@@ -10,7 +10,7 @@ public class Color {
 	 * Contains static predefined colors that can easily be used during prototyping.
 	 *
 	 */
-	public Color WHITE = new Color(255, 255, 255, 255);
+	public static Color WHITE = new Color(255, 255, 255, 255);
 	public static Color BLACK = new Color(0, 0, 0, 255);
 	public static Color RED = new Color(255, 0, 0, 255);
 	public static Color DARK_RED = new Color(127, 0, 0, 255);
