@@ -1,6 +1,5 @@
 package graphics;
 
-import util.Engine;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;

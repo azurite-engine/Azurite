@@ -33,6 +33,8 @@ out vec4 color;
 
 void main () {
     vec4 texColor;
+
+    // This may look bad, but it is intentional, openGL minimum spec does not require dynamic indexing with variables into texture arrays, so this switch is required on AMD GPUs.
     switch (int(fTexId)) {
         case 0:
             texColor = fColor;
@@ -59,10 +61,6 @@ void main () {
             texColor = fColor * texture(uTextures[7], fTexCoords);
             break;
     }
-
-//    if (texColor.a < 0.1) {
-//        discard;
-//    }
 
     color = texColor;
 }

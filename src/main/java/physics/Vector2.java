@@ -1,10 +1,15 @@
 package physics;
 
+/*
+* Please do not use this class, it is currently being phased out of the engine
+*/
+
+@Deprecated
 public class Vector2 {
 	
 	public float x;
 	public float y;
-	
+
 	public Vector2 (double px, double py) {
 		x = (float) px;
 		y = (float) py;
