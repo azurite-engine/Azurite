@@ -1,5 +1,6 @@
 package graphics;
 
+import org.joml.Vector3f;
 import util.Utils;
 import org.joml.Vector4f;
 
@@ -58,8 +59,11 @@ public class Color {
 		return Utils.map(p, 0, 255, 0, 1);
 	}
 
-	public Vector4f toNormalizedVec4f() {
+	public Vector4f toNormalizedVec4f () {
 		return new Vector4f(m(r), m(g), m(b), m(a));
+	}
+	public Vector3f toNormalizedVec3f () {
+		return new Vector3f(m(r), m(g), m(b));
 	}
 
 	public Color fromNormalized() {

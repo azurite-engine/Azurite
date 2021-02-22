@@ -12,6 +12,7 @@ import ecs.GameObject;
 import ecs.PointLight;
 import ecs.SpriteRenderer;
 import graphics.Camera;
+import graphics.Color;
 import org.joml.Vector3f;
 import physics.Transform;
 import util.Engine;
@@ -32,8 +33,8 @@ public class Main extends util.Scene {
 	public void awake() {
 		camera = new Camera();
 		pepper.addComponent(new SpriteRenderer("src/assets/images/pepper.png"));
-		light1.addComponent(new PointLight(new Vector3f(0.8f, 0.2f, 0.3f), 10));
-		light2.addComponent(new PointLight(new Vector3f(0.2f, 0.3f, 0.8f), 10));
+		light1.addComponent(new PointLight(Color.RED, 10));
+		light2.addComponent(new PointLight(Color.BLUE, 10));
 	}
 
 	public void update() {
