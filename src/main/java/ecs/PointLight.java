@@ -1,5 +1,6 @@
 package ecs;
 
+import graphics.Color;
 import org.joml.Vector3f;
 import physics.Transform;
 
@@ -30,15 +31,15 @@ public class PointLight extends Component {
 	 * @param intensity float: Intensity of the light
 	 */
 	public PointLight(float intensity) {
-		this(new Vector3f(1.0f), intensity);
+		this(Color.WHITE, intensity);
 	}
 
 	/**
 	 * @param color Vector3f: Color of the light
 	 * @param intensity float: Intensity of the light
 	 */
-	public PointLight(Vector3f color, float intensity) {
-		this.color = color;
+	public PointLight(Color color, float intensity) {
+		this.color = color.toNormalizedVec3f();
 		this.intensity = intensity;
 	}
 
