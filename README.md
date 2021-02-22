@@ -2,7 +2,6 @@
     <br />
     <img src="https://img.shields.io/badge/Made%20using-Java-red">
     <img src="https://img.shields.io/badge/Made%20Using-Open%20GL%20-yellow">
-    <img src="https://img.shields.io/badge/Platforms-Windows, Linux-lightgrey">
 </p>
 
 <br />
