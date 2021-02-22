@@ -26,7 +26,7 @@ public class Main extends util.Scene {
 		Engine.init(1080, 720, "Hello World!");
 	}
 
-	GameObject pepper = new GameObject("Pepper", new Transform(0, 0, 1080, 720), 10);
+	GameObject pepper = new GameObject("Pepper", new Transform((1080/2)-(720/2), 0, 720, 720), 10);
 	GameObject light1 = new GameObject("Light", new Transform(460, 360, 50, 50), 10);
 	GameObject light2 = new GameObject("Light", new Transform(620, 360, 50, 50), 10);
 
