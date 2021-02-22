@@ -1,6 +1,7 @@
 package input;
 
 import graphics.Window;
+import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
 import physics.Vector2;
 
@@ -10,13 +11,13 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class Mouse {
 
-	public static Vector2 mouse;
+	public static Vector2f mouse;
 	public static long mouseX = 0;
 	public static long mouseY = 0;
-	public static Vector2 pmouse;
+	public static Vector2f pmouse;
 	public static long pmouseX = 0;
 	public static long pmouseY = 0;
-	public static Vector2 mouseScroll;
+	public static Vector2f mouseScroll;
 	public static double scrollX = 0;
 	public static double scrollY = 0;
 	public static boolean mouseButton[] = new boolean[3];
@@ -58,7 +59,7 @@ public class Mouse {
 		glfwSetScrollCallback(Window.window, (w, xOffset, yOffset) -> {
 			scrollX = xOffset;
 			scrollY = yOffset;
-			mouseScroll = new Vector2(scrollX, scrollY);
+			mouseScroll = new Vector2f((float)scrollX, (float)scrollY);
 		});
 	}
 	
@@ -76,11 +77,11 @@ public class Mouse {
 
 		long pmouseX = mouseX;
 		long pmouseY = mouseY;
-		pmouse = new Vector2(pmouseX, pmouseY);
+		pmouse = new Vector2f(pmouseX, pmouseY);
 
 		mouseX = (long) x.get();
 		mouseY = (long) y.get();
-		mouse = new Vector2(mouseX, mouseY);
+		mouse = new Vector2f(mouseX, mouseY);
 		
 		if (mouseX != pmouseX || mouseY != pmouseY) {
 			mouseDragged = mouseButton[0] || mouseButton[1] || mouseButton[2]; 
@@ -97,10 +98,10 @@ public class Mouse {
 	public static void clearMouseInput () {
 		scrollX = 0;
 		scrollY = 0;
-		mouseScroll = new Vector2(scrollX, scrollY);
+		mouseScroll = new Vector2f((float)scrollX, (float)scrollY);
 		pmouseX = mouseX;
 		pmouseY = mouseY;
-		pmouse = new Vector2(pmouseX, pmouseY);
+		pmouse = new Vector2f(pmouseX, pmouseY);
 	}
 
 }
