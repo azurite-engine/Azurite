@@ -32,7 +32,7 @@ in float fTexId;
 
 #define MAX_LIGHTS 8
 uniform vec2 uLightPosition[MAX_LIGHTS];
-uniform vec3 uLightColour[MAX_LIGHTS];
+uniform vec3 uLightColor[MAX_LIGHTS];
 uniform float uIntensity[MAX_LIGHTS];
 uniform float uMinLighting;
 uniform int uNumLights;
@@ -57,7 +57,7 @@ void main () {
     for (int i = 0; i < uNumLights; i++) {
         float dist = distance(uLightPosition[i], fPos);
         float attenuation = calculateLighting(dist, uIntensity[i]);
-        totalLighting += uLightColour[i] * attenuation;
+        totalLighting += uLightColor[i] * attenuation;
     }
 //    totalLighting += vec3(1.0f) * uMinLighting;
 
