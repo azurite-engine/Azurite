@@ -87,11 +87,15 @@ public class Main extends Scene {
 * Java 1.8
   
 ## Project Setup
-tba
+To begin contributing, create a fork of this repository.
+Using intellj, import this project from existing sources as a gradle project.
+Build gradle, then run the Main scene (located in the scenes package).
 
 ## Documentation
-* [Documentatation](#) (Work in progress)
+* [Documentatation](https://games-with-gabe-community.github.io/azurite-docs/) (Work in progress)
 * [Javadocs](#) (Coming soon)
+* [Contributing guidelines](#) (also coming soon)
+* [Google Code style]( https://google.github.io/styleguide/javaguide.html) (Please adhere to this general style until we develop a simpler version)
 
 ### License
 Copyright (c) 2021 MIT License
@@ -100,7 +104,5 @@ Copyright (c) 2021 MIT License
 * [LWJGL 3](https://www.lwjgl.org/)
 
 ### Contact
-
-
-### Credits
+[Discord Server](https://discord.gg/dhyV3BXkRZ)
 
