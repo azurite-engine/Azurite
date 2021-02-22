@@ -69,9 +69,9 @@ public class Collisions {
 
     /**
      * Checks if a rectangle is completely inside of another rectangle.
-     * @param t1
-     * @param t2
-     * @return
+     * @param Transform 1
+     * @param Transform 2
+     * @return returns boolean true if t1 is inside of t2
      */
     public static boolean rectInRect(Transform t1, Transform t2) {
         return  t1.position.x < t2.scale.x 		&&

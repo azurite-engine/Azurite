@@ -3,7 +3,6 @@ package util;
 import graphics.Shader;
 import graphics.Spritesheet;
 import graphics.Texture;
-
 import java.io.File;
 import java.util.HashMap;
 
@@ -12,6 +11,11 @@ public class Assets {
 	private static HashMap<String, Texture> textures = new HashMap<>();
 	private static HashMap<String, Spritesheet> spritesheets = new HashMap<>();
 
+	/**
+	 * Loads a shader from the filesystem, compiles it, then returns type Shader.
+	 * @param path to GLSL shader resource
+	 * @return returns type Shader
+	 */
 	public static Shader getShader(String path) {
 		File file = new File(path);
 		if (shaders.containsKey(file.getAbsolutePath())) {
@@ -23,6 +27,11 @@ public class Assets {
 		return shader;
 	}
 
+	/**
+	 * Loads a image from the filesystem, and returns a Texture.
+	 * @param path to Texture resource (usually a .png file)
+	 * @return returns type Texture
+	 */
 	public static Texture getTexture(String path) {
 		File file = new File(path);
 		if (textures.containsKey(file.getAbsolutePath())) {
@@ -32,22 +41,37 @@ public class Assets {
 		textures.put(file.getAbsolutePath(), texture);
 		return texture;
 	}
-	
+
+	/**
+	 * Adds a filepath and spritesheet to the Asset class's spritesheet hashmap. (private)
+	 * @param path to Texture resource (usually a .png file)
+	 * @param Spritesheet object
+	 */
 	private static void addSpritesheet (String path, Spritesheet spritesheet) {
 		File file = new File(path);
 		if (!Assets.spritesheets.containsKey(file.getAbsolutePath())) {
 			Assets.spritesheets.put(file.getAbsolutePath(), spritesheet);
 		}
 	}
-	
+
+
 	private static Spritesheet getSpritesheet (String path) {
 		File file = new File(path);
 		if (!Assets.spritesheets.containsKey(file.getAbsolutePath())) {
-			assert false : "[ERROR] Tried to access spritesheet \"" + path + "\", but it does not exist.";
+			assert false : "[ERROR] Tried to access spritesheet \"" + path + "\", but it does not exist or is not loaded, try using \"Assets.loadSpritesheet()\".";
 		}
 		return Assets.spritesheets.getOrDefault(file.getAbsolutePath(), null);
 	}
-	
+
+	/**
+	 * Loads a image from the filesystem, and returns a Spritesheet object.
+	 * @param Path to Texture resource (usually a .png file)
+	 * @param Width of each sprite
+	 * @param Height of each sprite
+	 * @param Number of sprites in the sheet
+	 * @param Pixel spacing between sprites (0 if no spacing)
+	 * @return returns type Spritesheet
+	 */
 	public static Spritesheet loadSpritesheet (String path, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
 		addSpritesheet(path, new Spritesheet(getTexture(path), spriteWidth, spriteHeight, numSprites, spacing));
 		return getSpritesheet(path);

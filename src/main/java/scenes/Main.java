@@ -3,7 +3,7 @@ package scenes;/*
 
  * Javadoc style
  *
- * @author Name
+ * Method description if not obvious
  * @param if applicable
  * @return type and description if not void
  */
