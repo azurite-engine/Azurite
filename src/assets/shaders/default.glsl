@@ -8,11 +8,13 @@ layout (location=3) in float aTexId;
 uniform mat4 uProjection;
 uniform mat4 uView;
 
+out vec2 fPos;
 out vec4 fColor;
 out vec2 fTexCoords;
 out float fTexId;
 
 void main() {
+    fPos = aPos.xy;
     fColor = aColor;
     fTexCoords = aTexCoords;
     fTexId = aTexId;
@@ -23,16 +25,42 @@ void main() {
 #type fragment
 #version 330 core
 
+in vec2 fPos;
 in vec4 fColor;
 in vec2 fTexCoords;
 in float fTexId;
+
+#define MAX_LIGHTS 8
+uniform vec2 uLightPosition[MAX_LIGHTS];
+uniform vec3 uLightColour[MAX_LIGHTS];
+uniform float uIntensity[MAX_LIGHTS];
+uniform float uMinLighting;
+uniform int uNumLights;
 
 uniform sampler2D uTextures[8];
 
 out vec4 color;
 
+float distance(vec2 a, vec2 b) {
+    vec2 c = b - a;
+    return c.x * c.x + c.y * c.y;
+}
+
+float calculateLighting(float d, float intensity) {
+    return 1.0 / (1.0 + (0.001 / intensity) * d);
+}
+
 void main () {
     vec4 texColor;
+
+    vec3 totalLighting = vec3(0.0);
+    for (int i = 0; i < uNumLights; i++) {
+        float dist = distance(uLightPosition[i], fPos);
+        float attenuation = calculateLighting(dist, uIntensity[i]);
+        totalLighting += uLightColour[i] * attenuation;
+    }
+//    totalLighting += vec3(1.0f) * uMinLighting;
+
     switch (int(fTexId)) {
         case 0:
             texColor = fColor;
@@ -59,6 +87,7 @@ void main () {
             texColor = fColor * texture(uTextures[7], fTexCoords);
             break;
     }
+    texColor *= vec4(totalLighting, 1.0);
 
 //    if (texColor.a < 0.1) {
 //        discard;

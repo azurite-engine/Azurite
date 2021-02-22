@@ -1,15 +1,18 @@
 package graphics.renderer;
 
+import ecs.PointLight;
 import ecs.SpriteRenderer;
 import graphics.Shader;
 import graphics.Texture;
 import graphics.Window;
+import org.joml.Vector3f;
 import physics.Transform;
 import util.Assets;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
@@ -39,23 +42,27 @@ public class RenderBatch implements Comparable<RenderBatch>{
 	private final int VERTEX_SIZE = 9;
 	private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
 
-	private SpriteRenderer[] sprites;
+	private final SpriteRenderer[] sprites;
+	private int numberOfLights;
 	private int numberOfSprites;
 	private boolean hasRoomLeft;
 
-	private float[] vertices;
+	private final List<PointLight> lights;
 
-	private int[] textureSlots = {0, 1, 2, 3, 4, 5, 6, 7};
-	private ArrayList<Texture> textures;
+	private final float[] vertices;
+
+	private final int[] textureSlots = {0, 1, 2, 3, 4, 5, 6, 7};
+	private final ArrayList<Texture> textures;
 
 	private int vaoID, vboID;
-	private int maxBatchSize;
-	private Shader shader;
+	private final int maxBatchSize;
+	private final Shader shader;
 
-	private int zIndex;
+	private final int zIndex;
 
 	RenderBatch(int maxBatchSize, int zIndex) {
 		shader = Assets.getShader("src/assets/shaders/default.glsl");
+		lights = new ArrayList<>();
 
 		this.sprites = new SpriteRenderer[maxBatchSize];
 		this.maxBatchSize = maxBatchSize;
@@ -63,6 +70,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
 		vertices = new float[maxBatchSize * 4 * VERTEX_SIZE];
 
 		this.numberOfSprites = 0;
+		this.numberOfLights = 0;
 		this.hasRoomLeft = true;
 		this.textures = new ArrayList<>();
 		this.zIndex = zIndex;
@@ -97,6 +105,12 @@ public class RenderBatch implements Comparable<RenderBatch>{
 
 		glVertexAttribPointer(3, TEXTURE_ID_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEXTURE_ID_OFFSET);
 		glEnableVertexAttribArray(3);
+	}
+
+	public void addPointLight(PointLight light) {
+		numberOfLights++;
+		assert numberOfLights <= 10 : "NO MORE THAN 10 LIGHTS";
+		lights.add(light);
 	}
 
 	public void addSprite(SpriteRenderer sprite) {
@@ -137,6 +151,24 @@ public class RenderBatch implements Comparable<RenderBatch>{
 		shader.use();
 		shader.uploadMat4f("uProjection", Window.currentScene.camera().getProjectionMatrix());
 		shader.uploadMat4f("uView", Window.currentScene.camera().getViewMatrix());
+
+		// Set lighting uniforms
+		Vector2f[] lightPositions = new Vector2f[numberOfLights];
+		Vector3f[] lightColors = new Vector3f[numberOfLights];
+		float[] lightIntensities = new float[numberOfLights];
+
+		for (int i = 0; i < numberOfLights; i++) {
+			PointLight light = lights.get(i);
+			lightPositions[i] = light.lastTransform.getPosition();
+			lightColors[i] = light.color;
+			lightIntensities[i] = light.intensity;
+		}
+
+		shader.uploadVec2fArray("uLightPosition", lightPositions);
+		shader.uploadVec3fArray("uLightColour", lightColors);
+		shader.uploadFloatArray("uIntensity", lightIntensities);
+		shader.uploadFloat("uMinLighting", 0.3f);
+		shader.uploadInt("uNumLights", numberOfLights);
 
 		for (int i = 0; i < textures.size(); i ++) {
 			glActiveTexture(GL_TEXTURE0 + i + 1);
