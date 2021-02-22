@@ -22,7 +22,7 @@ import util.Engine;
 import static graphics.Graphics.background;
 
 public class Main extends util.Scene {
-		
+
 	public static void main (String[] args) {
 		Engine.init(1080, 720, "Hello World!");
 	}
@@ -34,10 +34,8 @@ public class Main extends util.Scene {
 	public void awake() {
 		camera = new Camera();
 		pepper.addComponent(new SpriteRenderer("src/assets/images/pepper.png"));
-		light1.addComponent(new PointLight(new Vector3f(0.8f, 0.2f, 0.3f), 10));
-		light2.addComponent(new PointLight(new Vector3f(0.2f, 0.3f, 0.8f), 10));
-
-
+		light1.addComponent(new PointLight(Color.RED, 10));
+		light2.addComponent(new PointLight(Color.BLUE, 10));
 	}
 
 	public void update() {
