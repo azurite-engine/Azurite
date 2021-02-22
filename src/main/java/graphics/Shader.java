@@ -1,9 +1,7 @@
 package graphics;
 
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
-import org.joml.Vector2f;
-import org.joml.Vector4f;
+import org.joml.*;
+import util.Engine;
 import org.lwjgl.BufferUtils;
 
 import java.io.IOException;
@@ -79,7 +77,7 @@ public class Shader {
 		int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
 		if (success == GL_FALSE) {
 			int length = glGetShaderi(vertexID, GL_INFO_LOG_LENGTH);
-			System.out.println("[FATAL] Vertex shader compilation failed. Gprocessing.graphics.Window.initShaders()\n\t");
+			System.out.println("[FATAL] Vertex shader compilation failed. " + filepath + "\n\t");
 			System.out.println(glGetShaderInfoLog(vertexID, length));
 			assert false : "";
 		}
@@ -94,7 +92,7 @@ public class Shader {
 		success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
 		if (success == GL_FALSE) {
 			int length = glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
-			System.out.println("[FATAL] Fragment shader compilation failed. Gprocessing.graphics.Window.initShaders()\n\t");
+			System.out.println("[FATAL] Fragment shader compilation failed. " + filepath + "\n\t");
 			System.out.println(glGetShaderInfoLog(fragmentID, length));
 			assert false : "";
 		}
@@ -108,7 +106,7 @@ public class Shader {
 		success = glGetProgrami(shaderProgramID, GL_LINK_STATUS);
 		if (success == GL_FALSE) {
 			int length = glGetProgrami(shaderProgramID, GL_INFO_LOG_LENGTH);
-			System.out.println("[FATAL] Shader linking failed. Gprocessing.graphics.Window.initShaders()\n\t");
+			System.out.println("[FATAL] Shader linking failed. " + filepath + "\n\t");
 			System.out.println(glGetProgramInfoLog(shaderProgramID, length));
 			assert false : "";
 		}
@@ -148,17 +146,60 @@ public class Shader {
 		use(); // make sure the shader is being used
 		glUniform4f(varLocation, v.x, v.y, v.z, v.w);
 	}
+
+	/**
+	 * Upload a vector3f array to the gpu
+	 * @param varName String: name of the uniform
+	 * @param vec Vector3f[]: the array to be uploaded
+	 */
+	public void uploadVec3fArray(String varName, Vector3f[] vec) {
+		int varLocation = glGetUniformLocation(shaderProgramID, varName);
+		use();
+		float[] vals = new float[vec.length * 3];
+		for (int i = 0; i < vec.length; i++) {
+			vals[i * 2] = vec[i].x;
+			vals[i * 2 + 1] = vec[i].y;
+			vals[i * 2 + 2] = vec[i].z;
+		}
+		glUniform3fv(varLocation, vals);
+	}
 	
 	public void uploadVec2f(String varName, Vector2f vec) {
         int varLocation = glGetUniformLocation(shaderProgramID, varName);
         use();
         glUniform2f(varLocation, vec.x, vec.y);
     }
-	
+
+	/**
+	 * Upload a vector2f array to the gpu
+	 * @param varName String: name of the uniform
+	 * @param vec Vector2f[]: the array to be uploaded
+	 */
+	public void uploadVec2fArray(String varName, Vector2f[] vec) {
+		int varLocation = glGetUniformLocation(shaderProgramID, varName);
+		use();
+		float[] vals = new float[vec.length * 2];
+		for (int i = 0; i < vec.length; i++) {
+			vals[i * 2] = vec[i].x;
+			vals[i * 2 + 1] = vec[i].y;
+		}
+		glUniform2fv(varLocation, vals);
+	}
+
 	public void uploadFloat (String varName, float val) {
 		int varLocation = glGetUniformLocation(shaderProgramID, varName);
 		use(); // make sure the shader is being used
 		glUniform1f(varLocation, val);
+	}
+	/**
+	 * Upload a float array to the gpu
+	 * @param varName String: name of the uniform
+	 * @param array float[]: the array to be uploaded
+	 */
+	public void uploadFloatArray(String varName, float[] array) {
+		int varLocation = glGetUniformLocation(shaderProgramID, varName);
+		use(); // make sure the shader is being used
+		glUniform1fv(varLocation, array);
 	}
 	
 	public void uploadInt (String varName, int val) {

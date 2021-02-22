@@ -1,6 +1,7 @@
 package graphics.renderer;
 
 import ecs.GameObject;
+import ecs.PointLight;
 import ecs.SpriteRenderer;
 import graphics.Texture;
 
@@ -27,8 +28,23 @@ public class Renderer {
 		if (spr != null) {
 			addSpriteRenderer(spr);
 		}
+
+		PointLight light = go.getComponent(PointLight.class);
+		if (light != null) {
+			addPointLight(light);
+		}
 	}
-	
+
+	/**
+	 * Adds the PointLight component to all Batches
+	 * @param light PointLight: The PointLight component to be added
+	 */
+	private void addPointLight(PointLight light) {
+		for (RenderBatch batch : batches) {
+			batch.addPointLight(light);
+		}
+	}
+
 	private void addSpriteRenderer (SpriteRenderer sprite) {
 		boolean added = false;
 		for (RenderBatch batch : batches) {
