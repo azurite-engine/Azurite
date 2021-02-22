@@ -8,16 +8,12 @@ import static org.lwjgl.glfw.GLFW.glfwInit;
 public class Engine {
 
 	/**
-	 * util.Engine contains static core methods that Gprocessing projects may access
-	 * also initializes the window and game loop
+	 * The Engine class initializes GLFW and the game loop.
 	 */
 
 	private static long startMillis = System.currentTimeMillis();
-
 	public static Window w;
-
 	public static boolean running = true;
-
 	public static float deltaTime = 0;
 
 	/**

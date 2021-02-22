@@ -92,6 +92,13 @@ public class Utils {
         return (value > max) ? max : (value < min ? min: value);
     }
 
+    /**
+     * Linearly interpolates between floats by a certain amount.
+     * @param start starting value
+     * @param end ending value
+     * @param amt amount to interpolate (0-1)
+     * @return returns a float that is the lerp of the two values by the amount.
+     */
     public static float lerp (float start, float end, float amt) {
         return (1 - amt) * start + amt * end;
     }
