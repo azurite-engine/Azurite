@@ -147,6 +147,11 @@ public class Shader {
 		glUniform4f(varLocation, v.x, v.y, v.z, v.w);
 	}
 
+	/**
+	 * Upload a vector3f array to the gpu
+	 * @param varName String: name of the uniform
+	 * @param vec Vector3f[]: the array to be uploaded
+	 */
 	public void uploadVec3fArray(String varName, Vector3f[] vec) {
 		int varLocation = glGetUniformLocation(shaderProgramID, varName);
 		use();
@@ -165,6 +170,11 @@ public class Shader {
         glUniform2f(varLocation, vec.x, vec.y);
     }
 
+	/**
+	 * Upload a vector2f array to the gpu
+	 * @param varName String: name of the uniform
+	 * @param vec Vector2f[]: the array to be uploaded
+	 */
 	public void uploadVec2fArray(String varName, Vector2f[] vec) {
 		int varLocation = glGetUniformLocation(shaderProgramID, varName);
 		use();
@@ -181,7 +191,11 @@ public class Shader {
 		use(); // make sure the shader is being used
 		glUniform1f(varLocation, val);
 	}
-
+	/**
+	 * Upload a float array to the gpu
+	 * @param varName String: name of the uniform
+	 * @param array float[]: the array to be uploaded
+	 */
 	public void uploadFloatArray(String varName, float[] array) {
 		int varLocation = glGetUniformLocation(shaderProgramID, varName);
 		use(); // make sure the shader is being used

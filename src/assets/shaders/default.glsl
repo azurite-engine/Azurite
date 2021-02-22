@@ -30,7 +30,11 @@ in vec4 fColor;
 in vec2 fTexCoords;
 in float fTexId;
 
-#define MAX_LIGHTS 8
+/**
+ * The lighting uniform variables.
+ * MAX_LIGHTS can be changed here. If you want more lights make sure to change the RenderBatch::addPointLight fuction as well.
+ */
+#define MAX_LIGHTS 10
 uniform vec2 uLightPosition[MAX_LIGHTS];
 uniform vec3 uLightColor[MAX_LIGHTS];
 uniform float uIntensity[MAX_LIGHTS];
@@ -53,13 +57,21 @@ float calculateLighting(float d, float intensity) {
 void main () {
     vec4 texColor;
 
+    // Total lighting accumulation variable
     vec3 totalLighting = vec3(0.0);
+    // Eventhough the arrays are crated with MAX_LIGHTS size, the arrays are iterated over only [uNumLights] times
     for (int i = 0; i < uNumLights; i++) {
+        // Distance between the current pixel and the light position
         float dist = distance(uLightPosition[i], fPos);
+        // calculate brightness using the attenuation function
         float attenuation = calculateLighting(dist, uIntensity[i]);
+        // accumulate the value into total lighting by adding
         totalLighting += uLightColor[i] * attenuation;
     }
-//    totalLighting += vec3(1.0f) * uMinLighting;
+    // Take minimum lighting into account
+    totalLighting.x = max(totalLighting.x, uMinLighting);
+    totalLighting.y = max(totalLighting.y, uMinLighting);
+    totalLighting.z = max(totalLighting.z, uMinLighting);
 
     switch (int(fTexId)) {
         case 0:
@@ -87,6 +99,7 @@ void main () {
             texColor = fColor * texture(uTextures[7], fTexCoords);
             break;
     }
+    // Apply lighting to the pixel's colour
     texColor *= vec4(totalLighting, 1.0);
 
 //    if (texColor.a < 0.1) {

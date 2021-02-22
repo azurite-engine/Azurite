@@ -107,6 +107,12 @@ public class RenderBatch implements Comparable<RenderBatch>{
 		glEnableVertexAttribArray(3);
 	}
 
+	/**
+	 * Add A Point Light to the batch.
+	 * If you want to change max number of lights in the scene, change all the 10 values to something else
+	 * Make sure to change it in shader code as well
+	 * @param light
+	 */
 	public void addPointLight(PointLight light) {
 		numberOfLights++;
 		assert numberOfLights <= 10 : "NO MORE THAN 10 LIGHTS";

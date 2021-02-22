@@ -35,6 +35,10 @@ public class Renderer {
 		}
 	}
 
+	/**
+	 * Adds the PointLight component to all Batches
+	 * @param light PointLight: The PointLight component to be added
+	 */
 	private void addPointLight(PointLight light) {
 		for (RenderBatch batch : batches) {
 			batch.addPointLight(light);
