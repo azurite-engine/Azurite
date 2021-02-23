@@ -92,7 +92,7 @@ Using intellj, import this project from existing sources as a gradle project.
 Build gradle, then run the Main scene (located in the scenes package).
 
 ## Documentation
-* [Documentatation](https://games-with-gabe-community.github.io/azurite-docs/) (Work in progress)
+* [Documentatation](https://games-with-gabe-community.github.io/Azurite-Docs/) (Work in progress)
 * [Javadocs](#) (Coming soon)
 * [Contributing guidelines](#) (also coming soon)
 * [Google Code style]( https://google.github.io/styleguide/javaguide.html) (Please adhere to this general style until we develop a simpler version)
