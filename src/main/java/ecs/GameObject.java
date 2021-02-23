@@ -2,7 +2,6 @@ package ecs;
 
 import scenes.Main;
 import physics.Transform;
-
 import java.util.ArrayList;
 import java.util.List;
 

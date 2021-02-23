@@ -12,7 +12,8 @@ import ecs.GameObject;
 import ecs.PointLight;
 import ecs.SpriteRenderer;
 import graphics.Camera;
-import graphics.Color;
+import input.Mouse;
+import org.joml.Vector2f;
 import org.joml.Vector3f;
 import physics.Transform;
 import util.Engine;
@@ -21,7 +22,7 @@ import util.Engine;
 import static graphics.Graphics.background;
 
 public class Main extends util.Scene {
-		
+
 	public static void main (String[] args) {
 		Engine.init(1080, 720, "Hello World!");
 	}
@@ -39,5 +40,6 @@ public class Main extends util.Scene {
 
 	public void update() {
 		background(50, 50, 50);
+		light1.getTransform().setPosition(new Vector2f(Mouse.mouseX, Mouse.mouseY));
 	}
 }
