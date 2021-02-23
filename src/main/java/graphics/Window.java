@@ -32,11 +32,12 @@ public class Window {
 
     static Shader defaultShader;
 
-    public Window(int pwidth, int pheight, String ptitle) {
+    public Window(int pwidth, int pheight, String ptitle, float minSceneLighting) {
 
         width = pwidth;
         height = pheight;
         title = ptitle;
+        currentScene.minLighting = minSceneLighting;
 
         // Configure GLFW
         glfwDefaultWindowHints();

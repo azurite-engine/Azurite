@@ -12,9 +12,9 @@ import ecs.GameObject;
 import ecs.PointLight;
 import ecs.SpriteRenderer;
 import graphics.Camera;
+import graphics.Color;
 import input.Mouse;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import physics.Transform;
 import util.Engine;
 
@@ -24,7 +24,7 @@ import static graphics.Graphics.background;
 public class Main extends util.Scene {
 
 	public static void main (String[] args) {
-		Engine.init(1080, 720, "Hello World!");
+		Engine.init(1080, 720, "Hello World!", 0.3f);
 	}
 
 	GameObject pepper = new GameObject("Pepper", new Transform((1080/2)-(720/2), 0, 720, 720), 10);
