@@ -10,6 +10,14 @@ public class Spritesheet {
     private Texture texture;
     private List<Sprite> sprites;
 
+    /**
+     * Takes a texture, sprite width, height, number of sprites and the pixel spacing between sprites (if applicable), and adds each sprite in the sheet to a List.
+     * @param texture
+     * @param spriteWidth
+     * @param spriteHeight
+     * @param numSprites
+     * @param spacing
+     */
     public Spritesheet(Texture texture, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
         this.sprites = new ArrayList<>();
 
@@ -39,14 +47,26 @@ public class Spritesheet {
         }
     }
 
+    /**
+     * Returns the integer size of the List of Sprites
+     * @return int size
+     */
     public int getSize () {
         return sprites.size();
     }
 
+    /**
+     * Return a single sprite by passing it's index in the sprite list
+     * @param index of the sprite
+     * @return Sprite
+     */
     public Sprite getSprite(int index) {
         return this.sprites.get(index);
     }
 
+    /**
+     * @return entire list of sprites contained in Spritesheet
+     */
     public List<Sprite> getSprites () {
         return sprites;
     }
