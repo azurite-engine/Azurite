@@ -75,7 +75,6 @@ public class Window {
     }
 
     public void showWindow() {
-
         /*
          * scenes.Main game loop
          */
@@ -84,7 +83,6 @@ public class Window {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 
         float frameBeginTime = (float)glfwGetTime();
         float frameEndTime = (float)glfwGetTime();
@@ -114,6 +112,9 @@ public class Window {
             Engine.deltaTime = dt;
             frameBeginTime = frameEndTime;
         }
+
+        // Delete all framebuffers
+        Framebuffer.clean();
 
         glfwDestroyWindow(window);
         glfwTerminate();
