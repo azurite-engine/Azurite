@@ -173,7 +173,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
 		shader.uploadVec2fArray("uLightPosition", lightPositions);
 		shader.uploadVec3fArray("uLightColor", lightColors);
 		shader.uploadFloatArray("uIntensity", lightIntensities);
-		shader.uploadFloat("uMinLighting", 0.3f);
+		shader.uploadFloat("uMinLighting", Window.currentScene.minLighting);
 		shader.uploadInt("uNumLights", numberOfLights);
 
 		for (int i = 0; i < textures.size(); i ++) {

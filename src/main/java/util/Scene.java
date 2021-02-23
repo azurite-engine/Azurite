@@ -16,12 +16,14 @@ public abstract class Scene {
     static protected ArrayList<GameObject> gameObjects = new ArrayList<>();
     protected GameObject activeGameObject = null;
 
+    public float minLighting;
+
     /**
      * @param args
      * Entry point to start the application
      */
     public static void main(String[] args) {
-        Engine.init(1600, 900, "Hello World!");
+        Engine.init(1600, 900, "Hello World!", 0.3f);
     }
 
     /**
