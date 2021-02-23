@@ -12,6 +12,7 @@ import ecs.GameObject;
 import ecs.PointLight;
 import ecs.SpriteRenderer;
 import graphics.Camera;
+import graphics.Color;
 import input.Mouse;
 import org.joml.Vector2f;
 import org.joml.Vector3f;

@@ -35,12 +35,7 @@ public abstract class Scene {
      * This method is called every frame, and can be used to update objects.
      */
     public void update() {}
-
-    /**
-     * This method is called from the ImGui layer, allowing the user to easily create imGui interfaces.
-     * The user is not restricted to using this method for GUIs, but it is encouraged.
-     */
-    public void imgui () {}
+    
 
     // The following methods shouldn't be overridden.
     /**
