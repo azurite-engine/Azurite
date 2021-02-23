@@ -12,7 +12,7 @@ public class FramebufferTextureSpec {
 	 */
 	public enum FramebufferTextureFormat {
 		// None is an invalid state
-		NONE(true, GL_NONE, GL_NONE),
+		NONE(false, GL_NONE, GL_NONE),
 		RGBA8(false, GL_RGBA8, GL_RGBA),
 		RED_INTEGER(false, GL_R32I, GL_RED_INTEGER),
 		RED_UNSIGNED_INTEGER(false, GL_R32UI, GL_RED_INTEGER),
@@ -116,9 +116,14 @@ public class FramebufferTextureSpec {
 	public FramebufferTextureSpec(FramebufferTextureFormat format, TextureResizeFilterType minificationFilter, TextureResizeFilterType magnificationFilter, TextureWrapFilterType rFilter, TextureWrapFilterType sFilter, TextureWrapFilterType tFilter) {
 		this.format = format;
 		this.minificationFilter = minificationFilter;
-		this.magnificationFilter = magnificationFilter;
+		this.magnificationFilter = changeForMagnification(magnificationFilter);
 		this.rFilter = rFilter;
 		this.sFilter = sFilter;
 		this.tFilter = tFilter;
+	}
+
+	private static TextureResizeFilterType changeForMagnification(TextureResizeFilterType t) {
+		if (t.appliesToMagFilter) return t;
+		else return TextureResizeFilterType.LINEAR;
 	}
 }

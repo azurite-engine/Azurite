@@ -137,7 +137,7 @@ public class Framebuffer {
 		}
 
 		// If the depth attachment spec is not the default
-		if (depthAttachmentSpec.format != FramebufferTextureFormat.NONE) {
+		if (depthAttachmentSpec.format.isDepth) {
 			// Generate the depth texture
 			depthAttachmentTexture = createDepthTexture(this.width, this.height, depthAttachmentSpec.format.internalFormat);
 
