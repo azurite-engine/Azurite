@@ -2,6 +2,8 @@ package util.specs;
 
 /**
  * Specification for a framebuffer
+ *
+ * @author VoxelRifts
  */
 public class FramebufferSpec {
 	public FramebufferTextureSpec[] attachments;

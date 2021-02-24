@@ -1,6 +1,9 @@
 package graphics;
 
 
+import event.EventData;
+import event.Events;
+import input.Keyboard;
 import scenes.Main;
 import input.Mouse;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -30,10 +33,7 @@ public class Window {
 
     private float dt = 0; // deltaTime (accessible from util.Engine.deltaTime)
 
-    static Shader defaultShader;
-
     public Window(int pwidth, int pheight, String ptitle, float minSceneLighting) {
-
         width = pwidth;
         height = pheight;
         title = ptitle;
@@ -50,10 +50,16 @@ public class Window {
         if (window == 0)
             throw new IllegalStateException("[FATAL] Failed to create window.");
 
+        // Set up callback
         glfwSetWindowSizeCallback(window, (w, newWidth, newHeight) -> {
             Window.setWidth(newWidth);
             Window.setHeight(newHeight);
+
+            Events.windowResizeEvent.onEvent(new EventData.WindowResizeEventData(newWidth, newHeight));
         });
+
+        Mouse.setupCallbacks();
+        Keyboard.setupCallbacks();
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
@@ -84,7 +90,6 @@ public class Window {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        Mouse.setupCallbacks();
 
         float frameBeginTime = (float)glfwGetTime();
         float frameEndTime = (float)glfwGetTime();
@@ -97,8 +102,10 @@ public class Window {
 
         while (!glfwWindowShouldClose(window)) {
             Engine.deltaTime = dt;
-            // poll GLFW for input events
+
             Mouse.update();
+            Keyboard.update();
+            // poll GLFW for input events
             glfwPollEvents();
 
             glClear(GL_COLOR_BUFFER_BIT);
