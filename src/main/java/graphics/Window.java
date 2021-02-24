@@ -1,6 +1,9 @@
 package graphics;
 
 
+import event.EventData;
+import event.Events;
+import input.Keyboard;
 import scenes.Main;
 import input.Mouse;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -50,10 +53,28 @@ public class Window {
         if (window == 0)
             throw new IllegalStateException("[FATAL] Failed to create window.");
 
+        // Set up callbacks
         glfwSetWindowSizeCallback(window, (w, newWidth, newHeight) -> {
             Window.setWidth(newWidth);
             Window.setHeight(newHeight);
+
+            Events.windowResizeEvent.onEvent(new EventData.WindowResizeEventData(newWidth, newHeight));
         });
+
+        glfwSetKeyCallback(window, (w, keycode, scancode, action, mods) -> {
+            Events.keyEvent.onEvent(new EventData.KeyEventData(keycode, scancode, action, mods));
+        });
+
+        glfwSetScrollCallback(window, (w, xOffset, yOffset) -> {
+            Events.mouseScrollEvent.onEvent(new EventData.MouseScrollEventData(xOffset, yOffset));
+        });
+
+        glfwSetMouseButtonCallback(window, (w, button, action, mods) -> {
+            Events.mouseButtonEvent.onEvent(new EventData.MouseButtonEventData(button, action, mods));
+        });
+
+        Mouse.setupCallbacks();
+        Keyboard.setupCallbacks();
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
@@ -84,7 +105,6 @@ public class Window {
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        Mouse.setupCallbacks();
 
         float frameBeginTime = (float)glfwGetTime();
         float frameEndTime = (float)glfwGetTime();
@@ -97,8 +117,10 @@ public class Window {
 
         while (!glfwWindowShouldClose(window)) {
             Engine.deltaTime = dt;
-            // poll GLFW for input events
+
             Mouse.update();
+            Keyboard.update();
+            // poll GLFW for input events
             glfwPollEvents();
 
             glClear(GL_COLOR_BUFFER_BIT);
