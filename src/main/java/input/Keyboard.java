@@ -1,5 +1,6 @@
 package input;
 
+import event.EventData;
 import event.Events;
 import graphics.Window;
 import org.lwjgl.glfw.GLFWKeyCallback;
@@ -40,29 +41,31 @@ public class Keyboard {
 	 * Subscribes to key event
 	 */
 	public static void setupCallbacks() {
-		Events.keyEvent.subscribe(data -> {
-			switch (data.action) {
+		glfwSetKeyCallback(Window.window, (w, keycode, scancode, action, mods) -> {
+			switch (action) {
 				case GLFW_PRESS: {
-					setKeyDownBit(data.keycode);
-					resetKeyUpBit(data.keycode);
-					resetKeyHeldBit(data.keycode);
+					setKeyDownBit(keycode);
+					resetKeyUpBit(keycode);
+					resetKeyHeldBit(keycode);
 					break;
 				}
 
 				case GLFW_RELEASE: {
-					resetKeyDownBit(data.keycode);
-					setKeyUpBit(data.keycode);
-					resetKeyHeldBit(data.keycode);
+					resetKeyDownBit(keycode);
+					setKeyUpBit(keycode);
+					resetKeyHeldBit(keycode);
 					break;
 				}
 
 				case GLFW_REPEAT: {
-					resetKeyDownBit(data.keycode);
-					resetKeyUpBit(data.keycode);
-					setKeyHeldBit(data.keycode);
+					resetKeyDownBit(keycode);
+					resetKeyUpBit(keycode);
+					setKeyHeldBit(keycode);
 					break;
 				}
 			}
+
+			Events.keyEvent.onEvent(new EventData.KeyEventData(keycode, scancode, action, mods));
 		});
 	}
 
@@ -81,7 +84,6 @@ public class Keyboard {
 	}
 
 	/**
-	 *
 	 * @param keycode keycode representing the key to be checked
 	 * @return Returns true if the key is currently pressed or held, otherwise returns false
 	 */

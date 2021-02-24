@@ -1,5 +1,6 @@
 package input;
 
+import event.EventData;
 import event.Events;
 import graphics.Window;
 import org.joml.Vector2f;
@@ -42,15 +43,18 @@ public class Mouse {
 	 * Subscribes to mouse scroll event and mouse button event
 	 */
 	public static void setupCallbacks() {
-		Events.mouseScrollEvent.subscribe(data -> {
-			scrollX = (float) data.xScroll;
-			scrollY = (float) data.yScroll;
+		glfwSetScrollCallback(Window.window, (w, xOffset, yOffset) -> {
+			scrollX = (float) xOffset;
+			scrollY = (float) yOffset;
 			mouseScroll = new Vector2f(scrollX, scrollY);
+
+			Events.mouseScrollEvent.onEvent(new EventData.MouseScrollEventData(xOffset, yOffset));
 		});
 
-		Events.mouseButtonEvent.subscribe(data -> {
-			_button = data.button;
-			_action = data.action;
+		glfwSetMouseButtonCallback(Window.window, (w, button, action, mods) -> {
+			_button = button;
+			_action = action;
+			Events.mouseButtonEvent.onEvent(new EventData.MouseButtonEventData(button, action, mods));
 		});
 	}
 

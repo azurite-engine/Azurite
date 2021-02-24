@@ -33,10 +33,7 @@ public class Window {
 
     private float dt = 0; // deltaTime (accessible from util.Engine.deltaTime)
 
-    static Shader defaultShader;
-
     public Window(int pwidth, int pheight, String ptitle, float minSceneLighting) {
-
         width = pwidth;
         height = pheight;
         title = ptitle;
@@ -53,24 +50,12 @@ public class Window {
         if (window == 0)
             throw new IllegalStateException("[FATAL] Failed to create window.");
 
-        // Set up callbacks
+        // Set up callback
         glfwSetWindowSizeCallback(window, (w, newWidth, newHeight) -> {
             Window.setWidth(newWidth);
             Window.setHeight(newHeight);
 
             Events.windowResizeEvent.onEvent(new EventData.WindowResizeEventData(newWidth, newHeight));
-        });
-
-        glfwSetKeyCallback(window, (w, keycode, scancode, action, mods) -> {
-            Events.keyEvent.onEvent(new EventData.KeyEventData(keycode, scancode, action, mods));
-        });
-
-        glfwSetScrollCallback(window, (w, xOffset, yOffset) -> {
-            Events.mouseScrollEvent.onEvent(new EventData.MouseScrollEventData(xOffset, yOffset));
-        });
-
-        glfwSetMouseButtonCallback(window, (w, button, action, mods) -> {
-            Events.mouseButtonEvent.onEvent(new EventData.MouseButtonEventData(button, action, mods));
         });
 
         Mouse.setupCallbacks();
