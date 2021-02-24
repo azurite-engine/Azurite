@@ -1,5 +1,6 @@
 package input;
 
+import event.Events;
 import graphics.Window;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
@@ -25,7 +26,6 @@ public class Mouse {
 	private static int _button;
 	private static int _action;
 
-	
 	public static void pollMouseButtons() {
 		if (_action == GLFW_PRESS) {
 			if (_button < mouseButton.length)
@@ -36,32 +36,24 @@ public class Mouse {
 				mouseDragged = false;
 			}
 		}
-	}	
+	}
 
+	/**
+	 * Subscribes to mouse scroll event and mouse button event
+	 */
 	public static void setupCallbacks() {
-		glfwSetScrollCallback(Window.window, (w, xOffset, yOffset) -> {
-			scrollX = (float) xOffset;
-			scrollY = (float) yOffset;
+		Events.mouseScrollEvent.subscribe(data -> {
+			scrollX = (float) data.xScroll;
+			scrollY = (float) data.yScroll;
 			mouseScroll = new Vector2f(scrollX, scrollY);
 		});
 
-		glfwSetMouseButtonCallback(Window.window, (w, button, action, mods) -> {
-//			ImGui Input (NOT USED)
-
-//			final boolean[] mouseDown = new boolean[5];
-//
-//			mouseDown[0] = button == GLFW_MOUSE_BUTTON_1 && action != GLFW_RELEASE;
-//			mouseDown[1] = button == GLFW_MOUSE_BUTTON_2 && action != GLFW_RELEASE;
-//			mouseDown[2] = button == GLFW_MOUSE_BUTTON_3 && action != GLFW_RELEASE;
-//			mouseDown[3] = button == GLFW_MOUSE_BUTTON_4 && action != GLFW_RELEASE;
-//			mouseDown[4] = button == GLFW_MOUSE_BUTTON_5 && action != GLFW_RELEASE;
-
-			// Gprocessing input
-			_button = button;
-			_action = action;
+		Events.mouseButtonEvent.subscribe(data -> {
+			_button = data.button;
+			_action = data.action;
 		});
 	}
-	
+
 	public static void update() {
 		pollMouseButtons();
 		
@@ -81,10 +73,10 @@ public class Mouse {
 		mouse = new Vector2f(mouseX, mouseY);
 		
 		if (mouseX != pmouseX || mouseY != pmouseY) {
-			mouseDragged = mouseButton[0] || mouseButton[1] || mouseButton[2]; 
+			mouseDragged = mouseButton[0] || mouseButton[1] || mouseButton[2];
 		}
 	}
-	
+
 	public static boolean mouseButtonDown (int button) {
 		if (button < mouseButton.length) {
 			return mouseButton[button];
@@ -100,5 +92,4 @@ public class Mouse {
 		pmouseY = mouseY;
 		pmouse = new Vector2f(pmouseX, pmouseY);
 	}
-
 }

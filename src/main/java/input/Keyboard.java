@@ -1,69 +1,118 @@
 package input;
 
+import event.Events;
 import graphics.Window;
 import org.lwjgl.glfw.GLFWKeyCallback;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Keyboard {
 
 	public static int SPACE = 32; // Space Bar
-	
+
 	public static int W_KEY = 87; // WASD
 	public static int A_KEY = 65;
 	public static int S_KEY = 83;
 	public static int D_KEY = 68;
-	
+
 	public static int UP_ARROW = 38;
 	public static int LEFT_ARROW = 37;
 	public static int DOWN_ARROW = 40;
 	public static int RIGHT_ARROW = 39;
 
 	/**
-	 * @param keyCode key-code representing the key to be checked.
-	 * @return Returns true if the key is being pressed, otherwise returns false.
+	 * A bitfield array to store button states.
+	 * First bit is key down
+	 * Second bit is key up
+	 * Third bit is key held
 	 */
-	public static boolean keyIsPressed(int keyCode) {
-		return glfwGetKey(Window.window, keyCode) == GLFW_PRESS;
+	public static byte[] keystateBitfields;
+
+	static {
+		keystateBitfields = new byte[256];
 	}
 
-	private static boolean returnBoolPressed;
 	/**
-	 * Returns true if a key is was just pressed, then returns false until the key is released and pressed again.
-	 * @param keyCode key-code representing the key to be checked.
-	 * @return Returns true if the key was just pressed, otherwise returns false.
+	 * Subscribes to key event
 	 */
-	public static boolean keyPressed(int keyCode) {
-		glfwSetKeyCallback(Window.window, (w, key, scancode, action, mods) -> {
-			if (key == keyCode && action == GLFW_PRESS) returnBoolPressed = true;
-		});
+	public static void setupCallbacks() {
+		Events.keyEvent.subscribe(data -> {
+			switch (data.action) {
+				case GLFW_PRESS: {
+					setKeyDownBit(data.keycode);
+					resetKeyUpBit(data.keycode);
+					resetKeyHeldBit(data.keycode);
+					break;
+				}
 
-		if (returnBoolPressed) {
-			returnBoolPressed = false;
-			return true;
-		}
-		return false;
-	}
+				case GLFW_RELEASE: {
+					resetKeyDownBit(data.keycode);
+					setKeyUpBit(data.keycode);
+					resetKeyHeldBit(data.keycode);
+					break;
+				}
 
-	private static boolean returnBoolReleased;
-	/**
-	 * Returns true if a key was just released.
-	 * @param keyCode key-code representing the key to be checked.
-	 * @return Returns true if the key was just released, otherwise returns false.
-	 */
-	public static boolean keyReleased(int keyCode) {
-		glfwSetKeyCallback(Window.window, new GLFWKeyCallback() {
-			@Override
-			public void invoke(long window, int key, int scancode, int action, int mods) {
-				if (key == keyCode && action == GLFW_RELEASE) returnBoolReleased = true;
+				case GLFW_REPEAT: {
+					resetKeyDownBit(data.keycode);
+					resetKeyUpBit(data.keycode);
+					setKeyHeldBit(data.keycode);
+					break;
+				}
 			}
 		});
-
-		if (returnBoolReleased) {
-			returnBoolReleased = false;
-			return true;
-		}
-		return false;
 	}
 
+	private static void setKeyDownBit(int keycode) { keystateBitfields[keycode] |= 0b00000001; }
+	private static void resetKeyDownBit(int keycode) { keystateBitfields[keycode] &= 0b11111110; }
+	private static void setKeyUpBit(int keycode) { keystateBitfields[keycode] |= 0b00000010; }
+	private static void resetKeyUpBit(int keycode) { keystateBitfields[keycode] &= 0b11111101; }
+	private static void setKeyHeldBit(int keycode) { keystateBitfields[keycode] |= 0b00000100; }
+	private static void resetKeyHeldBit(int keycode) { keystateBitfields[keycode] &= 0b11111011; }
+
+	/**
+	 * Reset all key states
+	 */
+	public static void update() {
+		Arrays.fill(keystateBitfields, (byte) 0);
+	}
+
+	/**
+	 *
+	 * @param keycode keycode representing the key to be checked
+	 * @return Returns true if the key is currently pressed or held, otherwise returns false
+	 */
+	public static boolean getKey(int keycode) {
+		return glfwGetKey(Window.window, keycode) != GLFW_RELEASE;
+	}
+
+	/**
+	 * Returns true if a key is was just pressed, then returns false until the key is released and pressed again.
+	 * @param keycode key-code representing the key to be checked.
+	 * @return Returns true if the key was just pressed, otherwise returns false.
+	 */
+	public static boolean getKeyDown(int keycode) {
+		return ((keystateBitfields[keycode] & 0b00000001) /*>> 0*/) != 0;
+	}
+
+	/**
+	 * Returns true if a key was just released.
+	 * @param keycode key-code representing the key to be checked.
+	 * @return Returns true if the key was just released, otherwise returns false.
+	 */
+	public static boolean getKeyUp(int keycode) {
+		return ((keystateBitfields[keycode] & 0b00000010) >> 1) != 0;
+	}
+
+	/**
+	 * Returns true if a key was held.
+	 * @param keycode key-code representing the key to be checked.
+	 * @return Returns true if the key was held, otherwise returns false.
+	 */
+	public static boolean getKeyHeld(int keycode) {
+		return ((keystateBitfields[keycode] & 0b00000100) >> 2) != 0;
+	}
 }

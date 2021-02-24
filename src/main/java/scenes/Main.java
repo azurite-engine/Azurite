@@ -13,6 +13,7 @@ import ecs.PointLight;
 import ecs.SpriteRenderer;
 import graphics.Camera;
 import graphics.Color;
+import input.Keyboard;
 import input.Mouse;
 import org.joml.Vector2f;
 import physics.Transform;
@@ -41,5 +42,8 @@ public class Main extends util.Scene {
 	public void update() {
 		background(50, 50, 50);
 		light1.getTransform().setPosition(new Vector2f(Mouse.mouseX, Mouse.mouseY));
+
+		// Testing keyboard system
+		if (Keyboard.getKeyDown('W')) System.out.println("w");
 	}
 }
