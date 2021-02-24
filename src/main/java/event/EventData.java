@@ -1,6 +1,9 @@
 package event;
 
 public class EventData {
+    /**
+     * Window Resized Event Data
+     */
     public static class WindowResizeEventData extends EventData {
         public final int x;
         public final int y;

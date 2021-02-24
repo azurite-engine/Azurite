@@ -1,5 +1,10 @@
 package event;
 
+/**
+ * Collection of Event Nodes for various Events
+ *
+ * @author VoxelRifts
+ */
 public class Events {
 	public static EventNode<EventData.WindowResizeEventData> windowResizeEvent;
 	public static EventNode<EventData.KeyEventData> keyEvent;
