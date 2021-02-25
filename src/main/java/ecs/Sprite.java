@@ -3,8 +3,12 @@ package ecs;
 import graphics.Texture;
 import org.joml.Vector2f;
 
+/**
+ * Contains the texture and UV coordinates used by openGL to render an image
+ */
+
 public class Sprite {
-	
+
 	private Texture texture;
 
 	private Vector2f[] textureCoordinates;
@@ -16,17 +20,26 @@ public class Sprite {
 		new Vector2f(1, 1),
 		new Vector2f(1, 0)
 	};
-	
+
+	/**
+	 * Construct a Sprite using custom texture coordinates (uv).
+	 * @param texture
+	 * @param uv
+	 */
 	public Sprite (Texture texture, Vector2f[] uv) {
 		this.texture = texture;
 		this.textureCoordinates = uv;
 	}
-	
+
+	/**
+	 * Construct a texture using default texture coordinates.
+	 * @param texture
+	 */
 	public Sprite (Texture texture) {
 		this.texture = texture;
 		this.textureCoordinates = defaultTextureCoordinates;
 	}
-	
+
 	public Texture getTexture () {
 		return this.texture;
 	}

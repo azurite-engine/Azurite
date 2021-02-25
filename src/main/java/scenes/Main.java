@@ -25,7 +25,7 @@ import static graphics.Graphics.background;
 public class Main extends util.Scene {
 
 	public static void main (String[] args) {
-		Engine.init(1080, 720, "Hello World!", 0.3f);
+		Engine.init(1080, 720, "Hello World!", 0.5f);
 	}
 
 	GameObject pepper = new GameObject("Pepper", new Transform((1080/2)-(720/2), 0, 720, 720), 10);
