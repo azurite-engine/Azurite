@@ -1,94 +1,64 @@
 package graphics.renderer;
 
-import ecs.PointLight;
-import ecs.SpriteRenderer;
-import graphics.Shader;
 import graphics.ShaderDatatype;
 import graphics.Texture;
-import graphics.Window;
-import org.joml.Vector3f;
-import physics.Transform;
-import util.Assets;
-import org.joml.Vector2f;
-import org.joml.Vector4f;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
-import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.glBindVertexArray;
-import static org.lwjgl.opengl.GL30.glGenVertexArrays;
+import static org.lwjgl.opengl.GL30.*;
 
-public class RenderBatch implements Comparable<RenderBatch> {
-	private final SpriteRenderer[] sprites;
-	private int numberOfLights;
-	private int numberOfSprites;
-	private boolean hasRoomLeft;
-
+public abstract class RenderBatch implements Comparable<RenderBatch> {
 	protected int vertexCount;
 	protected int vertexSize;
+	protected List<Texture> textures;
 
-	private final List<PointLight> lights;
+	public boolean hasRoom;
 
-	private final float[] vertices;
-
-	private final int[] textureSlots = {0, 1, 2, 3, 4, 5, 6, 7};
-	private final ArrayList<Texture> textures;
-
-	private int vaoID, vboID;
-	private final int maxBatchSize;
-
-	private final int VERTEX_SIZE = 9;
-	private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
-
-	private final Shader shader;
-
+	protected float[] data;
+	protected int spriteCount;
+	protected int textureIndex;
+	protected final int maxBatchSize;
 	private final int zIndex;
-	private ShaderDatatype[] attributes;
+	private final ShaderDatatype[] attributes;
+	private final int primitiveVertexCount;
+	private final int primitiveElementCount;
+	protected boolean shouldRebufferData;
 
-	RenderBatch(int maxBatchSize, int zIndex, ShaderDatatype... attributes) {
-		this.attributes = attributes;
-		shader = Assets.getShader("src/assets/shaders/default.glsl");
-		lights = new ArrayList<>();
+	private int vbo;
+	private int vao;
+	private int ebo;
 
-		this.sprites = new SpriteRenderer[maxBatchSize];
+	public RenderBatch(int maxBatchSize, int zIndex, ShaderDatatype... attributes) {
 		this.maxBatchSize = maxBatchSize;
+		this.zIndex = zIndex;
+		this.attributes = attributes;
+		this.primitiveVertexCount = 4; // FIXME: Change this
+		this.primitiveElementCount = 6; // FIXME: Change this
 
+		spriteCount = 0;
+		hasRoom = true;
+		textureIndex = 0;
+		textures = new ArrayList<>();
 		for (ShaderDatatype t : attributes) {
 			vertexCount += t.count;
 			vertexSize += t.size;
 		}
-		vertices = new float[maxBatchSize * 4 * vertexCount];
-
-		this.numberOfSprites = 0;
-		this.numberOfLights = 0;
-		this.hasRoomLeft = true;
-		this.textures = new ArrayList<>();
-		this.zIndex = zIndex;
+		data = new float[maxBatchSize * primitiveVertexCount * vertexCount];
 	}
 
 	public void start() {
-		// Generate and bind a Vertex Array Object
-		vaoID = glGenVertexArrays();
-		glBindVertexArray(vaoID);
+		vao = glGenVertexArrays();
+		glBindVertexArray(vao);
+		vbo = glGenBuffers();
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferData(GL_ARRAY_BUFFER, maxBatchSize * primitiveVertexCount * vertexSize, GL_DYNAMIC_DRAW);
+		ebo = glGenBuffers();
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, generateIndices(), GL_STATIC_DRAW);
 
-		// Allocate space for vertices
-		vboID = glGenBuffers();
-		glBindBuffer(GL_ARRAY_BUFFER, vboID);
-		glBufferData(GL_ARRAY_BUFFER, vertices.length * Float.BYTES, GL_DYNAMIC_DRAW);
-
-		// Create and upload indices buffer
-		int eboID = glGenBuffers();
-		int[] indices = generateIndices();
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboID);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices, GL_STATIC_DRAW);
-
-		// Enable Buffer attribute pointers (tell openGL what a vertex layout looks
-		// like)
 		int currentOffset = 0;
 		for (int i = 0; i < attributes.length; i++) {
 			ShaderDatatype attrib = attributes[i];
@@ -98,163 +68,56 @@ public class RenderBatch implements Comparable<RenderBatch> {
 		}
 	}
 
-	/**
-	 * Add A Point Light to the batch.
-	 * If you want to change max number of lights in the scene, change all the 10 values to something else
-	 * Make sure to change it in shader code as well
-	 * @param light
-	 */
-	public void addPointLight(PointLight light) {
-		numberOfLights++;
-		assert numberOfLights <= 10 : "NO MORE THAN 10 LIGHTS";
-		lights.add(light);
+	protected abstract void loadVertexProperties(int index);
+
+	protected int getOffset(int index) {
+		return index * 4 * vertexCount;
 	}
 
-	public void addSprite(SpriteRenderer sprite) {
-		// Get the index and add the renderObject
-		int index = this.numberOfSprites;
-		this.sprites[index] = sprite;
-		this.numberOfSprites++;
-
-		if (sprite.getTexture() != null) {
-			if (!textures.contains(sprite.getTexture())) {
-				textures.add(sprite.getTexture());
-			}
+	protected int addTexture(Texture texture) {
+		int texIndex;
+		if (textures.contains(texture)) {
+			texIndex = textures.indexOf(texture);
+		} else {
+			textures.add(texture);
+			texIndex = textureIndex++;
 		}
+		return texIndex;
+	}
 
-		// Add properties to local vertices array
-		loadVertexProperties(index);
-
-		if (this.numberOfSprites >= this.maxBatchSize) {
-			this.hasRoomLeft = false;
+	public void updateBuffer() {
+		if (shouldRebufferData) {
+			glBindBuffer(GL_ARRAY_BUFFER, vbo);
+			glBufferSubData(GL_ARRAY_BUFFER, 0, data);
+			shouldRebufferData = false;
 		}
 	}
 
-	public void render() {
-		boolean rebufferData = false;
-		for (int i = 0; i < numberOfSprites; i ++) {
-			SpriteRenderer spr = sprites[i];
-			if (spr.isDirty()) {
-				loadVertexProperties(i);
-				spr.setClean();
-				rebufferData = true;
-			}
-		}
-		if (rebufferData) {
-			glBindBuffer(GL_ARRAY_BUFFER, vboID);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, vertices);
-		}
-		// Use shader
-		shader.use();
-		shader.uploadMat4f("uProjection", Window.currentScene.camera().getProjectionMatrix());
-		shader.uploadMat4f("uView", Window.currentScene.camera().getViewMatrix());
+	public void bind() {
+		glBindVertexArray(vao);
+		for (int i = 0; i < textures.size(); i++)
+			textures.get(i).bindToSlot(i + 1);
+	}
 
-		// Set lighting uniforms
-		Vector2f[] lightPositions = new Vector2f[numberOfLights];
-		Vector3f[] lightColors = new Vector3f[numberOfLights];
-		float[] lightIntensities = new float[numberOfLights];
-
-		for (int i = 0; i < numberOfLights; i++) {
-			PointLight light = lights.get(i);
-			lightPositions[i] = light.lastTransform.getPosition();
-			lightColors[i] = light.color;
-			lightIntensities[i] = light.intensity;
-		}
-
-		shader.uploadVec2fArray("uLightPosition", lightPositions);
-		shader.uploadVec3fArray("uLightColor", lightColors);
-		shader.uploadFloatArray("uIntensity", lightIntensities);
-		shader.uploadFloat("uMinLighting", Window.currentScene.minLighting);
-		shader.uploadInt("uNumLights", numberOfLights);
-
-		for (int i = 0; i < textures.size(); i ++) {
-			glActiveTexture(GL_TEXTURE0 + i + 1);
-			textures.get(i).bind();
-		}
-		shader.uploadIntArray("uTextures", textureSlots);
-
-		// bind the VAO
-		glBindVertexArray(vaoID);
-
-		// enable vertex attribute pointers
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-
-		glDrawElements(GL_TRIANGLES, this.numberOfSprites * 6, GL_UNSIGNED_INT, 0);
-
-		// unbind everything
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
+	public void unbind() {
+		for (Texture texture : textures)
+			texture.unbind();
 		glBindVertexArray(0);
-
-		for (int i = 0; i < textures.size(); i ++) {
-			textures.get(i).unbind();
-		}
-
-		shader.detach();
 	}
 
-	private void loadVertexProperties(int index) {
-		// NOTE: this function figures out how to add vertices with an origin at the
-		// bottom left
-		SpriteRenderer sprite = this.sprites[index];
+	public void delete() {
+		glDeleteBuffers(vbo);
+		glDeleteBuffers(ebo);
+		glDeleteVertexArrays(vao);
+	}
 
-		// FInd offset within array (4 vertices per sprite)
-		int offset = index * 4 * vertexCount;
-
-		Vector4f color = sprite.getColorVector();
-		Vector2f[] textureCoordinates = sprite.getTexCoords();
-		int textureID = 0;
-		if (sprite.getTexture() != null) {
-			for (int i = 0; i < textures.size(); i++) {
-				if (textures.get(i) == sprite.getTexture()) {
-					textureID = i + 1;
-					break;
-				}
-			}
-		}
-
-		// Add vertex with the appropriate properties
-		float xAdd = 1.0f;
-		float yAdd = 1.0f;
-		for (int i = 0; i < 4; i++) {
-			switch (i) {
-				case 1:
-					yAdd = 0.0f;
-					break;
-				case 2:
-					xAdd = 0.0f;
-					break;
-				case 3:
-					yAdd = 1.0f;
-					break;
-			}
-
-			// Load position
-			Transform spr = sprite.gameObject.getTransform();
-			vertices[offset] = spr.position.x + (xAdd * spr.scale.x);
-			vertices[offset + 1] = spr.position.y + (yAdd * spr.scale.y);
-
-			// Load color
-			vertices[offset + 2] = color.x; // Red
-			vertices[offset + 3] = color.y; // Green
-			vertices[offset + 4] = color.z; // Blue
-			vertices[offset + 5] = color.w; // Alpha
-
-			// Load texture coordinates
-			vertices[offset + 6] = textureCoordinates[i].x;
-			vertices[offset + 7] = textureCoordinates[i].y;
-
-			// Load texture ID
-			vertices[offset + 8] = textureID;
-
-			offset += vertexCount;
-		}
+	public int getVertexCount() {
+		return spriteCount * primitiveElementCount;
 	}
 
 	private int[] generateIndices() {
 		// 6 indices/quad (3/triangle)
-		int[] elements = new int[6 * maxBatchSize];
+		int[] elements = new int[primitiveElementCount * maxBatchSize];
 		for (int i = 0; i < maxBatchSize; i++) {
 			loadElementIndices(elements, i);
 		}
@@ -263,8 +126,8 @@ public class RenderBatch implements Comparable<RenderBatch> {
 	}
 
 	private void loadElementIndices(int[] elements, int i) {
-		int offsetArrayIndex = 6 * i;
-		int offset = 4 * i;
+		int offsetArrayIndex = primitiveElementCount * i;
+		int offset = primitiveVertexCount * i;
 
 		// 3, 2, 0, 0, 2, 1, 7, 6, 4, 4, 6, 5
 
@@ -277,11 +140,10 @@ public class RenderBatch implements Comparable<RenderBatch> {
 		elements[offsetArrayIndex + 3] = offset + 0;
 		elements[offsetArrayIndex + 4] = offset + 2;
 		elements[offsetArrayIndex + 5] = offset + 1;
-
 	}
 
 	public boolean hasRoomLeft() {
-		return hasRoomLeft;
+		return hasRoom;
 	}
 
 	public boolean hasTextureRoom() {

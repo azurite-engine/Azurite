@@ -69,7 +69,7 @@ public class Window {
 
         // Center the window
         glfwSetWindowPos(window, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
-
+        GL.createCapabilities();
     }
 
     void getFPS() {
@@ -86,7 +86,6 @@ public class Window {
          * scenes.Main game loop
          */
         glfwShowWindow(window);
-        GL.createCapabilities();
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -97,6 +96,7 @@ public class Window {
         currentScene.loadEngineResources();
 
         currentScene.awake();
+        currentScene.renderer.init();
 
         currentScene.startGameObjects();
 

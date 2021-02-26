@@ -10,7 +10,7 @@ import static util.Engine.deltaTime;
 
 public abstract class Scene {
 
-    private Renderer renderer = new Renderer();
+    public Renderer renderer = new Renderer();
     public Camera camera;
     private boolean isRunning = false;
     static protected ArrayList<GameObject> gameObjects = new ArrayList<>();

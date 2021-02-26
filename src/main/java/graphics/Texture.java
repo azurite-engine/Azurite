@@ -6,6 +6,8 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.stb.STBImage.*;
 
 public class Texture {
@@ -62,6 +64,11 @@ public class Texture {
 	}
 
 	public void bind () {
+		glBindTexture(GL_TEXTURE_2D, textureID);
+	}
+
+	public void bindToSlot(int unit) {
+		glActiveTexture(GL_TEXTURE0 + unit);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 	}
 
