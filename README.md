@@ -10,9 +10,8 @@
 
   <p align="center">
     Azurite it is a 2D Java game engine built by the Games with Gabe <a href="https://discord.gg/dhyV3BXkRZ">Discord</a>/<a href="https://www.youtube.com/channel/UCQP4qSCj1eHMHisDDR4iPzw">YouTube</a> community.
-  <br><em>Documentation is incomplete at the moment, we are working on it.</em>
     <br />
-    <a href="https://games-with-gabe-community.github.io/azurite-docs/"><strong>Explore the docs »</strong></a>
+    <a href="https://games-with-gabe-community.github.io/Azurite-Docs/"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template">Features</a>
