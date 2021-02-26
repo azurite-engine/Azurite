@@ -122,6 +122,7 @@ public class Window {
             frameBeginTime = frameEndTime;
         }
 
+        currentScene.clean();
         // Delete all framebuffers
         Framebuffer.clean();
 

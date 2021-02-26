@@ -37,6 +37,11 @@ public abstract class Scene {
      * This method is called every frame, and can be used to update objects.
      */
     public void update() {}
+
+    /**
+     * This method is called at the end of the program
+     */
+    public void clean() { this.renderer.clean(); }
     
 
     // The following methods shouldn't be overridden.

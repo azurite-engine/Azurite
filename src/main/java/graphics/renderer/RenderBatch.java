@@ -3,6 +3,7 @@ package graphics.renderer;
 import ecs.PointLight;
 import ecs.SpriteRenderer;
 import graphics.Shader;
+import graphics.ShaderDatatype;
 import graphics.Texture;
 import graphics.Window;
 import org.joml.Vector3f;
@@ -22,30 +23,14 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
-public class RenderBatch implements Comparable<RenderBatch>{
-	/**
-	 * Vertex layout
-	 *
-	 * position color UV tex ID float, float, float, float, float, float, float,
-	 * float, float
-	 */
-	private final int POSITION_SIZE = 2;
-	private final int COLOR_SIZE = 4;
-	private final int TEXTURE_COORDS_SIZE = 2;
-	private final int TEXTURE_ID_SIZE = 1;
-
-	private final int POSITION_OFFSET = 0;
-	private final int COLOR_OFFSET = POSITION_OFFSET + POSITION_SIZE * Float.BYTES;
-	private final int TEXTURE_COORDS_OFFSET = COLOR_OFFSET + COLOR_SIZE * Float.BYTES;
-	private final int TEXTURE_ID_OFFSET = TEXTURE_COORDS_OFFSET + TEXTURE_COORDS_SIZE * Float.BYTES;
-
-	private final int VERTEX_SIZE = 9;
-	private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
-
+public class RenderBatch implements Comparable<RenderBatch> {
 	private final SpriteRenderer[] sprites;
 	private int numberOfLights;
 	private int numberOfSprites;
 	private boolean hasRoomLeft;
+
+	protected int vertexCount;
+	protected int vertexSize;
 
 	private final List<PointLight> lights;
 
@@ -56,18 +41,28 @@ public class RenderBatch implements Comparable<RenderBatch>{
 
 	private int vaoID, vboID;
 	private final int maxBatchSize;
+
+	private final int VERTEX_SIZE = 9;
+	private final int VERTEX_SIZE_BYTES = VERTEX_SIZE * Float.BYTES;
+
 	private final Shader shader;
 
 	private final int zIndex;
+	private ShaderDatatype[] attributes;
 
-	RenderBatch(int maxBatchSize, int zIndex) {
+	RenderBatch(int maxBatchSize, int zIndex, ShaderDatatype... attributes) {
+		this.attributes = attributes;
 		shader = Assets.getShader("src/assets/shaders/default.glsl");
 		lights = new ArrayList<>();
 
 		this.sprites = new SpriteRenderer[maxBatchSize];
 		this.maxBatchSize = maxBatchSize;
 
-		vertices = new float[maxBatchSize * 4 * VERTEX_SIZE];
+		for (ShaderDatatype t : attributes) {
+			vertexCount += t.count;
+			vertexSize += t.size;
+		}
+		vertices = new float[maxBatchSize * 4 * vertexCount];
 
 		this.numberOfSprites = 0;
 		this.numberOfLights = 0;
@@ -94,17 +89,13 @@ public class RenderBatch implements Comparable<RenderBatch>{
 
 		// Enable Buffer attribute pointers (tell openGL what a vertex layout looks
 		// like)
-		glVertexAttribPointer(0, POSITION_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, POSITION_OFFSET);
-		glEnableVertexAttribArray(0);
-
-		glVertexAttribPointer(1, COLOR_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, COLOR_OFFSET);
-		glEnableVertexAttribArray(1);
-
-		glVertexAttribPointer(2, TEXTURE_COORDS_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEXTURE_COORDS_OFFSET);
-		glEnableVertexAttribArray(2);
-
-		glVertexAttribPointer(3, TEXTURE_ID_SIZE, GL_FLOAT, false, VERTEX_SIZE_BYTES, TEXTURE_ID_OFFSET);
-		glEnableVertexAttribArray(3);
+		int currentOffset = 0;
+		for (int i = 0; i < attributes.length; i++) {
+			ShaderDatatype attrib = attributes[i];
+			glVertexAttribPointer(i, attrib.count, attrib.openglType, false, vertexSize, currentOffset);
+			glEnableVertexAttribArray(i);
+			currentOffset += attrib.size;
+		}
 	}
 
 	/**
@@ -209,7 +200,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
 		SpriteRenderer sprite = this.sprites[index];
 
 		// FInd offset within array (4 vertices per sprite)
-		int offset = index * 4 * VERTEX_SIZE;
+		int offset = index * 4 * vertexCount;
 
 		Vector4f color = sprite.getColorVector();
 		Vector2f[] textureCoordinates = sprite.getTexCoords();
@@ -228,15 +219,15 @@ public class RenderBatch implements Comparable<RenderBatch>{
 		float yAdd = 1.0f;
 		for (int i = 0; i < 4; i++) {
 			switch (i) {
-			case 1:
-				yAdd = 0.0f;
-				break;
-			case 2:
-				xAdd = 0.0f;
-				break;
-			case 3:
-				yAdd = 1.0f;
-				break;
+				case 1:
+					yAdd = 0.0f;
+					break;
+				case 2:
+					xAdd = 0.0f;
+					break;
+				case 3:
+					yAdd = 1.0f;
+					break;
 			}
 
 			// Load position
@@ -257,7 +248,7 @@ public class RenderBatch implements Comparable<RenderBatch>{
 			// Load texture ID
 			vertices[offset + 8] = textureID;
 
-			offset += VERTEX_SIZE;
+			offset += vertexCount;
 		}
 	}
 

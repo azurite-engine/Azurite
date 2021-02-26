@@ -3,13 +3,15 @@ package graphics.renderer;
 import ecs.GameObject;
 import ecs.PointLight;
 import ecs.SpriteRenderer;
+import graphics.ShaderDatatype;
 import graphics.Texture;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class Renderer {
-	private final int MAX_BATCH_SIZE = 1000;
+	private static final int MAX_BATCH_SIZE = 1000;
+
 	private List<RenderBatch> batches;
 	
 	public Renderer () {
@@ -72,11 +74,15 @@ public class Renderer {
 		// If the conditions for all of the above batches weren't met, create a new one and add to it
 		if (!added) {
 			// If unable to add to previous batch, create a new one
-			RenderBatch newBatch = new RenderBatch(MAX_BATCH_SIZE, sprite.gameObject.zIndex());
+			RenderBatch newBatch = new RenderBatch(MAX_BATCH_SIZE, sprite.gameObject.zIndex(), ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT);
 			newBatch.start();
 			batches.add(newBatch);
 			newBatch.addSprite(sprite);
 			Collections.sort(batches);
 		}
+	}
+
+	public void clean() {
+//		batches.forEach(RenderBatch::delete);
 	}
 }

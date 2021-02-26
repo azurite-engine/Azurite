@@ -34,7 +34,7 @@ public class Keyboard {
 	public static byte[] keystateBitfields;
 
 	static {
-		keystateBitfields = new byte[256];
+		keystateBitfields = new byte[400];
 	}
 
 	/**
