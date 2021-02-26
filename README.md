@@ -93,8 +93,8 @@ Build gradle, then run the Main scene (located in the scenes package).
 
 ## Documentation
 * [Documentatation](https://games-with-gabe-community.github.io/Azurite-Docs/) (Work in progress)
-* [Javadocs](#) (Coming soon)
-* [Contributing guidelines](#) (also coming soon)
+* [Javadocs](https://games-with-gabe-community.github.io/azurite-javadocs/)
+* [Contributing guidelines](https://github.com/Games-With-Gabe-Community/Azurite/blob/main/CONTRIBUTING.md)
 * [Google Code style]( https://google.github.io/styleguide/javaguide.html) (Please adhere to this general style until we develop a simpler version)
 
 ### License
