@@ -21,25 +21,13 @@ public class DefaultRenderBatch extends RenderBatch {
 	// NOTE: this function figures out how to add vertices with an origin at the
 	// bottom left
 	@Override
-	protected void loadVertexProperties(int index) {
-		shouldRebufferData = true;
+	protected void loadVertexProperties(int index, int offset) {
 		SpriteRenderer sprite = this.sprites[index];
-		spriteCount++;
 
 		// Find offset within array (4 vertices per sprite)
-		int offset = getOffset(index);
-
 		Vector4f color = sprite.getColorVector();
 		Vector2f[] textureCoordinates = sprite.getTexCoords();
-		int textureID = 0;
-		if (sprite.getTexture() != null) {
-			for (int i = 0; i < textures.size(); i++) {
-				if (textures.get(i) == sprite.getTexture()) {
-					textureID = i + 1;
-					break;
-				}
-			}
-		}
+		int textureID = addTexture(sprite.getTexture());
 
 		// Add vertex with the appropriate properties
 		float xAdd = 1.0f;
@@ -83,7 +71,7 @@ public class DefaultRenderBatch extends RenderBatch {
 		for (int i = 0; i < numberOfSprites; i ++) {
 			SpriteRenderer spr = sprites[i];
 			if (spr.isDirty()) {
-				loadVertexProperties(i);
+				load(i);
 				spr.setClean();
 			}
 		}
@@ -103,7 +91,7 @@ public class DefaultRenderBatch extends RenderBatch {
 		}
 
 		// Add properties to local vertices array
-		loadVertexProperties(index);
+		load(index);
 
 		if (this.numberOfSprites >= this.maxBatchSize) {
 			this.hasRoom = false;

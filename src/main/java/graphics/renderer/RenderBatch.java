@@ -68,16 +68,23 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 		}
 	}
 
-	protected abstract void loadVertexProperties(int index);
+	protected abstract void loadVertexProperties(int index, int offset);
 
 	protected int getOffset(int index) {
 		return index * 4 * vertexCount;
 	}
 
+	protected void load(int index) {
+		shouldRebufferData = true;
+		spriteCount++;
+		int offset = getOffset(index);
+		loadVertexProperties(index, offset);
+	}
+
 	protected int addTexture(Texture texture) {
 		int texIndex;
 		if (textures.contains(texture)) {
-			texIndex = textures.indexOf(texture);
+			texIndex = textures.indexOf(texture) + 1;
 		} else {
 			textures.add(texture);
 			texIndex = textureIndex++;
