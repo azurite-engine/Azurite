@@ -3,8 +3,8 @@ package graphics.renderer;
 import ecs.GameObject;
 import ecs.PointLight;
 import ecs.SpriteRenderer;
+import graphics.Framebuffer;
 import graphics.Shader;
-import graphics.Texture;
 import graphics.Window;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -17,6 +17,7 @@ import java.util.List;
 public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 	private static final int MAX_BATCH_SIZE = 1000;
 
+	// The light data
 	private final List<PointLight> lights;
 	private int numberOfLights;
 
@@ -25,13 +26,39 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 		this.numberOfLights = 0;
 	}
 
+	/**
+	 * Create a shader
+	 *
+	 * @return the created shader
+	 */
 	@Override
-	protected Shader getShader() {
+	protected Shader createShader() {
 		return Assets.getShader("src/assets/shaders/default.glsl");
 	}
 
+	/**
+	 * Create a framebuffer
+	 *
+	 * @return the created Framebuffer
+	 */
+	@Override
+	protected Framebuffer createFramebuffer() {
+		return Framebuffer.createDefault();
+	}
+
+	/**
+	 * Upload uniforms to the shader
+	 *
+	 * @param shader the shader
+	 */
 	@Override
 	protected void uploadUniforms(Shader shader) {
+		shader.uploadIntArray("uTextures", textureSlots);
+
+		// This is here so that all renderers can have different cameras OR no cameras at all
+		shader.uploadMat4f("uProjection", Window.currentScene.camera().getProjectionMatrix());
+		shader.uploadMat4f("uView", Window.currentScene.camera().getViewMatrix());
+
 		// Set lighting uniforms
 		Vector2f[] lightPositions = new Vector2f[numberOfLights];
 		Vector3f[] lightColors = new Vector3f[numberOfLights];
@@ -51,6 +78,11 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 		shader.uploadInt("uNumLights", numberOfLights);
 	}
 
+	/**
+	 * Add a gameObject to this renderer
+	 *
+	 * @param gameObject the GameObject with renderable components
+	 */
 	@Override
 	public void add(GameObject gameObject) {
 		SpriteRenderer spr = gameObject.getComponent(SpriteRenderer.class);
@@ -63,12 +95,6 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 			addPointLight(light);
 		}
 	}
-
-	@Override
-	public DefaultRenderBatch createBatch(int zIndex) {
-		return new DefaultRenderBatch(MAX_BATCH_SIZE, zIndex);
-	}
-
 
 	/**
 	 * Add A Point Light to the scene.
@@ -93,7 +119,7 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 			}
 		}
 		// If unable to add to previous batch, create a new one
-		DefaultRenderBatch newBatch = createBatch(sprite.gameObject.zIndex());
+		DefaultRenderBatch newBatch = new DefaultRenderBatch(MAX_BATCH_SIZE, sprite.gameObject.zIndex());
 		newBatch.start();
 		batches.add(newBatch);
 		newBatch.addSprite(sprite);

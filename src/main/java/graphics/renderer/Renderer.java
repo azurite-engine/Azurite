@@ -1,56 +1,65 @@
 package graphics.renderer;
 
 import ecs.GameObject;
-import ecs.PointLight;
-import ecs.SpriteRenderer;
+import graphics.Framebuffer;
 import graphics.Shader;
-import graphics.Texture;
-import graphics.Window;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-import util.Assets;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
 public abstract class Renderer<T extends RenderBatch> {
-	private final int[] textureSlots = {0, 1, 2, 3, 4, 5, 6, 7};
+	protected final int[] textureSlots = {0, 1, 2, 3, 4, 5, 6, 7};
 
 	protected final List<T> batches;
 
 	private Shader shader;
+	private Framebuffer framebuffer;
 
 	public Renderer () {
 		this.batches = new ArrayList<>();
 	}
 
-	protected abstract Shader getShader();
+	/**
+	 * Create a shader
+	 *
+	 * @return the created shader
+	 */
+	protected abstract Shader createShader();
+
+	/**
+	 * Create a framebuffer
+	 *
+	 * @return the created fbo
+	 */
+	protected abstract Framebuffer createFramebuffer();
+
+	/**
+	 * Upload the required uniforms
+	 *
+	 * @param shader the shader
+	 */
 	protected abstract void uploadUniforms(Shader shader);
-	public abstract T createBatch(int zIndex);
 
 	/**
 	 * Add a gameObject to the renderer, and if it contains a component that affects rendering, like a sprite or light, those are added to the batch.
 	 * @param gameObject the GameObject with renderable components
 	 */
-	public void add(GameObject gameObject) {
-
-	}
+	public void add(GameObject gameObject) {}
 
 	public void init() {
-		shader = getShader();
+		shader = createShader();
+		framebuffer = createFramebuffer();
 	}
 
 	/**
 	 * Loop through all render batches and render them
 	 */
 	public void render () {
+		framebuffer.bind();
 		shader.attach();
-
-		_uploadUniforms();
-
+		uploadUniforms(shader);
 		for (T batch : batches) {
 			batch.updateBuffer();
 			batch.bind();
@@ -58,14 +67,7 @@ public abstract class Renderer<T extends RenderBatch> {
 			batch.unbind();
 		}
 		shader.detach();
-	}
-
-	private void _uploadUniforms() {
-		shader.uploadMat4f("uProjection", Window.currentScene.camera().getProjectionMatrix());
-		shader.uploadMat4f("uView", Window.currentScene.camera().getViewMatrix());
-		shader.uploadIntArray("uTextures", textureSlots);
-
-		uploadUniforms(shader);
+		Framebuffer.unbind();
 	}
 
 	public void clean() {

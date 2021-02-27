@@ -45,11 +45,11 @@ public abstract class Scene {
     public void clean() { this.renderer.clean(); }
     
 
-    // The following methods shouldn't be overridden.
+    // The following methods shouldn't be overridden. For this, added final keyword
     /**
      * Loops through all gameobjects already in the scene and calls their start methods.
      */
-    public void startGameObjects() {
+    public final void startGameObjects() {
         for (GameObject gameObject : gameObjects) {
             gameObject.start();
             this.renderer.add(gameObject);

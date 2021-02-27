@@ -1,6 +1,7 @@
 package graphics.renderer;
 
 import ecs.SpriteRenderer;
+import graphics.Primitive;
 import graphics.ShaderDatatype;
 import graphics.Texture;
 import org.joml.Vector2f;
@@ -13,7 +14,7 @@ public class DefaultRenderBatch extends RenderBatch {
 	private int numberOfSprites;
 
 	DefaultRenderBatch(int maxBatchSize, int zIndex) {
-		super(maxBatchSize, zIndex, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT);
+		super(maxBatchSize, zIndex, Primitive.QUAD, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT);
 		this.sprites = new SpriteRenderer[maxBatchSize];
 
 		this.numberOfSprites = 0;

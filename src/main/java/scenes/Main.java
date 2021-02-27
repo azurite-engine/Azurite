@@ -1,13 +1,13 @@
-package scenes;/*
- * 	Note when adding a new scene, remember to set it in Window.java
+package scenes;
 
+/*
+ * 	Note when adding a new scene, remember to set it in Window.java
  * Javadoc style
  *
  * Method description if not obvious
  * @param if applicable
  * @return type and description if not void
  */
-
 import ecs.GameObject;
 import ecs.PointLight;
 import ecs.SpriteRenderer;
@@ -23,7 +23,6 @@ import util.Engine;
 import static graphics.Graphics.background;
 
 public class Main extends util.Scene {
-
 	public static void main (String[] args) {
 		Engine.init(1080, 720, "Hello World!", 0.3f);
 	}

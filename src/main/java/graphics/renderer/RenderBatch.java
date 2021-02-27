@@ -1,10 +1,15 @@
 package graphics.renderer;
 
+import graphics.Primitive;
 import graphics.ShaderDatatype;
 import graphics.Texture;
+import org.lwjgl.BufferUtils;
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -22,21 +27,19 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 	protected int textureIndex;
 	protected final int maxBatchSize;
 	private final int zIndex;
+	private Primitive primitive;
 	private final ShaderDatatype[] attributes;
-	private final int primitiveVertexCount;
-	private final int primitiveElementCount;
 	protected boolean shouldRebufferData;
 
 	private int vbo;
 	private int vao;
 	private int ebo;
 
-	public RenderBatch(int maxBatchSize, int zIndex, ShaderDatatype... attributes) {
+	public RenderBatch(int maxBatchSize, int zIndex, Primitive primitive, ShaderDatatype... attributes) {
 		this.maxBatchSize = maxBatchSize;
 		this.zIndex = zIndex;
+		this.primitive = primitive;
 		this.attributes = attributes;
-		this.primitiveVertexCount = 4; // FIXME: Change this
-		this.primitiveElementCount = 6; // FIXME: Change this
 
 		spriteCount = 0;
 		hasRoom = true;
@@ -46,7 +49,7 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 			vertexCount += t.count;
 			vertexSize += t.size;
 		}
-		data = new float[maxBatchSize * primitiveVertexCount * vertexCount];
+		data = new float[maxBatchSize * primitive.vertexCount * vertexCount];
 	}
 
 	public void start() {
@@ -54,7 +57,7 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 		glBindVertexArray(vao);
 		vbo = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		glBufferData(GL_ARRAY_BUFFER, maxBatchSize * primitiveVertexCount * vertexSize, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, maxBatchSize * primitive.vertexCount * vertexSize, GL_DYNAMIC_DRAW);
 		ebo = glGenBuffers();
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, generateIndices(), GL_STATIC_DRAW);
@@ -119,34 +122,16 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 	}
 
 	public int getVertexCount() {
-		return spriteCount * primitiveElementCount;
+		return spriteCount * primitive.elementCount;
 	}
 
-	private int[] generateIndices() {
-		// 6 indices/quad (3/triangle)
-		int[] elements = new int[primitiveElementCount * maxBatchSize];
+	private IntBuffer generateIndices() {
+		IntBuffer elementBuffer = BufferUtils.createIntBuffer(primitive.elementCount * maxBatchSize);
 		for (int i = 0; i < maxBatchSize; i++) {
-			loadElementIndices(elements, i);
+			primitive.elementCreation.accept(elementBuffer, i);
 		}
-
-		return elements;
-	}
-
-	private void loadElementIndices(int[] elements, int i) {
-		int offsetArrayIndex = primitiveElementCount * i;
-		int offset = primitiveVertexCount * i;
-
-		// 3, 2, 0, 0, 2, 1, 7, 6, 4, 4, 6, 5
-
-		// Triangle 1
-		elements[offsetArrayIndex] = offset + 3;
-		elements[offsetArrayIndex + 1] = offset + 2;
-		elements[offsetArrayIndex + 2] = offset + 0;
-
-		// Triangle 2
-		elements[offsetArrayIndex + 3] = offset + 0;
-		elements[offsetArrayIndex + 4] = offset + 2;
-		elements[offsetArrayIndex + 5] = offset + 1;
+		elementBuffer.flip();
+		return elementBuffer;
 	}
 
 	public boolean hasRoomLeft() {
