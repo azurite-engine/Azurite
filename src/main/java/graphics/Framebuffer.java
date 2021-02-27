@@ -83,6 +83,16 @@ public class Framebuffer {
 		return new Framebuffer(0);
 	}
 
+	public int fetchColorAttachment(int i) {
+		if (colorAttachmentTextures.size() >= i)
+			return colorAttachmentTextures.get(i);
+		return -1;
+	}
+
+	public int fetchDepthAttachment() {
+		return depthAttachmentTexture;
+	}
+
 	/**
 	 * Copies all data from the color texture attachments of this framebuffer to the texture attachments
 	 * 				of the default Framebuffer. OpenGL provides a function, glBlitFramebuffer for this

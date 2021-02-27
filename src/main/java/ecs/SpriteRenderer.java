@@ -1,5 +1,6 @@
 package ecs;
 
+import com.sun.pisces.PiscesRenderer;
 import graphics.Color;
 import graphics.Texture;
 import physics.Transform;
@@ -62,6 +63,13 @@ public class SpriteRenderer extends Component {
 
 	public Texture getTexture() {
 		return sprite.getTexture();
+	}
+
+	public void setTexture(Texture texture) {
+		if (sprite.getTexture() != texture) {
+			sprite.setTexture(texture);
+			isDirty = true;
+		}
 	}
 
 	public Vector2f[] getTexCoords() {

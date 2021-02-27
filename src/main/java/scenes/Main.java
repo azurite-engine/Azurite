@@ -10,9 +10,11 @@ package scenes;
  */
 import ecs.GameObject;
 import ecs.PointLight;
+import ecs.Sprite;
 import ecs.SpriteRenderer;
 import graphics.Camera;
 import graphics.Color;
+import graphics.Texture;
 import input.Keyboard;
 import input.Mouse;
 import org.joml.Vector2f;
@@ -21,28 +23,47 @@ import util.Engine;
 
 
 import static graphics.Graphics.background;
+import static graphics.Graphics.setDefaultBackground;
 
 public class Main extends util.Scene {
+
 	public static void main (String[] args) {
 		Engine.init(1080, 720, "Hello World!", 0.3f);
 	}
 
+	TestRenderer t;
+	Texture wrapTexture;
 	GameObject pepper = new GameObject("Pepper", new Transform((1080/2)-(720/2), 0, 720, 720), 10);
+	GameObject two = new GameObject("Two", new Transform((1080/2)-(720/2), 0, 720, 720), 10);
 	GameObject light1 = new GameObject("Light", new Transform(460, 360, 50, 50), 10);
 	GameObject light2 = new GameObject("Light", new Transform(620, 360, 50, 50), 10);
 
 	public void awake() {
+		setDefaultBackground(Color.WHITE);
+
+		t = new TestRenderer();
+		t.init();
+		wrapTexture = Texture.wrap(-1);
 		camera = new Camera();
-		pepper.addComponent(new SpriteRenderer("src/assets/images/pepper.png"));
-		light1.addComponent(new PointLight(Color.RED, 10));
-		light2.addComponent(new PointLight(Color.BLUE, 10));
+
+
+		t.render();
+		wrapTexture.setId(t.fetchColorAttachment(0));
+		pepper.addComponent(new SpriteRenderer(new Sprite(wrapTexture)));
+		two.addComponent(new SpriteRenderer("src/assets/images/pepper.png"));
+		light1.addComponent(new PointLight(Color.WHITE, 100)); // SOMEONE FIX COLORS PLS :(
+		light2.addComponent(new PointLight(Color.BLUE, 10)); // SOMEONE FIX COLORS PLS :(
 	}
 
 	public void update() {
-		background(50, 50, 50);
 		light1.getTransform().setPosition(new Vector2f(Mouse.mouseX, Mouse.mouseY));
 
 		// Testing keyboard system
 		if (Keyboard.getKeyDown('W')) System.out.println("w");
+	}
+
+	@Override
+	public void render() {
+		super.render();
 	}
 }

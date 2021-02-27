@@ -1,25 +1,34 @@
-package graphics.renderer;
+package scenes;
 
 import ecs.GameObject;
 import ecs.PointLight;
 import ecs.SpriteRenderer;
-import graphics.*;
+import graphics.Framebuffer;
+import graphics.Graphics;
+import graphics.Shader;
+import graphics.Window;
+import graphics.renderer.DefaultRenderBatch;
+import graphics.renderer.Renderer;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import util.Assets;
+import util.specs.FramebufferSpec;
+import util.specs.FramebufferTextureSpec;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
+import static org.lwjgl.opengl.GL11.glClearColor;
+
+public class TestRenderer extends Renderer<DefaultRenderBatch> {
 	private static final int MAX_BATCH_SIZE = 1000;
 
 	// The light data
 	private final List<PointLight> lights;
 	private int numberOfLights;
 
-	public DefaultRenderer() {
+	public TestRenderer() {
 		lights = new ArrayList<>();
 		this.numberOfLights = 0;
 	}
@@ -41,7 +50,7 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 	 */
 	@Override
 	protected Framebuffer createFramebuffer() {
-		return Framebuffer.createDefault();
+		return new Framebuffer(Window.getWidth(), Window.getHeight(), new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)));
 	}
 
 	/**
@@ -76,56 +85,8 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 		shader.uploadInt("uNumLights", numberOfLights);
 	}
 
-	/**
-	 * Add a gameObject to this renderer
-	 *
-	 * @param gameObject the GameObject with renderable components
-	 */
-	@Override
-	public void add(GameObject gameObject) {
-		SpriteRenderer spr = gameObject.getComponent(SpriteRenderer.class);
-		if (spr != null) {
-			addSpriteRenderer(spr);
-		}
-
-		PointLight light = gameObject.getComponent(PointLight.class);
-		if (light != null) {
-			addPointLight(light);
-		}
-	}
-
 	@Override
 	protected void prepare() {
-		Graphics.background(255);
-	}
-
-	/**
-	 * Add A Point Light to the scene.
-	 * If you want to change max number of lights in the scene, change all the 10 values to something else
-	 * Make sure to change it in shader code as well
-	 * @param light the light
-	 */
-	private void addPointLight(PointLight light) {
-		numberOfLights++;
-		assert numberOfLights <= 10 : "NO MORE THAN 10 LIGHTS";
-		lights.add(light);
-	}
-
-	/**
-	 * Adds the SpriteRenderer to a single batch, and creates a new batch if their is no space.
-	 * @param sprite SpriteRenderer: The SpriteRenderer component to be added
-	 */
-	protected void addSpriteRenderer (SpriteRenderer sprite) {
-		for (DefaultRenderBatch batch : batches) {
-			if (batch.addSprite(sprite)) {
-				return;
-			}
-		}
-		// If unable to add to previous batch, create a new one
-		DefaultRenderBatch newBatch = new DefaultRenderBatch(MAX_BATCH_SIZE, sprite.gameObject.zIndex());
-		newBatch.start();
-		batches.add(newBatch);
-		newBatch.addSprite(sprite);
-		Collections.sort(batches);
+		Graphics.background(Graphics.defaultBackground);
 	}
 }

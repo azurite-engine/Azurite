@@ -6,11 +6,11 @@ import graphics.renderer.Renderer;
 import graphics.Camera;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static util.Engine.deltaTime;
 
 public abstract class Scene {
-
     public DefaultRenderer renderer = new DefaultRenderer();
     public Camera camera;
     private boolean isRunning = false;
@@ -42,8 +42,9 @@ public abstract class Scene {
     /**
      * This method is called at the end of the program
      */
-    public void clean() { this.renderer.clean(); }
-    
+    public void clean() {
+        this.renderer.clean();
+    }
 
     // The following methods shouldn't be overridden. For this, added final keyword
     /**
@@ -87,7 +88,9 @@ public abstract class Scene {
         for (GameObject go : gameObjects) {
             go.update((float) deltaTime);
         }
+    }
 
+    public void render() {
         this.renderer.render();
     }
 
@@ -98,4 +101,7 @@ public abstract class Scene {
         Assets.getShader("src/assets/shaders/default.glsl");
     }
 
+    public void initRenderers() {
+        renderer.init();
+    }
 }

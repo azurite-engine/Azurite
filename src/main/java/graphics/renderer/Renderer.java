@@ -15,7 +15,7 @@ public abstract class Renderer<T extends RenderBatch> {
 	protected final List<T> batches;
 
 	private Shader shader;
-	private Framebuffer framebuffer;
+	public Framebuffer framebuffer;
 
 	public Renderer () {
 		this.batches = new ArrayList<>();
@@ -48,9 +48,22 @@ public abstract class Renderer<T extends RenderBatch> {
 	 */
 	public void add(GameObject gameObject) {}
 
+	/**
+	 * Creates the renderer's shader and framebuffer
+	 */
 	public void init() {
 		shader = createShader();
 		framebuffer = createFramebuffer();
+	}
+
+	/**
+	 * Get a color attachment texture from the framebuffer
+	 *
+	 * @param index index of the required color attachment texture. Will return -1 if there is no attachment at that index.
+	 * @return the texture ID of the attachment
+	 */
+	public int fetchColorAttachment(int index) {
+		return framebuffer.fetchColorAttachment(index);
 	}
 
 	/**
@@ -58,6 +71,9 @@ public abstract class Renderer<T extends RenderBatch> {
 	 */
 	public void render () {
 		framebuffer.bind();
+		prepare();
+		glClear(GL_COLOR_BUFFER_BIT);
+
 		shader.attach();
 		uploadUniforms(shader);
 		for (T batch : batches) {
@@ -69,6 +85,8 @@ public abstract class Renderer<T extends RenderBatch> {
 		shader.detach();
 		Framebuffer.unbind();
 	}
+
+	protected abstract void prepare();
 
 	public void clean() {
 		batches.forEach(RenderBatch::delete);

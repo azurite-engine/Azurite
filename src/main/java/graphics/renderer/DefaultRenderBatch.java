@@ -80,7 +80,7 @@ public class DefaultRenderBatch extends RenderBatch {
 	}
 
 	public boolean addSprite(SpriteRenderer sprite) {
-		// If the batch still has room, and is at the same z index as the sprite, then add it to the batch and break
+		// If the batch still has room, and is at the same z index as the sprite, then add it to the batch
 		if (hasRoomLeft() && zIndex() == sprite.gameObject.zIndex()) {
 			Texture tex = sprite.getTexture();
 			if (tex == null || (hasTexture(tex) || hasTextureRoom())) {
@@ -88,12 +88,6 @@ public class DefaultRenderBatch extends RenderBatch {
 				int index = this.numberOfSprites;
 				this.sprites[index] = sprite;
 				this.numberOfSprites++;
-
-				if (sprite.getTexture() != null) {
-					if (!textures.contains(sprite.getTexture())) {
-						textures.add(sprite.getTexture());
-					}
-				}
 
 				// Add properties to local vertices array
 				load(index);

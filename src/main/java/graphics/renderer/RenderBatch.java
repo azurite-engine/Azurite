@@ -7,9 +7,7 @@ import org.lwjgl.BufferUtils;
 
 import java.nio.IntBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
@@ -74,7 +72,7 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 	protected abstract void loadVertexProperties(int index, int offset);
 
 	protected int getOffset(int index) {
-		return index * 4 * vertexCount;
+		return index * primitive.vertexCount * vertexCount;
 	}
 
 	protected void load(int index) {
@@ -90,7 +88,8 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 			texIndex = textures.indexOf(texture) + 1;
 		} else {
 			textures.add(texture);
-			texIndex = textureIndex++;
+			texIndex = textureIndex + 1;
+			textureIndex++;
 		}
 		return texIndex;
 	}

@@ -17,6 +17,11 @@ public class Texture {
 
 	private int width, height;
 
+	private Texture(int id) {
+		this.textureID = id;
+		filepath = "==== Wrapper ====";
+	}
+
 	public Texture (String filepath) {
 		this.filepath = filepath;
 
@@ -63,6 +68,10 @@ public class Texture {
 		stbi_image_free(image);
 	}
 
+	public static Texture wrap(int id) {
+		return new Texture(id);
+	}
+
 	public void bind () {
 		glBindTexture(GL_TEXTURE_2D, textureID);
 	}
@@ -94,5 +103,9 @@ public class Texture {
 
 	public void setFilepath(String filepath) {
 		this.filepath = filepath;
+	}
+
+	public void setId(int id) {
+		this.textureID = id;
 	}
 }

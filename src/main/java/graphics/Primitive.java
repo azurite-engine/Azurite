@@ -4,7 +4,7 @@ import java.nio.IntBuffer;
 import java.util.function.BiConsumer;
 
 public enum Primitive {
-	QUAD(4, 6, 	(elements, i) -> {
+	QUAD(4, 6, (elements, i) -> {
 		int offset = 4 * i;
 
 		// 3, 2, 0, 0, 2, 1, 7, 6, 4, 4, 6, 5

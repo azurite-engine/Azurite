@@ -96,7 +96,7 @@ public class Window {
         currentScene.loadEngineResources();
 
         currentScene.awake();
-        currentScene.renderer.init();
+        currentScene.initRenderers();
 
         currentScene.startGameObjects();
 
@@ -112,6 +112,7 @@ public class Window {
 
             currentScene.update();
             currentScene.updateGameObjects();
+            currentScene.render();
 
             glfwSwapBuffers(window);
             getFPS();
