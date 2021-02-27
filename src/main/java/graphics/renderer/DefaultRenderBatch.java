@@ -2,6 +2,7 @@ package graphics.renderer;
 
 import ecs.SpriteRenderer;
 import graphics.ShaderDatatype;
+import graphics.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import physics.Transform;
@@ -24,7 +25,6 @@ public class DefaultRenderBatch extends RenderBatch {
 	protected void loadVertexProperties(int index, int offset) {
 		SpriteRenderer sprite = this.sprites[index];
 
-		// Find offset within array (4 vertices per sprite)
 		Vector4f color = sprite.getColorVector();
 		Vector2f[] textureCoordinates = sprite.getTexCoords();
 		int textureID = addTexture(sprite.getTexture());
@@ -78,23 +78,31 @@ public class DefaultRenderBatch extends RenderBatch {
 		super.updateBuffer();
 	}
 
-	public void addSprite(SpriteRenderer sprite) {
-		// Get the index and add the renderObject
-		int index = this.numberOfSprites;
-		this.sprites[index] = sprite;
-		this.numberOfSprites++;
+	public boolean addSprite(SpriteRenderer sprite) {
+		// If the batch still has room, and is at the same z index as the sprite, then add it to the batch and break
+		if (hasRoomLeft() && zIndex() == sprite.gameObject.zIndex()) {
+			Texture tex = sprite.getTexture();
+			if (tex == null || (hasTexture(tex) || hasTextureRoom())) {
+				// Get the index and add the renderObject
+				int index = this.numberOfSprites;
+				this.sprites[index] = sprite;
+				this.numberOfSprites++;
 
-		if (sprite.getTexture() != null) {
-			if (!textures.contains(sprite.getTexture())) {
-				textures.add(sprite.getTexture());
+				if (sprite.getTexture() != null) {
+					if (!textures.contains(sprite.getTexture())) {
+						textures.add(sprite.getTexture());
+					}
+				}
+
+				// Add properties to local vertices array
+				load(index);
+
+				if (this.numberOfSprites >= this.maxBatchSize) {
+					this.hasRoom = false;
+				}
+				return true;
 			}
 		}
-
-		// Add properties to local vertices array
-		load(index);
-
-		if (this.numberOfSprites >= this.maxBatchSize) {
-			this.hasRoom = false;
-		}
+		return false;
 	}
 }

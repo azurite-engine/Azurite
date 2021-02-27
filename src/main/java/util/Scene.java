@@ -1,6 +1,7 @@
 package util;
 
 import ecs.GameObject;
+import graphics.renderer.DefaultRenderer;
 import graphics.renderer.Renderer;
 import graphics.Camera;
 
@@ -10,7 +11,7 @@ import static util.Engine.deltaTime;
 
 public abstract class Scene {
 
-    public Renderer renderer = new Renderer();
+    public DefaultRenderer renderer = new DefaultRenderer();
     public Camera camera;
     private boolean isRunning = false;
     static protected ArrayList<GameObject> gameObjects = new ArrayList<>();
@@ -83,7 +84,7 @@ public abstract class Scene {
      * Loops through all the gameObjects in the scene and calls their update methods.
      */
     public void updateGameObjects () {
-        for (GameObject go : this.gameObjects) {
+        for (GameObject go : gameObjects) {
             go.update((float) deltaTime);
         }
 
