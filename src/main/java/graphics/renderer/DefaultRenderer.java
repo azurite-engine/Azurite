@@ -94,9 +94,12 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 		}
 	}
 
+	/**
+	 * Prepare for rendering. Do anything like setting background here.
+	 */
 	@Override
 	protected void prepare() {
-		Graphics.background(255);
+		Graphics.background(Graphics.defaultBackground);
 	}
 
 	/**

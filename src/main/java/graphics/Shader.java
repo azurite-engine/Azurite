@@ -218,5 +218,4 @@ public class Shader {
         attach();
         glUniform1iv(varLocation, array);
     }
-	
 }

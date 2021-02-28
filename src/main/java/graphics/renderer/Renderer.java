@@ -10,11 +10,15 @@ import java.util.List;
 import static org.lwjgl.opengl.GL11.*;
 
 public abstract class Renderer<T extends RenderBatch> {
+	/** Texture slots to be uploaded to the shader. You don't have to upload them in your custom renderer. */
 	protected final int[] textureSlots = {0, 1, 2, 3, 4, 5, 6, 7};
 
+	/** A list of batches */
 	protected final List<T> batches;
 
+	/** Shader to be used for rendering */
 	private Shader shader;
+	/** Framebuffer to which this renderer will render */
 	public Framebuffer framebuffer;
 
 	public Renderer () {
@@ -73,7 +77,6 @@ public abstract class Renderer<T extends RenderBatch> {
 		framebuffer.bind();
 		prepare();
 		glClear(GL_COLOR_BUFFER_BIT);
-
 		shader.attach();
 		uploadUniforms(shader);
 		for (T batch : batches) {
@@ -86,8 +89,14 @@ public abstract class Renderer<T extends RenderBatch> {
 		Framebuffer.unbind();
 	}
 
+	/**
+	 * Prepare for rendering. Do anything like setting background here.
+	 */
 	protected abstract void prepare();
 
+	/**
+	 * Delete all the Batches.
+	 */
 	public void clean() {
 		batches.forEach(RenderBatch::delete);
 	}

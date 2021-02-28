@@ -2,6 +2,9 @@ package graphics;
 
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * Represents a datatype in GLSL
+ */
 public enum ShaderDatatype {
 	INT(1, Integer.BYTES, GL_INT),
 	INT2(2, 2 * Integer.BYTES, GL_INT),
@@ -14,8 +17,11 @@ public enum ShaderDatatype {
 	MAT3(9, 3 * 3 * Float.BYTES, GL_FLOAT),
 	MAT4(16, 4 * 4 * Float.BYTES, GL_FLOAT);
 
+	/** Number of FLOATS or INTS */
 	public final int count;
+	/** Number of bytes */
 	public final int size;
+	/** OpenGL expected type */
 	public final int openglType;
 
 	ShaderDatatype(int count, int bytes, int openglType) {

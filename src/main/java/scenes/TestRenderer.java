@@ -3,10 +3,7 @@ package scenes;
 import ecs.GameObject;
 import ecs.PointLight;
 import ecs.SpriteRenderer;
-import graphics.Framebuffer;
-import graphics.Graphics;
-import graphics.Shader;
-import graphics.Window;
+import graphics.*;
 import graphics.renderer.DefaultRenderBatch;
 import graphics.renderer.Renderer;
 import org.joml.Vector2f;
@@ -85,8 +82,11 @@ public class TestRenderer extends Renderer<DefaultRenderBatch> {
 		shader.uploadInt("uNumLights", numberOfLights);
 	}
 
+	/**
+	 * Prepare for rendering. Do anything like setting background here.
+	 */
 	@Override
 	protected void prepare() {
-		Graphics.background(Graphics.defaultBackground);
+		Graphics.background(Color.WHITE);
 	}
 }

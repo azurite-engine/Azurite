@@ -13,6 +13,12 @@ public class DefaultRenderBatch extends RenderBatch {
 
 	private int numberOfSprites;
 
+	/**
+	 * Create a default type render batch
+	 *
+	 * @param maxBatchSize maximum number of sprites in the batch
+	 * @param zIndex zIndex of the batch. Used for sorting.
+	 */
 	DefaultRenderBatch(int maxBatchSize, int zIndex) {
 		super(maxBatchSize, zIndex, Primitive.QUAD, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT);
 		this.sprites = new SpriteRenderer[maxBatchSize];
@@ -20,8 +26,12 @@ public class DefaultRenderBatch extends RenderBatch {
 		this.numberOfSprites = 0;
 	}
 
-	// NOTE: this function figures out how to add vertices with an origin at the
-	// bottom left
+	/**
+	 * This function figures out how to add vertices with an origin at the top left
+	 *
+	 * @param index index of the primitive to be loaded
+	 * @param offset offset of where the primitive should start being added to the array
+	 */
 	@Override
 	protected void loadVertexProperties(int index, int offset) {
 		SpriteRenderer sprite = this.sprites[index];
@@ -68,6 +78,12 @@ public class DefaultRenderBatch extends RenderBatch {
 		}
 	}
 
+	/**
+	 * Checks if any sprite is dirty (has changed any of its properties).
+	 * If so, resets its data in the data[] via load().
+	 *
+	 * Calls the RenderBatch::updateBuffer method to re-upload the data if required
+	 */
 	public void updateBuffer() {
 		for (int i = 0; i < numberOfSprites; i ++) {
 			SpriteRenderer spr = sprites[i];
@@ -79,6 +95,12 @@ public class DefaultRenderBatch extends RenderBatch {
 		super.updateBuffer();
 	}
 
+	/**
+	 * Adds a sprite to this batch
+	 *
+	 * @param sprite sprite to be added
+	 * @return if the sprite was successfully added to the batch
+	 */
 	public boolean addSprite(SpriteRenderer sprite) {
 		// If the batch still has room, and is at the same z index as the sprite, then add it to the batch
 		if (hasRoomLeft() && zIndex() == sprite.gameObject.zIndex()) {

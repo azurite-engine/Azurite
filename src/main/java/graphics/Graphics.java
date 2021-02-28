@@ -38,7 +38,15 @@ public class Graphics {
 	}
 
 	/**
-	 * Set the GL clear color
+	 * Set the GL clear color for the DefaultRenderer
+	 * @param rgb Single value affecting red, green, and blue (0-255)
+	 */
+	public static void setDefaultBackground(float rgb) {
+		Graphics.defaultBackground = new Color(rgb, rgb, rgb);
+	}
+
+	/**
+	 * Set the GL clear color for the DefaultRenderer
 	 * @param r Red (0-255)
 	 * @param g Green (0-255)
 	 * @param b Blue (0-255)
@@ -48,7 +56,7 @@ public class Graphics {
 	}
 
 	/**
-	 * Set the GL clear color
+	 * Set the GL clear color for the DefaultRenderer
 	 * @param color to set the clear color. Alpha is ignored
 	 */
 	public static void setDefaultBackground(Color color) {

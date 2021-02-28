@@ -10,18 +10,45 @@ import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.stb.STBImage.*;
 
+/**
+ * This is a class for an OpenGL texture
+ */
 public class Texture {
-
+	/**
+	 * Filepath of this texture.
+	 * If the instance is just a wrapper around an id (by using Texture.wrap()),
+	 * 		this will be set to "==== Wrapper ===="
+	 */
 	private String filepath;
+
+	/**
+	 * The id of the texture
+	 */
 	private int textureID;
 
+	/**
+	 * Width and the height of the texture
+	 */
 	private int width, height;
 
+	/**
+	 * Wrap the given id into a texture object
+	 *
+	 * @param id the id to be wrapped
+	 */
 	private Texture(int id) {
 		this.textureID = id;
+		this.width = -1;
+		this.height = -1;
 		filepath = "==== Wrapper ====";
 	}
 
+	/**
+	 * Load a Texture from a filepath.
+	 * Recommended to use Assets.loadTexture instead of calling this function
+	 *
+	 * @param filepath filepath of the texture
+	 */
 	public Texture (String filepath) {
 		this.filepath = filepath;
 
@@ -68,41 +95,73 @@ public class Texture {
 		stbi_image_free(image);
 	}
 
+	/**
+	 * Wrap the given id into a texture object
+	 * @param id the id to be wrapped
+	 * @return the texture instance
+	 */
 	public static Texture wrap(int id) {
 		return new Texture(id);
 	}
 
+	/**
+	 * Bind this texture to the currently active texture slot
+	 */
 	public void bind () {
 		glBindTexture(GL_TEXTURE_2D, textureID);
 	}
 
+	/**
+	 * Bind this texture to a specific texture slot
+	 * @param unit the texture unit to bind this texture to
+	 */
 	public void bindToSlot(int unit) {
 		glActiveTexture(GL_TEXTURE0 + unit);
 		glBindTexture(GL_TEXTURE_2D, textureID);
 	}
 
+	/**
+	 * Unbind the texture
+	 */
 	public void unbind () {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
+	/**
+	 * Get This texture's width. Will be -1 if the instance is just a wrapper
+	 *
+	 * @return the width of the texture
+	 */
 	public int getWidth() {
 		return this.width;
 	}
 
+	/**
+	 * Get This texture's height. Will be -1 if the instance is just a wrapper
+	 *
+	 * @return the height of the texture
+	 */
 	public int getHeight() {
 		return this.height;
 	}
 
+	/**
+	 * Get the texture's id.
+	 *
+	 * @return the id of the texture
+	 */
 	public int getTextureID () {
 		return textureID;
 	}
 
+	/**
+	 * The filepath from which this texture was loaded.
+	 * Will return "==== Wrapper ====" if it is just a wrapper around an id.
+	 *
+	 * @return filepath from which the texture was loaded
+	 */
 	public String getFilePath () {
 		return filepath;
-	}
-
-	public void setFilepath(String filepath) {
-		this.filepath = filepath;
 	}
 
 	public void setId(int id) {

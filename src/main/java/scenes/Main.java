@@ -39,20 +39,21 @@ public class Main extends util.Scene {
 	GameObject light2 = new GameObject("Light", new Transform(620, 360, 50, 50), 10);
 
 	public void awake() {
-		setDefaultBackground(Color.WHITE);
+		setDefaultBackground(new Color(50));
+
+		camera = new Camera();
 
 		t = new TestRenderer();
 		t.init();
-		wrapTexture = Texture.wrap(-1);
-		camera = new Camera();
-
-
 		t.render();
-		wrapTexture.setId(t.fetchColorAttachment(0));
+
+		wrapTexture = Texture.wrap(t.fetchColorAttachment(0));
+
 		pepper.addComponent(new SpriteRenderer(new Sprite(wrapTexture)));
+
 		two.addComponent(new SpriteRenderer("src/assets/images/pepper.png"));
-		light1.addComponent(new PointLight(Color.WHITE, 100)); // SOMEONE FIX COLORS PLS :(
-		light2.addComponent(new PointLight(Color.BLUE, 10)); // SOMEONE FIX COLORS PLS :(
+		light1.addComponent(new PointLight(Color.GREEN, 100));
+		light2.addComponent(new PointLight(Color.BLUE, 100));
 	}
 
 	public void update() {
