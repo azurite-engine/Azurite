@@ -28,7 +28,7 @@ import static graphics.Graphics.setDefaultBackground;
 public class Main extends util.Scene {
 
 	public static void main (String[] args) {
-		Engine.init(1080, 720, "Hello World!", 0.3f);
+		Engine.init(1080, 720, "Hello World!", 0.5f);
 	}
 
 	TestRenderer t;

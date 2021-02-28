@@ -45,7 +45,7 @@ public class Assets {
 	/**
 	 * Adds a filepath and spritesheet to the Asset class's spritesheet hashmap. (private)
 	 * @param path to Texture resource (usually a .png file)
-	 * @param Spritesheet object
+	 * @param spritesheet object
 	 */
 	private static void addSpritesheet (String path, Spritesheet spritesheet) {
 		File file = new File(path);
@@ -65,11 +65,11 @@ public class Assets {
 
 	/**
 	 * Loads a image from the filesystem, and returns a Spritesheet object.
-	 * @param Path to Texture resource (usually a .png file)
-	 * @param Width of each sprite
-	 * @param Height of each sprite
-	 * @param Number of sprites in the sheet
-	 * @param Pixel spacing between sprites (0 if no spacing)
+	 * @param path to Texture resource (usually a .png file)
+	 * @param width of each sprite
+	 * @param height of each sprite
+	 * @param number of sprites in the sheet
+	 * @param pixel spacing between sprites (0 if no spacing)
 	 * @return returns type Spritesheet
 	 */
 	public static Spritesheet loadSpritesheet (String path, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
