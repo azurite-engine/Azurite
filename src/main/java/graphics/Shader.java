@@ -156,9 +156,9 @@ public class Shader {
 		attach();
 		float[] vals = new float[vec.length * 3];
 		for (int i = 0; i < vec.length; i++) {
-			vals[i * 2] = vec[i].x;
-			vals[i * 2 + 1] = vec[i].y;
-			vals[i * 2 + 2] = vec[i].z;
+			vals[i * 3] = vec[i].x;
+			vals[i * 3 + 1] = vec[i].y;
+			vals[i * 3 + 2] = vec[i].z;
 		}
 		glUniform3fv(varLocation, vals);
 	}
