@@ -9,3 +9,8 @@ hs_err_pid*
 /.gradle/
 /build/
 /.idea/
+.settings/org.eclipse.jdt.core.prefs
+.settings/org.eclipse.buildship.core.prefs
+.classpath
+.project
+.vscode/launch.json
