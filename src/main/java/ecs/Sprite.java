@@ -59,4 +59,8 @@ public class Sprite {
 	public float getHeight () {
 		return texture.getHeight();
 	}
+
+	public void setTexture(Texture texture) {
+		this.texture = texture;
+	}
 }

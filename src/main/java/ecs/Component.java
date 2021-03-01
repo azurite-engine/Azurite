@@ -17,8 +17,8 @@ public abstract class Component {
 
 	/**
 	 *  Called once per frame for each Component
-	 * @param Engine.deltaTime
+	 * @param dt Engine.deltaTime
 	 */
 	public void update (float dt) {}
-	
+
 }

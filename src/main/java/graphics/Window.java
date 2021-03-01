@@ -65,11 +65,12 @@ public class Window {
         glfwMakeContextCurrent(window);
 
         // Enable V-Sync
-        glfwSwapInterval(1);
+        //glfwSwapInterval(1);
+
 
         // Center the window
         glfwSetWindowPos(window, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
-
+        GL.createCapabilities();
     }
 
     void getFPS() {
@@ -86,7 +87,6 @@ public class Window {
          * scenes.Main game loop
          */
         glfwShowWindow(window);
-        GL.createCapabilities();
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -97,6 +97,7 @@ public class Window {
         currentScene.loadEngineResources();
 
         currentScene.awake();
+        currentScene.initRenderers();
 
         currentScene.startGameObjects();
 
@@ -112,6 +113,7 @@ public class Window {
 
             currentScene.update();
             currentScene.updateGameObjects();
+            currentScene.render();
 
             glfwSwapBuffers(window);
             getFPS();
@@ -122,13 +124,14 @@ public class Window {
             frameBeginTime = frameEndTime;
         }
 
+        currentScene.clean();
         // Delete all framebuffers
         Framebuffer.clean();
 
         glfwDestroyWindow(window);
         glfwTerminate();
         glfwSetErrorCallback(null).free();
-    };
+    }
 
     private static void setHeight(int newHeight) {
         height = newHeight;

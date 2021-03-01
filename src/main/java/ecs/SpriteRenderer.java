@@ -1,5 +1,6 @@
 package ecs;
 
+import com.sun.pisces.PiscesRenderer;
 import graphics.Color;
 import graphics.Texture;
 import physics.Transform;
@@ -94,6 +95,16 @@ public class SpriteRenderer extends Component {
 	 */
 	public Texture getTexture() {
 		return sprite.getTexture();
+	}
+
+  /**
+   * Set the texture of the Sprite if reqd.
+   */
+	public void setTexture(Texture texture) {
+		if (sprite.getTexture() != texture) {
+			sprite.setTexture(texture);
+			isDirty = true;
+		}
 	}
 
 	/**

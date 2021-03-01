@@ -3,11 +3,8 @@ package input;
 import event.EventData;
 import event.Events;
 import graphics.Window;
-import org.lwjgl.glfw.GLFWKeyCallback;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -34,7 +31,7 @@ public class Keyboard {
 	public static byte[] keystateBitfields;
 
 	static {
-		keystateBitfields = new byte[256];
+		keystateBitfields = new byte[400];
 	}
 
 	/**
@@ -69,12 +66,29 @@ public class Keyboard {
 		});
 	}
 
-	private static void setKeyDownBit(int keycode) { keystateBitfields[keycode] |= 0b00000001; }
-	private static void resetKeyDownBit(int keycode) { keystateBitfields[keycode] &= 0b11111110; }
-	private static void setKeyUpBit(int keycode) { keystateBitfields[keycode] |= 0b00000010; }
-	private static void resetKeyUpBit(int keycode) { keystateBitfields[keycode] &= 0b11111101; }
-	private static void setKeyHeldBit(int keycode) { keystateBitfields[keycode] |= 0b00000100; }
-	private static void resetKeyHeldBit(int keycode) { keystateBitfields[keycode] &= 0b11111011; }
+	private static void setKeyDownBit(int keycode) {
+		keystateBitfields[keycode] |= 0b00000001;
+	}
+
+	private static void resetKeyDownBit(int keycode) {
+		keystateBitfields[keycode] &= 0b11111110;
+	}
+
+	private static void setKeyUpBit(int keycode) {
+		keystateBitfields[keycode] |= 0b00000010;
+	}
+
+	private static void resetKeyUpBit(int keycode) {
+		keystateBitfields[keycode] &= 0b11111101;
+	}
+
+	private static void setKeyHeldBit(int keycode) {
+		keystateBitfields[keycode] |= 0b00000100;
+	}
+
+	private static void resetKeyHeldBit(int keycode) {
+		keystateBitfields[keycode] &= 0b11111011;
+	}
 
 	/**
 	 * Reset all key states
@@ -93,6 +107,7 @@ public class Keyboard {
 
 	/**
 	 * Returns true if a key is was just pressed, then returns false until the key is released and pressed again.
+	 *
 	 * @param keycode key-code representing the key to be checked.
 	 * @return Returns true if the key was just pressed, otherwise returns false.
 	 */
@@ -102,6 +117,7 @@ public class Keyboard {
 
 	/**
 	 * Returns true if a key was just released.
+	 *
 	 * @param keycode key-code representing the key to be checked.
 	 * @return Returns true if the key was just released, otherwise returns false.
 	 */
@@ -111,6 +127,7 @@ public class Keyboard {
 
 	/**
 	 * Returns true if a key was held.
+	 *
 	 * @param keycode key-code representing the key to be checked.
 	 * @return Returns true if the key was held, otherwise returns false.
 	 */

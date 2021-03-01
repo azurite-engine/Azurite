@@ -1,16 +1,17 @@
 package util;
 
 import ecs.GameObject;
+import graphics.renderer.DefaultRenderer;
 import graphics.renderer.Renderer;
 import graphics.Camera;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static util.Engine.deltaTime;
 
 public abstract class Scene {
-
-    private Renderer renderer = new Renderer();
+    public DefaultRenderer renderer = new DefaultRenderer();
     public Camera camera;
     private boolean isRunning = false;
     static protected ArrayList<GameObject> gameObjects = new ArrayList<>();
@@ -37,13 +38,19 @@ public abstract class Scene {
      * This method is called every frame, and can be used to update objects.
      */
     public void update() {}
-    
 
-    // The following methods shouldn't be overridden.
+    /**
+     * This method is called at the end of the program
+     */
+    public void clean() {
+        this.renderer.clean();
+    }
+
+    // The following methods shouldn't be overridden. For this, added final keyword
     /**
      * Loops through all gameobjects already in the scene and calls their start methods.
      */
-    public void startGameObjects() {
+    public final void startGameObjects() {
         for (GameObject gameObject : gameObjects) {
             gameObject.start();
             this.renderer.add(gameObject);
@@ -78,10 +85,12 @@ public abstract class Scene {
      * Loops through all the gameObjects in the scene and calls their update methods.
      */
     public void updateGameObjects () {
-        for (GameObject go : this.gameObjects) {
+        for (GameObject go : gameObjects) {
             go.update((float) deltaTime);
         }
+    }
 
+    public void render() {
         this.renderer.render();
     }
 
@@ -92,4 +101,7 @@ public abstract class Scene {
         Assets.getShader("src/assets/shaders/default.glsl");
     }
 
+    public void initRenderers() {
+        renderer.init();
+    }
 }
