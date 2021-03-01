@@ -28,43 +28,22 @@ import static graphics.Graphics.setDefaultBackground;
 public class Main extends util.Scene {
 
 	public static void main (String[] args) {
-		Engine.init(1080, 720, "Hello World!", 0.5f);
+		Engine.init(1920, 1080, "Hello World!", 0.5f);
 	}
 
-	TestRenderer t;
-	Texture wrapTexture;
-	GameObject pepper = new GameObject("Pepper", new Transform((1080/2)-(720/2), 0, 720, 720), 10);
-	GameObject two = new GameObject("Two", new Transform((1080/2)-(720/2), 0, 720, 720), 10);
-	GameObject light1 = new GameObject("Light", new Transform(460, 360, 50, 50), 10);
-	GameObject light2 = new GameObject("Light", new Transform(620, 360, 50, 50), 10);
+	GameObject box = new GameObject("Two", new Transform((1080/2)-(720/2), 0, 720, 720), 10);
+	GameObject pepper = new GameObject("Pepper", new Transform((1080/2)-(720/2), 0, 720, 720), 12);
 
 	public void awake() {
-		setDefaultBackground(new Color(50));
-
+		setDefaultBackground(Color.GREEN);
 		camera = new Camera();
 
-		t = new TestRenderer();
-		t.init();
-		t.render();
-
-		wrapTexture = Texture.wrap(t.fetchColorAttachment(0));
-
-		pepper.addComponent(new SpriteRenderer(new Sprite(wrapTexture)));
-
-		two.addComponent(new SpriteRenderer("src/assets/images/pepper.png"));
-		light1.addComponent(new PointLight(Color.GREEN, 100));
-		light2.addComponent(new PointLight(Color.BLUE, 100));
+		pepper.addComponent(new SpriteRenderer("src/assets/images/pepper.png"));
+		box.addComponent(new SpriteRenderer(new Color(150, 150,150, 255)));
 	}
 
 	public void update() {
-		light1.getTransform().setPosition(new Vector2f(Mouse.mouseX, Mouse.mouseY));
 
-		// Testing keyboard system
-		if (Keyboard.getKeyDown('W')) System.out.println("w");
 	}
 
-	@Override
-	public void render() {
-		super.render();
-	}
 }

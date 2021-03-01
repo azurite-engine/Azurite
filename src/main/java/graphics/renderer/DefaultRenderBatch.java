@@ -35,10 +35,14 @@ public class DefaultRenderBatch extends RenderBatch {
 	@Override
 	protected void loadVertexProperties(int index, int offset) {
 		SpriteRenderer sprite = this.sprites[index];
-
 		Vector4f color = sprite.getColorVector();
 		Vector2f[] textureCoordinates = sprite.getTexCoords();
-		int textureID = addTexture(sprite.getTexture());
+
+		int textureID;
+		if (sprite.getTexture() != null)
+			textureID = addTexture(sprite.getTexture());
+		else
+			textureID = 0;
 
 		// Add vertex with the appropriate properties
 		float xAdd = 1.0f;
