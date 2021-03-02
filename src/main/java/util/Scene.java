@@ -101,8 +101,8 @@ public abstract class Scene {
     }
 
     public void render() {
-        this.renderer.render();
         rendererRegistry.forEach(Renderer::render);
+        this.renderer.render();
     }
 
     /**
