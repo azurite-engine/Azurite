@@ -4,8 +4,10 @@ import ecs.GameObject;
 import graphics.renderer.DefaultRenderer;
 import graphics.renderer.Renderer;
 import graphics.Camera;
+import physics.Particle;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static util.Engine.deltaTime;
@@ -15,6 +17,7 @@ public abstract class Scene {
     public Camera camera;
     private boolean isRunning = false;
     static protected ArrayList<GameObject> gameObjects = new ArrayList<>();
+    static protected ArrayList<GameObject> gameObjectsQueue = new ArrayList<>();
     protected GameObject activeGameObject = null;
 
     public float minLighting;
@@ -74,6 +77,19 @@ public abstract class Scene {
         gameObject.start();
     }
 
+    public static void queueGameObject (GameObject gameObject) {
+        gameObjectsQueue.add(gameObject);
+    }
+
+    private static void emptyQueue () {
+        for (GameObject go : gameObjectsQueue) {
+            addGameObjectToScene(go);
+        }
+        if (gameObjectsQueue.size() >= 1) {
+            gameObjectsQueue = new ArrayList<>();
+        }
+    }
+
     /**
      * @return Returns the scene's instance of Camera
      */
@@ -85,6 +101,7 @@ public abstract class Scene {
      * Loops through all the gameObjects in the scene and calls their update methods.
      */
     public void updateGameObjects () {
+        emptyQueue();
         for (GameObject go : gameObjects) {
             go.update((float) deltaTime);
         }

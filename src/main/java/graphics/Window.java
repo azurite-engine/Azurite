@@ -4,10 +4,12 @@ package graphics;
 import event.EventData;
 import event.Events;
 import input.Keyboard;
+import scenes.LightingDemo;
 import scenes.Main;
 import input.Mouse;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import scenes.ParticleDemo;
 import util.Engine;
 import util.Scene;
 
@@ -18,8 +20,10 @@ public class Window {
 
     // Define and set the current scene
     public static Scene main = new Main();
+    public static Scene lightDemo = new LightingDemo();
+    public static Scene pd = new ParticleDemo();
 
-    public static Scene currentScene = main;
+    public static Scene currentScene = pd;
 
     // Window Variables
     public long frameCount = 0;

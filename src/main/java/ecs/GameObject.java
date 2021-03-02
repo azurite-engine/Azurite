@@ -1,5 +1,6 @@
 package ecs;
 
+import graphics.Window;
 import scenes.Main;
 import physics.Transform;
 import java.util.ArrayList;
@@ -26,13 +27,33 @@ public class GameObject {
 	 * @param componentList
 	 * @param transform
 	 * @param zIndex
+	 * @param queue if the gameObject is being added from inside of a gameObject or component, it has to be added to a queue to avoid ConcurrentModificationException
+	 */
+	public GameObject (String name, List<Component> componentList, Transform transform, int zIndex, boolean queue) {
+		this.name = name;
+		this.components = componentList;
+		this.transform = transform;
+		this.zIndex = zIndex;
+		if (queue) {
+			Window.currentScene.queueGameObject(this);
+		} else {
+			Window.currentScene.addGameObjectToScene(this);
+		}
+	}
+
+	/**
+	 * Creates a new GameObject.
+	 * @param name
+	 * @param componentList
+	 * @param transform
+	 * @param zIndex
 	 */
 	public GameObject (String name, List<Component> componentList, Transform transform, int zIndex) {
 		this.name = name;
 		this.components = componentList;
 		this.transform = transform;
 		this.zIndex = zIndex;
-		Main.addGameObjectToScene(this);
+		Window.currentScene.addGameObjectToScene(this);
 	}
 
 	/**
