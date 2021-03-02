@@ -12,10 +12,10 @@ import static util.Engine.deltaTime;
 
 public abstract class Scene {
     public DefaultRenderer renderer = new DefaultRenderer();
+    private List<Renderer<?>> rendererRegistry = new ArrayList<>();
     public Camera camera;
     private boolean isRunning = false;
     static protected ArrayList<GameObject> gameObjects = new ArrayList<>();
-    protected GameObject activeGameObject = null;
 
     public float minLighting;
 
@@ -44,6 +44,7 @@ public abstract class Scene {
      */
     public void clean() {
         this.renderer.clean();
+        rendererRegistry.forEach(Renderer::clean);
     }
 
     // The following methods shouldn't be overridden. For this, added final keyword
@@ -54,6 +55,7 @@ public abstract class Scene {
         for (GameObject gameObject : gameObjects) {
             gameObject.start();
             this.renderer.add(gameObject);
+            rendererRegistry.forEach(r -> r.add(gameObject));
         }
         isRunning = true;
     }
@@ -75,6 +77,14 @@ public abstract class Scene {
     }
 
     /**
+     * Register a renderer to this scene
+     * @param renderer the renderer to be registered
+     */
+    public void registerRenderer(Renderer<?> renderer) {
+        rendererRegistry.add(renderer);
+    }
+
+    /**
      * @return Returns the scene's instance of Camera
      */
     public Camera camera () {
@@ -91,6 +101,7 @@ public abstract class Scene {
     }
 
     public void render() {
+        rendererRegistry.forEach(Renderer::render);
         this.renderer.render();
     }
 
@@ -103,5 +114,6 @@ public abstract class Scene {
 
     public void initRenderers() {
         renderer.init();
+        rendererRegistry.forEach(Renderer::init);
     }
 }
