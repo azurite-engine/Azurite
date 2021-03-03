@@ -4,6 +4,7 @@ package graphics;
 import event.EventData;
 import event.Events;
 import input.Keyboard;
+import scenes.Demo;
 import scenes.Main;
 import input.Mouse;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -18,8 +19,9 @@ public class Window {
 
     // Define and set the current scene
     public static Scene main = new Main();
+    public static Scene demo = new Demo();
 
-    public static Scene currentScene = main;
+    public static Scene currentScene = demo;
 
     // Window Variables
     public long frameCount = 0;

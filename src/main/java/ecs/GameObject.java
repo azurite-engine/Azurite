@@ -171,12 +171,14 @@ public class GameObject {
 
 	/**
 	 * Adds a new component to the GameObject's list
-	 * @param component
-	 */
-	public void addComponent (Component c) {
+     * @param component
+     * @return
+     */
+	public GameObject addComponent (Component c) {
 		this.components.add(c);
 		c.gameObject = this;
-	}
+        return this;
+    }
 
 	/**
 	 * @return List of Components in GameObject
