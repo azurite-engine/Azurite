@@ -72,8 +72,8 @@ public class Assets {
 	 * @param pixel spacing between sprites (0 if no spacing)
 	 * @return returns type Spritesheet
 	 */
-	public static Spritesheet loadSpritesheet (String path, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
-		addSpritesheet(path, new Spritesheet(getTexture(path), spriteWidth, spriteHeight, numSprites, spacing));
+	public static Spritesheet loadSpritesheet (String path, int spriteWidth, int spriteHeight, int numSprites, int spacing, int wrapWidth) {
+		addSpritesheet(path, new Spritesheet(getTexture(path), spriteWidth, spriteHeight, numSprites, spacing, wrapWidth));
 		return getSpritesheet(path);
 	}
 	
