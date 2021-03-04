@@ -1,16 +1,13 @@
 package scenes;
 
-import ecs.GameObject;
-import ecs.PointLight;
-import ecs.Sprite;
-import ecs.SpriteRenderer;
+import ecs.*;
 import graphics.Camera;
 import graphics.Color;
 import graphics.Spritesheet;
 import graphics.Window;
 import input.Mouse;
-import misc.Tilesystem;
-import org.joml.Vector2f;
+import tiles.TMXParser;
+import tiles.Tilesystem;
 import physics.Transform;
 import util.Assets;
 import util.Engine;
@@ -24,22 +21,27 @@ public class Demo extends Scene {
         Engine.init(1920, 1080, "Azurite Engine Demo 1", 0.1f);
     }
 
-    Spritesheet s;
+    Spritesheet a;
+    Spritesheet b;
     Tilesystem t;
-    GameObject light;
+    GameObject player;
 
     public void awake() {
         setDefaultBackground(Color.BLACK);
         camera = new Camera();
-        s = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 26, 0);
-        t = new Tilesystem(s, 34, 30, Window.getWidth()/32, Window.getHeight()/18);
+        a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0, 16);
+        b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0, 16);
+        t = new Tilesystem(a, b, 31, 15, 200, 200);
 
-        light = new GameObject(new Transform(Window.getWidth()/2, Window.getHeight()/2, 1, 1), 2).addComponent(new PointLight(new Color(245, 255, 98), 30));
+        player = new GameObject("Player", new Transform(600, 600, 100, 100), 2);
+        player.addComponent(new PointLight(new Color(250, 255, 181), 30));
+        player.addComponent(new SpriteRenderer(a.getSprite(132)));
+        player.addComponent(new CharacterController());
     }
 
     public void update() {
-        light.setTransformX(Mouse.mouseX);
-        light.setTransformY(Mouse.mouseY);
-        light.getComponent(PointLight.class).intensity = Utils.map((float)Math.sin(Engine.millis()/600), -1, 1, 10, 20);
+        player.getComponent(PointLight.class).intensity = Utils.map((float)Math.sin(Engine.millis()/600), -1, 1, 100, 140);
+
+        camera.smoothFollow(player.getTransform());
     }
 }
