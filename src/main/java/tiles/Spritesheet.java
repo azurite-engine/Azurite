@@ -1,6 +1,7 @@
-package graphics;
+package tiles;
 
 import ecs.Sprite;
+import graphics.Texture;
 import org.joml.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
