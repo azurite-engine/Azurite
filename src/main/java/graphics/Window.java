@@ -35,7 +35,7 @@ public class Window {
 
     private float dt = 0; // deltaTime (accessible from util.Engine.deltaTime)
 
-    public Window(int pwidth, int pheight, String ptitle, float minSceneLighting) {
+    public Window(int pwidth, int pheight, String ptitle, boolean fullscreen, float minSceneLighting) {
         width = pwidth;
         height = pheight;
         title = ptitle;
@@ -47,7 +47,10 @@ public class Window {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
         // Create window
-        window = glfwCreateWindow(width, height, title, 0, 0);
+        if (!fullscreen)
+            window = glfwCreateWindow(width, height, title, 0, 0);
+        else
+            window = glfwCreateWindow(width, height, title, glfwGetPrimaryMonitor(), 0);
 
         if (window == 0)
             throw new IllegalStateException("[FATAL] Failed to create window.");
