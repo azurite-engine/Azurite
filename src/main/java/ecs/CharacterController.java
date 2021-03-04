@@ -34,7 +34,6 @@ public class CharacterController extends Component {
         }
 
         // X
-
         gameObject.setTransformX(position.x);
         if (Keyboard.getKey(Keyboard.A_KEY) || Keyboard.getKey(Keyboard.LEFT_ARROW)) {
             position.x += -speed.x + sprintSpeed * Engine.deltaTime;
