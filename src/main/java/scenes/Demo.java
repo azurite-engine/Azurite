@@ -21,14 +21,10 @@ public class Demo extends Scene {
     Spritesheet b;
     Tilesystem t;
     GameObject player;
-    LightmapRenderer tr;
 
     public void awake() {
         camera = new Camera();
         setDefaultBackground(Color.BLACK);
-        tr = new LightmapRenderer();
-        tr.init();
-        registerRenderer(tr);
 
         a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0, 16);
         b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0, 16);
@@ -44,12 +40,5 @@ public class Demo extends Scene {
         player.getComponent(PointLight.class).intensity = Utils.map((float)Math.sin(Engine.millis()/600), -1, 1, 100, 140);
 
         camera.smoothFollow(player.getTransform());
-    }
-
-    @Override
-    public void render() {
-        tr.bindLightmap();
-        super.render();
-//        tr.framebuffer.blitColorBuffersToScreen();
     }
 }
