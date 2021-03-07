@@ -57,23 +57,7 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 		shader.uploadMat4f("uProjection", Window.currentScene.camera().getProjectionMatrix());
 		shader.uploadMat4f("uView", Window.currentScene.camera().getViewMatrix());
 
-		// Set lighting uniforms
-		Vector2f[] lightPositions = new Vector2f[numberOfLights];
-		Vector3f[] lightColors = new Vector3f[numberOfLights];
-		float[] lightIntensities = new float[numberOfLights];
-
-		for (int i = 0; i < numberOfLights; i++) {
-			PointLight light = lights.get(i);
-			lightPositions[i] = light.lastTransform.getPosition();
-			lightColors[i] = light.color;
-			lightIntensities[i] = light.intensity;
-		}
-
-		shader.uploadVec2fArray("uLightPosition", lightPositions);
-		shader.uploadVec3fArray("uLightColor", lightColors);
-		shader.uploadFloatArray("uIntensity", lightIntensities);
-		shader.uploadFloat("uMinLighting", Window.currentScene.minLighting);
-		shader.uploadInt("uNumLights", numberOfLights);
+		shader.uploadInt("uLightmap", 8);
 	}
 
 	/**
@@ -87,11 +71,6 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 		if (spr != null) {
 			addSpriteRenderer(spr);
 		}
-
-		PointLight light = gameObject.getComponent(PointLight.class);
-		if (light != null) {
-			addPointLight(light);
-		}
 	}
 
 	/**
@@ -101,19 +80,6 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 	protected void prepare() {
 		Graphics.background(Graphics.defaultBackground);
 	}
-
-	/**
-	 * Add A Point Light to the scene.
-	 * If you want to change max number of lights in the scene, change all the 10 values to something else
-	 * Make sure to change it in shader code as well
-	 * @param light the light
-	 */
-	private void addPointLight(PointLight light) {
-		numberOfLights++;
-		assert numberOfLights <= 10 : "NO MORE THAN 10 LIGHTS";
-		lights.add(light);
-	}
-
 	/**
 	 * Adds the SpriteRenderer to a single batch, and creates a new batch if their is no space.
 	 * @param sprite SpriteRenderer: The SpriteRenderer component to be added

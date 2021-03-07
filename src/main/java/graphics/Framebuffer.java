@@ -3,7 +3,6 @@ package graphics;
 import org.lwjgl.opengl.GL11;
 import util.specs.FramebufferSpec;
 import util.specs.FramebufferTextureSpec;
-import util.specs.FramebufferTextureSpec.FramebufferTextureFormat;
 
 import java.util.ArrayList;
 import java.util.List;

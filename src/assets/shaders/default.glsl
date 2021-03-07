@@ -1,5 +1,6 @@
 #type vertex
 #version 330 core
+
 layout (location=0) in vec3 aPos;
 layout (location=1) in vec4 aColor;
 layout (location=2) in vec2 aTexCoords;
@@ -14,12 +15,13 @@ out vec2 fTexCoords;
 out float fTexId;
 
 void main() {
-    fPos = aPos.xy;
+    vec4 pos = uProjection * uView * vec4(aPos, 1.0);
+    fPos = pos.xy;
     fColor = aColor;
     fTexCoords = aTexCoords;
     fTexId = aTexId;
 
-    gl_Position = uProjection * uView * vec4(aPos, 1.0);
+    gl_Position = pos;
 }
 
 #type fragment
@@ -30,48 +32,13 @@ in vec4 fColor;
 in vec2 fTexCoords;
 in float fTexId;
 
-/**
- * The lighting uniform variables.
- * MAX_LIGHTS can be changed here. If you want more lights make sure to change the RenderBatch::addPointLight fuction as well.
- */
-#define MAX_LIGHTS 10
-uniform vec2 uLightPosition[MAX_LIGHTS];
-uniform vec3 uLightColor[MAX_LIGHTS];
-uniform float uIntensity[MAX_LIGHTS];
-uniform float uMinLighting;
-uniform int uNumLights;
-
 uniform sampler2D uTextures[8];
+uniform sampler2D uLightmap;
 
 out vec4 color;
 
-float distance(vec2 a, vec2 b) {
-    vec2 c = b - a;
-    return c.x * c.x + c.y * c.y;
-}
-
-float calculateLighting(float d, float intensity) {
-    return 1.0 / (1.0 + (0.001 / intensity) * d);
-}
-
 void main () {
     vec4 texColor;
-
-    // Total lighting accumulation variable
-    vec3 totalLighting = vec3(0.0);
-    // Eventhough the arrays are crated with MAX_LIGHTS size, the arrays are iterated over only [uNumLights] times
-    for (int i = 0; i < uNumLights; i++) {
-        // Distance between the current pixel and the light position
-        float dist = distance(uLightPosition[i], fPos);
-        // calculate brightness using the attenuation function
-        float attenuation = calculateLighting(dist, uIntensity[i]);
-        // accumulate the value into total lighting by adding
-        totalLighting += uLightColor[i] * attenuation;
-    }
-    // Take minimum lighting into account
-    totalLighting.x = max(totalLighting.x, uMinLighting);
-    totalLighting.y = max(totalLighting.y, uMinLighting);
-    totalLighting.z = max(totalLighting.z, uMinLighting);
 
     // This may look bad, but it is intentional, openGL minimum spec does not require dynamic indexing with variables into texture arrays, so this switch is required on AMD GPUs.
     switch (int(fTexId)) {
@@ -100,8 +67,8 @@ void main () {
             texColor = fColor * texture(uTextures[7], fTexCoords);
             break;
     }
-    // Apply lighting to the pixel's colour
-    texColor *= vec4(totalLighting, 1.0);
 
+    // Sample from lightmap and multiply with current fragment color
+    texColor *= texture(uLightmap, (fPos + 1)/2);
     color = texColor;
 }

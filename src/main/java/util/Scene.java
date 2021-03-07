@@ -114,6 +114,5 @@ public abstract class Scene {
 
     public void initRenderers() {
         renderer.init();
-        rendererRegistry.forEach(Renderer::init);
     }
 }
