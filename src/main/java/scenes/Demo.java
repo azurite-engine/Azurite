@@ -27,8 +27,8 @@ public class Demo extends Scene {
         camera = new Camera();
         setDefaultBackground(Color.BLACK);
 
-        a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0, 16);
-        b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0, 16);
+        a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0);
+        b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0);
         t = new Tilesystem(a, b, 31, 15, 200, 200);
 
         player = new GameObject("Player", new Transform(600, 600, 100, 100), 2);
