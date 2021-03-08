@@ -2,6 +2,7 @@ package util;
 
 import ecs.GameObject;
 import graphics.renderer.DefaultRenderer;
+import graphics.renderer.LightmapRenderer;
 import graphics.renderer.Renderer;
 import graphics.Camera;
 
@@ -12,6 +13,7 @@ import static util.Engine.deltaTime;
 
 public abstract class Scene {
     public DefaultRenderer renderer = new DefaultRenderer();
+    public LightmapRenderer lightmapRenderer = new LightmapRenderer();
     private List<Renderer<?>> rendererRegistry = new ArrayList<>();
     public Camera camera;
     private boolean isRunning = false;
@@ -55,6 +57,7 @@ public abstract class Scene {
         for (GameObject gameObject : gameObjects) {
             gameObject.start();
             this.renderer.add(gameObject);
+            this.lightmapRenderer.add(gameObject);
             rendererRegistry.forEach(r -> r.add(gameObject));
         }
         isRunning = true;
@@ -102,6 +105,8 @@ public abstract class Scene {
 
     public void render() {
         rendererRegistry.forEach(Renderer::render);
+        lightmapRenderer.render();
+        lightmapRenderer.bindLightmap();
         this.renderer.render();
     }
 
@@ -113,7 +118,7 @@ public abstract class Scene {
     }
 
     public void initRenderers() {
+        lightmapRenderer.init();
         renderer.init();
-        rendererRegistry.forEach(Renderer::init);
     }
 }

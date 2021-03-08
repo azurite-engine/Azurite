@@ -55,5 +55,8 @@ public class Camera {
 		}
 		position = smoothedPosition;
 	}
-	
+
+	public Vector2f getPosition() {
+		return this.position;
+	}
 }

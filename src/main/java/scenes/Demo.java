@@ -1,8 +1,8 @@
 package scenes;
 
 import ecs.*;
-import graphics.Camera;
-import graphics.Color;
+import graphics.*;
+import graphics.renderer.LightmapRenderer;
 import tiles.Spritesheet;
 import tiles.Tilesystem;
 import physics.Transform;
@@ -24,10 +24,11 @@ public class Demo extends Scene {
     GameObject player;
 
     public void awake() {
-        setDefaultBackground(Color.BLACK);
         camera = new Camera();
-        a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0);
-        b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0);
+        setDefaultBackground(Color.BLACK);
+
+        a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0, 16);
+        b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0, 16);
         t = new Tilesystem(a, b, 31, 15, 200, 200);
 
         player = new GameObject("Player", new Transform(600, 600, 100, 100), 2);
