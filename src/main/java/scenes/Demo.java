@@ -3,6 +3,7 @@ package scenes;
 import ecs.*;
 import graphics.*;
 import graphics.renderer.LightmapRenderer;
+import tiles.Spritesheet;
 import tiles.Tilesystem;
 import physics.Transform;
 import util.Assets;
@@ -14,7 +15,7 @@ import static graphics.Graphics.setDefaultBackground;
 
 public class Demo extends Scene {
     public static void main (String[] args) {
-        Engine.init(1080, 720, "Azurite Engine Demo 1", 0.1f);
+        Engine.init(3560, 2160, "Azurite Engine Demo 1", true, 0.1f);
     }
 
     Spritesheet a;
