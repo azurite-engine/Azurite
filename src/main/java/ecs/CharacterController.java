@@ -28,8 +28,6 @@ public class CharacterController extends Component {
         super.start();
     }
 
-
-
     @Override
     public void update (float dt) {
 
