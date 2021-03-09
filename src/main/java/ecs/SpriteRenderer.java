@@ -1,6 +1,5 @@
 package ecs;
 
-import com.sun.pisces.PiscesRenderer;
 import graphics.Color;
 import graphics.Texture;
 import physics.Transform;

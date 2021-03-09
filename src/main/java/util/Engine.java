@@ -22,14 +22,14 @@ public class Engine {
 	 * @param windowHeight Height of the window to be created
 	 * @param windowTitle Title of the window to be created
 	 */
-	public static void init(int windowWidth, int windowHeight, String windowTitle, float minSceneLighting) {
+	public static void init(int windowWidth, int windowHeight, String windowTitle, boolean fullscrenn, float minSceneLighting) {
 
 		GLFWErrorCallback.createPrint(System.err).set();
 
 		if (!glfwInit())
 			throw new IllegalStateException("[FATAL] Failed to initialize GLFW.");
 
-		w = new Window(windowWidth, windowHeight, windowTitle, minSceneLighting);
+		w = new Window(windowWidth, windowHeight, windowTitle, fullscrenn, minSceneLighting);
 
 		w.showWindow();
 	}

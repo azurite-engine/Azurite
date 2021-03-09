@@ -1,6 +1,7 @@
-package graphics;
+package tiles;
 
 import ecs.Sprite;
+import graphics.Texture;
 import org.joml.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +19,12 @@ public class Spritesheet {
      * @param numSprites
      * @param spacing
      */
-    public Spritesheet(Texture texture, int spriteWidth, int spriteHeight, int numSprites, int spacing, int wrapWidth) {
+    public Spritesheet(Texture texture, int spriteWidth, int spriteHeight, int numSprites, int spacing) {
         this.sprites = new ArrayList<>();
 
         this.texture = texture;
         int currentX = 0;
         int currentY = texture.getHeight() - spriteHeight;
-        int currentSpriteWrapIndex = 0;
         for (int i = 0; i < numSprites; i ++) {
             float topY = (currentY + spriteHeight) / (float)texture.getHeight();
             float rightX = (currentX + spriteWidth) / (float)texture.getWidth();
@@ -39,7 +39,7 @@ public class Spritesheet {
             };
             Sprite sprite = new Sprite(this.texture, texCoords);
             this.sprites.add(sprite);
-            currentSpriteWrapIndex ++;
+
             currentX += spriteWidth + spacing;
             if (currentX >= texture.getWidth()) {
                 currentX = 0;
