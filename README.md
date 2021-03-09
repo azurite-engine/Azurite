@@ -49,11 +49,12 @@
 public class Main extends Scene {
 	
 	public void awake() {		
+		setDefaultBackground(Color.BLACK);
 		camera = new Camera();
 	}
 
 	public void update() {
-		background(255, 255, 255); // Sets the clear color
+
 	}
 }
 ```
@@ -65,7 +66,8 @@ public class Main extends Scene {
 	GameObject greenRectangle = new GameObject(new Transform(600, 230, 50, 50), 1);
 	GameObject mario = new GameObject(new Transform(600, 200, 50, 50), 2);
 	
-	public void awake() {		
+	public void awake() {	
+		setDefaultBackground(Color.BLACK);
 		camera = new Camera();
 		
 		greenRectangle.addComponent(new SpriteRenderer(new Color(0, 255, 0, 255))); // Creates a new green sprite component
@@ -73,7 +75,7 @@ public class Main extends Scene {
 	}
 
 	public void update() {
-		background(50, 50, 50); // Sets the clear color
+
 	}
 }
 ```
