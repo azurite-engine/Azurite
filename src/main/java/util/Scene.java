@@ -5,6 +5,7 @@ import graphics.renderer.DefaultRenderer;
 import graphics.renderer.LightmapRenderer;
 import graphics.renderer.Renderer;
 import graphics.Camera;
+import physics.AABB;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,9 @@ public abstract class Scene {
     /**
      * This method is called every frame, and can be used to update objects.
      */
-    public void update() {}
+    public void update() {
+        AABB.checkCollisions();
+    }
 
     /**
      * This method is called at the end of the program
