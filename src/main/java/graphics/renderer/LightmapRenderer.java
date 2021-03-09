@@ -1,13 +1,16 @@
-package scenes;
+package graphics.renderer;
 
 import ecs.GameObject;
 import ecs.PointLight;
 import ecs.SpriteRenderer;
+import event.Events;
 import graphics.*;
 import graphics.renderer.DefaultRenderBatch;
 import graphics.renderer.Renderer;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import util.Assets;
 import util.specs.FramebufferSpec;
 import util.specs.FramebufferTextureSpec;
@@ -16,18 +19,28 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.glClearColor;
 
-public class TestRenderer extends Renderer<DefaultRenderBatch> {
+public class LightmapRenderer extends Renderer<QuadRenderBatch> {
 	private static final int MAX_BATCH_SIZE = 1000;
 
 	// The light data
 	private final List<PointLight> lights;
 	private int numberOfLights;
 
-	public TestRenderer() {
+	public LightmapRenderer() {
 		lights = new ArrayList<>();
 		this.numberOfLights = 0;
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		QuadRenderBatch qb = new QuadRenderBatch();
+		qb.start();
+		qb.loadQuad();
+		batches.add(qb);
 	}
 
 	/**
@@ -37,7 +50,7 @@ public class TestRenderer extends Renderer<DefaultRenderBatch> {
 	 */
 	@Override
 	protected Shader createShader() {
-		return Assets.getShader("src/assets/shaders/default.glsl");
+		return Assets.getShader("src/assets/shaders/lightmap.glsl");
 	}
 
 	/**
@@ -57,11 +70,9 @@ public class TestRenderer extends Renderer<DefaultRenderBatch> {
 	 */
 	@Override
 	protected void uploadUniforms(Shader shader) {
-		shader.uploadIntArray("uTextures", textureSlots);
-
 		// This is here so that all renderers can have different cameras OR no cameras at all
 		shader.uploadMat4f("uProjection", Window.currentScene.camera().getProjectionMatrix());
-		shader.uploadMat4f("uView", Window.currentScene.camera().getViewMatrix());
+		shader.uploadVec2f("uCameraOffset", Window.currentScene.camera().getPosition());
 
 		// Set lighting uniforms
 		Vector2f[] lightPositions = new Vector2f[numberOfLights];
@@ -82,11 +93,26 @@ public class TestRenderer extends Renderer<DefaultRenderBatch> {
 		shader.uploadInt("uNumLights", numberOfLights);
 	}
 
+	@Override
+	public void add(GameObject gameObject) {
+		PointLight l = gameObject.getComponent(PointLight.class);
+		if (l != null) {
+			numberOfLights++;
+			assert numberOfLights <= 10 : "NO MORE THAN 10 LIGHTS";
+			lights.add(l);
+		}
+	}
+
 	/**
 	 * Prepare for rendering. Do anything like setting background here.
 	 */
 	@Override
 	protected void prepare() {
 		Graphics.background(Color.WHITE);
+	}
+
+	public void bindLightmap() {
+		GL13.glActiveTexture(GL13.GL_TEXTURE8);
+		GL11.glBindTexture(GL_TEXTURE_2D, framebuffer.fetchColorAttachment(0));
 	}
 }
