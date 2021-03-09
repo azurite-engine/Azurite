@@ -3,6 +3,7 @@ package ecs;
 import input.Gamepad;
 import input.Keyboard;
 import org.joml.Vector2f;
+import physics.AABB;
 import physics.Transform;
 import util.Engine;
 
@@ -17,6 +18,9 @@ public class CharacterController extends Component {
 
     float sprintSpeed = 0;
 
+    AABB collision;
+    public boolean AABB_enabled = false;
+
     @Override
     public void start() {
         lastPosition = new Vector2f();
@@ -24,15 +28,24 @@ public class CharacterController extends Component {
         super.start();
     }
 
+
+
     @Override
     public void update (float dt) {
 
-        if (Keyboard.getKey(Keyboard.SPACE)) {
-            sprintSpeed = 20;
-        } else {
-            sprintSpeed = 0;
-        }
+        moveX();
+        if (collision != null) collision.collideX();
 
+        moveY();
+        if (collision != null) collision.collideY();
+    }
+
+    public void enableAABB () {
+        AABB_enabled = true;
+        collision = gameObject.getComponent(AABB.class);
+    }
+
+    private void moveX () {
         // X
         gameObject.setTransformX(position.x);
         if (Keyboard.getKey(Keyboard.A_KEY) || Keyboard.getKey(Keyboard.LEFT_ARROW)) {
@@ -41,7 +54,9 @@ public class CharacterController extends Component {
         if (Keyboard.getKey(Keyboard.D_KEY) || Keyboard.getKey(Keyboard.RIGHT_ARROW)) {
             position.x += speed.x + sprintSpeed * Engine.deltaTime;
         }
+    }
 
+    private void moveY () {
         // Y
         gameObject.setTransformY(position.y);
 
@@ -51,11 +66,7 @@ public class CharacterController extends Component {
         if (Keyboard.getKey(Keyboard.S_KEY) || Keyboard.getKey(Keyboard.DOWN_ARROW)) {
             position.y += speed.y + sprintSpeed * Engine.deltaTime;
         }
-
-
-
     }
 
-    
 
 }
