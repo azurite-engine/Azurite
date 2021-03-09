@@ -28,7 +28,7 @@ import static graphics.Graphics.setDefaultBackground;
 public class Main extends util.Scene {
 
 	public static void main (String[] args) {
-		Engine.init(1920, 1080, "Hello World!", false, 0.5f);
+		Engine.init(1920, 1080, "Hello World!");
 	}
 
 //	GameObject box = new GameObject("Two", new Transform((1080/2)-(720/2), 0, 720, 720), 10);

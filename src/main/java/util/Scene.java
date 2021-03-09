@@ -24,7 +24,7 @@ public abstract class Scene {
      * Entry point to start the application
      */
     public static void main(String[] args) {
-        Engine.init(1600, 900, "Hello World!", false,1);
+        Engine.init(1600, 900, "Hello World!");
     }
 
     /**

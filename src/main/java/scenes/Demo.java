@@ -16,7 +16,7 @@ import static graphics.Graphics.setDefaultBackground;
 
 public class Demo extends Scene {
     public static void main (String[] args) {
-        Engine.init(1600, 900, "Azurite Engine Demo 1", false, 0.1f);
+        Engine.init("test", 0.2F);
     }
 
     Spritesheet a;

@@ -13,6 +13,7 @@ import util.Engine;
 import util.Scene;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Window {
@@ -46,11 +47,75 @@ public class Window {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
-        // Create window
         if (!fullscreen)
-            window = glfwCreateWindow(width, height, title, 0, 0);
+            initWindow(width, height, title, 0);
         else
-            window = glfwCreateWindow(width, height, title, glfwGetPrimaryMonitor(), 0);
+            initWindow(width, height, title, (int) glfwGetPrimaryMonitor());
+    }
+
+    public Window(int pwidth, int pheight, String ptitle, float minSceneLighting) {
+        width = pwidth;
+        height = pheight;
+        title = ptitle;
+        currentScene.minLighting = minSceneLighting;
+
+        // Configure GLFW
+        glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+        initWindow(width, height, title, 0);
+    }
+
+    public Window(int pwidth, int pheight, String ptitle) {
+        width = pwidth;
+        height = pheight;
+        title = ptitle;
+        currentScene.minLighting = 1;
+
+        // Configure GLFW
+        glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+        initWindow(width, height, title, 0);
+    }
+
+    public Window(String ptitle, float minSceneLighting) {
+        GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+        width = mode.width();
+        height = mode.height();
+        title = ptitle;
+        currentScene.minLighting = minSceneLighting;
+
+        // Configure GLFW
+        glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+        initWindow(width, height, title, glfwGetPrimaryMonitor());
+    }
+
+    public Window(String ptitle) {
+        GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+        width = mode.width();
+        height = mode.height();
+        title = ptitle;
+        currentScene.minLighting = 1;
+
+        // Configure GLFW
+        glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+        initWindow(width, height, title, glfwGetPrimaryMonitor());
+    }
+
+    private void initWindow (int width, int height, String title, long monitor) {
+        // Create window
+        window = glfwCreateWindow(width, height, title, monitor, 0);
 
         if (window == 0)
             throw new IllegalStateException("[FATAL] Failed to create window.");
