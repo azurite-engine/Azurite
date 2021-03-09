@@ -101,8 +101,8 @@ public class Window {
 
         currentScene.loadEngineResources();
 
-        currentScene.initRenderers();
         currentScene.awake();
+        currentScene.initRenderers();
 
         currentScene.startGameObjects();
 

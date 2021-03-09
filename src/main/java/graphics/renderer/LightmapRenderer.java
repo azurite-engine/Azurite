@@ -41,6 +41,9 @@ public class LightmapRenderer extends Renderer<QuadRenderBatch> {
 		qb.start();
 		qb.loadQuad();
 		batches.add(qb);
+		Events.windowResizeEvent.subscribe(data -> {
+			framebuffer.resize(data.x, data.y);
+		});
 	}
 
 	/**
