@@ -1,5 +1,7 @@
 package ecs;
 
+import util.Line;
+
 /**
  * Abstract structure for ECS Components.
  * It is highly recommended to use this when implementing any system that can/should be applied to a GameObject.
@@ -21,4 +23,10 @@ public abstract class Component {
 	 */
 	public void update (float dt) {}
 
+	/**
+	 * Get an array of debug lines to be rendered in debug mode
+	 *
+	 * @return an array of lines to be rendered in debug mode
+	 */
+	public Line[] debugLines() { return null; }
 }

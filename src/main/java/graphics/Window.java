@@ -4,26 +4,25 @@ package graphics;
 import event.EventData;
 import event.Events;
 import input.Keyboard;
-import scenes.LightingDemo;
+import scenes.Demo;
 import scenes.Main;
 import input.Mouse;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import scenes.ParticleDemo;
 import util.Engine;
 import util.Scene;
 
 import static org.lwjgl.glfw.GLFW.*;
+import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Window {
 
     // Define and set the current scene
     public static Scene main = new Main();
-    public static Scene lightDemo = new LightingDemo();
-    public static Scene pd = new ParticleDemo();
+    public static Scene demo = new Demo();
 
-    public static Scene currentScene = pd;
+    public static Scene currentScene = demo;
 
     // Window Variables
     public long frameCount = 0;
@@ -37,6 +36,23 @@ public class Window {
 
     private float dt = 0; // deltaTime (accessible from util.Engine.deltaTime)
 
+    public Window(int pwidth, int pheight, String ptitle, boolean fullscreen, float minSceneLighting) {
+        width = pwidth;
+        height = pheight;
+        title = ptitle;
+        currentScene.minLighting = minSceneLighting;
+
+        // Configure GLFW
+        glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+        if (!fullscreen)
+            initWindow(width, height, title, 0);
+        else
+            initWindow(width, height, title, (int) glfwGetPrimaryMonitor());
+    }
+
     public Window(int pwidth, int pheight, String ptitle, float minSceneLighting) {
         width = pwidth;
         height = pheight;
@@ -48,8 +64,58 @@ public class Window {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
+        initWindow(width, height, title, 0);
+    }
+
+    public Window(int pwidth, int pheight, String ptitle) {
+        width = pwidth;
+        height = pheight;
+        title = ptitle;
+        currentScene.minLighting = 1;
+
+        // Configure GLFW
+        glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+        initWindow(width, height, title, 0);
+    }
+
+    public Window(String ptitle, float minSceneLighting) {
+        GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+        width = mode.width();
+        height = mode.height();
+        title = ptitle;
+        currentScene.minLighting = minSceneLighting;
+
+        // Configure GLFW
+        glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+        initWindow(width, height, title, glfwGetPrimaryMonitor());
+    }
+
+    public Window(String ptitle) {
+        GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+        width = mode.width();
+        height = mode.height();
+        title = ptitle;
+        currentScene.minLighting = 1;
+
+        // Configure GLFW
+        glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+        initWindow(width, height, title, glfwGetPrimaryMonitor());
+    }
+
+    private void initWindow (int width, int height, String title, long monitor) {
         // Create window
-        window = glfwCreateWindow(width, height, title, 0, 0);
+        window = glfwCreateWindow(width, height, title, monitor, 0);
 
         if (window == 0)
             throw new IllegalStateException("[FATAL] Failed to create window.");
@@ -100,8 +166,8 @@ public class Window {
 
         currentScene.loadEngineResources();
 
-        currentScene.awake();
         currentScene.initRenderers();
+        currentScene.awake();
 
         currentScene.startGameObjects();
 

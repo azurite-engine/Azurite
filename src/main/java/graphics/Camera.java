@@ -3,6 +3,8 @@ package graphics;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import physics.Transform;
+import util.Utils;
 
 public class Camera {
 
@@ -41,5 +43,20 @@ public class Camera {
 	public Matrix4f getProjectionMatrix () {
 		return this.projectionMatrix;		
 	}
-	
+
+	public void smoothFollow (Transform centerOn) {
+		Transform c = centerOn;
+
+		float smoothing = 0.045f;
+		Vector2f desiredPosition = new Vector2f(c.getX() - Window.getWidth()/2,c.getY() - Window.getHeight()/2);
+		Vector2f smoothedPosition = new Vector2f(Utils.lerp(position.x, desiredPosition.x, smoothing), Utils.lerp(position.y, desiredPosition.y, smoothing));
+		if (Utils.dist(desiredPosition, position) < 10) {
+			position = desiredPosition;
+		}
+		position = smoothedPosition;
+	}
+
+	public Vector2f getPosition() {
+		return this.position;
+	}
 }

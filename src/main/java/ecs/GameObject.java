@@ -27,26 +27,6 @@ public class GameObject {
 	 * @param componentList
 	 * @param transform
 	 * @param zIndex
-	 * @param queue if the gameObject is being added from inside of a gameObject or component, it has to be added to a queue to avoid ConcurrentModificationException
-	 */
-	public GameObject (String name, List<Component> componentList, Transform transform, int zIndex, boolean queue) {
-		this.name = name;
-		this.components = componentList;
-		this.transform = transform;
-		this.zIndex = zIndex;
-		if (queue) {
-			Window.currentScene.queueGameObject(this);
-		} else {
-			Window.currentScene.addGameObjectToScene(this);
-		}
-	}
-
-	/**
-	 * Creates a new GameObject.
-	 * @param name
-	 * @param componentList
-	 * @param transform
-	 * @param zIndex
 	 */
 	public GameObject (String name, List<Component> componentList, Transform transform, int zIndex) {
 		this.name = name;
@@ -192,12 +172,14 @@ public class GameObject {
 
 	/**
 	 * Adds a new component to the GameObject's list
-	 * @param component
-	 */
-	public void addComponent (Component c) {
+     * @param component
+     * @return
+     */
+	public GameObject addComponent (Component c) {
 		this.components.add(c);
 		c.gameObject = this;
-	}
+        return this;
+    }
 
 	/**
 	 * @return List of Components in GameObject

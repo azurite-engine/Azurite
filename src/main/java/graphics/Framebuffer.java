@@ -3,7 +3,6 @@ package graphics;
 import org.lwjgl.opengl.GL11;
 import util.specs.FramebufferSpec;
 import util.specs.FramebufferTextureSpec;
-import util.specs.FramebufferTextureSpec.FramebufferTextureFormat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -195,7 +194,7 @@ public class Framebuffer {
 	 * @return the created texture's id
 	 */
 	private static int createColorTexture(int width, int height, int internalFormat, int format, int type) {
-		int texture = glCreateTextures(GL_TEXTURE_2D);
+		int texture = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, texture);
 
 		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, 0);
@@ -212,7 +211,7 @@ public class Framebuffer {
 	 * @return the created texture's id
 	 */
 	private static int createDepthTexture(int width, int height, int internalFormat) {
-		int texture = glCreateTextures(GL_TEXTURE_2D);
+		int texture = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, texture);
 
 		glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, width, height);

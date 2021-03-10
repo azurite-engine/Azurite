@@ -1,10 +1,12 @@
 package util;
 
 import ecs.GameObject;
+import graphics.renderer.DebugRenderer;
 import graphics.renderer.DefaultRenderer;
+import graphics.renderer.LightmapRenderer;
 import graphics.renderer.Renderer;
 import graphics.Camera;
-import physics.Particle;
+import physics.AABB;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,11 +16,13 @@ import static util.Engine.deltaTime;
 
 public abstract class Scene {
     public DefaultRenderer renderer = new DefaultRenderer();
+    public LightmapRenderer lightmapRenderer = new LightmapRenderer();
+    public DebugRenderer debugRenderer = new DebugRenderer();
+    private List<Renderer<?>> rendererRegistry = new ArrayList<>();
     public Camera camera;
     private boolean isRunning = false;
+    private boolean debugMode = true;
     static protected ArrayList<GameObject> gameObjects = new ArrayList<>();
-    static protected ArrayList<GameObject> gameObjectsQueue = new ArrayList<>();
-    protected GameObject activeGameObject = null;
 
     public float minLighting;
 
@@ -27,7 +31,7 @@ public abstract class Scene {
      * Entry point to start the application
      */
     public static void main(String[] args) {
-        Engine.init(1600, 900, "Hello World!", 0.3f);
+        Engine.init(1600, 900, "Hello World!", 1);
     }
 
     /**
@@ -47,6 +51,9 @@ public abstract class Scene {
      */
     public void clean() {
         this.renderer.clean();
+        this.lightmapRenderer.clean();
+        this.debugRenderer.clean();
+        rendererRegistry.forEach(Renderer::clean);
     }
 
     // The following methods shouldn't be overridden. For this, added final keyword
@@ -57,6 +64,9 @@ public abstract class Scene {
         for (GameObject gameObject : gameObjects) {
             gameObject.start();
             this.renderer.add(gameObject);
+            this.lightmapRenderer.add(gameObject);
+            this.debugRenderer.add(gameObject);
+            rendererRegistry.forEach(r -> r.add(gameObject));
         }
         isRunning = true;
     }
@@ -77,17 +87,12 @@ public abstract class Scene {
         gameObject.start();
     }
 
-    public static void queueGameObject (GameObject gameObject) {
-        gameObjectsQueue.add(gameObject);
-    }
-
-    private static void emptyQueue () {
-        for (GameObject go : gameObjectsQueue) {
-            addGameObjectToScene(go);
-        }
-        if (gameObjectsQueue.size() >= 1) {
-            gameObjectsQueue = new ArrayList<>();
-        }
+    /**
+     * Register a renderer to this scene
+     * @param renderer the renderer to be registered
+     */
+    public void registerRenderer(Renderer<?> renderer) {
+        rendererRegistry.add(renderer);
     }
 
     /**
@@ -101,14 +106,17 @@ public abstract class Scene {
      * Loops through all the gameObjects in the scene and calls their update methods.
      */
     public void updateGameObjects () {
-        emptyQueue();
         for (GameObject go : gameObjects) {
             go.update((float) deltaTime);
         }
     }
 
     public void render() {
+        rendererRegistry.forEach(Renderer::render);
+        lightmapRenderer.render();
+        lightmapRenderer.bindLightmap();
         this.renderer.render();
+        if (debugMode) this.debugRenderer.render();
     }
 
     /**
@@ -118,7 +126,12 @@ public abstract class Scene {
         Assets.getShader("src/assets/shaders/default.glsl");
     }
 
+    /**
+     * Initialize all renderers
+     */
     public void initRenderers() {
+        debugRenderer.init();
+        lightmapRenderer.init();
         renderer.init();
     }
 }

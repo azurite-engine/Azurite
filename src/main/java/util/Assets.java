@@ -1,7 +1,7 @@
 package util;
 
 import graphics.Shader;
-import graphics.Spritesheet;
+import tiles.Spritesheet;
 import graphics.Texture;
 import java.io.File;
 import java.util.HashMap;
