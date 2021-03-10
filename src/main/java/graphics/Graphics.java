@@ -1,7 +1,7 @@
 package graphics;
 
+import static org.lwjgl.opengl.GL11.*;
 import static util.Utils.map;
-import static org.lwjgl.opengl.GL11.glClearColor;
 
 public class Graphics {
 	public static Color defaultBackground;
@@ -19,6 +19,7 @@ public class Graphics {
 		b = map(b, 0, 255, 0, 1);
 
 		glClearColor(r, g, b, 1);
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	/**

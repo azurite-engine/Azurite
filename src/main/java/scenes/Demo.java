@@ -5,6 +5,7 @@ import graphics.*;
 import graphics.renderer.LightmapRenderer;
 import org.joml.Vector2f;
 import physics.AABB;
+import tiles.Spritesheet;
 import tiles.Tilesystem;
 import physics.Transform;
 import util.Assets;
@@ -16,7 +17,7 @@ import static graphics.Graphics.setDefaultBackground;
 
 public class Demo extends Scene {
     public static void main (String[] args) {
-        Engine.init(1080, 720, "Azurite Engine Demo 1", 0.1f);
+        Engine.init(1080, 720, "Azurite Engine Demo 1", false, 0.1f);
     }
 
     Spritesheet a;
@@ -29,8 +30,8 @@ public class Demo extends Scene {
         camera = new Camera();
         setDefaultBackground(Color.BLACK);
 
-        a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0, 16);
-        b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0, 16);
+        a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0);
+        b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0);
         t = new Tilesystem(a, b, 31, 15, 200, 200);
 
         booper = new GameObject("Booper", new Transform(800, 800, 100, 100), 2);
