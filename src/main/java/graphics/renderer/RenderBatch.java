@@ -35,7 +35,7 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 	/** zIndex for this batch. Used for batch ordering */
 	private final int zIndex;
 	/** The primitive that this batch draws */
-	private Primitive primitive;
+	public final Primitive primitive;
 	/** The attributes for the Vertex Array */
 	private final ShaderDatatype[] attributes;
 	/** Should the data array be re-uploaded to the GPU */

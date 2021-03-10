@@ -1,9 +1,12 @@
 package util;
 
 import ecs.GameObject;
+import graphics.renderer.DebugRenderer;
 import graphics.renderer.DefaultRenderer;
+import graphics.renderer.LightmapRenderer;
 import graphics.renderer.Renderer;
 import graphics.Camera;
+import physics.AABB;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +15,12 @@ import static util.Engine.deltaTime;
 
 public abstract class Scene {
     public DefaultRenderer renderer = new DefaultRenderer();
+    public LightmapRenderer lightmapRenderer = new LightmapRenderer();
+    public DebugRenderer debugRenderer = new DebugRenderer();
     private List<Renderer<?>> rendererRegistry = new ArrayList<>();
     public Camera camera;
     private boolean isRunning = false;
+    private boolean debugMode = true;
     static protected ArrayList<GameObject> gameObjects = new ArrayList<>();
 
     public float minLighting;
@@ -24,7 +30,7 @@ public abstract class Scene {
      * Entry point to start the application
      */
     public static void main(String[] args) {
-        Engine.init(1600, 900, "Hello World!");
+        Engine.init(1600, 900, "Hello World!", 1);
     }
 
     /**
@@ -44,6 +50,8 @@ public abstract class Scene {
      */
     public void clean() {
         this.renderer.clean();
+        this.lightmapRenderer.clean();
+        this.debugRenderer.clean();
         rendererRegistry.forEach(Renderer::clean);
     }
 
@@ -55,6 +63,8 @@ public abstract class Scene {
         for (GameObject gameObject : gameObjects) {
             gameObject.start();
             this.renderer.add(gameObject);
+            this.lightmapRenderer.add(gameObject);
+            this.debugRenderer.add(gameObject);
             rendererRegistry.forEach(r -> r.add(gameObject));
         }
         isRunning = true;
@@ -102,7 +112,10 @@ public abstract class Scene {
 
     public void render() {
         rendererRegistry.forEach(Renderer::render);
+        lightmapRenderer.render();
+        lightmapRenderer.bindLightmap();
         this.renderer.render();
+        if (debugMode) this.debugRenderer.render();
     }
 
     /**
@@ -112,7 +125,12 @@ public abstract class Scene {
         Assets.getShader("src/assets/shaders/default.glsl");
     }
 
+    /**
+     * Initialize all renderers
+     */
     public void initRenderers() {
+        debugRenderer.init();
+        lightmapRenderer.init();
         renderer.init();
     }
 }
