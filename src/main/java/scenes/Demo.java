@@ -3,6 +3,7 @@ package scenes;
 import ecs.*;
 import graphics.*;
 import graphics.renderer.LightmapRenderer;
+import org.joml.Vector2f;
 import physics.AABB;
 import tiles.Spritesheet;
 import tiles.Tilesystem;
@@ -16,7 +17,7 @@ import static graphics.Graphics.setDefaultBackground;
 
 public class Demo extends Scene {
     public static void main (String[] args) {
-        Engine.init("Azurite Demo", 0.2F);
+        Engine.init(1080, 720, "Azurite Engine Demo 1", 0.1f);
     }
 
     Spritesheet a;
@@ -25,15 +26,10 @@ public class Demo extends Scene {
     GameObject player;
     GameObject booper;
     GameObject greenLight;
-    LightmapRenderer lightRenderer;
 
     public void awake() {
         camera = new Camera();
         setDefaultBackground(Color.BLACK);
-
-        lightRenderer = new LightmapRenderer();
-        lightRenderer.init();
-        registerRenderer(lightRenderer);
 
         a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0);
         b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0);
@@ -61,13 +57,5 @@ public class Demo extends Scene {
         greenLight.getComponent(PointLight.class).intensity = Utils.map((float)Math.cos(Engine.millis()/600), -1, 1, 70, 110);
 
         camera.smoothFollow(player.getTransform());
-        System.out.println(player.getTransform().getX());
-    }
-
-    @Override
-    public void render() {
-        lightRenderer.bindLightmap();
-        super.render();
-        //  tr.framebuffer.blitColorBuffersToScreen();
     }
 }

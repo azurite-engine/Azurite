@@ -2,6 +2,8 @@ package physics;
 
 import ecs.CharacterController;
 import ecs.Component;
+import org.joml.Vector2f;
+import util.Line;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,18 +17,48 @@ public class AABB extends Component {
 
 	CharacterController controller;
 
+	private Line[] lines;
+
 	@Override
 	public void start() {
+		lines = new Line[4];
 		colliders.add(this);
 		self = gameObject.getTransform(); // Parent game object's transform
 		lastPosition = self;
 		checkControllerAABB();
+		lines[0] = new Line(new Vector2f(self.getPosition()), new Vector2f(self.getX() + self.getWidth(), self.getY()));
+		lines[1] = new Line(new Vector2f(self.getX() + self.getWidth(), self.getY()), new Vector2f(self.getX() + self.getWidth(), self.getY() + self.getHeight()));
+		lines[2] = new Line(new Vector2f(self.getX() + self.getWidth(), self.getY() + self.getHeight()), new Vector2f(self.getX(), self.getY() + self.getHeight()));
+		lines[3] = new Line(new Vector2f(self.getX(), self.getY() + self.getHeight()), new Vector2f(self.getPosition()));
 	}
 
 	@Override
 	public void update(float dt) {
 		checkControllerAABB();
-		lastPosition = gameObject.getTransform();
+		updateLines();
+	}
+
+	private void updateLines() {
+		lines[0].start.set(self.getPosition());
+		lines[0].end.set(self.getX() + self.getWidth(), self.getY());
+		lines[0].markDirty();
+
+		lines[1].start.set(self.getX() + self.getWidth(), self.getY());
+		lines[1].end.set(self.getX() + self.getWidth(), self.getY() + self.getHeight());
+		lines[1].markDirty();
+
+		lines[2].start.set(self.getX() + self.getWidth(), self.getY() + self.getHeight());
+		lines[2].end.set(self.getX(), self.getY() + self.getHeight());
+		lines[2].markDirty();
+
+		lines[3].start.set(self.getX(), self.getY() + self.getHeight());
+		lines[3].end.set(self.getPosition());
+		lines[3].markDirty();
+	}
+
+	@Override
+	public Line[] debugLines() {
+		return lines;
 	}
 
 	public boolean checkCollision () {

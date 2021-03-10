@@ -76,13 +76,12 @@ public abstract class Renderer<T extends RenderBatch> {
 	public void render () {
 		framebuffer.bind();
 		prepare();
-		glClear(GL_COLOR_BUFFER_BIT);
 		shader.attach();
 		uploadUniforms(shader);
 		for (T batch : batches) {
 			batch.updateBuffer();
 			batch.bind();
-			glDrawElements(GL_TRIANGLES, batch.getVertexCount(), GL_UNSIGNED_INT, 0);
+			glDrawElements(batch.primitive.openglPrimitive, batch.getVertexCount(), GL_UNSIGNED_INT, 0);
 			batch.unbind();
 		}
 		shader.detach();

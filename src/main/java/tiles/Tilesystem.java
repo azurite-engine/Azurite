@@ -39,8 +39,6 @@ public class Tilesystem {
 
         int i = 0;
 
-        System.out.println(map.length);
-
         for (int y = 0; y < yTiles; y ++) {
             for (int x = 0; x < xTiles; x ++) {
 
