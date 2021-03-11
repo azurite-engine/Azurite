@@ -1,6 +1,7 @@
 package ecs;
 
-import util.Line;
+import util.debug.DebugLine;
+import util.debug.DebugPrimitive;
 
 /**
  * Abstract structure for ECS Components.
@@ -28,5 +29,5 @@ public abstract class Component {
 	 *
 	 * @return an array of lines to be rendered in debug mode
 	 */
-	public Line[] debugLines() { return null; }
+	public DebugPrimitive[] debugLines() { return null; }
 }

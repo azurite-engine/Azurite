@@ -1,13 +1,12 @@
 package graphics.renderer;
 
-import ecs.SpriteRenderer;
 import graphics.Primitive;
 import graphics.ShaderDatatype;
 import org.joml.Vector4f;
-import util.Line;
+import util.debug.DebugLine;
 
 public class DebugRenderBatch extends RenderBatch {
-	private final Line[] lines;
+	private final DebugLine[] lines;
 	private int numberOfLines;
 
 	/**
@@ -16,7 +15,7 @@ public class DebugRenderBatch extends RenderBatch {
 	 */
 	public DebugRenderBatch(int maxBatchSize, int zIndex) {
 		super(maxBatchSize, zIndex, Primitive.LINE, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4);
-		this.lines = new Line[maxBatchSize];
+		this.lines = new DebugLine[maxBatchSize];
 		numberOfLines = 0;
 	}
 
@@ -28,7 +27,7 @@ public class DebugRenderBatch extends RenderBatch {
 	 */
 	@Override
 	protected void loadVertexProperties(int index, int offset) {
-		Line line = lines[index];
+		DebugLine line = lines[index];
 		Vector4f color = line.color.toNormalizedVec4f();
 
 		data[offset     ] = line.start.x;
@@ -52,7 +51,7 @@ public class DebugRenderBatch extends RenderBatch {
 	@Override
 	public void updateBuffer() {
 		for (int i = 0; i < numberOfLines; i ++) {
-			Line line = lines[i];
+			DebugLine line = lines[i];
 			if (line.isDirty()) {
 				load(i);
 				line.markClean();
@@ -61,7 +60,7 @@ public class DebugRenderBatch extends RenderBatch {
 		super.updateBuffer();
 	}
 
-	public boolean addLine(Line line) {
+	public boolean addLine(DebugLine line) {
 		if (hasRoomLeft()) {
 			// Get the index and add the renderObject
 			int index = this.numberOfLines++;

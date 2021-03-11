@@ -2,8 +2,11 @@ package physics;
 
 import ecs.CharacterController;
 import ecs.Component;
+import graphics.Color;
 import org.joml.Vector2f;
-import util.Line;
+import util.debug.DebugLine;
+import util.debug.DebugPrimitive;
+import util.debug.DebugRect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,48 +20,26 @@ public class AABB extends Component {
 
 	CharacterController controller;
 
-	private Line[] lines;
+	private DebugRect debugRect;
 
 	@Override
 	public void start() {
-		lines = new Line[4];
 		colliders.add(this);
 		self = gameObject.getTransform(); // Parent game object's transform
 		lastPosition = self;
 		checkControllerAABB();
-		lines[0] = new Line(new Vector2f(self.getPosition()), new Vector2f(self.getX() + self.getWidth(), self.getY()));
-		lines[1] = new Line(new Vector2f(self.getX() + self.getWidth(), self.getY()), new Vector2f(self.getX() + self.getWidth(), self.getY() + self.getHeight()));
-		lines[2] = new Line(new Vector2f(self.getX() + self.getWidth(), self.getY() + self.getHeight()), new Vector2f(self.getX(), self.getY() + self.getHeight()));
-		lines[3] = new Line(new Vector2f(self.getX(), self.getY() + self.getHeight()), new Vector2f(self.getPosition()));
+		debugRect = new DebugRect(self.getX(), self.getY(), self.getWidth(), self.getHeight(), Color.WHITE);
 	}
 
 	@Override
 	public void update(float dt) {
 		checkControllerAABB();
-		updateLines();
-	}
-
-	private void updateLines() {
-		lines[0].start.set(self.getPosition());
-		lines[0].end.set(self.getX() + self.getWidth(), self.getY());
-		lines[0].markDirty();
-
-		lines[1].start.set(self.getX() + self.getWidth(), self.getY());
-		lines[1].end.set(self.getX() + self.getWidth(), self.getY() + self.getHeight());
-		lines[1].markDirty();
-
-		lines[2].start.set(self.getX() + self.getWidth(), self.getY() + self.getHeight());
-		lines[2].end.set(self.getX(), self.getY() + self.getHeight());
-		lines[2].markDirty();
-
-		lines[3].start.set(self.getX(), self.getY() + self.getHeight());
-		lines[3].end.set(self.getPosition());
-		lines[3].markDirty();
+		debugRect.reset(self.getX(), self.getY(), self.getWidth(), self.getHeight());
 	}
 
 	@Override
-	public Line[] debugLines() {
-		return lines;
+	public DebugPrimitive[] debugLines() {
+		return new DebugPrimitive[] {debugRect};
 	}
 
 	public boolean checkCollision () {
@@ -84,12 +65,10 @@ public class AABB extends Component {
 
 	public void collideY () {
 		if (checkCollision()) {
-			if (checkCollision()) {
-				if (lastPosition.getY() < other.getY()) {
-					gameObject.setTransformY(other.getY() - gameObject.getTransform().getHeight());
-				} else {
-					gameObject.setTransformY(other.getY() + other.getHeight());
-				}
+			if (lastPosition.getY() < other.getY()) {
+				gameObject.setTransformY(other.getY() - gameObject.getTransform().getHeight());
+			} else {
+				gameObject.setTransformY(other.getY() + other.getHeight());
 			}
 		}
 	}
