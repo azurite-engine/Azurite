@@ -1,11 +1,14 @@
 package util;
 
 import ecs.GameObject;
+import event.Events;
 import graphics.renderer.DebugRenderer;
 import graphics.renderer.DefaultRenderer;
 import graphics.renderer.LightmapRenderer;
 import graphics.renderer.Renderer;
 import graphics.Camera;
+import input.Keyboard;
+import org.lwjgl.glfw.GLFW;
 import physics.AABB;
 
 import java.util.ArrayList;
@@ -44,7 +47,11 @@ public abstract class Scene {
     /**
      * This method is called every frame, and can be used to update objects.
      */
-    public void update() {}
+    public void update() {
+        if (Keyboard.getKeyDown(GLFW.GLFW_KEY_GRAVE_ACCENT)) {
+            debugMode = !debugMode;
+        }
+    }
 
     /**
      * This method is called at the end of the program

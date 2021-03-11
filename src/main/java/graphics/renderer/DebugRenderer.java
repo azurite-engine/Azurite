@@ -2,15 +2,14 @@ package graphics.renderer;
 
 import ecs.Component;
 import ecs.GameObject;
-import graphics.Color;
 import graphics.Framebuffer;
 import graphics.Shader;
 import graphics.Window;
-import org.joml.Vector2f;
 import util.Assets;
-import util.Line;
+import util.debug.DebugLine;
+import util.debug.DebugPrimitive;
 
-import java.util.Collections;
+import static org.lwjgl.opengl.GL11.glLineWidth;
 
 public class DebugRenderer extends Renderer<DebugRenderBatch> {
 	/**
@@ -49,18 +48,22 @@ public class DebugRenderer extends Renderer<DebugRenderBatch> {
 	 */
 	@Override
 	protected void prepare() {
-		// Nothing to do :D
+		glLineWidth(3);
 	}
 
 	@Override
 	public void add(GameObject gameObject) {
 		for (Component c : gameObject.getComponents()) {
-			Line[] lines = c.debugLines();
-			if (lines != null) for (Line line : lines) addLine(line);
+			DebugPrimitive[] primitives = c.debug();
+			if (primitives != null)
+				for (DebugPrimitive primitive : primitives) {
+					for (DebugLine line : primitive.getLines())
+						addLine(line);
+			}
 		}
 	}
 
-	private void addLine(Line l) {
+	private void addLine(DebugLine l) {
 		for (DebugRenderBatch batch : batches) {
 			if (batch.addLine(l)) {
 				return;

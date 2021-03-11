@@ -1,22 +1,20 @@
-package util;
+package util.debug;
 
 import graphics.Color;
 import org.joml.Vector2f;
 
-public class Line {
+public class DebugLine {
 	public Vector2f start;
 	public Vector2f end;
 	public Color color;
 
 	public boolean dirty;
 
-	public Line(Vector2f start, Vector2f end) {
-		this.start = start;
-		this.end = end;
-		this.color = Color.WHITE;
+	public DebugLine(Vector2f start, Vector2f end) {
+		this(start, end, Color.WHITE);
 	}
 
-	public Line(Vector2f start, Vector2f end, Color color) {
+	public DebugLine(Vector2f start, Vector2f end, Color color) {
 		this.start = start;
 		this.end = end;
 		this.color = color;
