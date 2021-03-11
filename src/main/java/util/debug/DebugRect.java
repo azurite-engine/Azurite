@@ -10,10 +10,10 @@ public class DebugRect extends DebugPrimitive {
 
 	private static DebugLine[] createLines(float x, float y, float width, float height, Color color) {
 		DebugLine[] lines = new DebugLine[4];
-		lines[0] = new DebugLine(new Vector2f(x, y), new Vector2f(x + width, y));
-		lines[1] = new DebugLine(new Vector2f(x + width, y), new Vector2f(x + width, y + height));
-		lines[2] = new DebugLine(new Vector2f(x + width, y + height), new Vector2f(x, y + height));
-		lines[3] = new DebugLine(new Vector2f(x, y + height), new Vector2f(x, y));
+		lines[0] = new DebugLine(new Vector2f(x, y), new Vector2f(x + width, y), color);
+		lines[1] = new DebugLine(new Vector2f(x + width, y), new Vector2f(x + width, y + height), color);
+		lines[2] = new DebugLine(new Vector2f(x + width, y + height), new Vector2f(x, y + height), color);
+		lines[3] = new DebugLine(new Vector2f(x, y + height), new Vector2f(x, y), color);
 		return lines;
 	}
 

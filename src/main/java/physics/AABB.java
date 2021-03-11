@@ -28,7 +28,7 @@ public class AABB extends Component {
 		self = gameObject.getTransform(); // Parent game object's transform
 		lastPosition = self;
 		checkControllerAABB();
-		debugRect = new DebugRect(self.getX(), self.getY(), self.getWidth(), self.getHeight(), Color.WHITE);
+		debugRect = new DebugRect(self.getX(), self.getY(), self.getWidth(), self.getHeight(), Color.GREEN);
 	}
 
 	@Override
