@@ -48,6 +48,9 @@ public class Demo extends Scene {
 
         greenLight = new GameObject("Green light", new Transform(3315, 300, 1, 1), 3);
         greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));
+
+
+
     }
 
     public void update() {
