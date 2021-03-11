@@ -38,7 +38,7 @@ public class AABB extends Component {
 	}
 
 	@Override
-	public DebugPrimitive[] debugLines() {
+	public DebugPrimitive[] debug() {
 		return new DebugPrimitive[] {debugRect};
 	}
 

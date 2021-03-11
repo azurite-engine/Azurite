@@ -29,5 +29,5 @@ public abstract class Component {
 	 *
 	 * @return an array of lines to be rendered in debug mode
 	 */
-	public DebugPrimitive[] debugLines() { return null; }
+	public DebugPrimitive[] debug() { return null; }
 }
