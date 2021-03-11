@@ -9,6 +9,8 @@ import util.Assets;
 import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
 
+import static org.lwjgl.opengl.GL11.glLineWidth;
+
 public class DebugRenderer extends Renderer<DebugRenderBatch> {
 	/**
 	 * Create a shader
@@ -46,7 +48,7 @@ public class DebugRenderer extends Renderer<DebugRenderBatch> {
 	 */
 	@Override
 	protected void prepare() {
-		// Nothing to do :D
+		glLineWidth(3);
 	}
 
 	@Override
