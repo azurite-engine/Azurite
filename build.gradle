@@ -27,7 +27,7 @@ switch (OperatingSystem.current()) {
                 : "natives-linux"
         break
     case OperatingSystem.MAC_OS:
-        project.ext.lwjglNatives = natives-macos
+        project.ext.lwjglNatives = "natives-macos"
         break
     case OperatingSystem.WINDOWS:
         def osArch = System.getProperty("os.arch")
