@@ -6,6 +6,7 @@ import org.joml.Vector3f;
 import physics.Transform;
 import util.Utils;
 
+@Deprecated
 public class Camera {
 
 	private Matrix4f projectionMatrix, viewMatrix;

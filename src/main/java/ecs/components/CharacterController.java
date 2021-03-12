@@ -1,5 +1,6 @@
-package ecs;
+package ecs.components;
 
+import ecs.Component;
 import input.Gamepad;
 import input.Keyboard;
 import org.joml.Vector2f;

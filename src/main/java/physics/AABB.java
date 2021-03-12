@@ -1,10 +1,8 @@
 package physics;
 
-import ecs.CharacterController;
+import ecs.components.CharacterController;
 import ecs.Component;
 import graphics.Color;
-import org.joml.Vector2f;
-import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
 import util.debug.DebugRect;
 

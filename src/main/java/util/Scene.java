@@ -1,15 +1,13 @@
 package util;
 
 import ecs.GameObject;
-import event.Events;
 import graphics.renderer.DebugRenderer;
 import graphics.renderer.DefaultRenderer;
 import graphics.renderer.LightmapRenderer;
 import graphics.renderer.Renderer;
-import graphics.Camera;
+import ecs.components.Camera;
 import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
-import physics.AABB;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,7 @@ public abstract class Scene {
     public LightmapRenderer lightmapRenderer = new LightmapRenderer();
     public DebugRenderer debugRenderer = new DebugRenderer();
     private List<Renderer<?>> rendererRegistry = new ArrayList<>();
-    public Camera camera;
+    protected Camera cameraComponent;
     private boolean isRunning = false;
     private boolean debugMode = true;
     static protected ArrayList<GameObject> gameObjects = new ArrayList<>();
@@ -40,7 +38,7 @@ public abstract class Scene {
      * Runs only once on startup, useful for initializing gameObjects or for first time setup.
      */
     public void awake () {
-        camera = new Camera();
+        cameraComponent = new Camera();
     }
 
     /**
@@ -105,7 +103,15 @@ public abstract class Scene {
      * @return Returns the scene's instance of Camera
      */
     public Camera camera () {
-        return this.camera;
+        return this.cameraComponent;
+    }
+
+    /**
+     * Sets the scene's active camera
+     * @param camera The instance of the camera
+     */
+    public void setCamera(Camera camera) {
+        this.cameraComponent = camera;
     }
 
     /**

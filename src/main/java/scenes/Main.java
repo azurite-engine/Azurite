@@ -9,16 +9,11 @@ package scenes;
  * @return type and description if not void
  */
 import ecs.GameObject;
-import ecs.PointLight;
-import ecs.Sprite;
-import ecs.SpriteRenderer;
-import graphics.Camera;
+import ecs.components.Camera;
+import ecs.components.PointLight;
 import graphics.Color;
-import graphics.Texture;
-import input.Keyboard;
 import input.Mouse;
 import org.joml.Vector2f;
-import physics.Transform;
 import util.Engine;
 
 
@@ -38,7 +33,7 @@ public class Main extends util.Scene {
 
 	public void awake() {
 		setDefaultBackground(Color.BLACK);
-		camera = new Camera();
+		new GameObject().addComponent(new Camera());
 
 //		pepper.addComponent(new SpriteRenderer("src/assets/images/pepper.png"));
 //		box.addComponent(new SpriteRenderer(new Color(150, 150,150, 255)));

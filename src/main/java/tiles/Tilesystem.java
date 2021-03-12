@@ -1,7 +1,7 @@
 package tiles;
 
 import ecs.GameObject;
-import ecs.SpriteRenderer;
+import ecs.components.SpriteRenderer;
 import physics.Transform;
 import util.Utils;
 

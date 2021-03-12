@@ -1,6 +1,6 @@
 package graphics.renderer;
 
-import ecs.SpriteRenderer;
+import ecs.components.SpriteRenderer;
 import graphics.Primitive;
 import graphics.ShaderDatatype;
 import graphics.Texture;

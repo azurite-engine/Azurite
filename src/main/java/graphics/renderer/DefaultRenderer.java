@@ -1,11 +1,9 @@
 package graphics.renderer;
 
 import ecs.GameObject;
-import ecs.PointLight;
-import ecs.SpriteRenderer;
+import ecs.components.PointLight;
+import ecs.components.SpriteRenderer;
 import graphics.*;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 import util.Assets;
 
 import java.util.ArrayList;

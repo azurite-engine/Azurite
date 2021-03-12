@@ -1,5 +1,6 @@
-package ecs;
+package ecs.components;
 
+import ecs.Component;
 import graphics.Color;
 import org.joml.Vector3f;
 import physics.Transform;

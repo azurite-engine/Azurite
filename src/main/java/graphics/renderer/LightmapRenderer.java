@@ -1,12 +1,9 @@
 package graphics.renderer;
 
 import ecs.GameObject;
-import ecs.PointLight;
-import ecs.SpriteRenderer;
+import ecs.components.PointLight;
 import event.Events;
 import graphics.*;
-import graphics.renderer.DefaultRenderBatch;
-import graphics.renderer.Renderer;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
@@ -16,11 +13,9 @@ import util.specs.FramebufferSpec;
 import util.specs.FramebufferTextureSpec;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glClearColor;
 
 public class LightmapRenderer extends Renderer<QuadRenderBatch> {
 	private static final int MAX_BATCH_SIZE = 1000;
@@ -75,7 +70,7 @@ public class LightmapRenderer extends Renderer<QuadRenderBatch> {
 	protected void uploadUniforms(Shader shader) {
 		// This is here so that all renderers can have different cameras OR no cameras at all
 		shader.uploadMat4f("uProjection", Window.currentScene.camera().getProjectionMatrix());
-		shader.uploadVec2f("uCameraOffset", Window.currentScene.camera().getPosition());
+		shader.uploadVec2f("uCameraOffset", Window.currentScene.camera().gameObject.getTransform().position);
 
 		// Set lighting uniforms
 		Vector2f[] lightPositions = new Vector2f[numberOfLights];

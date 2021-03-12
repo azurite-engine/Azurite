@@ -1,5 +1,7 @@
-package ecs;
+package ecs.components;
 
+import ecs.Component;
+import ecs.Sprite;
 import graphics.Color;
 import graphics.Texture;
 import physics.Transform;

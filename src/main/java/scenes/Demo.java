@@ -1,9 +1,11 @@
 package scenes;
 
 import ecs.*;
+import ecs.components.Camera;
+import ecs.components.CharacterController;
+import ecs.components.PointLight;
+import ecs.components.SpriteRenderer;
 import graphics.*;
-import graphics.renderer.LightmapRenderer;
-import org.joml.Vector2f;
 import physics.AABB;
 import tiles.Spritesheet;
 import tiles.Tilesystem;
@@ -26,9 +28,12 @@ public class Demo extends Scene {
     GameObject player;
     GameObject booper;
     GameObject greenLight;
+    GameObject camera;
 
     public void awake() {
-        camera = new Camera();
+        camera = new GameObject();
+        camera.addComponent(new Camera());
+
         setDefaultBackground(Color.BLACK);
 
         a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0);
@@ -56,6 +61,6 @@ public class Demo extends Scene {
         booper.getComponent(PointLight.class).intensity = Utils.map((float)Math.cos(Engine.millis()/600), -1, 1, 70, 110);
         greenLight.getComponent(PointLight.class).intensity = Utils.map((float)Math.cos(Engine.millis()/600), -1, 1, 70, 110);
 
-        camera.smoothFollow(player.getTransform());
+        this.camera().smoothFollow(player.getTransform());
     }
 }
