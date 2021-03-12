@@ -9,12 +9,12 @@ import org.joml.Vector2f;
 
 public class Sprite {
 
-	private Texture texture;
+	protected Texture texture;
 
-	private Vector2f[] textureCoordinates;
+	protected Vector2f[] textureCoordinates;
 	
 	// This contains the default coordinates for an entire image UV
-	private Vector2f[] defaultTextureCoordinates = {
+	protected Vector2f[] defaultTextureCoordinates = {
 		new Vector2f(0, 0),
 		new Vector2f(0, 1),
 		new Vector2f(1, 1),

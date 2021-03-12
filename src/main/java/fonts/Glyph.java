@@ -23,12 +23,15 @@
  */
 package fonts;
 
+import ecs.Sprite;
+import graphics.Texture;
+
 /**
  * This class represents a font glyph.
  *
  * @author Heiko Brumme
  */
-public class Glyph {
+public class Glyph extends Sprite {
 
     public final int width;
     public final int height;
@@ -45,12 +48,14 @@ public class Glyph {
      * @param y       Y coordinate on the font texture
      * @param advance Advance width
      */
-    public Glyph(int width, int height, int x, int y, float advance) {
+    public Glyph(int width, int height, int x, int y) {
+        super(null);
         this.width = width;
         this.height = height;
         this.x = x;
         this.y = y;
-        this.advance = advance;
+        this.advance = 0;
+        this.texture = texture;
     }
 
 }

@@ -203,13 +203,20 @@ public class Font {
             int charHeight = charImage.getHeight();
 
             /* Create glyph and draw char on image */
-            Glyph ch = new Glyph(charWidth, charHeight, x, image.getHeight() - charHeight, 0f);
+            Glyph ch = new Glyph(charWidth, charHeight, x, image.getHeight() - charHeight);
             g.drawImage(charImage, x, 0, null);
             x += ch.width;
             glyphs.put(c, ch);
 
         }
 
+        /* Create texture */
+//        GameObject go = new GameObject("go", new Transform(0, 0, width, height), 2);
+//        go.addComponent(new SpriteRenderer(new Sprite(fontTexture)));
+        return bufferedImageToTexture(image);
+    }
+
+    private Texture bufferedImageToTexture (BufferedImage image) {
         /* Flip image Horizontally */
         AffineTransform transform = AffineTransform.getScaleInstance(1f, -1f);
         transform.translate(0, -image.getHeight());
@@ -227,7 +234,8 @@ public class Font {
         /* Put pixel data into a ByteBuffer */
         ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
         for (int i = 0; i < height; i ++) {
-            for (int j = width - 1; j >= 0; j --) {
+//            for (int j = width - 1; j >= 0; j --) {
+            for (int j = 0; j < width; j ++) {
                 /* Pixel as RGBA: 0xAARRGGBB */
                 int pixel = pixels[i * width + j];
                 /* Red component 0xAARRGGBB >> 16 = 0x0000AARR */
@@ -243,13 +251,10 @@ public class Font {
 
         buffer.flip();
 
-        /* Create texture */
-        Texture fontTexture = new Texture().createTexture(width, height, buffer);
+        Texture t = new Texture().createTexture(width, height, buffer);
         MemoryUtil.memFree(buffer);
 
-//        GameObject go = new GameObject("go", new Transform(0, 0, width, height), 2);
-//        go.addComponent(new SpriteRenderer(new Sprite(fontTexture)));
-        return fontTexture;
+        return t;
     }
 
     /**
@@ -353,6 +358,18 @@ public class Font {
         return height;
     }
 
+    public int getFontHeight () {
+        return fontHeight;
+    }
+
+    public Map<Character, Glyph> getGlyphs () {
+        return glyphs;
+    }
+
+    public Texture getTexture () {
+        return texture;
+    }
+
     /**
      * Draw text at the specified position and color.
      *
@@ -362,47 +379,45 @@ public class Font {
      * @param y        Y coordinate of the text position
      * @param c        Color to use
      */
-//    public void drawText(Renderer renderer, CharSequence text, float x, float y, Color c) {
-//        int textHeight = getHeight(text);
-//
-//        float drawX = x;
-//        float drawY = y;
-//        if (textHeight > fontHeight) {
-//            drawY += textHeight - fontHeight;
-//        }
-//
-//        texture.bind();
-//        renderer.begin();
-//        for (int i = 0; i < text.length(); i++) {
-//            char ch = text.charAt(i);
-//            if (ch == '\n') {
-//                /* Line feed, set x and y to draw at the next line */
-//                drawY -= fontHeight;
-//                drawX = x;
-//                continue;
-//            }
-//            if (ch == '\r') {
-//                /* Carriage return, just skip it */
-//                continue;
-//            }
-//            Glyph g = glyphs.get(ch);
+    public void drawText(CharSequence text, float x, float y, Color c) {
+        int textHeight = getHeight(text);
+
+        float drawX = x;
+        float drawY = y;
+        if (textHeight > fontHeight) {
+            drawY += textHeight - fontHeight;
+        }
+
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (ch == '\n') {
+                /* Line feed, set x and y to draw at the next line */
+                drawY -= fontHeight;
+                drawX = x;
+                continue;
+            }
+            if (ch == '\r') {
+                /* Carriage return, just skip it */
+                continue;
+            }
+            Glyph g = glyphs.get(ch);
 //            renderer.drawTextureRegion(texture, drawX, drawY, g.x, g.y, g.width, g.height, c);
-//            drawX += g.width;
-//        }
-//        renderer.end();
-//    }
-//
-//    /**
-//     * Draw text at the specified position.
-//     *
-//     * @param renderer The renderer to use
-//     * @param text     Text to draw
-//     * @param x        X coordinate of the text position
-//     * @param y        Y coordinate of the text position
-//     */
-//    public void drawText(Renderer renderer, CharSequence text, float x, float y) {
-//        drawText(renderer, text, x, y, Color.WHITE);
-//    }
+            drawX += g.width;
+        }
+
+    }
+
+    /**
+     * Draw text at the specified position.
+     *
+     * @param renderer The renderer to use
+     * @param text     Text to draw
+     * @param x        X coordinate of the text position
+     * @param y        Y coordinate of the text position
+     */
+    public void drawText(CharSequence text, float x, float y) {
+        drawText(text, x, y, Color.WHITE);
+    }
 
     /**
      * Disposes the font.

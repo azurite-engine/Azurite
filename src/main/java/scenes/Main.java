@@ -8,10 +8,13 @@ package scenes;
  * @param if applicable
  * @return type and description if not void
  */
-import fonts.AFont;
+
+import ecs.GameObject;
+import ecs.Text;
 import graphics.Camera;
 import graphics.Color;
 import fonts.Font;
+import physics.Transform;
 import util.Engine;
 
 import static graphics.Graphics.setDefaultBackground;
@@ -23,6 +26,7 @@ public class Main extends util.Scene {
 	}
 
 	Font f;
+	GameObject textTest;
 
 	public void awake() {
 		super.update();
@@ -30,6 +34,10 @@ public class Main extends util.Scene {
 		camera = new Camera();
 
 		f = new Font(new java.awt.Font("src/assets/fonts/OpenSans-Regular.ttf", java.awt.Font.PLAIN, 16), true);
+
+		textTest = new GameObject("", new Transform(0, 0, 100, 140), 2);
+		textTest.addComponent(new Text("Hello World!", f, 1, 1));
+
 	}
 
 	public void update () {
