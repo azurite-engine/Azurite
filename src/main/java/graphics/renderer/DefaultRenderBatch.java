@@ -10,7 +10,6 @@ import physics.Transform;
 
 public class DefaultRenderBatch extends RenderBatch {
 	private final SpriteRenderer[] sprites;
-
 	private int numberOfSprites;
 
 	/**
@@ -21,8 +20,8 @@ public class DefaultRenderBatch extends RenderBatch {
 	 */
 	DefaultRenderBatch(int maxBatchSize, int zIndex) {
 		super(maxBatchSize, zIndex, Primitive.QUAD, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT);
-		this.sprites = new SpriteRenderer[maxBatchSize];
 
+		this.sprites = new SpriteRenderer[maxBatchSize];
 		this.numberOfSprites = 0;
 	}
 
@@ -113,7 +112,7 @@ public class DefaultRenderBatch extends RenderBatch {
 				// Get the index and add the renderObject
 				int index = this.numberOfSprites;
 				this.sprites[index] = sprite;
-				this.numberOfSprites++;
+				this.numberOfSprites ++;
 
 				// Add properties to local vertices array
 				load(index);

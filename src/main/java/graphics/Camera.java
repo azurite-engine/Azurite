@@ -50,9 +50,16 @@ public class Camera {
 		float smoothing = 0.045f;
 		Vector2f desiredPosition = new Vector2f(c.getX() - Window.getWidth()/2,c.getY() - Window.getHeight()/2);
 		Vector2f smoothedPosition = new Vector2f(Utils.lerp(position.x, desiredPosition.x, smoothing), Utils.lerp(position.y, desiredPosition.y, smoothing));
-		if (Utils.dist(desiredPosition, position) < 10) {
+//		if (!(desiredPosition.x - position.x < 13))
+//			smoothedPosition.x = Utils.round(smoothedPosition.x);
+//
+//		if (!(desiredPosition.y - position.y < 13))
+//			smoothedPosition.y = Utils.round(smoothedPosition.y);
+
+		// Lines in beteen sprites on tilemaps are caused by non pixel perfect (floating point) camera positions, unfortunately rounding the position can cause slight jitteryness.
+
+		if (Utils.dist(desiredPosition, position) < 20)
 			position = desiredPosition;
-		}
 		position = smoothedPosition;
 	}
 

@@ -22,7 +22,7 @@ public class Window {
     public static Scene main = new Main();
     public static Scene demo = new Demo();
 
-    public static Scene currentScene = demo;
+    public static Scene currentScene = main;
 
     // Window Variables
     public long frameCount = 0;
