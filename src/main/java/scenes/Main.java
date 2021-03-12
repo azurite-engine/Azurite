@@ -11,7 +11,7 @@ package scenes;
 import fonts.AFont;
 import graphics.Camera;
 import graphics.Color;
-import testFonts.Font;
+import fonts.Font;
 import util.Engine;
 
 import static graphics.Graphics.setDefaultBackground;
@@ -25,6 +25,7 @@ public class Main extends util.Scene {
 	Font f;
 
 	public void awake() {
+		super.update();
 		setDefaultBackground(Color.BLACK);
 		camera = new Camera();
 

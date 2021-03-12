@@ -2,8 +2,6 @@ package scenes;
 
 import ecs.*;
 import graphics.*;
-import graphics.renderer.LightmapRenderer;
-import org.joml.Vector2f;
 import physics.AABB;
 import tiles.Spritesheet;
 import tiles.Tilesystem;
@@ -17,7 +15,7 @@ import static graphics.Graphics.setDefaultBackground;
 
 public class Demo extends Scene {
     public static void main (String[] args) {
-        Engine.init(1080, 720, "Azurite Engine Demo 1", 0.1f);
+        Engine.init("Azurite Engine Demo 1", 0.1f);
     }
 
     Spritesheet a;
@@ -48,13 +46,11 @@ public class Demo extends Scene {
 
         greenLight = new GameObject("Green light", new Transform(3315, 300, 1, 1), 3);
         greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));
-
-
-
     }
 
     public void update() {
         super.update();
+
         player.getComponent(PointLight.class).intensity = Utils.map((float)Math.sin(Engine.millis()/600), -1, 1, 100, 140);
         booper.getComponent(PointLight.class).intensity = Utils.map((float)Math.cos(Engine.millis()/600), -1, 1, 70, 110);
         greenLight.getComponent(PointLight.class).intensity = Utils.map((float)Math.cos(Engine.millis()/600), -1, 1, 70, 110);
