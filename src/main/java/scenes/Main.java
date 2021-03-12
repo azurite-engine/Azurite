@@ -26,7 +26,7 @@ public class Main extends util.Scene {
 	}
 
 	Font f;
-	GameObject textTest;
+	Text t;
 
 	public void awake() {
 		super.update();
@@ -35,8 +35,8 @@ public class Main extends util.Scene {
 
 		f = new Font(new java.awt.Font("src/assets/fonts/OpenSans-Regular.ttf", java.awt.Font.PLAIN, 16), true);
 
-		textTest = new GameObject("", new Transform(0, 0, 100, 140), 2);
-		textTest.addComponent(new Text("Hello World!", f, 1, 1));
+		t = new Text("Hello World!", f, 1, 1);
+		t.draw();
 
 	}
 

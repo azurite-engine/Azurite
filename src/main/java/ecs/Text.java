@@ -8,13 +8,17 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 import physics.Transform;
 
-public class Text extends Component {
+import java.util.ArrayList;
+
+public class Text {
     private Vector4f color = new Color(255, 100, 100, 255).toNormalizedVec4f();
 
     private Sprite sprite;
 
     private Transform lastTransform;
     private boolean isDirty = false; // Dirty flag, tells renderer to redraw if object components have changed
+
+    ArrayList<GameObject> gameObjects;
 
     float x, y;
     Font font;
@@ -25,6 +29,7 @@ public class Text extends Component {
         this.font = font;
         this.x = x;
         this.y = y;
+        gameObjects = new ArrayList<>();
     }
 
     public void start () {
@@ -69,7 +74,10 @@ public class Text extends Component {
             };
 
             Sprite s = new Sprite(font.getTexture(), uv);
-            gameObject.addComponent(new SpriteRenderer(s));
+            gameObjects.add(new GameObject("" + ch, new Transform(drawX, drawY, g.width, g.height), 1).addComponent(new SpriteRenderer(s)));
+
+
+//            System.out.println("" + ch);
 
 //            renderer.drawTextureRegion(texture, drawX, drawY, g.x, g.y, g.width, g.height, c);
             drawX += g.width;

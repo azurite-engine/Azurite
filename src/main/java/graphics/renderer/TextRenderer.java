@@ -54,10 +54,10 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
      */
     @Override
     public void add(GameObject gameObject) {
-        Text t = gameObject.getComponent(Text.class);
-        if (t != null) {
-            addSpriteRenderer(t);
-        }
+//        Text t = gameObject.getComponent(Text.class);
+//        if (t != null) {
+//            addSpriteRenderer(t);
+//        }
     }
 
     @Override
@@ -68,16 +68,16 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
      * @param text Text: The text component to be added
      */
     protected void addSpriteRenderer (Text text) {
-        for (TextRendererBatch batch : batches) {
-            if (batch.addText(text)) {
-                return;
-            }
-        }
-        // If unable to add to previous batch, create a new one
-        TextRendererBatch newBatch = new TextRendererBatch(MAX_BATCH_SIZE, text.gameObject.zIndex());
-        newBatch.start();
-        batches.add(newBatch);
-        newBatch.addText(text);
-        Collections.sort(batches);
+//        for (TextRendererBatch batch : batches) {
+//            if (batch.addText(text)) {
+//                return;
+//            }
+//        }
+//        // If unable to add to previous batch, create a new one
+//        TextRendererBatch newBatch = new TextRendererBatch(MAX_BATCH_SIZE, text.gameObject.zIndex());
+//        newBatch.start();
+//        batches.add(newBatch);
+//        newBatch.addText(text);
+//        Collections.sort(batches);
     }
 }
