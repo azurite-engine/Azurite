@@ -21,22 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package testFonts;
+package fonts;
 
-import ecs.GameObject;
-import ecs.Sprite;
-import ecs.SpriteRenderer;
 import graphics.Texture;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryUtil;
-import physics.Transform;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
