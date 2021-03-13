@@ -121,7 +121,8 @@ public class DefaultRenderBatch extends RenderBatch {
 	 */
 
 	//Old way of updating by calling glSubData
-	public void updateBufferOLD() {
+	/*
+	public void updateBuffer() {
 
 		for (int i = 0; i < numberOfSprites; i ++) {
 			SpriteRenderer spr = sprites[i];
@@ -132,6 +133,7 @@ public class DefaultRenderBatch extends RenderBatch {
 		}
 		super.updateBuffer();
 	}
+	*/
 
 
 
