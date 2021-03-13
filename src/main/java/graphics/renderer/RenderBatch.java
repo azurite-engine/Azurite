@@ -53,7 +53,7 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 	/** Vertex Array id */
 	private int vao;
 	/** Vertex Buffer id */
-	private int vbo;
+	protected int vbo;
 	/** Index Buffer (Element Buffer) id */
 	private int ebo;
 
@@ -82,8 +82,6 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 		data = new float[maxBatchSize * primitive.vertexCount * vertexCount];
 
 		this.primitiveVertices = new float[vertexCount * primitive.vertexCount];
-
-
 	}
 
 	/**

@@ -1,24 +1,21 @@
-package graphics.renderer;
+package input;
 
 import ecs.SpriteRenderer;
 import graphics.Primitive;
 import graphics.ShaderDatatype;
 import graphics.Texture;
+import graphics.renderer.RenderBatchOLD;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import physics.Transform;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.util.Arrays;
+/**
+ * This is the old renderBatch, before goldspark added some code... I am temporarily leaving this file here for review by voxelrifts
+ * The new version had to be added manually.
+ */
 
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL15.glUnmapBuffer;
-import static org.lwjgl.opengl.GL30.*;
-
-public class DefaultRenderBatch extends RenderBatch {
+@Deprecated
+public class DefaultRenderBatch extends RenderBatchOLD {
 	private final SpriteRenderer[] sprites;
 
 	private int numberOfSprites;
@@ -32,7 +29,6 @@ public class DefaultRenderBatch extends RenderBatch {
 	DefaultRenderBatch(int maxBatchSize, int zIndex) {
 		super(maxBatchSize, zIndex, Primitive.QUAD, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT);
 		this.sprites = new SpriteRenderer[maxBatchSize];
-		this.primitiveVertices = new float[vertexCount * 4];
 
 		this.numberOfSprites = 0;
 	}
@@ -55,7 +51,6 @@ public class DefaultRenderBatch extends RenderBatch {
 		else
 			textureID = 0;
 
-
 		// Add vertex with the appropriate properties
 		float xAdd = 1.0f;
 		float yAdd = 1.0f;
@@ -77,36 +72,21 @@ public class DefaultRenderBatch extends RenderBatch {
 			data[offset] = spr.position.x + (xAdd * spr.scale.x);
 			data[offset + 1] = spr.position.y + (yAdd * spr.scale.y);
 
-			primitiveVertices[primitiveVerticesOffset] = data[offset];
-			primitiveVertices[primitiveVerticesOffset + 1] = data[offset + 1];
-
 			// Load color
 			data[offset + 2] = color.x; // Red
 			data[offset + 3] = color.y; // Green
 			data[offset + 4] = color.z; // Blue
 			data[offset + 5] = color.w; // Alpha
 
-			primitiveVertices[primitiveVerticesOffset + 2] = data[offset + 2];
-			primitiveVertices[primitiveVerticesOffset + 3] = data[offset + 3];
-			primitiveVertices[primitiveVerticesOffset + 4] = data[offset + 4];
-			primitiveVertices[primitiveVerticesOffset + 5] = data[offset + 5];
-
 			// Load texture coordinates
 			data[offset + 6] = textureCoordinates[i].x;
 			data[offset + 7] = textureCoordinates[i].y;
 
-			primitiveVertices[primitiveVerticesOffset + 6] = data[offset + 6];
-			primitiveVertices[primitiveVerticesOffset + 7] = data[offset + 7];
-
 			// Load texture ID
 			data[offset + 8] = textureID;
 
-			primitiveVertices[primitiveVerticesOffset + 8] = data[offset + 8];
-
 			offset += vertexCount;
-			primitiveVerticesOffset += vertexCount;
 		}
-
 	}
 
 	/**
@@ -115,10 +95,7 @@ public class DefaultRenderBatch extends RenderBatch {
 	 *
 	 * Calls the RenderBatch::updateBuffer method to re-upload the data if required
 	 */
-
-	//Old way of updating by calling glSubData
-  
-	public void updateBufferOLD() {
+	public void updateBuffer() {
 		for (int i = 0; i < numberOfSprites; i ++) {
 			SpriteRenderer spr = sprites[i];
 			if (spr.isDirty()) {
@@ -126,22 +103,8 @@ public class DefaultRenderBatch extends RenderBatch {
 				spr.setClean();
 			}
 		}
-
 		super.updateBuffer();
 	}
-
-	//New way of updating an object which was changed by ONLY updating that object without having to rebuffer entire buffer by calling glSubBufferData
-	public void updateBuffer(){
-		for(int i = 0; i < numberOfSprites; i++){
-			if(sprites[i].isDirty()){
-				//Create map for the dirty quad starting at its offset and ending in its length
-				super.updateBuffer(i);
-				sprites[i].setClean();
-			}
-		}
-	}
-
-
 
 	/**
 	 * Adds a sprite to this batch
