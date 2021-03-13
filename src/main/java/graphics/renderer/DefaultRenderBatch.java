@@ -117,8 +117,8 @@ public class DefaultRenderBatch extends RenderBatch {
 	 */
 
 	//Old way of updating by calling glSubData
-  
-	public void updateBufferOLD() {
+	/*
+	public void updateBuffer() {
 		for (int i = 0; i < numberOfSprites; i ++) {
 			SpriteRenderer spr = sprites[i];
 			if (spr.isDirty()) {
@@ -129,6 +129,7 @@ public class DefaultRenderBatch extends RenderBatch {
 
 		super.updateBuffer();
 	}
+	*/
 
 	//New way of updating an object which was changed by ONLY updating that object without having to rebuffer entire buffer by calling glSubBufferData
 	public void updateBuffer(){
