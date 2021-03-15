@@ -5,6 +5,9 @@ import graphics.ShaderDatatype;
 import graphics.Texture;
 import org.lwjgl.BufferUtils;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,14 +22,20 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 	protected int vertexCount;
 	/** How many bytes for a single vertex */
 	protected int vertexSize;
+	/** Vertices of one primitive */
+	protected float[] primitiveVertices;
 	/** The List of submitted textures */
 	protected List<Texture> textures;
 
 	/** Does the batch have room for more submissions */
 	public boolean hasRoom;
 
+
+
 	/** The data which is uploaded to the GPU */
 	protected float[] data;
+	/** Variable for gathering vertices of a single primitive */
+	protected int primitiveVerticesOffset = 0;
 	/** Internal count of how many primitives have been submitted to this batch */
 	protected int spriteCount;
 	/** Internal index for how many textures have been submitted to this batch */
@@ -73,7 +82,7 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 		}
 		data = new float[maxBatchSize * primitive.vertexCount * vertexCount];
 
-
+		this.primitiveVertices = new float[vertexCount * primitive.vertexCount];
 	}
 
 	/**
@@ -128,6 +137,7 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 		shouldRebufferData = true;
 		spriteCount++;
 		int offset = getOffset(index);
+		primitiveVerticesOffset = 0;
 		loadVertexProperties(index, offset);
 	}
 
@@ -158,6 +168,23 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 			glBufferSubData(GL_ARRAY_BUFFER, 0, data);
 			shouldRebufferData = false;
 		}
+	}
+
+	/**
+	 * Update the buffer with a memory taken as a pointer from GPU and only update the sprite that needs updating
+	 * @param spriteIndex the index of a sprite that needs updating
+	 */
+	public void updateBuffer(int spriteIndex) {
+		//Create a pointer to a buffer memory where the mapping will begin
+		FloatBuffer vertexPtr;
+
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		vertexPtr = ((ByteBuffer)glMapBufferRange(GL_ARRAY_BUFFER, spriteIndex * vertexSize * Float.BYTES,  vertexSize * Float.BYTES,GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT))
+				.order(ByteOrder.nativeOrder()).asFloatBuffer();
+		load(spriteIndex);
+		//Get vertices from createQuad
+		vertexPtr.put(primitiveVertices).position(0);
+		glUnmapBuffer(GL_ARRAY_BUFFER);
 	}
 
 	/**

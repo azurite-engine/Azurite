@@ -11,6 +11,7 @@ import physics.Transform;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Arrays;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL30.*;
@@ -19,9 +20,6 @@ public class DefaultRenderBatch extends RenderBatch {
 	private final SpriteRenderer[] sprites;
 
 	private int numberOfSprites;
-
-	private float[] primitiveVertices; //Vertices of one quad
-
 
 	/**
 	 * Create a default type render batch
@@ -35,7 +33,6 @@ public class DefaultRenderBatch extends RenderBatch {
 		this.primitiveVertices = new float[vertexCount * 4];
 
 		this.numberOfSprites = 0;
-
 	}
 
 	/**
@@ -56,9 +53,6 @@ public class DefaultRenderBatch extends RenderBatch {
 		else
 			textureID = 0;
 
-
-		//For single quad vertices so glMapBuffer can update the quad that is being updated
-		int primitiveVerticesOffset = 0;
 
 		// Add vertex with the appropriate properties
 		float xAdd = 1.0f;
@@ -110,6 +104,7 @@ public class DefaultRenderBatch extends RenderBatch {
 			offset += vertexCount;
 			primitiveVerticesOffset += vertexCount;
 		}
+
 	}
 
 	/**
@@ -122,8 +117,6 @@ public class DefaultRenderBatch extends RenderBatch {
 	//Old way of updating by calling glSubData
 	/*
 	public void updateBuffer() {
-
-
 		for (int i = 0; i < numberOfSprites; i ++) {
 			SpriteRenderer spr = sprites[i];
 			if (spr.isDirty()) {
@@ -132,31 +125,16 @@ public class DefaultRenderBatch extends RenderBatch {
 			}
 		}
 
-
 		super.updateBuffer();
-
-
 	}
+	*/
 
-	 */
-
-
-
-	//New way of updating an object which was changed by ONLY updating that object without having to rebuffer entire buffer by calling glSubBufferData 
+	//New way of updating an object which was changed by ONLY updating that object without having to rebuffer entire buffer by calling glSubBufferData
 	public void updateBuffer(){
 		for(int i = 0; i < numberOfSprites; i++){
 			if(sprites[i].isDirty()){
 				//Create map for the dirty quad starting at its offset and ending in its length
-				FloatBuffer vertexPtr;
-				glBindBuffer(GL_ARRAY_BUFFER, vbo);
-				vertexPtr = ((ByteBuffer)glMapBufferRange(GL_ARRAY_BUFFER, i * ((vertexCount * 4) * 4), vertexCount * 4 * primitive.elementCount,GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT))
-						.order(ByteOrder.nativeOrder()).asFloatBuffer();
-				load(i);
-				//Get vertices from createQuad
-				vertexPtr.put(primitiveVertices).position(0);
-
-				glUnmapBuffer(GL_ARRAY_BUFFER);
-
+				super.updateBuffer(i);
 				sprites[i].setClean();
 			}
 		}
