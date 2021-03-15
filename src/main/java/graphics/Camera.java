@@ -50,6 +50,7 @@ public class Camera {
 		float smoothing = 0.045f;
 		Vector2f desiredPosition = new Vector2f(c.getX() - Window.getWidth()/2,c.getY() - Window.getHeight()/2);
 		Vector2f smoothedPosition = new Vector2f(Utils.lerp(position.x, desiredPosition.x, smoothing), Utils.lerp(position.y, desiredPosition.y, smoothing));
+		// If you notice black bars while the camera is panning, it is because floating point positions can cause discrepencies, unfortunately casing the lerp to an int makes the motion a little  bit choppy
 		if (Utils.dist(desiredPosition, position) < 10) {
 			position = desiredPosition;
 		}
