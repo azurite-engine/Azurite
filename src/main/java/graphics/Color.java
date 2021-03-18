@@ -3,13 +3,17 @@ package graphics;
 import org.joml.Vector3f;
 import util.Utils;
 import org.joml.Vector4f;
+import java.util.Random;
 
 public class Color {
+
+	public static Random random = new Random();
 
 	/*
 	 * Color class used throughout the engine to represent red, green, blue and alpha
 	 * Contains static predefined colors that can easily be used during prototyping.
 	 *
+	 * COLOR CODES WERE MODIFIED BY CGOCLAN
 	 */
 	public static Color WHITE = new Color(255, 255, 255, 255);
 	public static Color BLACK = new Color(0, 0, 0, 255);
@@ -23,17 +27,25 @@ public class Color {
 	public static Color CYAN = new Color(0, 255, 255, 255);
 	public static Color YELLOW = new Color(255, 255, 0, 255);
 	public static Color PURPLE = new Color(127, 0, 127, 255);
-
-	/*
-	 * An array of the predefined colors, used when generating a random color.
-	 */
-	public static Color[] LIST = {RED, GREEN, BLUE, PINK, CYAN, YELLOW, DARK_RED, PURPLE, DARK_BLUE, DIRTY_BLUE};
+	/* More Colors Added by CGOClan (BEANS) */
+	public static Color SILVER = new Color(192, 192, 192, 255);
+	public static Color GRAY = new Color(128, 128, 128, 255);
+	public static Color MAROON = new Color(128, 0, 0, 255);
+	public static Color OLIVE = new Color(120, 128, 0, 255);
+	public static Color DARK_GREEN = new Color(0, 128, 0, 255);
+	public static Color TEAL = new Color(0, 128, 128, 255);
+	public static Color NAVY_BLUE = new Color(0, 0, 128, 255);
+	public static Color BROWN = new Color(165, 42, 42, 255);
+	public static Color FIREBRICK = new Color(178, 34, 34, 255);
+	public static Color CRISMON = new Color(220, 20, 60, 255);
 
 	/**
-	* @return random Color from the array of predefined colors.
+	* @return random Color
+	 *
+	 * RANDOM COLOR GENERATION SYSTEM WAS CHANGED BY CGOCLAN
 	*/
 	public static Color randomColor () {
-		return LIST[Utils.randomInt(2, LIST.length - 1)];
+		return new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255),255);
 	}
 
 	public float r;
@@ -114,3 +126,4 @@ public class Color {
 		}
 	}
 }
+
