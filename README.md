@@ -41,7 +41,6 @@
 
 * Modern OpenGL through the LWJGL 3 library for fast GPU rendering.
 * Entity Component System
-* Dear ImGui bindings
 
 ## Code Samples
 #### BoilerPlate Code:
