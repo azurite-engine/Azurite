@@ -12,8 +12,6 @@ public class Color {
 	/*
 	 * Color class used throughout the engine to represent red, green, blue and alpha
 	 * Contains static predefined colors that can easily be used during prototyping.
-	 *
-	 * COLOR CODES WERE MODIFIED BY CGOCLAN
 	 */
 	public static Color WHITE = new Color(255, 255, 255, 255);
 	public static Color BLACK = new Color(0, 0, 0, 255);
@@ -27,7 +25,6 @@ public class Color {
 	public static Color CYAN = new Color(0, 255, 255, 255);
 	public static Color YELLOW = new Color(255, 255, 0, 255);
 	public static Color PURPLE = new Color(127, 0, 127, 255);
-	/* More Colors Added by CGOClan (BEANS) */
 	public static Color SILVER = new Color(192, 192, 192, 255);
 	public static Color GRAY = new Color(128, 128, 128, 255);
 	public static Color MAROON = new Color(128, 0, 0, 255);
@@ -37,12 +34,10 @@ public class Color {
 	public static Color NAVY_BLUE = new Color(0, 0, 128, 255);
 	public static Color BROWN = new Color(165, 42, 42, 255);
 	public static Color FIREBRICK = new Color(178, 34, 34, 255);
-	public static Color CRISMON = new Color(220, 20, 60, 255);
+	public static Color CRIMSON = new Color(220, 20, 60, 255);
 
 	/**
 	* @return random Color
-	 *
-	 * RANDOM COLOR GENERATION SYSTEM WAS CHANGED BY CGOCLAN
 	*/
 	public static Color randomColor () {
 		return new Color(random.nextInt(255),random.nextInt(255),random.nextInt(255),255);
@@ -78,7 +73,6 @@ public class Color {
 	}
 
 	private float m (float p) {
-		// I am too lazy to type this three times...
 		return Utils.map(p, 0, 255, 0, 1);
 	}
 
@@ -109,18 +103,18 @@ public class Color {
 		a = value;
 	}
 
-	public void setValue (String type, float value) {
+	public void setValue (char type, float value) {
 		switch (type) {
-		case "r":
+		case 'r':
 			r = value;
 			break;
-		case "g":
+		case 'g':
 			g = value;
 			break;
-		case "b":
+		case 'b':
 			b = value;
 			break;
-		case "a":
+		case 'a':
 			a = value;
 			break;
 		}
