@@ -17,7 +17,7 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL30.*;
 
 public class DefaultRenderBatch extends RenderBatch {
-	private final SpriteRenderer[] sprites;
+	private SpriteRenderer[] sprites;
 	private int numberOfSprites;
 
 	/**
