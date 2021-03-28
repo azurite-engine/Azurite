@@ -2,12 +2,13 @@ package tiles;
 
 import ecs.GameObject;
 import ecs.SpriteRenderer;
+import physics.AABB;
 import physics.Transform;
 import util.Utils;
 
 public class Tilesystem {
 
-    GameObject[][] gameObjects = new GameObject[0][0];
+    GameObject[][] gameObjects;
     int w, h;
 
     public int map[] = {
@@ -49,6 +50,10 @@ public class Tilesystem {
                     gameObjects[x][y].addComponent(new SpriteRenderer(a.getSprite(
                         getAt(x, y, 31)
                     )));
+                    if (getAt(x, y, 31) == 1) {
+                        System.out.println("called");
+                        gameObjects[x][y].addComponent(new AABB());
+                    }
                 } else if (getAt(x, y, 31) >= 256) {
                     gameObjects[x][y].addComponent(new SpriteRenderer(b.getSprite(
                             (int) Utils.map(getAt(x, y, 31), 256, 256*2-1, 0, 255)
