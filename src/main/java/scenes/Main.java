@@ -22,7 +22,7 @@ import static graphics.Graphics.setDefaultBackground;
 public class Main extends util.Scene {
 
 	public static void main (String[] args) {
-		Engine.init(1920, 1080, "Hello World!", 1);
+		Engine.init(1600, 900, "Hello World!", 1);
 	}
 
 	Font f;
@@ -33,9 +33,9 @@ public class Main extends util.Scene {
 		setDefaultBackground(Color.BLACK);
 		camera = new Camera();
 
-		f = new Font(new java.awt.Font("src/assets/fonts/OpenSans-Regular.ttf", java.awt.Font.PLAIN, 16), true);
+		f = new Font(new java.awt.Font("src/assets/fonts/OpenSans-Regular.ttf", java.awt.Font.PLAIN, 36), true);
 
-		t = new Text("Hello World!", f, 1, 1);
+		t = new Text("Hello World!\nLorem Ipsum set dolar amet...", f, 1, 1);
 		t.draw();
 
 	}
