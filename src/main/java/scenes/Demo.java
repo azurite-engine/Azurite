@@ -17,7 +17,7 @@ import static graphics.Graphics.setDefaultBackground;
 
 public class Demo extends Scene {
     public static void main (String[] args) {
-        Engine.init("Azurite Engine Demo 1", 0.1f);
+        Engine.init(1080, 720, "Azurite Engine Demo 1", 0.1f);
     }
 
     Spritesheet a;
@@ -36,7 +36,7 @@ public class Demo extends Scene {
         t = new Tilesystem(a, b, 31, 15, 200, 200);
 
         booper = new GameObject("Booper", new Transform(800, 800, 100, 100), 2);
-        booper.addComponent(new SpriteRenderer(a.getSprite(150))); // a.getSprite(132)
+        booper.addComponent(new Animation(1, a.getSprite(132), a.getSprite(150)));
         booper.addComponent(new AABB());
         booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
 
