@@ -9,13 +9,16 @@ package scenes;
  * @return type and description if not void
  */
 
-import ecs.GameObject;
 import ecs.Text;
 import graphics.Camera;
 import graphics.Color;
 import fonts.Font;
-import physics.Transform;
 import util.Engine;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 import static graphics.Graphics.setDefaultBackground;
 
@@ -29,13 +32,12 @@ public class Main extends util.Scene {
 	Text t;
 
 	public void awake() {
-		super.update();
+
 		setDefaultBackground(Color.BLACK);
 		camera = new Camera();
 
-		f = new Font(new java.awt.Font("src/assets/fonts/OpenSans-Regular.ttf", java.awt.Font.PLAIN, 36), true);
-
-		t = new Text("Hello World!\nLorem Ipsum set dolar amet...", f, 1, 1);
+		f = new Font("src/assets/fonts/Chango-Regular.ttf", 60, true);
+		t = new Text("Hello World!\nLorem Ipsum set dolar amet...", f, 100, 100);
 		t.draw();
 
 	}

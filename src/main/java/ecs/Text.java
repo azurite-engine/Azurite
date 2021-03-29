@@ -49,7 +49,7 @@ public class Text {
             char ch = text.charAt(i);
             if (ch == '\n') {
                 /* Line feed, set x and y to draw at the next line */
-                drawY -= font.getFontHeight();
+                drawY += font.getFontHeight();
                 drawX = x;
                 continue;
             }
@@ -76,10 +76,6 @@ public class Text {
             Sprite s = new Sprite(font.getTexture(), uv);
             gameObjects.add(new GameObject("" + ch, new Transform(drawX, drawY, g.width, g.height), 1).addComponent(new SpriteRenderer(s)));
 
-
-//            System.out.println("" + ch);
-
-//            renderer.drawTextureRegion(texture, drawX, drawY, g.x, g.y, g.width, g.height, c);
             drawX += g.width;
         }
     }

@@ -31,6 +31,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -124,6 +125,27 @@ public class Font {
      */
     public Font(InputStream in, int size, boolean antiAlias) throws FontFormatException, IOException {
         this(java.awt.Font.createFont(TRUETYPE_FONT, in).deriveFont(PLAIN, size), antiAlias);
+    }
+
+    /**
+     * Creates a Font from an input stream.
+     *
+     * @param path      Path to TTF file
+     * @param size      Font size
+     * @param antiAlias Whether the font should be antialiased or not
+     */
+    public Font(String path, float size, boolean antiAlias) {
+        java.awt.Font f = null;
+        try {
+            java.awt.Font fontRaw = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, new File(path));
+            f = fontRaw.deriveFont(size);
+        } catch (Exception e) {
+            System.out.println("[WARNING] Could not load font " + path + ", using default monospaced font.");
+            e.printStackTrace();
+        }
+
+        glyphs = new HashMap<>();
+        texture = createFontTexture(f, antiAlias);
     }
 
     /**
