@@ -30,7 +30,6 @@ public class CharacterController extends Component {
 
     @Override
     public void update (float dt) {
-
         moveX();
         if (collision != null) collision.collideX();
 

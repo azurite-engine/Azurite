@@ -2,9 +2,8 @@ package physics;
 
 import ecs.CharacterController;
 import ecs.Component;
+import ecs.Trigger;
 import graphics.Color;
-import org.joml.Vector2f;
-import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
 import util.debug.DebugRect;
 
@@ -16,7 +15,7 @@ public class AABB extends Component {
 	private Transform self, other;
 	private Transform lastPosition;
 
-	private static final List<AABB> colliders = new ArrayList<>();;
+	public static final List<AABB> colliders = new ArrayList<>();
 
 	CharacterController controller;
 
@@ -39,10 +38,10 @@ public class AABB extends Component {
 
 	@Override
 	public DebugPrimitive[] debug() {
-		return new DebugPrimitive[] {debugRect};
+		return new DebugPrimitive[]{debugRect};
 	}
 
-	public boolean checkCollision () {
+	public boolean checkCollision() {
 		for (AABB a : colliders) {
 			other = a.gameObject.getTransform();
 			if (a.equals(this)) continue;
@@ -53,7 +52,7 @@ public class AABB extends Component {
 		return false;
 	}
 
-	public void collideX () {
+	public void collideX() {
 		if (checkCollision()) {
 			if (lastPosition.getX() < other.getX()) {
 				gameObject.setTransformX(other.getX() - gameObject.getTransform().getWidth());
@@ -63,7 +62,7 @@ public class AABB extends Component {
 		}
 	}
 
-	public void collideY () {
+	public void collideY() {
 		if (checkCollision()) {
 			if (lastPosition.getY() < other.getY()) {
 				gameObject.setTransformY(other.getY() - gameObject.getTransform().getHeight());
@@ -87,7 +86,7 @@ public class AABB extends Component {
 		return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
 	}
 
-	private void checkControllerAABB () {
+	private void checkControllerAABB() {
 		controller = gameObject.getComponent(CharacterController.class);
 		if (controller != null) {
 			if (!controller.AABB_enabled) {
