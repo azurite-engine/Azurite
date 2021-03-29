@@ -49,4 +49,8 @@ public class EventData {
             this.modifiers = modifiers;
         }
     }
+
+    public static class TriggerEnterEvent extends EventData {}
+
+    public static class TriggerExitEvent extends EventData {}
 }
