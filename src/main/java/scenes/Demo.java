@@ -2,8 +2,6 @@ package scenes;
 
 import ecs.*;
 import graphics.*;
-import graphics.renderer.LightmapRenderer;
-import org.joml.Vector2f;
 import physics.AABB;
 import tiles.Spritesheet;
 import tiles.Tilesystem;
@@ -37,7 +35,7 @@ public class Demo extends Scene {
 
         booper = new GameObject("Booper", new Transform(800, 800, 100, 100), 2);
         booper.addComponent(new Animation(1, a.getSprite(132), a.getSprite(150)));
-        booper.addComponent(new AABB());
+        booper.addComponent(new CollisionTrigger(data -> System.out.println("Entered Trigger")));
         booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
 
         player = new GameObject("Player", new Transform(600, 600, 100, 100), 2);
