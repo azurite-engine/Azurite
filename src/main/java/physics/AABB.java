@@ -2,7 +2,6 @@ package physics;
 
 import ecs.CharacterController;
 import ecs.Component;
-import ecs.Trigger;
 import graphics.Color;
 import util.debug.DebugPrimitive;
 import util.debug.DebugRect;

@@ -9,7 +9,7 @@ import physics.Transform;
 import util.debug.DebugPrimitive;
 import util.debug.DebugRect;
 
-public class Trigger extends Component {
+public class CollisionTrigger extends Component {
 	private Transform self, other;
 	private Transform lastPosition;
 	private boolean wasColliding;
@@ -19,7 +19,7 @@ public class Trigger extends Component {
 	public EventNode<EventData.TriggerEnterEvent> onTriggerEnter;
 	public EventNode<EventData.TriggerExitEvent> onTriggerExit;
 
-	public Trigger(EventListener<EventData.TriggerEnterEvent> onEnter) {
+	public CollisionTrigger(EventListener<EventData.TriggerEnterEvent> onEnter) {
 		onTriggerEnter = new EventNode<>();
 		onTriggerEnter.subscribe(onEnter);
 	}
