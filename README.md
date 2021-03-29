@@ -2,6 +2,7 @@
     <br />
     <img src="https://img.shields.io/badge/Made%20using-Java-red">
     <img src="https://img.shields.io/badge/Made%20Using-Open%20GL%20-yellow">
+    <img src="https://github.com/Games-With-Gabe-Community/Azurite/actions/workflows/gradle.yml/badge.svg">
 </p>
 
 <br />
