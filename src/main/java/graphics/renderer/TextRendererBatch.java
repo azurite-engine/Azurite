@@ -88,16 +88,16 @@ public class TextRendererBatch extends RenderBatch {
      *
      * Calls the RenderBatch::updateBuffer method to re-upload the data if required
      */
-    public void updateBuffer() {
-//        for (int i = 0; i < numberOfTexts; i ++) {
-//            Text text = texts[i];
-//            if (text.isDirty()) {
+//    public void updateBuffer() {
+//        for (int i = 0; i < numberOfGlyphRenderers; i ++) {
+//            GlyphRenderer gr = glyphRenderers[i];
+//            if (gr.isDirty()) {
 //                load(i);
-//                text.setClean();
+//                gr.setClean();
 //            }
 //        }
 //        super.updateBuffer();
-    }
+//    }
 
     /**
      * Adds a Text object to this batch

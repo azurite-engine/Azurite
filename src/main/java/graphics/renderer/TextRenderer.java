@@ -34,7 +34,7 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
      */
     @Override
     protected Framebuffer createFramebuffer() {
-        return new Framebuffer(Window.getWidth(), Window.getHeight(), new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)));
+        return Framebuffer.createDefault();
     }
 
     /**
@@ -70,6 +70,7 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
     protected void addText (Text text) {
         boolean createNewBatch = false;
         int continueFromIndex = 0;
+        if (batches.size() == 0) createNewBatch = true;
         for (TextRendererBatch batch : batches) {
             for (int i = 0; i < text.getGlyphRenderers().size(); i ++) {
                 GlyphRenderer g = text.getGlyphRenderers().get(i);

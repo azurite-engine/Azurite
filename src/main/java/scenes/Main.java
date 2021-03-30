@@ -31,6 +31,7 @@ public class Main extends util.Scene {
 
 		t = new Text("Hello World!\nLorem Ipsum set dolar amet...", 100, 100);
 		t.draw();
+		textRenderer.add(t);
 
 	}
 
