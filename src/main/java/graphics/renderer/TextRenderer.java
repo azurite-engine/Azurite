@@ -63,6 +63,10 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
     @Override
     protected void prepare() {}
 
+    protected void modifyText (Text text) {
+
+    }
+
     /**
      * Adds the Text component to a single batch, and creates a new batch if their is no space.
      * @param text Text: The text component to be added
@@ -78,6 +82,7 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
                     createNewBatch = true;
                     continueFromIndex = i;
                 }
+                g.setRendererBatch(batch, batch.getSize());
             }
         }
         if (createNewBatch) {
@@ -88,6 +93,7 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
             for (int i = continueFromIndex; i < text.getGlyphRenderers().size(); i ++) {
                 GlyphRenderer g = text.getGlyphRenderers().get(i);
                 newBatch.addGlyphRenderer(g);
+                g.setRendererBatch(newBatch, newBatch.getSize());
             }
             Collections.sort(batches);
         }

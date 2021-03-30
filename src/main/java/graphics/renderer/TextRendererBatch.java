@@ -82,22 +82,9 @@ public class TextRendererBatch extends RenderBatch {
         }
     }
 
-    /**
-     * Checks if any sprite is dirty (has changed any of its properties).
-     * If so, resets its data in the data[] via load().
-     *
-     * Calls the RenderBatch::updateBuffer method to re-upload the data if required
-     */
-//    public void updateBuffer() {
-//        for (int i = 0; i < numberOfGlyphRenderers; i ++) {
-//            GlyphRenderer gr = glyphRenderers[i];
-//            if (gr.isDirty()) {
-//                load(i);
-//                gr.setClean();
-//            }
-//        }
-//        super.updateBuffer();
-//    }
+    public int getSize () {
+        return numberOfGlyphRenderers;
+    }
 
     /**
      * Adds a Text object to this batch

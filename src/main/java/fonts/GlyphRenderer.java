@@ -3,10 +3,13 @@ package fonts;
 import ecs.Text;
 import graphics.Color;
 import graphics.Texture;
+import graphics.renderer.TextRendererBatch;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import physics.Transform;
 import util.Utils;
+
+import java.util.ArrayList;
 
 import static graphics.Color.WHITE;
 
@@ -21,7 +24,9 @@ public class GlyphRenderer {
     private Transform localTransform;
     private Transform lastTransform;
     private boolean isDirty = false; // Dirty flag, tells renderer to redraw if object has changed
-    
+
+    private TextRendererBatch batch;
+    private int batchIndex;
 
     /**
      * Create a spriteRenderer using a sprite that is already loaded.
@@ -46,6 +51,11 @@ public class GlyphRenderer {
 
 //            isDirty = true;
 //        }
+    }
+
+    public void setRendererBatch (TextRendererBatch batch, int index) {
+        this.batch = batch;
+        batchIndex = index;
     }
 
     /**

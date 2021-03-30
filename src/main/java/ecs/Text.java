@@ -5,6 +5,7 @@ import fonts.Glyph;
 import fonts.GlyphRenderer;
 import graphics.Color;
 import graphics.Texture;
+import graphics.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import physics.Transform;
@@ -12,7 +13,7 @@ import physics.Transform;
 import java.util.ArrayList;
 
 public class Text {
-    private Vector4f color = new Color(255, 100, 100, 255).toNormalizedVec4f();
+    private Vector4f color = Color.RED.toNormalizedVec4f();
 
     private Sprite sprite;
 
@@ -33,7 +34,11 @@ public class Text {
         this.x = x;
         this.y = y;
         this.zIndex = zIndex;
+
         glyphRenderers = new ArrayList<>();
+
+        draw();
+        Window.currentScene.textRenderer.add(this);
     }
 
     public Text (String string, float x, float y) {
@@ -42,11 +47,48 @@ public class Text {
         this.x = x;
         this.y = y;
         this.zIndex = 1;
+
         glyphRenderers = new ArrayList<>();
+
+        draw();
+        Window.currentScene.textRenderer.add(this);
     }
 
     public void draw () {
         int textHeight = font.getHeight(text);
+
+        float drawX = x;
+        float drawY = y;
+        if (textHeight > font.getFontHeight()) {
+            drawY += textHeight - font.getFontHeight();
+        }
+
+        for (int i = 0; i < text.length(); i++) {
+            char ch = text.charAt(i);
+            if (ch == '\n') {
+                /* Line feed, set x and y to draw at the next line */
+                drawY += font.getFontHeight();
+                drawX = x;
+                continue;
+            }
+            if (ch == '\r') {
+                /* Carriage return, just skip it */
+                continue;
+            }
+            Glyph g = font.getGlyphs().get(ch);
+
+            glyphRenderers.add(new GlyphRenderer(new Transform(drawX, drawY, g.width, g.height), g, this));
+
+            drawX += g.width;
+        }
+    }
+
+    public void change (String string) {
+        this.text = string;
+        glyphRenderers = new ArrayList<>();
+        int textHeight = font.getHeight(text);
+
+
 
         float drawX = x;
         float drawY = y;

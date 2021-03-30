@@ -13,6 +13,8 @@ import ecs.Text;
 import graphics.Camera;
 import graphics.Color;
 import util.Engine;
+import util.Logger;
+import util.Utils;
 
 import static graphics.Graphics.setDefaultBackground;
 
@@ -29,14 +31,14 @@ public class Main extends util.Scene {
 		setDefaultBackground(Color.BLACK);
 		camera = new Camera();
 
-		t = new Text("Hello World!\nLorem Ipsum set dolar amet...", 100, 100);
-		t.draw();
-		textRenderer.add(t);
+		t = new Text("Hello World!\nLorem Ipsum dolor sit amet...", 100, 100);
+//		t.draw();
+//		textRenderer.add(t);
 
 	}
 
 	public void update () {
-
+		t.change("" + Utils.random(0, 10000));
 	}
 
 }
