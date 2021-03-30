@@ -3,6 +3,8 @@ package graphics.renderer;
 import ecs.GameObject;
 import ecs.SpriteRenderer;
 import ecs.Text;
+import fonts.Glyph;
+import fonts.GlyphRenderer;
 import graphics.Framebuffer;
 import graphics.Shader;
 import graphics.Window;
@@ -48,16 +50,14 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
     }
 
     /**
-     * Add a gameObject to this renderer
+     * Add a Text object to this renderer
      *
-     * @param gameObject the GameObject with renderable components
+     * @param textObject the Text with renderable glpyhs
      */
-    @Override
-    public void add(GameObject gameObject) {
-//        Text t = gameObject.getComponent(Text.class);
-//        if (t != null) {
-//            addSpriteRenderer(t);
-//        }
+    public void add(Text textObject) {
+        if (textObject != null) {
+            addText(textObject);
+        }
     }
 
     @Override
@@ -67,17 +67,28 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
      * Adds the Text component to a single batch, and creates a new batch if their is no space.
      * @param text Text: The text component to be added
      */
-    protected void addSpriteRenderer (Text text) {
-//        for (TextRendererBatch batch : batches) {
-//            if (batch.addText(text)) {
-//                return;
-//            }
-//        }
-//        // If unable to add to previous batch, create a new one
-//        TextRendererBatch newBatch = new TextRendererBatch(MAX_BATCH_SIZE, text.gameObject.zIndex());
-//        newBatch.start();
-//        batches.add(newBatch);
-//        newBatch.addText(text);
-//        Collections.sort(batches);
+    protected void addText (Text text) {
+        boolean createNewBatch = false;
+        int continueFromIndex = 0;
+        for (TextRendererBatch batch : batches) {
+            for (int i = 0; i < text.getGlyphRenderers().size(); i ++) {
+                GlyphRenderer g = text.getGlyphRenderers().get(i);
+                if (!batch.addGlyphRenderer(g)) {
+                    createNewBatch = true;
+                    continueFromIndex = i;
+                }
+            }
+        }
+        if (createNewBatch) {
+            // If unable to add to previous batch, create a new one
+            TextRendererBatch newBatch = new TextRendererBatch(MAX_BATCH_SIZE, text.zIndex());
+            newBatch.start();
+            batches.add(newBatch);
+            for (int i = continueFromIndex; i < text.getGlyphRenderers().size(); i ++) {
+                GlyphRenderer g = text.getGlyphRenderers().get(i);
+                newBatch.addGlyphRenderer(g);
+            }
+            Collections.sort(batches);
+        }
     }
 }

@@ -169,6 +169,7 @@ public class Window {
         currentScene.initRenderers();
         currentScene.awake();
 
+        currentScene.startUi();
         currentScene.startGameObjects();
 
         while (!glfwWindowShouldClose(window)) {
