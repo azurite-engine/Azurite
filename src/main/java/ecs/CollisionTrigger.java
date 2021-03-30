@@ -21,6 +21,7 @@ public class CollisionTrigger extends Component {
 
 	public CollisionTrigger(EventListener<EventData.TriggerEnterEvent> onEnter) {
 		onTriggerEnter = new EventNode<>();
+		onTriggerExit = new EventNode<>();
 		onTriggerEnter.subscribe(onEnter);
 	}
 
