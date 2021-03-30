@@ -1,18 +1,39 @@
 package util;
 
 public class Logger {
-    public static void logFATAL(String error) {
-        System.out.println("[FATAL] " + error);
+
+    /**
+     * Logs fatal errors in format: {@code [FATAL] [{Class calling the method}] {error}} <br>
+     * Then, exits with exit value: {@code -1}
+     *
+     * @param error The fatal error message passed to log.
+     */
+    public static void logFatal(String error) {
+        String clazz = Thread.currentThread().getStackTrace()[2].getClassName();
+        System.out.println("\u001b[31m[FATAL] [" + clazz + "] " + error + "\u001b[0m");
         System.exit(-1);
     }
 
+    /**
+     * Logs asset errors in format: {@code [ASSET ERROR] [{Class calling the method}] {error}} <br>
+     * Then, exits with exit value: {@code -1}
+     *
+     * @param error The asset error message passed to log.
+     */
     public static void logAssetError(String error) {
-        System.out.println("[ASSET ERROR] " + error);
+        String clazz = Thread.currentThread().getStackTrace()[2].getClassName();
+        System.out.println("\u001b[33m[ASSET ERROR] " + clazz + "] " + error + "\u001b[0m");
         System.exit(-1);
     }
 
+    /**
+     * Logs information in format: {@code [INFO] [{Class calling the method}] {info}}
+     *
+     * @param info The string passed to log.
+     */
     public static void logInfo(String info) {
-        System.out.println("[INFO] " + info);
+        String clazz = Thread.currentThread().getStackTrace()[2].getClassName();
+        System.out.println("\u001b[32m[INFO] [" + clazz + "] " + info + "\u001b[0m");
     }
 
     public static void logSystemCompatibilityError() {
@@ -25,7 +46,13 @@ public class Logger {
         System.exit(-1);
     }
 
-    public static void log(String log) {
-        System.out.println(log);
+    /**
+     * Logs debug information in format: {@code [{Class calling the method}] {info}}
+     *
+     * @param log The string passed to log.
+     */
+    public static void debugLog(String log) {
+        String clazz = Thread.currentThread().getStackTrace()[2].getClassName();
+        System.out.println("\u001b[36m[DEBUG] [" + clazz + "] " + log + "\u001b[0m");
     }
 }
