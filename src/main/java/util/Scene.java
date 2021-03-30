@@ -1,12 +1,10 @@
 package util;
 
 import ecs.GameObject;
+import ecs.Text;
 import graphics.Camera;
 import event.Events;
-import graphics.renderer.DebugRenderer;
-import graphics.renderer.DefaultRenderer;
-import graphics.renderer.LightmapRenderer;
-import graphics.renderer.Renderer;
+import graphics.renderer.*;
 import graphics.Camera;
 import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
@@ -21,11 +19,13 @@ public abstract class Scene {
     public DefaultRenderer renderer = new DefaultRenderer();
     public LightmapRenderer lightmapRenderer = new LightmapRenderer();
     public DebugRenderer debugRenderer = new DebugRenderer();
+    public TextRenderer textRenderer = new TextRenderer();
     private List<Renderer<?>> rendererRegistry = new ArrayList<>();
     public Camera camera;
     private boolean isRunning = false;
     private boolean debugMode = true;
     static protected ArrayList<GameObject> gameObjects = new ArrayList<>();
+    static protected ArrayList<Text> uiObjects = new ArrayList<>(); // Todo: implement ui component based system similar to gameObjects
 
     public float minLighting;
 
@@ -60,10 +60,17 @@ public abstract class Scene {
         this.renderer.clean();
         this.lightmapRenderer.clean();
         this.debugRenderer.clean();
+        this.textRenderer.clean();
         rendererRegistry.forEach(Renderer::clean);
     }
 
+
     // The following methods shouldn't be overridden. For this, added final keyword
+
+    public final void startUi () {
+        textRenderer.init();
+    }
+
     /**
      * Loops through all gameobjects already in the scene and calls their start methods.
      */
@@ -123,6 +130,7 @@ public abstract class Scene {
         lightmapRenderer.render();
         lightmapRenderer.bindLightmap();
         this.renderer.render();
+        textRenderer.render();
         if (debugMode) this.debugRenderer.render();
     }
 
