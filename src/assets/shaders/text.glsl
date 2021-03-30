@@ -27,6 +27,7 @@ in vec4 fColor;
 in vec2 fTexCoords;
 in float fTexId;
 
+// Font textures
 uniform sampler2D uTextures[8];
 
 out vec4 color;

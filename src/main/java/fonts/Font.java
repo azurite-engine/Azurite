@@ -232,10 +232,23 @@ public class Font {
 
         }
 
-        /* Create texture */
-//        GameObject go = new GameObject("go", new Transform(0, 0, width, height), 2);
-//        go.addComponent(new SpriteRenderer(new Sprite(fontTexture)));
-        return bufferedImageToTexture(image);
+        Texture finalTexture = bufferedImageToTexture(image);
+
+        /* Finally, calculate the UV coordinates on the generated texture and store it in each Glyph */
+        for (int i = 32; i < 256; i++) {
+            if (i == 127) {
+                /* ASCII 127 is the DEL control code, so we can skip it */
+                continue;
+            }
+
+            if (glyphs.get((char) i) != null) {
+                // Skip extended ASCII (I think it is extended atleast, range is approximately 128-159) it causes null pointer exceptions.
+                glyphs.get((char) i).calculateUVs(finalTexture);
+            }
+
+        }
+
+        return finalTexture;
     }
 
     private Texture bufferedImageToTexture (BufferedImage image) {

@@ -2,6 +2,7 @@ package ecs;
 
 import fonts.Font;
 import fonts.Glyph;
+import fonts.GlyphRenderer;
 import graphics.Color;
 import graphics.Texture;
 import org.joml.Vector2f;
@@ -18,22 +19,30 @@ public class Text {
     private Transform lastTransform;
     private boolean isDirty = false; // Dirty flag, tells renderer to redraw if object components have changed
 
-    ArrayList<GameObject> gameObjects;
+    int zIndex;
+
+    ArrayList<GlyphRenderer> glyphRenderers;
 
     float x, y;
     Font font;
     CharSequence text;
 
-    public Text (String string, Font font, float x, float y) {
+    public Text (String string, Font font, float x, float y, int zIndex) {
         this.text = string;
         this.font = font;
         this.x = x;
         this.y = y;
-        gameObjects = new ArrayList<>();
+        this.zIndex = zIndex;
+        glyphRenderers = new ArrayList<>();
     }
 
-    public void start () {
-        draw();
+    public Text (String string, float x, float y) {
+        this.text = string;
+        this.font = new Font();
+        this.x = x;
+        this.y = y;
+        this.zIndex = 1;
+        glyphRenderers = new ArrayList<>();
     }
 
     public void draw () {
@@ -59,24 +68,17 @@ public class Text {
             }
             Glyph g = font.getGlyphs().get(ch);
 
-            Texture texture = font.getTexture();
-
-            float topY = (g.y + g.height) / (float)texture.getHeight();
-            float rightX = (g.x + g.width) / (float)texture.getWidth();
-            float leftX = g.x / (float)texture.getWidth();
-            float bottomY = g.y / (float)texture.getHeight();
-
-            Vector2f[] uv = {
-                    new Vector2f(rightX, bottomY),
-                    new Vector2f(rightX, topY),
-                    new Vector2f(leftX, topY),
-                    new Vector2f(leftX, bottomY)
-            };
-
-            Sprite s = new Sprite(font.getTexture(), uv);
-            gameObjects.add(new GameObject("" + ch, new Transform(drawX, drawY, g.width, g.height), 1).addComponent(new SpriteRenderer(s)));
+            glyphRenderers.add(new GlyphRenderer(new Transform(drawX, drawY, g.width, g.height), g, this));
 
             drawX += g.width;
         }
+    }
+
+    public ArrayList<GlyphRenderer> getGlyphRenderers () {
+        return glyphRenderers;
+    }
+
+    public int zIndex () {
+        return zIndex;
     }
 }
