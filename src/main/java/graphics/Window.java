@@ -184,6 +184,8 @@ public class Window {
             currentScene.update();
             currentScene.updateGameObjects();
             currentScene.render();
+            currentScene.postProcess(currentScene.renderer.fetchColorAttachment(0));
+            currentScene.debugRender();
 
             glfwSwapBuffers(window);
             getFPS();

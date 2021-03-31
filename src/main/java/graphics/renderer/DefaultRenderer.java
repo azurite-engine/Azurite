@@ -5,6 +5,8 @@ import ecs.PointLight;
 import ecs.SpriteRenderer;
 import graphics.*;
 import util.Assets;
+import util.specs.FramebufferSpec;
+import util.specs.FramebufferTextureSpec;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +34,11 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 		return Assets.getShader("src/assets/shaders/default.glsl");
 	}
 
+	@Override
+	public void render() {
+		super.render();
+	}
+
 	/**
 	 * Create a framebuffer
 	 *
@@ -39,7 +46,7 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 	 */
 	@Override
 	protected Framebuffer createFramebuffer() {
-		return Framebuffer.createDefault();
+		return new Framebuffer(Window.getWidth(), Window.getHeight(), new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)));
 	}
 
 	/**

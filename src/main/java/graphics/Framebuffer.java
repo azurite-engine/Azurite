@@ -44,8 +44,6 @@ public class Framebuffer {
 	 * @param spec FramebufferSpec: Specification of the framebuffer
 	 */
 	public Framebuffer(int width, int height, FramebufferSpec spec) {
-		this.width = width;
-		this.height = height;
 		this.spec = spec;
 
 		this.colorAttachmentSpecs = new ArrayList<>();
@@ -60,7 +58,7 @@ public class Framebuffer {
 			}
 		}
 		// Generate the framebuffer
-		invalidate();
+		resize(width, height);
 
 		fbos.add(this);
 	}
@@ -81,6 +79,8 @@ public class Framebuffer {
 	public static Framebuffer createDefault() {
 		return new Framebuffer(0);
 	}
+
+	public boolean isDefault() { return id == 0; }
 
 	public int fetchColorAttachment(int i) {
 		if (colorAttachmentTextures.size() >= i)
@@ -122,7 +122,7 @@ public class Framebuffer {
 		if (this.id != -1)
 			delete();
 
-		this.id = glCreateFramebuffers();
+		this.id = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, this.id);
 
 		// If there are any color attachments requested, create them all

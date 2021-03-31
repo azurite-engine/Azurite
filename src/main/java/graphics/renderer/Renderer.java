@@ -73,10 +73,10 @@ public abstract class Renderer<T extends RenderBatch> {
 	/**
 	 * Loop through all render batches and render them
 	 */
-	public void render () {
+	public void render() {
 		framebuffer.bind();
-		prepare();
 		shader.attach();
+		prepare();
 		uploadUniforms(shader);
 		for (T batch : batches) {
 			batch.updateBuffer();

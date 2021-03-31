@@ -27,7 +27,7 @@ public class Demo extends Scene {
 
     public void awake() {
         camera = new Camera();
-        setDefaultBackground(Color.BLACK);
+        setDefaultBackground(0);
 
         a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0);
         b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0);
@@ -49,7 +49,6 @@ public class Demo extends Scene {
     }
 
     public void update() {
-
         player.getComponent(PointLight.class).intensity = Utils.map((float)Math.sin(Engine.millis()/600), -1, 1, 100, 140);
         booper.getComponent(PointLight.class).intensity = Utils.map((float)Math.cos(Engine.millis()/600), -1, 1, 70, 110);
         greenLight.getComponent(PointLight.class).intensity = Utils.map((float)Math.cos(Engine.millis()/600), -1, 1, 70, 110);

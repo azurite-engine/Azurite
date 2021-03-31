@@ -2,6 +2,7 @@ package util;
 
 import ecs.GameObject;
 import event.Events;
+import graphics.Framebuffer;
 import graphics.renderer.DebugRenderer;
 import graphics.renderer.DefaultRenderer;
 import graphics.renderer.LightmapRenderer;
@@ -10,6 +11,8 @@ import graphics.Camera;
 import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
 import physics.AABB;
+import postprocess.Forward;
+import postprocess.PostProcessQuad;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +28,8 @@ public abstract class Scene {
     private boolean isRunning = false;
     private boolean debugMode = true;
     static protected ArrayList<GameObject> gameObjects = new ArrayList<>();
+
+    private final Forward forward = new Forward(Framebuffer::createDefault);
 
     public float minLighting;
 
@@ -50,6 +55,11 @@ public abstract class Scene {
         if (Keyboard.getKeyDown(GLFW.GLFW_KEY_GRAVE_ACCENT)) {
             debugMode = !debugMode;
         }
+    }
+
+    public void postProcess(int texture) {
+        PostProcessQuad.bindQuad();
+        forward.apply();
     }
 
     /**
@@ -121,7 +131,11 @@ public abstract class Scene {
         rendererRegistry.forEach(Renderer::render);
         lightmapRenderer.render();
         lightmapRenderer.bindLightmap();
-        this.renderer.render();
+        renderer.render();
+//        renderer.framebuffer.blitColorBuffersToScreen();
+    }
+
+    public void debugRender() {
         if (debugMode) this.debugRenderer.render();
     }
 
@@ -139,5 +153,7 @@ public abstract class Scene {
         debugRenderer.init();
         lightmapRenderer.init();
         renderer.init();
+        forward.init();
+        forward.setTexture(renderer.fetchColorAttachment(0));
     }
 }
