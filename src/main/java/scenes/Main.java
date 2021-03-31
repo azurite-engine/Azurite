@@ -10,6 +10,7 @@ package scenes;
  */
 
 import ecs.Text;
+import fonts.Font;
 import graphics.Camera;
 import graphics.Color;
 import util.Engine;
@@ -21,27 +22,27 @@ import static graphics.Graphics.setDefaultBackground;
 public class Main extends util.Scene {
 
 	public static void main (String[] args) {
-		Engine.init(1600, 900, "Hello World!", 1);
+		Engine.init(1000, 400, "Hello World!", 1);
 	}
 
 	Text t;
+	Font f;
 
 	public void awake() {
 
 		setDefaultBackground(Color.BLACK);
 		camera = new Camera();
 
-		t = new Text("Hello", 100, 100);
-//		t.draw();
-//		textRenderer.add(t);
+		f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 100, true);
+		t = new Text("Hello", f, 100, 100, 1);
 
 	}
 
 	int x = 0;
 
 	public void update () {
-		if (x % 200 == 0) {
-			t.change("" + Utils.random(0, 10000));
+		if (x % 100 == 0) {
+			t.change("" + Utils.randomInt(0, 10000));
 		}
 		x ++;
 	}
