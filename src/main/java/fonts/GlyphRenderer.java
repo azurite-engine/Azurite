@@ -18,7 +18,7 @@ public class GlyphRenderer {
     private Vector4f color = WHITE.toNormalizedVec4f();
 
     private Glyph glyph;
-    
+    private char character;
     private Text parentText;
 
     private Transform localTransform;
@@ -33,12 +33,13 @@ public class GlyphRenderer {
      * Default tint color is white (no tinting visible).
      * @param glyph
      */
-    public GlyphRenderer(Transform transform, Glyph glyph, Text parentText) {
+    public GlyphRenderer(Transform transform, Glyph glyph, Text parentText, char c) {
         this.localTransform = transform;
         this.glyph = glyph;
         this.color = WHITE.toNormalizedVec4f();
         this.parentText = parentText;
         this.isDirty = true;
+        this.character = c;
     }
 
     /**
@@ -56,6 +57,18 @@ public class GlyphRenderer {
     public void setRendererBatch (TextRendererBatch batch, int index) {
         this.batch = batch;
         batchIndex = index;
+    }
+
+    public TextRendererBatch getBatch () {
+        return batch;
+    }
+
+    public int getBatchIndex () {
+        return batchIndex;
+    }
+
+    public char getCharacter () {
+        return character;
     }
 
     /**
@@ -122,15 +135,6 @@ public class GlyphRenderer {
     }
 
     /**
-     * Change the glyph contained in the SpriteRenderer Component.
-     * @param glyph
-     */
-    public void setSprite(Glyph glyph) {
-        this.glyph = glyph;
-        isDirty = true;
-    }
-
-    /**
      * Used by the renderer to determine if this glyph should be sent back to the GPU to be redrawn.
      * @return true or false if the sprite or color has changes since last draw.
      */
@@ -143,8 +147,15 @@ public class GlyphRenderer {
      */
     public void setClean() {
         isDirty = false;
-    }    
-    
+    }
+
+    /**
+     * Used by the renderer to reset the state of the GlyphRenderer to dirty.
+     */
+    public void setDirty() {
+        isDirty = true;
+    }
+
     public Text getParentText () {
         return parentText;
     }

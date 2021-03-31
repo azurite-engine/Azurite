@@ -1,16 +1,16 @@
 package graphics.renderer;
 
 import fonts.GlyphRenderer;
-import graphics.Color;
-import graphics.Primitive;
-import graphics.ShaderDatatype;
-import graphics.Texture;
+import graphics.*;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import physics.Transform;
+import util.Logger;
+
+import java.util.ArrayList;
 
 public class TextRendererBatch extends RenderBatch {
-    private GlyphRenderer[] glyphRenderers;
+    private ArrayList<GlyphRenderer> glyphRenderers; // even though this is an arrayList, maxBatchSize still applies
     private int numberOfGlyphRenderers;
 
     /**
@@ -22,7 +22,7 @@ public class TextRendererBatch extends RenderBatch {
     TextRendererBatch(int maxBatchSize, int zIndex) {
         super(maxBatchSize, zIndex, Primitive.QUAD, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT);
 
-        this.glyphRenderers = new GlyphRenderer[maxBatchSize];
+        this.glyphRenderers = new ArrayList<>();
         this.numberOfGlyphRenderers = 0;
     }
 
@@ -34,7 +34,7 @@ public class TextRendererBatch extends RenderBatch {
      */
     @Override
     protected void loadVertexProperties(int index, int offset) {
-        GlyphRenderer glyphRenderer = glyphRenderers[index]; // todo
+        GlyphRenderer glyphRenderer = glyphRenderers.get(index); // todo
         Vector4f color = Color.WHITE.toNormalizedVec4f();
         Vector2f[] textureCoordinates = glyphRenderer.getTexCoords();
 
@@ -86,6 +86,26 @@ public class TextRendererBatch extends RenderBatch {
         return numberOfGlyphRenderers;
     }
 
+    public void removeIndex (int i) {
+//        glyphRenderers = new ArrayList<>();
+        if (glyphRenderers.size() > 0) {
+            Logger.logInfo("Removed GlyphRenderer " + glyphRenderers.get(i).getCharacter() + " (" + i + ") from batch.");
+            glyphRenderers.remove(i);
+            numberOfGlyphRenderers --;
+            super.updateBuffer();
+        }
+    }
+
+//    public void updateBuffer(){
+//        for(int i = 0; i < numberOfGlyphRenderers; i++){
+//            if(glyphRenderers.get(i).isDirty()){
+//                //Create map for the dirty quad starting at its offset and ending in its length
+//                super.updateBuffer(i);
+//                glyphRenderers.get(i).setClean();
+//            }
+//        }
+//    }
+
     /**
      * Adds a Text object to this batch
      *
@@ -99,7 +119,7 @@ public class TextRendererBatch extends RenderBatch {
             if (tex == null || (hasTexture(tex) || hasTextureRoom())) {
                 // Get the index and add the renderObject
                 int index = this.numberOfGlyphRenderers;
-                this.glyphRenderers[index] = glyphR;
+                this.glyphRenderers.add(glyphR); // = glyphR;
                 this.numberOfGlyphRenderers++;
 
                 // Add properties to local vertices array

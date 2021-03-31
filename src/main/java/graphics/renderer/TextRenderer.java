@@ -9,9 +9,11 @@ import graphics.Framebuffer;
 import graphics.Shader;
 import graphics.Window;
 import util.Assets;
+import util.Logger;
 import util.specs.FramebufferSpec;
 import util.specs.FramebufferTextureSpec;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 public class TextRenderer extends Renderer<TextRendererBatch> {
@@ -63,8 +65,16 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
     @Override
     protected void prepare() {}
 
-    protected void modifyText (Text text) {
+    public void removeGlyphRenderer (GlyphRenderer gr) {
+        if (gr != null && gr.getBatch() != null) {
+            gr.getBatch().removeIndex(gr.getBatchIndex());
+        }
+    }
 
+    public void removeAllGlyphRenderers (ArrayList<GlyphRenderer> grs) {
+        for (int i = grs.size() - 1; i >= 0; i --) {
+            removeGlyphRenderer(grs.get(i));
+        }
     }
 
     /**
@@ -72,29 +82,41 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
      * @param text Text: The text component to be added
      */
     protected void addText (Text text) {
+
         boolean createNewBatch = false;
         int continueFromIndex = 0;
         if (batches.size() == 0) createNewBatch = true;
+
         for (TextRendererBatch batch : batches) {
             for (int i = 0; i < text.getGlyphRenderers().size(); i ++) {
+
                 GlyphRenderer g = text.getGlyphRenderers().get(i);
+
                 if (!batch.addGlyphRenderer(g)) {
+                    // If unable to add to current batch, create a new one
                     createNewBatch = true;
                     continueFromIndex = i;
+                } else {
+                    g.setRendererBatch(batch, batch.getSize() - 1);
+                    Logger.debugLog("Added GlyphRenderer \"" + g.getCharacter() + "\" (" + (batch.getSize() - 1) + ") to existing batch.");
                 }
-                g.setRendererBatch(batch, batch.getSize());
+
             }
         }
+
         if (createNewBatch) {
             // If unable to add to previous batch, create a new one
             TextRendererBatch newBatch = new TextRendererBatch(MAX_BATCH_SIZE, text.zIndex());
             newBatch.start();
             batches.add(newBatch);
+
             for (int i = continueFromIndex; i < text.getGlyphRenderers().size(); i ++) {
                 GlyphRenderer g = text.getGlyphRenderers().get(i);
                 newBatch.addGlyphRenderer(g);
-                g.setRendererBatch(newBatch, newBatch.getSize());
+                g.setRendererBatch(newBatch, newBatch.getSize() - 1);
+                Logger.debugLog("Added GlyphRenderer \"" + g.getCharacter() + "\" (" + (newBatch.getSize() - 1) + ") to new batch.");
             }
+
             Collections.sort(batches);
         }
     }

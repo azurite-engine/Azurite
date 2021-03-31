@@ -31,14 +31,19 @@ public class Main extends util.Scene {
 		setDefaultBackground(Color.BLACK);
 		camera = new Camera();
 
-		t = new Text("Hello World!\nLorem Ipsum dolor sit amet...", 100, 100);
+		t = new Text("Hello", 100, 100);
 //		t.draw();
 //		textRenderer.add(t);
 
 	}
 
+	int x = 0;
+
 	public void update () {
-		t.change("" + Utils.random(0, 10000));
+		if (x % 200 == 0) {
+			t.change("" + Utils.random(0, 10000));
+		}
+		x ++;
 	}
 
 }
