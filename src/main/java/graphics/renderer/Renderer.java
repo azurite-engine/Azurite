@@ -75,8 +75,8 @@ public abstract class Renderer<T extends RenderBatch> {
 	 */
 	public void render() {
 		framebuffer.bind();
-		shader.attach();
 		prepare();
+		shader.attach();
 		uploadUniforms(shader);
 		for (T batch : batches) {
 			batch.updateBuffer();

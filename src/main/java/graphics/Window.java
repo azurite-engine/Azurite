@@ -180,8 +180,6 @@ public class Window {
             // poll GLFW for input events
             glfwPollEvents();
 
-            glClear(GL_COLOR_BUFFER_BIT);
-
             currentScene.update();
             currentScene.updateGameObjects();
             currentScene.render();

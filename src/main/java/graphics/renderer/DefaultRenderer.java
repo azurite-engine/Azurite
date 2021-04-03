@@ -34,11 +34,6 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 		return Assets.getShader("src/assets/shaders/default.glsl");
 	}
 
-	@Override
-	public void render() {
-		super.render();
-	}
-
 	/**
 	 * Create a framebuffer
 	 *

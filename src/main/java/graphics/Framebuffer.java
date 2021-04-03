@@ -18,38 +18,24 @@ import static org.lwjgl.opengl.GL45.*;
  * @author VoxelRifts
  */
 public class Framebuffer {
-	/**
-	 * the framebuffer handle
-	 */
+	/** the framebuffer handle */
 	private int id = -1;
 	private int width;
 	private int height;
-	/**
-	 * Specification of the framebuffer's attachments
-	 */
+	/** Specification of the framebuffer's attachments */
 	private FramebufferSpec spec;
 
-	/**
-	 * The color attachment textures' specifications
-	 */
+	/** The color attachment textures' specifications */
 	private List<FramebufferTextureSpec> colorAttachmentSpecs;
-	/**
-	 * The depth attachment texture's specification. Initialized to an Invalid default
-	 */
+	/** The depth attachment texture's specification. Initialized to an Invalid default */
 	private FramebufferTextureSpec depthAttachmentSpec = new FramebufferTextureSpec();
 
-	/**
-	 * Color attachment textures to which the framebuffer renders to
-	 */
+	/** Color attachment textures to which the framebuffer renders to */
 	private List<Integer> colorAttachmentTextures;
-	/**
-	 * Depth attachment texture to which the framebuffer renders to
-	 */
+	/** Depth attachment texture to which the framebuffer renders to */
 	private int depthAttachmentTexture;
 
-	/**
-	 * Static list maintaining all framebuffers so as to delete them all in the end
-	 */
+	/** Static list maintaining all framebuffers so as to delete them all in the end */
 	private static final List<Framebuffer> fbos = new ArrayList<>();
 
 	/**
@@ -118,16 +104,33 @@ public class Framebuffer {
 		return new Framebuffer(Window.getWidth() / 2, Window.getHeight() / 4, new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)));
 	}
 
+	/**
+	 * Checks if the fbo is a wrapper around the default one.
+	 * Required because created wrapper has no attachments stored in colorAttachmentTextures
+	 *
+	 * @return if the framebuffer instance is a wrapper around the
+	 */
 	public boolean isDefault() {
 		return id == 0;
 	}
 
+	/**
+	 * Get a color texture attachment id from the framebuffer
+	 *
+	 * @param i index of the texture attachment required
+	 * @return the color attachment texture id at the index
+	 */
 	public int fetchColorAttachment(int i) {
 		if (colorAttachmentTextures.size() >= i)
 			return colorAttachmentTextures.get(i);
 		return -1;
 	}
 
+	/**
+	 * Get the depth attachment texture from this framebuffer
+	 *
+	 * @return
+	 */
 	public int fetchDepthAttachment() {
 		return depthAttachmentTexture;
 	}
@@ -137,14 +140,10 @@ public class Framebuffer {
 	 * of the default Framebuffer. OpenGL provides a function, glBlitFramebuffer for this
 	 */
 	public void blitColorBuffersToScreen() {
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, this.id);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-		glBlitFramebuffer(0,
-				0, width, height,
+		glBlitNamedFramebuffer(this.id, 0,
+				0, 0, width, height,
 				0, 0, Window.getWidth(), Window.getHeight(),
 				GL_COLOR_BUFFER_BIT, GL_NEAREST);
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	}
 
 	/**
@@ -241,7 +240,7 @@ public class Framebuffer {
 		int texture = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, texture);
 
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, (ByteBuffer) null);
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, 0);
 
 		return texture;
 	}
@@ -298,10 +297,18 @@ public class Framebuffer {
 		fbos.forEach(Framebuffer::delete);
 	}
 
+	/**
+	 * Get the width of this Framebuffer
+	 * @return width of the Framebuffer
+	 */
 	public int getWidth() {
 		return width;
 	}
 
+	/**
+	 * Get the height of this Framebuffer
+	 * @return height of the Framebuffer
+	 */
 	public int getHeight() {
 		return height;
 	}

@@ -8,16 +8,20 @@ import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
 public class PostProcessQuad {
-	public static PostProcessQuad instance;
+	/** Only one PostProcessQuad can exist */
+	private static PostProcessQuad instance;
 
+	/** Get the singleton instance. If it doesn't exist, create it */
 	public static PostProcessQuad getInstance() {
 		if (instance == null)
 			instance = new PostProcessQuad();
 		return instance;
 	}
 
+	/** The Quad's vertex array handle */
 	private final int quadVao;
 
+	/** Creates the GPU resources for the fullscreen quad */
 	public PostProcessQuad() {
 		quadVao = glGenVertexArrays();
 		glBindVertexArray(quadVao);
@@ -38,12 +42,14 @@ public class PostProcessQuad {
 		glEnableVertexAttribArray(1);
 	}
 
+	/** Binds the quad and enables attributes */
 	public void _bindQuad() {
 		glBindVertexArray(quadVao);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 	}
 
+	/** Unbinds the quad and disables attributes */
 	public void _unbindQuad() {
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
