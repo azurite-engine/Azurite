@@ -16,14 +16,6 @@ public class PostProcessQuad {
 		return instance;
 	}
 
-	public static void bindQuad() {
-		getInstance()._bindQuad();
-	}
-
-	public static void unbindQuad() {
-		getInstance()._unbindQuad();
-	}
-
 	private final int quadVao;
 
 	public PostProcessQuad() {
@@ -52,7 +44,7 @@ public class PostProcessQuad {
 		glEnableVertexAttribArray(1);
 	}
 
-	private void _unbindQuad() {
+	public void _unbindQuad() {
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glBindVertexArray(0);

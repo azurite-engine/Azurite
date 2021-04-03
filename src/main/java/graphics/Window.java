@@ -4,6 +4,7 @@ package graphics;
 import event.EventData;
 import event.Events;
 import input.Keyboard;
+import postprocess.PostProcessing;
 import scenes.Demo;
 import scenes.Main;
 import input.Mouse;
@@ -184,7 +185,9 @@ public class Window {
             currentScene.update();
             currentScene.updateGameObjects();
             currentScene.render();
+            PostProcessing.prepare();
             currentScene.postProcess(currentScene.renderer.fetchColorAttachment(0));
+            PostProcessing.finish();
             currentScene.debugRender();
 
             glfwSwapBuffers(window);

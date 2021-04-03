@@ -56,7 +56,6 @@ public abstract class Scene {
     }
 
     public void postProcess(int texture) {
-        PostProcessQuad.bindQuad();
         forwardToScreen.setTexture(texture);
         forwardToScreen.apply();
     }

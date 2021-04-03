@@ -22,6 +22,7 @@ public abstract class PostProcessStep {
 		switch (target) {
 			case DEFAULT_FRAMEBUFFER: return Framebuffer.createDefault();
 			case ONE_COLOR_TEXTURE_FRAMEBUFFER: return Framebuffer.createWithColorAttachment();
+			case ONE_COLOR_HALF_SIZE_TEXTURE_FRAMEBUFFER: return Framebuffer.createHalfResWithColorAttachment();
 			default: return null;
 		}
 	}
@@ -37,9 +38,7 @@ public abstract class PostProcessStep {
 		prepare();
 		uploadUniforms(shader);
 
-		PostProcessQuad.bindQuad();
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
-		PostProcessQuad.unbindQuad();
 
 		shader.detach();
 		Framebuffer.unbind();
@@ -57,6 +56,7 @@ public abstract class PostProcessStep {
 
 	public enum Target {
 		DEFAULT_FRAMEBUFFER,
-		ONE_COLOR_TEXTURE_FRAMEBUFFER
+		ONE_COLOR_TEXTURE_FRAMEBUFFER,
+		ONE_COLOR_HALF_SIZE_TEXTURE_FRAMEBUFFER
 	}
 }

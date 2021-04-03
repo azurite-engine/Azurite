@@ -27,15 +27,15 @@ out vec4 color;
 
 void main() {
 	color = vec4(0.0);
-	color += texture(uTexture, fBlurTexCoords[0]) * 0.0293;
-	color += texture(uTexture, fBlurTexCoords[1]) * 0.048002;
-	color += texture(uTexture, fBlurTexCoords[2]) * 0.085984;
-	color += texture(uTexture, fBlurTexCoords[3]) * 0.151703;
-	color += texture(uTexture, fBlurTexCoords[4]) * 0.195713;
-	color += texture(uTexture, fBlurTexCoords[5]) * 0.218596;
-	color += texture(uTexture, fBlurTexCoords[6]) * 0.195713;
-	color += texture(uTexture, fBlurTexCoords[7]) * 0.141703;
-	color += texture(uTexture, fBlurTexCoords[8]) * 0.085984;
-	color += texture(uTexture, fBlurTexCoords[9]) * 0.048002;
-	color += texture(uTexture, fBlurTexCoords[10]) * 0.2093;
+	color += texture(uTexture, fBlurTexCoords[0])  * 0.0093;
+	color += texture(uTexture, fBlurTexCoords[1])  * 0.028002;
+	color += texture(uTexture, fBlurTexCoords[2])  * 0.065984;
+	color += texture(uTexture, fBlurTexCoords[3])  * 0.131703;
+	color += texture(uTexture, fBlurTexCoords[4])  * 0.175713;
+	color += texture(uTexture, fBlurTexCoords[5])  * 0.198596;
+	color += texture(uTexture, fBlurTexCoords[6])  * 0.175713;
+	color += texture(uTexture, fBlurTexCoords[7])  * 0.121703;
+	color += texture(uTexture, fBlurTexCoords[8])  * 0.065984;
+	color += texture(uTexture, fBlurTexCoords[9])  * 0.028002;
+	color += texture(uTexture, fBlurTexCoords[10]) * 0.0093;
 }

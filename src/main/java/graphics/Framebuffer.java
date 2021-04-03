@@ -109,6 +109,15 @@ public class Framebuffer {
 		return new Framebuffer(Window.getWidth(), Window.getHeight(), new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)));
 	}
 
+	/**
+	 * Factory method to create an instance that is half the size of the screen and has one simple color attachment
+	 *
+	 * @return Framebuffer
+	 */
+	public static Framebuffer createHalfResWithColorAttachment() {
+		return new Framebuffer(Window.getWidth() / 2, Window.getHeight() / 4, new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)));
+	}
+
 	public boolean isDefault() {
 		return id == 0;
 	}
