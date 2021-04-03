@@ -29,10 +29,7 @@ public class Demo extends Scene {
 	GameObject greenLight;
 	GameObject trRes;
 
-	HorizontalBlur hblur;
-	VerticalBlur vblur;
-	BrightFilter brightFilter;
-	Combine combine;
+	BloomEffect bloom;
 
 	public void awake() {
 		camera = new Camera();
@@ -58,14 +55,8 @@ public class Demo extends Scene {
 		greenLight = new GameObject("Green light", new Transform(3315, 300, 1, 1), 3);
 		greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));
 
-		brightFilter = new BrightFilter(PostProcessStep.Target.ONE_COLOR_TEXTURE_FRAMEBUFFER);
-		brightFilter.init();
-		hblur = new HorizontalBlur(PostProcessStep.Target.ONE_COLOR_HALF_SIZE_TEXTURE_FRAMEBUFFER);
-		hblur.init();
-		vblur = new VerticalBlur(PostProcessStep.Target.ONE_COLOR_TEXTURE_FRAMEBUFFER);
-		vblur.init();
-		combine = new Combine(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
-		combine.init();
+		bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
+		bloom.init();
 	}
 
 	public void update() {
@@ -79,15 +70,6 @@ public class Demo extends Scene {
 
 	@Override
 	public void postProcess(int texture) {
-		brightFilter.setTexture(texture);
-		int brights = brightFilter.apply();
-		hblur.setTexture(brights);
-		int hBlurred = hblur.apply();
-		vblur.setTexture(hBlurred);
-		int blurred = vblur.apply();
-		combine.setTextureA(texture);
-		combine.setTextureB(blurred);
-		combine.setWeightB(1.5f);
-		combine.apply();
+		bloom.apply(texture);
 	}
 }
