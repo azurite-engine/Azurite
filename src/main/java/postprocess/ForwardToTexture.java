@@ -5,30 +5,27 @@ import graphics.Graphics;
 import graphics.Shader;
 import util.Assets;
 
-import java.util.function.Supplier;
-
-public class Forward extends PostProcessStep {
+public class ForwardToTexture extends PostProcessStep {
 	private int textureID;
 
-	public Forward(Supplier<Framebuffer> fboSupplier) {
-		super(fboSupplier);
+	public ForwardToTexture(Target target) {
+		super(target);
 	}
 
 	@Override
-	public Shader getShader() {
+	public Shader createShader() {
 		return Assets.getShader("src/assets/shaders/forward.glsl");
 	}
 
 	@Override
 	public void prepare() {
+		Graphics.background(Graphics.defaultBackground);
 		bindTexture(textureID, 0);
-		shader.uploadTexture("uTexture", 0);
-
-		Graphics.background(0);
 	}
 
-	public void blit() {
-		fbo.blitColorBuffersToScreen();
+	@Override
+	protected void uploadUniforms(Shader shader) {
+		shader.uploadTexture("uTexture", 0);
 	}
 
 	public void setTexture(int textureID) {

@@ -5,37 +5,58 @@ import graphics.Shader;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
-import java.util.function.Supplier;
-
 public abstract class PostProcessStep {
-	protected Shader shader;
-	public Framebuffer fbo;
-	private Supplier<Framebuffer> fboSupplier;
+	private Shader shader;
+	public Framebuffer framebuffer;
+	private Target target;
 
-	public PostProcessStep(Supplier<Framebuffer> fboSupplier) {
-		this.fboSupplier = fboSupplier;
+	public PostProcessStep(Target target) {
+		this.target = target;
 	}
 
-	public abstract Shader getShader();
+	public abstract Shader createShader();
 	public abstract void prepare();
+	protected abstract void uploadUniforms(Shader shader);
+
+	protected Framebuffer createFramebuffer() {
+		switch (target) {
+			case DEFAULT_FRAMEBUFFER: return Framebuffer.createDefault();
+			case ONE_COLOR_TEXTURE_FRAMEBUFFER: return Framebuffer.createWithColorAttachment();
+			default: return null;
+		}
+	}
 
 	public void init() {
-		shader = getShader();
-		fbo = fboSupplier.get();
+		shader = createShader();
+		framebuffer = createFramebuffer();
 	}
 
 	public int apply() {
-		fbo.bind();
+		framebuffer.bind();
 		shader.attach();
 		prepare();
+		uploadUniforms(shader);
+
+		PostProcessQuad.bindQuad();
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
+		PostProcessQuad.unbindQuad();
+
 		shader.detach();
 		Framebuffer.unbind();
-		return fbo.isDefault() ? -1 : fbo.fetchColorAttachment(0);
+		return framebuffer.isDefault() ? -1 : framebuffer.fetchColorAttachment(0);
 	}
 
 	protected void bindTexture(int texture, int slot) {
 		GL13.glActiveTexture(GL13.GL_TEXTURE0 + slot);
 		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
+	}
+
+	public void blit() {
+		framebuffer.blitColorBuffersToScreen();
+	}
+
+	public enum Target {
+		DEFAULT_FRAMEBUFFER,
+		ONE_COLOR_TEXTURE_FRAMEBUFFER
 	}
 }

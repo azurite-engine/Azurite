@@ -2,7 +2,12 @@ package scenes;
 
 import ecs.*;
 import graphics.*;
+import org.joml.Vector2f;
 import physics.AABB;
+import postprocess.HorizontalBlur;
+import postprocess.PostProcessQuad;
+import postprocess.PostProcessStep;
+import postprocess.VerticalBlur;
 import tiles.Spritesheet;
 import tiles.Tilesystem;
 import physics.Transform;
@@ -10,6 +15,8 @@ import util.Assets;
 import util.Engine;
 import util.Scene;
 import util.Utils;
+import util.specs.FramebufferSpec;
+import util.specs.FramebufferTextureSpec;
 
 import static graphics.Graphics.setDefaultBackground;
 
@@ -24,6 +31,10 @@ public class Demo extends Scene {
     GameObject player;
     GameObject booper;
     GameObject greenLight;
+    GameObject trRes;
+
+    HorizontalBlur hblur;
+    VerticalBlur vblur;
 
     public void awake() {
         camera = new Camera();
@@ -32,6 +43,8 @@ public class Demo extends Scene {
         a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0);
         b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0);
         t = new Tilesystem(a, b, 31, 15, 200, 200);
+
+        trRes = new GameObject("", new Transform(new Vector2f(0, 0), new Vector2f(100)), -20);
 
         booper = new GameObject("Booper", new Transform(800, 800, 100, 100), 2);
         booper.addComponent(new Animation(1, a.getSprite(132), a.getSprite(150)));
@@ -46,13 +59,27 @@ public class Demo extends Scene {
 
         greenLight = new GameObject("Green light", new Transform(3315, 300, 1, 1), 3);
         greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));
+
+        hblur = new HorizontalBlur(PostProcessStep.Target.ONE_COLOR_TEXTURE_FRAMEBUFFER);
+        hblur.init();
+        vblur = new VerticalBlur(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
+        vblur.init();
     }
 
     public void update() {
+        super.update();
         player.getComponent(PointLight.class).intensity = Utils.map((float)Math.sin(Engine.millis()/600), -1, 1, 100, 140);
         booper.getComponent(PointLight.class).intensity = Utils.map((float)Math.cos(Engine.millis()/600), -1, 1, 70, 110);
         greenLight.getComponent(PointLight.class).intensity = Utils.map((float)Math.cos(Engine.millis()/600), -1, 1, 70, 110);
 
         camera.smoothFollow(player.getTransform());
+    }
+
+    @Override
+    public void postProcess(int texture) {
+        hblur.setTexture(texture);
+        int hBlurred = hblur.apply();
+        vblur.setTexture(hBlurred);
+        vblur.apply();
     }
 }

@@ -46,7 +46,7 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 	 */
 	@Override
 	protected Framebuffer createFramebuffer() {
-		return new Framebuffer(Window.getWidth(), Window.getHeight(), new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)));
+		return Framebuffer.createWithColorAttachment();
 	}
 
 	/**
