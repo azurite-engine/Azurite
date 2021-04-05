@@ -6,7 +6,8 @@ import graphics.Color;
 import org.joml.Vector2f;
 import physics.AABB;
 import physics.Transform;
-import postprocess.*;
+import postprocess.BloomEffect;
+import postprocess.PostProcessStep;
 import tiles.Spritesheet;
 import tiles.Tilesystem;
 import util.Assets;
@@ -18,7 +19,7 @@ import static graphics.Graphics.setDefaultBackground;
 
 public class Demo extends Scene {
 	public static void main(String[] args) {
-		Engine.init(1080, 720, "Azurite Engine Demo 1", 0.1f);
+		Engine.init(1080, 720, "Azurite Engine Demo 1", 0.1f, true);
 	}
 
 	Spritesheet a;

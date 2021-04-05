@@ -1,5 +1,7 @@
 package graphics;
 
+import event.EventData;
+import event.Events;
 import org.lwjgl.opengl.GL11;
 import util.specs.FramebufferSpec;
 import util.specs.FramebufferTextureSpec;
@@ -38,6 +40,13 @@ public class Framebuffer {
 	/** Static list maintaining all framebuffers so as to delete them all in the end */
 	private static final List<Framebuffer> fbos = new ArrayList<>();
 
+	private static final List<Framebuffer> screenSize = new ArrayList<>();
+	private static final List<Framebuffer> halfScreenSize = new ArrayList<>();
+
+	static {
+		Events.windowResizeEvent.subscribe(Framebuffer::resizeAll);
+	}
+
 	/**
 	 * Default Framebuffer constructor
 	 *
@@ -61,6 +70,30 @@ public class Framebuffer {
 				depthAttachmentSpec = format;
 			}
 		}
+		// Generate the framebuffer
+		invalidate();
+
+		fbos.add(this);
+	}
+
+	private Framebuffer(int width, int height, FramebufferSpec spec, boolean isScreenSize, boolean isHalfSize) {
+		this.width = width;
+		this.height = height;
+		this.spec = spec;
+
+		this.colorAttachmentSpecs = new ArrayList<>();
+		this.colorAttachmentTextures = new ArrayList<>();
+
+		// Sort the texture formats.
+		for (FramebufferTextureSpec format : spec.attachments) {
+			if (!format.format.isDepth) {
+				colorAttachmentSpecs.add(format);
+			} else {
+				depthAttachmentSpec = format;
+			}
+		}
+		if (isScreenSize) screenSize.add(this);
+		if (isHalfSize) halfScreenSize.add(this);
 		// Generate the framebuffer
 		invalidate();
 
@@ -92,7 +125,7 @@ public class Framebuffer {
 	 * @return Framebuffer
 	 */
 	public static Framebuffer createWithColorAttachment() {
-		return new Framebuffer(Window.getWidth(), Window.getHeight(), new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)));
+		return new Framebuffer(Window.getWidth(), Window.getHeight(), new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)), true, false);
 	}
 
 	/**
@@ -101,7 +134,19 @@ public class Framebuffer {
 	 * @return Framebuffer
 	 */
 	public static Framebuffer createHalfResWithColorAttachment() {
-		return new Framebuffer(Window.getWidth() / 2, Window.getHeight() / 4, new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)));
+		return new Framebuffer(Window.getWidth() / 2, Window.getHeight() / 4, new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)), false, true);
+	}
+
+	/**
+	 * Resize all Framebuffers created via the createWithColorAttachment() or createHalfResWithColorAttachment() methods
+	 */
+	public static void resizeAll(EventData.WindowResizeEventData data) {
+		for (Framebuffer f : screenSize) {
+			f.resize(data.x, data.y);
+		}
+		for (Framebuffer f : halfScreenSize) {
+			f.resize(data.x / 2, data.y / 2);
+		}
 	}
 
 	/**

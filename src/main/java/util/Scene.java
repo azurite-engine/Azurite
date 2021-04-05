@@ -130,7 +130,7 @@ public abstract class Scene {
         lightmapRenderer.render();
         lightmapRenderer.bindLightmap();
         renderer.render();
-//        lightmapRenderer.framebuffer.blitColorBuffersToScreen();
+        lightmapRenderer.framebuffer.blitColorBuffersToScreen();
     }
 
     public void debugRender() {

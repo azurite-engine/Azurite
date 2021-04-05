@@ -34,13 +34,15 @@ public class Window {
 
     public static int width;
     public static int height;
+    private boolean recalculateProjectionOnResize;
 
     private float dt = 0; // deltaTime (accessible from util.Engine.deltaTime)
 
-    public Window(int pwidth, int pheight, String ptitle, boolean fullscreen, float minSceneLighting) {
+    public Window(int pwidth, int pheight, String ptitle, boolean fullscreen, float minSceneLighting, boolean recalculateProjectionOnResize) {
         width = pwidth;
         height = pheight;
         title = ptitle;
+        this.recalculateProjectionOnResize = recalculateProjectionOnResize;
         currentScene.minLighting = minSceneLighting;
 
         // Configure GLFW
@@ -54,10 +56,11 @@ public class Window {
             initWindow(width, height, title, (int) glfwGetPrimaryMonitor());
     }
 
-    public Window(int pwidth, int pheight, String ptitle, float minSceneLighting) {
+    public Window(int pwidth, int pheight, String ptitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
         width = pwidth;
         height = pheight;
         title = ptitle;
+        this.recalculateProjectionOnResize = recalculateProjectionOnResize;
         currentScene.minLighting = minSceneLighting;
 
         // Configure GLFW
@@ -68,10 +71,11 @@ public class Window {
         initWindow(width, height, title, 0);
     }
 
-    public Window(int pwidth, int pheight, String ptitle) {
+    public Window(int pwidth, int pheight, String ptitle, boolean recalculateProjectionOnResize) {
         width = pwidth;
         height = pheight;
         title = ptitle;
+        this.recalculateProjectionOnResize = recalculateProjectionOnResize;
         currentScene.minLighting = 1;
 
         // Configure GLFW
@@ -82,13 +86,31 @@ public class Window {
         initWindow(width, height, title, 0);
     }
 
-    public Window(String ptitle, float minSceneLighting) {
+    public Window(String ptitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
         GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 
         width = mode.width();
         height = mode.height();
         title = ptitle;
+        this.recalculateProjectionOnResize = recalculateProjectionOnResize;
         currentScene.minLighting = minSceneLighting;
+
+        // Configure GLFW
+        glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+        initWindow(width, height, title, glfwGetPrimaryMonitor());
+    }
+
+    public Window(String ptitle, boolean recalculateProjectionOnResize) {
+        GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+        width = mode.width();
+        height = mode.height();
+        title = ptitle;
+        this.recalculateProjectionOnResize = recalculateProjectionOnResize;
+        currentScene.minLighting = 1;
 
         // Configure GLFW
         glfwDefaultWindowHints();
@@ -100,6 +122,7 @@ public class Window {
 
     public Window(String ptitle) {
         GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        this.recalculateProjectionOnResize = false;
 
         width = mode.width();
         height = mode.height();
@@ -126,6 +149,7 @@ public class Window {
             Window.setWidth(newWidth);
             Window.setHeight(newHeight);
 
+            if (recalculateProjectionOnResize && currentScene.camera != null) currentScene.camera.adjustProjection();
             Events.windowResizeEvent.onEvent(new EventData.WindowResizeEventData(newWidth, newHeight));
         });
 
@@ -136,8 +160,7 @@ public class Window {
         glfwMakeContextCurrent(window);
 
         // Enable V-Sync
-        //glfwSwapInterval(1);
-
+        glfwSwapInterval(1);
 
         // Center the window
         glfwSetWindowPos(window, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
