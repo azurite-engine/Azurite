@@ -6,7 +6,7 @@ import graphics.Window;
 import util.Assets;
 
 /**
- * A Post Processing Step that renders the texture with a Horizontal Blur.
+ * A Post Processing Step that renders the texture with a Vertical Blur.
  * <p>
  * NOTE: If you want a more blurry texture, consider using Target.ONE_COLOR_HALF_SIZE_TEXTURE_FRAMEBUFFER
  * to get a smaller framebuffer size and in turn, a more blurrier texture
