@@ -5,6 +5,8 @@ import ecs.PointLight;
 import ecs.SpriteRenderer;
 import graphics.*;
 import util.Assets;
+import util.specs.FramebufferSpec;
+import util.specs.FramebufferTextureSpec;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -39,7 +41,7 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 	 */
 	@Override
 	protected Framebuffer createFramebuffer() {
-		return Framebuffer.createDefault();
+		return Framebuffer.createWithColorAttachment();
 	}
 
 	/**

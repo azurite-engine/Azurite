@@ -30,7 +30,7 @@ public class Engine {
 		if (!glfwInit())
 			throw new IllegalStateException("[FATAL] Failed to initialize GLFW.");
 
-		w = new Window(windowWidth, windowHeight, windowTitle, minSceneLighting);
+		w = new Window(windowWidth, windowHeight, windowTitle, minSceneLighting, false);
 
 		w.showWindow();
 	}
@@ -48,7 +48,7 @@ public class Engine {
 		if (!glfwInit())
 			throw new IllegalStateException("[FATAL] Failed to initialize GLFW.");
 
-		w = new Window(windowWidth, windowHeight, windowTitle);
+		w = new Window(windowWidth, windowHeight, windowTitle, false);
 
 		w.showWindow();
 	}
@@ -65,7 +65,19 @@ public class Engine {
 		if (!glfwInit())
 			throw new IllegalStateException("[FATAL] Failed to initialize GLFW.");
 
-		w = new Window(windowTitle, minSceneLighting);
+		w = new Window(windowTitle, minSceneLighting, false);
+
+		w.showWindow();
+	}
+
+	public static void init(int windowWidth, int windowHeight, String windowTitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
+
+		GLFWErrorCallback.createPrint(System.err).set();
+
+		if (!glfwInit())
+			throw new IllegalStateException("[FATAL] Failed to initialize GLFW.");
+
+		w = new Window(windowWidth, windowHeight, windowTitle, minSceneLighting, recalculateProjectionOnResize);
 
 		w.showWindow();
 	}

@@ -2,6 +2,10 @@ package graphics;
 
 import org.lwjgl.BufferUtils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -75,7 +79,6 @@ public class Texture {
 		ByteBuffer image = stbi_load(filepath, width, height, channels, 0);
 
 		if (image != null) {
-
 			this.width = width.get(0);
 			this.height = height.get(0);
 
@@ -95,6 +98,38 @@ public class Texture {
 		stbi_image_free(image);
 	}
 
+	/**
+	 * Will write am OpenGL Texture to the provided file
+	 * @param file path where the image is to be stored with extension
+	 * @param id id of the OpenGL Texture Resource
+	 * @param width width of the texture
+	 * @param height height of the texture
+	 */
+	public static void toFile(String file, int id, int width, int height) {
+		glBindTexture(GL_TEXTURE_2D, id);
+		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+
+		for (int x = 0; x < width; ++x) {
+			for (int y = 0; y < height; ++y) {
+				int i = (x + y * width) * 4;
+
+				int r = buffer.get(i) & 0xFF;
+				int g = buffer.get(i + 1) & 0xFF;
+				int b = buffer.get(i + 2) & 0xFF;
+				int a = buffer.get(i + 3) & 0xFF;
+
+				image.setRGB(x, y, (a << 24) | (r << 16) | (g << 8) | b);
+			}
+		}
+		try {
+			ImageIO.write(image, "PNG", new File(file));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	/**
 	 * Wrap the given id into a texture object
 	 * @param id the id to be wrapped
