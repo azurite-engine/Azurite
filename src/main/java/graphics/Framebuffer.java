@@ -40,7 +40,9 @@ public class Framebuffer {
 	/** Static list maintaining all framebuffers so as to delete them all in the end */
 	private static final List<Framebuffer> fbos = new ArrayList<>();
 
+	/** Register for all FBOs that are the size of the screen */
 	private static final List<Framebuffer> screenSize = new ArrayList<>();
+	/** Register for all FBOs that are half the size of the screen */
 	private static final List<Framebuffer> halfScreenSize = new ArrayList<>();
 
 	static {
@@ -76,6 +78,14 @@ public class Framebuffer {
 		fbos.add(this);
 	}
 
+	/**
+	 * Constructor used to register the framebuffer for Auto-Resizing based on its size
+	 * @param width   width of the fbo
+	 * @param height  height of the fbo
+	 * @param spec    Specification of the framebuffer
+	 * @param isScreenSize Is the framebuffer the size of the screen
+	 * @param isHalfSize Is the framebuffer half the size of the screen
+	 */
 	private Framebuffer(int width, int height, FramebufferSpec spec, boolean isScreenSize, boolean isHalfSize) {
 		this.width = width;
 		this.height = height;
