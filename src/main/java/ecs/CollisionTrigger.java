@@ -10,15 +10,27 @@ import util.debug.DebugPrimitive;
 import util.debug.DebugRect;
 
 public class CollisionTrigger extends Component {
-	private Transform self, other;
-	private Transform lastPosition;
+	/** Transform for this component's gameobject */
+	private Transform self;
+	/** Transform for the gameobject against which collision is being tested */
+	private Transform other;
+
+	/** Was the trigger active last frame */
 	private boolean wasColliding;
 
+	/** A Debug Rect Primitive to be rendered in Debug Mode */
 	private DebugRect debugRect;
 
+	/** This Event will fire when any AABB intersects with this trigger on the frame that it intersects */
 	public EventNode<EventData.TriggerEnterEvent> onTriggerEnter;
+	/** This Event will fire when any AABB stops intersecting with this trigger on the frame that it exits */
 	public EventNode<EventData.TriggerExitEvent> onTriggerExit;
 
+	/**
+	 * Construct a Trigger Object with a Listener that will be called when trigger is entered
+	 * Add more Listeners by accessing onTriggerEnter or onTriggerExit
+	 * @param onEnter
+	 */
 	public CollisionTrigger(EventListener<EventData.TriggerEnterEvent> onEnter) {
 		onTriggerEnter = new EventNode<>();
 		onTriggerExit = new EventNode<>();
@@ -28,7 +40,6 @@ public class CollisionTrigger extends Component {
 	@Override
 	public void start() {
 		self = gameObject.getTransform(); // Parent game object's transform
-		lastPosition = self;
 		debugRect = new DebugRect(self.getX(), self.getY(), self.getWidth(), self.getHeight(), Color.GREEN);
 	}
 
@@ -43,6 +54,7 @@ public class CollisionTrigger extends Component {
 		return new DebugPrimitive[]{debugRect};
 	}
 
+	/** Check if this trigger is intersecting with any other AABB */
 	public boolean checkCollision() {
 		for (AABB a : AABB.colliders) {
 			other = a.gameObject.getTransform();
@@ -53,6 +65,7 @@ public class CollisionTrigger extends Component {
 		return false;
 	}
 
+	/** Will be called every frame to fire required events if applicable */
 	public void collide() {
 		if (checkCollision()) {
 			if (!wasColliding) {
@@ -67,6 +80,7 @@ public class CollisionTrigger extends Component {
 		}
 	}
 
+	/** Is this Trigger colliding with another AABB */
 	public boolean isColliding(Transform other) {
 		float x1 = self.getX();
 		float y1 = self.getY();
