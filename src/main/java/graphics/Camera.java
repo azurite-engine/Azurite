@@ -54,7 +54,7 @@ public class Camera {
 		
 		return this.viewMatrix;
 	}
-
+	
 	/** Get the camera's projection matrix */
 	public Matrix4f getProjectionMatrix () {
 		return this.projectionMatrix;		
