@@ -11,22 +11,35 @@ import java.nio.DoubleBuffer;
 import static org.lwjgl.glfw.GLFW.*;
 
 public class Mouse {
-
+	/** Position of the mouse */
 	public static Vector2f mouse;
+	/** X Position of the mouse */
 	public static long mouseX = 0;
+	/** Y Position of the mouse */
 	public static long mouseY = 0;
+	/** Position of the mouse on the previous frame */
 	public static Vector2f pmouse;
+	/** X Position of the mouse on the previous frame */
 	public static long pmouseX = 0;
+	/** Y Position of the mouse on the previous frame */
 	public static long pmouseY = 0;
+	/** Mouse Scrolling Values */
 	public static Vector2f mouseScroll;
+	/** Mouse Scrolling in X-axis. */
 	public static float scrollX = 0;
+	/** Mouse Scrolling in Y-axis. */
 	public static float scrollY = 0;
+	/** Array for storing states for mouse buttons */
 	public static boolean mouseButton[] = new boolean[3];
+	/** Is the mouse being dragged */
 	public static boolean mouseDragged;
 
+	/** Latest button whose state was changed */
 	private static int _button;
+	/** Latest button whose state is changed */
 	private static int _action;
 
+	/** Apply the latest changes to the mouseButton array */
 	public static void pollMouseButtons() {
 		if (_action == GLFW_PRESS) {
 			if (_button < mouseButton.length)
@@ -58,6 +71,9 @@ public class Mouse {
 		});
 	}
 
+	/**
+	 * Called each frame to update mouse button states and mouse position.
+	 */
 	public static void update() {
 		pollMouseButtons();
 		
@@ -81,13 +97,21 @@ public class Mouse {
 		}
 	}
 
+	/**
+	 * Get if the queried button is pressed
+	 * @param button The button. Check input/Buttons.java
+	 * @return Returns whether the button is currently pressed.
+	 */
 	public static boolean mouseButtonDown (int button) {
 		if (button < mouseButton.length) {
 			return mouseButton[button];
 		}
 		return false;
 	}
-	
+
+	/**
+	 * Clear the mouse state
+	 */
 	public static void clearMouseInput () {
 		scrollX = 0;
 		scrollY = 0;
