@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.FloatBuffer;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
@@ -30,12 +31,15 @@ public class Shader {
 	/** Filepath to the shader file */
 	private String filepath;
 
+	private HashMap<String, Integer> uniformLocations;
+
 	/**
 	 * Loads the shader file at filepath. The shader file should have both shaders.
 	 * Vertex Shader and fragment shader. #type should be used to separate them.
 	 */
 	public Shader(String filePath) {
 		this.filepath = filePath;
+		this.uniformLocations = new HashMap<>();
 		try {
 			String source = new String(Files.readAllBytes(Paths.get(filepath)));
 			String[] splitString = source.split("(#type)( )+([a-zA-Z]+)");
@@ -137,13 +141,22 @@ public class Shader {
 		beingUsed = false;
 	}
 
+	private int getLocation(String name) {
+		int location = uniformLocations.getOrDefault(name, -1);
+		if (location == -1) {
+			location = glGetUniformLocation(shaderProgramID, name);
+			uniformLocations.put(name, location);
+		}
+		return location;
+	}
+
 	/**
 	 * Upload a 4x4 Matrix to the gpu
 	 * @param varName name of the uniform
 	 * @param mat4 the matrix to be uploaded
 	 */
 	public void uploadMat4f (String varName, Matrix4f mat4) {
-		int varLocation = glGetUniformLocation(shaderProgramID, varName);
+		int varLocation = getLocation(varName);
 		attach(); // make sure the shader is being used
 		FloatBuffer matBuffer = BufferUtils.createFloatBuffer(16);
 		mat4.get(matBuffer);
@@ -156,7 +169,7 @@ public class Shader {
 	 * @param mat3 the matrix to be uploaded
 	 */
 	public void uploadMat3f(String varName, Matrix3f mat3) {
-        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+		int varLocation = getLocation(varName);
         attach();
         FloatBuffer matBuffer = BufferUtils.createFloatBuffer(9);
         mat3.get(matBuffer);
@@ -169,7 +182,7 @@ public class Shader {
 	 * @param vec the vector to be uploaded
 	 */
 	public void uploadVec4f (String varName, Vector4f vec) {
-		int varLocation = glGetUniformLocation(shaderProgramID, varName);
+		int varLocation = getLocation(varName);
 		attach(); // make sure the shader is being used
 		glUniform4f(varLocation, vec.x, vec.y, vec.z, vec.w);
 	}
@@ -180,7 +193,7 @@ public class Shader {
 	 * @param vec the array to be uploaded
 	 */
 	public void uploadVec3fArray(String varName, Vector3f[] vec) {
-		int varLocation = glGetUniformLocation(shaderProgramID, varName);
+		int varLocation = getLocation(varName);
 		attach();
 		float[] vals = new float[vec.length * 3];
 		for (int i = 0; i < vec.length; i++) {
@@ -197,7 +210,7 @@ public class Shader {
 	 * @param vec the vector to be uploaded
 	 */
 	public void uploadVec2f(String varName, Vector2f vec) {
-        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+		int varLocation = getLocation(varName);
         attach();
         glUniform2f(varLocation, vec.x, vec.y);
     }
@@ -208,7 +221,7 @@ public class Shader {
 	 * @param vec the array to be uploaded
 	 */
 	public void uploadVec2fArray(String varName, Vector2f[] vec) {
-		int varLocation = glGetUniformLocation(shaderProgramID, varName);
+		int varLocation = getLocation(varName);
 		attach();
 		float[] vals = new float[vec.length * 2];
 		for (int i = 0; i < vec.length; i++) {
@@ -224,7 +237,7 @@ public class Shader {
 	 * @param val the float value to be uploaded
 	 */
 	public void uploadFloat (String varName, float val) {
-		int varLocation = glGetUniformLocation(shaderProgramID, varName);
+		int varLocation = getLocation(varName);
 		attach(); // make sure the shader is being used
 		glUniform1f(varLocation, val);
 	}
@@ -235,7 +248,7 @@ public class Shader {
 	 * @param array the array to be uploaded
 	 */
 	public void uploadFloatArray(String varName, float[] array) {
-		int varLocation = glGetUniformLocation(shaderProgramID, varName);
+		int varLocation = getLocation(varName);
 		attach(); // make sure the shader is being used
 		glUniform1fv(varLocation, array);
 	}
@@ -246,7 +259,7 @@ public class Shader {
 	 * @param val the int value to be uploaded
 	 */
 	public void uploadInt (String varName, int val) {
-		int varLocation = glGetUniformLocation(shaderProgramID, varName);
+		int varLocation = getLocation(varName);
 		attach(); // make sure the shader is being used
 		glUniform1i(varLocation, val);
 	}
@@ -257,7 +270,7 @@ public class Shader {
 	 * @param slot the texture slot to which the texture is bound
 	 */
 	public void uploadTexture (String varName, int slot) {
-		int varLocation = glGetUniformLocation(shaderProgramID, varName);
+		int varLocation = getLocation(varName);
 		attach(); // make sure the shader is being used
 		glUniform1i(varLocation, slot);
 	}
@@ -268,7 +281,7 @@ public class Shader {
 	 * @param array the array to be uploaded
 	 */
 	public void uploadIntArray(String varName, int[] array) {
-        int varLocation = glGetUniformLocation(shaderProgramID, varName);
+		int varLocation = getLocation(varName);
         attach();
         glUniform1iv(varLocation, array);
     }
