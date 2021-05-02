@@ -20,6 +20,9 @@ public class AABB extends Component {
 
 	private DebugRect debugRect;
 
+	private boolean collidingX = false;
+
+	private boolean collidingY = false;
 	@Override
 	public void start() {
 		colliders.add(this);
@@ -58,7 +61,8 @@ public class AABB extends Component {
 			} else {
 				gameObject.setTransformX(other.getX() + other.getWidth());
 			}
-		}
+			collidingX = true;
+		} else collidingX = false;
 	}
 
 	public void collideY() {
@@ -68,7 +72,16 @@ public class AABB extends Component {
 			} else {
 				gameObject.setTransformY(other.getY() + other.getHeight());
 			}
-		}
+			collidingY = true;
+		} else collidingY = false;
+	}
+
+	public boolean isCollidingX () {
+		return collidingX;
+	}
+
+	public boolean isCollidingY () {
+		return collidingY;
 	}
 
 	public boolean collide(Transform other) {

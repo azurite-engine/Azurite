@@ -5,7 +5,8 @@ import event.EventData;
 import event.Events;
 import input.Keyboard;
 import postprocess.PostProcessing;
-import scenes.Demo;
+import scenes.DemoPlatformer;
+import scenes.DemoTopDown;
 import scenes.Main;
 import input.Mouse;
 import org.lwjgl.glfw.GLFWVidMode;
@@ -21,9 +22,10 @@ public class Window {
 
     // Define and set the current scene
     public static Scene main = new Main();
-    public static Scene demo = new Demo();
+    public static Scene demoTopDown = new DemoTopDown();
+    public static Scene demoPlatformer = new DemoPlatformer();
 
-    public static Scene currentScene = demo;
+    public static Scene currentScene = demoPlatformer;
 
     // Window Variables
     public long frameCount = 0;

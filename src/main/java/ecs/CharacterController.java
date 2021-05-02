@@ -12,11 +12,11 @@ public class CharacterController extends Component {
 
 	float gravity = 9;
 	private final boolean grounded = false;
-	private Vector2f lastPosition;
+	protected Vector2f lastPosition;
 
 	float sprintSpeed = 0;
 
-	AABB collision;
+	protected AABB collision;
 	public boolean AABB_enabled = false;
 
 	@Override
@@ -40,7 +40,7 @@ public class CharacterController extends Component {
 		collision = gameObject.getComponent(AABB.class);
 	}
 
-	private void moveX() {
+	protected void moveX() {
 		// X
 		gameObject.setTransformX(position.x);
 		if (Keyboard.getKey(Keyboard.A_KEY) || Keyboard.getKey(Keyboard.LEFT_ARROW)) {
@@ -51,7 +51,7 @@ public class CharacterController extends Component {
 		}
 	}
 
-	private void moveY() {
+	protected void moveY() {
 		// Y
 		gameObject.setTransformY(position.y);
 
@@ -62,6 +62,5 @@ public class CharacterController extends Component {
 			position.y += speed.y + sprintSpeed * Engine.deltaTime;
 		}
 	}
-
 
 }
