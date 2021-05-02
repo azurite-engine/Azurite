@@ -8,7 +8,7 @@ import util.Engine;
 public class CharacterController extends Component {
 
 	Vector2f position = new Vector2f(0, 0);
-	Vector2f speed = new Vector2f(5, 5);
+	Vector2f speed = new Vector2f(300, 300);
 
 	float gravity = 9;
 	private final boolean grounded = false;
