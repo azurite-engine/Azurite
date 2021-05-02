@@ -162,7 +162,7 @@ public class Window {
         glfwMakeContextCurrent(window);
 
         // Enable V-Sync
-        glfwSwapInterval(1);
+//        glfwSwapInterval(1);
 
         // Center the window
         glfwSetWindowPos(window, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
