@@ -36,7 +36,7 @@
   * [Prerequisites](#prerequisites)
   * [Project Setup](#project-setup)
   * [Documentation](#documentation)
-* [Issues](https://github.com/athaun/Gprocessing/issues)
+* [Issues](https://github.com/Games-With-Gabe-Community/Azurite/issues)
 * [License](#license)
 * [Contact](#contact)
 
@@ -90,9 +90,7 @@ public class Main extends Scene {
 * Java 1.8
   
 ## Project Setup
-To begin contributing, create a fork of this repository.
-Using intellj, import this project from existing sources as a gradle project.
-Build gradle, then run the Main scene (located in the scenes package).
+To begin using this game engine. Start by typing 'cmd' into the search bar, then it will show you the path you are in if you dont want to download the engine in that path then type 'cd C:/Your/Path' (type the path instead of Your/Path). Then type 'git clone https://github.com/Games-With-Gabe-Community/Azurite'. Then download 'intellij' from <a href="https://www.jetbrains.com/idea/">here</a> then open it an build using gradle. (This Engine only works for java 8, if you tried to compile in any other java realese then the program would crash instantly.)
 
 ## Documentation
 * [Documentatation](https://games-with-gabe-community.github.io/Azurite-Docs/) (Done but we are still adding stuff to it)
