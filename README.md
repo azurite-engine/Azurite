@@ -93,15 +93,7 @@ public class Main extends Scene {
 * Java 1.8
   
 ## Project Setup
-
-# Windows
-To begin using this game engine. Start by typing 'cmd' into the search bar, then it will show you the path you are in if you dont want to download the engine in that path then type 'cd C:/Your/Path' (type the path instead of Your/Path). Then type 'git clone https://github.com/Games-With-Gabe-Community/Azurite'. Then download 'intellij' from <a href="https://www.jetbrains.com/idea/">here</a> then open it an build using gradle. (This Engine only works for java 8, if you tried to compile in any other java realese then the program would crash instantly.)
-
-## Linux
-Open terminal by doing 'Ctrl + Alt + T' or press 'Alt + F2' and type gnome-terminal or if you are using XUbuntu then press 'Win + T' or if none of the above work then go to applications then accessories then click on terminal, then it will show you the path you are in if you dont want to download the engine in that path then type 'cd C:/Your/Path' (type the path instead of Your/Path). Then type 'git clone https://github.com/Games-With-Gabe-Community/Azurite'. Then download 'intellij' from <a href="https://www.jetbrains.com/idea/">here</a> then open it an build using gradle. (This Engine only works for java 8, if you tried to compile in any other java realese then the program would crash instantly.)
-
-## Mac
-If you are using mac os 10 or above then open terminal by doing 'command + space' and type spotlight but, if you are using mac od 9 or under then in the menu click on the go tab and click 'Utilities' then click on terminal, then it will show you the path you are in if you dont want to download the engine in that path then type 'cd C:/Your/Path' (type the path instead of Your/Path). Then type 'git clone https://github.com/Games-With-Gabe-Community/Azurite'. Then download 'intellij' from <a href="https://www.jetbrains.com/idea/">here</a> then open it an build using gradle. (This Engine only works for java 8, if you tried to compile in any other java realese then the program would crash instantly.)
+https://games-with-gabe-community.github.io/Azurite-Docs/tutorials/set-a-project.html
 
 ## Documentation
 * [Documentatation](https://games-with-gabe-community.github.io/Azurite-Docs/) (Done but we are still adding stuff to it)
