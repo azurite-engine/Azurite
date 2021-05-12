@@ -36,7 +36,7 @@
   * [Prerequisites](#prerequisites)
   * [Project Setup](#project-setup)
   * [Documentation](#documentation)
-* [Issues](https://github.com/athaun/Gprocessing/issues)
+* [Issues](https://github.com/Games-With-Gabe-Community/Azurite/issues)
 * [License](#license)
 * [Contact](#contact)
 
@@ -93,7 +93,7 @@ public class Main extends Scene {
 To begin contributing, create a fork of this repository.
 Using intellj, import this project from existing sources as a gradle project.
 Build gradle, then run the Main scene (located in the scenes package).
-Follow this [link](https://games-with-gabe-community.github.io/Azurite-Docs/tutorials/set-a-project.html) for tutorials on cloning and importing to either Intellj or Gradle.
+Follow this [link](https://games-with-gabe-community.github.io/Azurite-Docs/tutorials/set-a-project.html) for tutorials on cloning and importing to either Intellj or Eclipse.
 
 ## Documentation
 * [Documentatation](https://games-with-gabe-community.github.io/Azurite-Docs/) (Done but we are still adding stuff to it)
