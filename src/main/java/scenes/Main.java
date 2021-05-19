@@ -42,7 +42,7 @@ public class Main extends util.Scene {
 
 	public void update () {
 		if (x % 100 == 0) {
-			t.change("" + Utils.randomInt(0, 10000));
+			t.change("" + Utils.randomInt(0, 1000000));
 		}
 		x ++;
 	}

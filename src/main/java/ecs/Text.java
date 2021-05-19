@@ -116,7 +116,6 @@ public class Text {
 
             glyphRenderers.add(new GlyphRenderer(new Transform(drawX, drawY, g.width, g.height), g, this, ch));
 
-
             drawX += g.width;
         }
         Window.currentScene.textRenderer.add(this);
@@ -128,5 +127,29 @@ public class Text {
 
     public int zIndex () {
         return zIndex;
+    }
+
+    public float getX () {
+        return x;
+    }
+
+    public void setX (float x) {
+        this.x = x;
+    }
+
+    public float getY () {
+        return y;
+    }
+
+    public void setY (float y) {
+        this.y = y;
+    }
+
+    public float addY (float y) {
+        return y += y;
+    }
+
+    public void addX (float x) {
+        this.x = x;
     }
 }

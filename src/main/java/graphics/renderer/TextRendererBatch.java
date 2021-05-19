@@ -87,24 +87,13 @@ public class TextRendererBatch extends RenderBatch {
     }
 
     public void removeIndex (int i) {
-//        glyphRenderers = new ArrayList<>();
         if (glyphRenderers.size() > 0) {
-            Logger.logInfo("Removed GlyphRenderer " + glyphRenderers.get(i).getCharacter() + " (" + i + ") from batch.");
+            Logger.logInfo("Removed GlyphRenderer \"" + glyphRenderers.get(i).getCharacter() + "\" (" + i + ") from batch.");
             glyphRenderers.remove(i);
             numberOfGlyphRenderers --;
-            super.updateBuffer();
+//            super.updateBuffer();
         }
     }
-
-//    public void updateBuffer(){
-//        for(int i = 0; i < numberOfGlyphRenderers; i++){
-//            if(glyphRenderers.get(i).isDirty()){
-//                //Create map for the dirty quad starting at its offset and ending in its length
-//                super.updateBuffer(i);
-//                glyphRenderers.get(i).setClean();
-//            }
-//        }
-//    }
 
     /**
      * Adds a Text object to this batch

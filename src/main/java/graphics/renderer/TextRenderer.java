@@ -8,6 +8,7 @@ import fonts.GlyphRenderer;
 import graphics.Framebuffer;
 import graphics.Shader;
 import graphics.Window;
+import sun.security.util.Debug;
 import util.Assets;
 import util.Logger;
 import util.specs.FramebufferSpec;
