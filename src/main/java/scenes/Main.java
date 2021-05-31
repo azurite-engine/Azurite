@@ -9,10 +9,13 @@ package scenes;
  * @return type and description if not void
  */
 
+import ecs.GameObject;
+import ecs.SpriteRenderer;
 import ecs.Text;
 import fonts.Font;
 import graphics.Camera;
 import graphics.Color;
+import physics.Transform;
 import util.Engine;
 import util.Logger;
 import util.Utils;
@@ -28,6 +31,8 @@ public class Main extends util.Scene {
 	Text t;
 	Font f;
 
+	GameObject g;
+
 	public void awake() {
 
 		setDefaultBackground(Color.BLACK);
@@ -35,6 +40,9 @@ public class Main extends util.Scene {
 
 		f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 25, true);
 		t = new Text("Hello World!\nTest Text line 2.", f, 10, 0, 1);
+
+		g = new GameObject("test", new Transform(100, 100, 100, 100), 1);
+		g.addComponent(new SpriteRenderer(Color.RED));
 
 	}
 

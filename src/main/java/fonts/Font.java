@@ -279,7 +279,7 @@ public class Font {
      *
      * @param font      The AWT font
      * @param c         The char
-     * @param antiAlias Wheter the char should be antialiased or not
+     * @param antiAlias Whether the char should be antialiased or not
      *
      * @return Char image
      */

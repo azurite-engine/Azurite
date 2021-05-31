@@ -37,7 +37,7 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
      */
     @Override
     protected Framebuffer createFramebuffer() {
-        return Framebuffer.createDefault();
+        return Framebuffer.createWithColorAttachment();
     }
 
     /**
