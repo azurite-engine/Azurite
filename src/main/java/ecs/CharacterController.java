@@ -8,15 +8,15 @@ import util.Engine;
 public class CharacterController extends Component {
 
 	Vector2f position = new Vector2f(0, 0);
-	Vector2f speed = new Vector2f(5, 5);
+	Vector2f speed = new Vector2f(300, 300);
 
 	float gravity = 9;
 	private final boolean grounded = false;
-	private Vector2f lastPosition;
+	protected Vector2f lastPosition;
 
 	float sprintSpeed = 0;
 
-	AABB collision;
+	protected AABB collision;
 	public boolean AABB_enabled = false;
 
 	@Override
@@ -40,28 +40,27 @@ public class CharacterController extends Component {
 		collision = gameObject.getComponent(AABB.class);
 	}
 
-	private void moveX() {
+	protected void moveX() {
 		// X
 		gameObject.setTransformX(position.x);
 		if (Keyboard.getKey(Keyboard.A_KEY) || Keyboard.getKey(Keyboard.LEFT_ARROW)) {
-			position.x += -speed.x + sprintSpeed * Engine.deltaTime;
+			position.x += (-speed.x + sprintSpeed) * Engine.deltaTime;
 		}
 		if (Keyboard.getKey(Keyboard.D_KEY) || Keyboard.getKey(Keyboard.RIGHT_ARROW)) {
-			position.x += speed.x + sprintSpeed * Engine.deltaTime;
+			position.x += (speed.x + sprintSpeed) * Engine.deltaTime;
 		}
 	}
 
-	private void moveY() {
+	protected void moveY() {
 		// Y
 		gameObject.setTransformY(position.y);
 
 		if (Keyboard.getKey(Keyboard.W_KEY) || Keyboard.getKey(Keyboard.UP_ARROW)) {
-			position.y += -speed.y + sprintSpeed * Engine.deltaTime;
+			position.y += (-speed.y + sprintSpeed) * Engine.deltaTime;
 		}
 		if (Keyboard.getKey(Keyboard.S_KEY) || Keyboard.getKey(Keyboard.DOWN_ARROW)) {
-			position.y += speed.y + sprintSpeed * Engine.deltaTime;
+			position.y += (speed.y + sprintSpeed) * Engine.deltaTime;
 		}
 	}
-
 
 }
