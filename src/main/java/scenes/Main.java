@@ -33,18 +33,18 @@ public class Main extends util.Scene {
 		setDefaultBackground(Color.BLACK);
 		camera = new Camera();
 
-		f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 100, true);
-		t = new Text("Hello", f, 100, 100, 1);
+		f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 25, true);
+		t = new Text("Hello World!\nTest Text line 2.", f, 10, 0, 1);
 
 	}
 
 	int x = 0;
 
 	public void update () {
-		if (x % 100 == 0) {
-			t.change("" + Utils.randomInt(0, 1000000));
-		}
-		x ++;
+//		if (x % 100 == 0) {
+//			t.change("" + Utils.randomInt(0, 400) + ":" + Utils.randomInt(1, 100));
+//		}
+//		x ++;
 	}
 
 }

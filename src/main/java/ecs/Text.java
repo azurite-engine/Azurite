@@ -55,32 +55,35 @@ public class Text {
     }
 
     public void draw () {
-        int textHeight = font.getHeight(text);
-
-        float drawX = x;
-        float drawY = y;
-        if (textHeight > font.getFontHeight()) {
-            drawY += textHeight - font.getFontHeight();
-        }
-
-        for (int i = 0; i < text.length(); i++) {
-            char ch = text.charAt(i);
-            if (ch == '\n') {
-                /* Line feed, set x and y to draw at the next line */
-                drawY += font.getFontHeight();
-                drawX = x;
-                continue;
-            }
-            if (ch == '\r') {
-                /* Carriage return, just skip it */
-                continue;
-            }
-            Glyph g = font.getGlyphs().get(ch);
-
-            glyphRenderers.add(new GlyphRenderer(new Transform(drawX, drawY, g.width, g.height), g, this, ch));
-
-            drawX += g.width;
-        }
+        generateGlyphs();
+//        int textHeight = font.getHeight(text);
+//        int lineIncreases = 0;
+//
+//        float drawX = x;
+//        float drawY = y;
+//
+//        for (int i = 0; i < text.length(); i++) {
+//            char ch = text.charAt(i);
+//            if (ch == '\n') {
+//                lineIncreases ++;
+//                /* Line feed, set x and y to draw at the next line */
+//                drawY = y + (font.getFontHeight() * lineIncreases);
+//                drawX = x;
+//                continue;
+//            }
+//            if (ch == '\r') {
+//                /* Carriage return, just skip it */
+//                continue;
+//            }
+//            Glyph g = font.getGlyphs().get(ch);
+//
+//            glyphRenderers.add(new GlyphRenderer(new Transform(drawX, drawY, g.width, g.height), g, this, ch));
+//
+//            drawX += g.width;
+//        }
+//        if (textHeight > font.getFontHeight()) {
+//            drawY += textHeight - font.getFontHeight();
+//        }
     }
 
     public void change (String string) {
@@ -88,23 +91,30 @@ public class Text {
         Window.currentScene.textRenderer.removeAllGlyphRenderers(glyphRenderers);
         System.out.println("");
 
-
-        this.text = string;
+        String tmp = "";
+        for (int i = 0; i < this.text.length() - string.length(); i ++) {
+            tmp += " ";
+        }
+        this.text = string + tmp;
         glyphRenderers = new ArrayList<>();
 
+        generateGlyphs();
+        Window.currentScene.textRenderer.add(this);
+    }
+
+    private void generateGlyphs () {
         int textHeight = font.getHeight(text);
+        int lineIncreases = 0;
+
         float drawX = x;
         float drawY = y;
-
-        if (textHeight > font.getFontHeight()) {
-            drawY += textHeight - font.getFontHeight();
-        }
 
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
             if (ch == '\n') {
+                lineIncreases ++;
                 /* Line feed, set x and y to draw at the next line */
-                drawY += font.getFontHeight();
+                drawY = y + (font.getFontHeight() * lineIncreases);
                 drawX = x;
                 continue;
             }
@@ -118,7 +128,9 @@ public class Text {
 
             drawX += g.width;
         }
-        Window.currentScene.textRenderer.add(this);
+        if (textHeight > font.getFontHeight()) {
+            drawY += textHeight - font.getFontHeight();
+        }
     }
 
     public ArrayList<GlyphRenderer> getGlyphRenderers () {
