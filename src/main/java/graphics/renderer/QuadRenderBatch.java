@@ -1,16 +1,15 @@
 package graphics.renderer;
 
+import event.Events;
 import graphics.Primitive;
 import graphics.ShaderDatatype;
 import graphics.Window;
 import org.joml.Vector2f;
 
 public class QuadRenderBatch extends RenderBatch {
-	private Vector2f offset;
-
 	public QuadRenderBatch() {
 		super(1, 1, Primitive.QUAD, ShaderDatatype.FLOAT2);
-		offset = new Vector2f(0);
+		Events.windowResizeEvent.subscribe(d -> loadQuad());
 	}
 
 	/**
@@ -21,22 +20,17 @@ public class QuadRenderBatch extends RenderBatch {
 	 */
 	@Override
 	protected void loadVertexProperties(int index, int offset) {
-		data[offset]     = 0 + this.offset.x;
-		data[offset + 1] = 0 + this.offset.y;
-		data[offset + 2] = Window.getWidth() + this.offset.x;
-		data[offset + 3] = 0 + this.offset.y;
-		data[offset + 4] = Window.getWidth() + this.offset.x;
-		data[offset + 5] = Window.getHeight() + this.offset.y;
-		data[offset + 6] = 0 + this.offset.x;
-		data[offset + 7] = Window.getHeight() + this.offset.y;
+		data[offset]     = 0;
+		data[offset + 1] = 0;
+		data[offset + 2] = Window.getWidth();
+		data[offset + 3] = 0;
+		data[offset + 4] = Window.getWidth();
+		data[offset + 5] = Window.getHeight();
+		data[offset + 6] = 0;
+		data[offset + 7] = Window.getHeight();
 	}
 
 	public void loadQuad() {
-		load(0);
-	}
-
-	public void setOffset(Vector2f offset) {
-		this.offset.set(offset);
 		load(0);
 	}
 }

@@ -36,9 +36,6 @@ public class LightmapRenderer extends Renderer<QuadRenderBatch> {
 		qb.start();
 		qb.loadQuad();
 		batches.add(qb);
-		Events.windowResizeEvent.subscribe(data -> {
-			framebuffer.resize(data.x, data.y);
-		});
 	}
 
 	/**
@@ -58,7 +55,7 @@ public class LightmapRenderer extends Renderer<QuadRenderBatch> {
 	 */
 	@Override
 	protected Framebuffer createFramebuffer() {
-		return new Framebuffer(Window.getWidth(), Window.getHeight(), new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)));
+		return Framebuffer.createWithColorAttachment();
 	}
 
 	/**
