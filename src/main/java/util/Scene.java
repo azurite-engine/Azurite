@@ -8,7 +8,9 @@ import graphics.renderer.*;
 import graphics.Camera;
 import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
-import physics.AABB;
+import postprocess.ForwardToTexture;
+import postprocess.PostProcessQuad;
+import postprocess.PostProcessStep;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,8 @@ public abstract class Scene {
     private boolean debugMode = true;
     static protected ArrayList<GameObject> gameObjects = new ArrayList<>();
     static protected ArrayList<Text> uiObjects = new ArrayList<>(); // Todo: implement ui component based system similar to gameObjects
+
+    protected ForwardToTexture forwardToScreen;
 
     public float minLighting;
 
@@ -51,6 +55,11 @@ public abstract class Scene {
         if (Keyboard.getKeyDown(GLFW.GLFW_KEY_GRAVE_ACCENT)) {
             debugMode = !debugMode;
         }
+    }
+
+    public void postProcess(int texture) {
+        forwardToScreen.setTexture(texture);
+        forwardToScreen.apply();
     }
 
     /**
@@ -130,7 +139,12 @@ public abstract class Scene {
         lightmapRenderer.render();
         lightmapRenderer.bindLightmap();
         this.renderer.render();
+//        renderer.render();
+        lightmapRenderer.framebuffer.blitColorBuffersToScreen();
         textRenderer.render();
+    }
+
+    public void debugRender() {
         if (debugMode) this.debugRenderer.render();
     }
 
@@ -148,5 +162,7 @@ public abstract class Scene {
         debugRenderer.init();
         lightmapRenderer.init();
         renderer.init();
+        forwardToScreen = new ForwardToTexture(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
+        forwardToScreen.init();
     }
 }
