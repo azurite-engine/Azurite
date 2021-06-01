@@ -269,7 +269,7 @@ public class Font {
         buffer.flip();
 
         Texture t = new Texture().createTexture(width, height, buffer);
-        MemoryUtil.memFree(buffer);
+//        MemoryUtil.memFree(buffer);
 
         return t;
     }
