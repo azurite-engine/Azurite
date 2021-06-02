@@ -14,7 +14,6 @@ public class Glyph extends Sprite {
     public final int x;
     public final int y;
     public Vector2f[] uvCoordinates;
-    Texture texture;
 
     /**
      * Creates a font Glyph.
@@ -25,7 +24,7 @@ public class Glyph extends Sprite {
      * @param y       Y coordinate on the font texture
      */
     public Glyph(int width, int height, int x, int y) {
-        super(null);
+        super(new Texture());
         this.width = width;
         this.height = height;
         this.x = x;

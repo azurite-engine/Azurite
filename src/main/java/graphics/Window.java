@@ -193,9 +193,9 @@ public class Window {
         currentScene.loadEngineResources();
 
         currentScene.initRenderers();
+        currentScene.startUi();
         currentScene.awake();
 
-        currentScene.startUi();
         currentScene.startGameObjects();
 
         while (!glfwWindowShouldClose(window)) {
@@ -213,6 +213,7 @@ public class Window {
             PostProcessing.prepare();
             currentScene.postProcess(currentScene.renderer.fetchColorAttachment(0));
             PostProcessing.finish();
+            currentScene.textRender();
             currentScene.debugRender();
 
             glfwSwapBuffers(window);

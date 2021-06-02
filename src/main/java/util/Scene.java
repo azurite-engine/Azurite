@@ -138,9 +138,10 @@ public abstract class Scene {
         rendererRegistry.forEach(Renderer::render);
         lightmapRenderer.render();
         lightmapRenderer.bindLightmap();
-        this.renderer.render();
-//        renderer.render();
-        lightmapRenderer.framebuffer.blitColorBuffersToScreen();
+        renderer.render();
+    }
+
+    public final void textRender() {
         textRenderer.render();
     }
 
