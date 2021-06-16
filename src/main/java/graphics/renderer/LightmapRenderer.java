@@ -2,15 +2,16 @@ package graphics.renderer;
 
 import ecs.GameObject;
 import ecs.PointLight;
-import event.Events;
-import graphics.*;
+import graphics.Color;
+import graphics.Framebuffer;
+import graphics.Graphics;
+import graphics.Shader;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import util.Assets;
-import util.specs.FramebufferSpec;
-import util.specs.FramebufferTextureSpec;
+import util.Engine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,8 +67,8 @@ public class LightmapRenderer extends Renderer<QuadRenderBatch> {
 	@Override
 	protected void uploadUniforms(Shader shader) {
 		// This is here so that all renderers can have different cameras OR no cameras at all
-		shader.uploadMat4f("uProjection", Window.currentScene.camera().getProjectionMatrix());
-		shader.uploadVec2f("uCameraOffset", Window.currentScene.camera().getPosition());
+		shader.uploadMat4f("uProjection", Engine.window().currentScene().camera().getProjectionMatrix());
+		shader.uploadVec2f("uCameraOffset", Engine.window().currentScene().camera().getPosition());
 
 		// Set lighting uniforms
 		Vector2f[] lightPositions = new Vector2f[numberOfLights];
@@ -84,7 +85,7 @@ public class LightmapRenderer extends Renderer<QuadRenderBatch> {
 		shader.uploadVec2fArray("uLightPosition", lightPositions);
 		shader.uploadVec3fArray("uLightColor", lightColors);
 		shader.uploadFloatArray("uIntensity", lightIntensities);
-		shader.uploadFloat("uMinLighting", Window.currentScene.minLighting);
+		shader.uploadFloat("uMinLighting", Engine.window().currentScene().minLighting);
 		shader.uploadInt("uNumLights", numberOfLights);
 	}
 

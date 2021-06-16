@@ -4,8 +4,8 @@ import ecs.Component;
 import ecs.GameObject;
 import graphics.Framebuffer;
 import graphics.Shader;
-import graphics.Window;
 import util.Assets;
+import util.Engine;
 import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
 
@@ -39,8 +39,8 @@ public class DebugRenderer extends Renderer<DebugRenderBatch> {
 	 */
 	@Override
 	protected void uploadUniforms(Shader shader) {
-		shader.uploadMat4f("uProjection", Window.currentScene.camera().getProjectionMatrix());
-		shader.uploadMat4f("uView", Window.currentScene.camera().getViewMatrix());
+		shader.uploadMat4f("uProjection", Engine.window().currentScene().camera().getProjectionMatrix());
+		shader.uploadMat4f("uView", Engine.window().currentScene().camera().getViewMatrix());
 	}
 
 	/**

@@ -14,29 +14,41 @@ import util.Assets;
 import util.Engine;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static util.Engine.deltaTime;
-
 public abstract class Scene {
+
+    private static int sceneCounter = 0;
+
     public DefaultRenderer renderer = new DefaultRenderer();
     public LightmapRenderer lightmapRenderer = new LightmapRenderer();
     public DebugRenderer debugRenderer = new DebugRenderer();
+
     private List<Renderer<?>> rendererRegistry = new ArrayList<>();
+
     public Camera camera;
-    private boolean isRunning = false;
     private boolean debugMode = true;
+    private boolean active = false;
     static protected List<GameObject> gameObjects = new ArrayList<>();
 
     protected ForwardToTexture forwardToScreen;
 
     public float minLighting;
 
-    /**
-     * @param args Entry point to start the application
-     */
-    public static void main(String[] args) {
-        Engine.init(1600, 900, "Hello World!", 1);
+    private int sceneId = sceneCounter++;
+
+//    TODO: remove, old code
+//    /**
+//     * @param args Entry point to start the application
+//     */
+//    public static void main(String[] args) {
+//        Engine.init(1600, 900, "Hello World!", 1);
+//    }
+
+
+    public boolean isActive() {
+        return active;
     }
 
     /**
@@ -44,6 +56,24 @@ public abstract class Scene {
      */
     public void awake() {
         camera = new Camera();
+    }
+
+    /**
+     * This method will be called each time this scene becomes active by {@link SceneManager}.
+     * Will be called right before the first update.
+     * Can be used to prepare the scene to be shown after been shown previously to reset to a certain state.
+     */
+    public void activate() {
+        this.active = true;
+    }
+
+    /**
+     * This method will be called each time this scene becomes inactive by {@link SceneManager},
+     * because of switching to another method or termination of the program.
+     * Can be used to preserve the current state of the scene or quickly complete/cancel tasks that were midst execution.
+     */
+    public void deactivate() {
+        this.active = false;
     }
 
     /**
@@ -83,14 +113,22 @@ public abstract class Scene {
             this.debugRenderer.add(gameObject);
             rendererRegistry.forEach(r -> r.add(gameObject));
         }
-        isRunning = true;
     }
 
     /**
-     * @return Returns an ArrayList of gameObjects in the scene.
+     * The sceneId is meant to represent the instance of a scene as an integer
+     *
+     * @see SceneManager
+     */
+    public final int sceneId() {
+        return sceneId;
+    }
+
+    /**
+     * @return Returns the List of gameObjects contained in the scene.
      */
     public List<GameObject> getGameObjects() {
-        return gameObjects;
+        return Collections.unmodifiableList(gameObjects);
     }
 
     /**
@@ -123,7 +161,7 @@ public abstract class Scene {
      */
     public void updateGameObjects() {
         for (GameObject go : gameObjects) {
-            go.update(deltaTime);
+            go.update(Engine.deltaTime());
         }
     }
 
@@ -142,7 +180,7 @@ public abstract class Scene {
     /**
      * Loads the shader.
      */
-    public void loadEngineResources() {
+    public void loadSceneResources() {
         Assets.getShader("src/assets/shaders/default.glsl");
     }
 

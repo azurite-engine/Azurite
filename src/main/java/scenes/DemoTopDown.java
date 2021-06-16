@@ -62,9 +62,9 @@ public class DemoTopDown extends Scene {
 
 	public void update() {
 		super.update();
-		player.getComponent(PointLight.class).intensity = Utils.map((float) Math.sin(Engine.millis() / 600), -1, 1, 100, 140);
-		booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millis() / 600), -1, 1, 70, 110);
-		greenLight.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millis() / 600), -1, 1, 70, 110);
+		player.getComponent(PointLight.class).intensity = Utils.map((float) Math.sin(Engine.millisRunning() / 600), -1, 1, 100, 140);
+		booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
+		greenLight.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 
 		camera.smoothFollow(player.getTransform());
 	}

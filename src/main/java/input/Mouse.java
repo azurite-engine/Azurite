@@ -56,7 +56,7 @@ public class Mouse {
 	 * Subscribes to mouse scroll event and mouse button event
 	 */
 	public static void setupCallbacks() {
-		glfwSetScrollCallback(Window.window, (w, xOffset, yOffset) -> {
+		glfwSetScrollCallback(Window.glfwWindow(), (w, xOffset, yOffset) -> {
 			scrollX = (float) xOffset;
 			scrollY = (float) yOffset;
 			mouseScroll = new Vector2f(scrollX, scrollY);
@@ -64,7 +64,7 @@ public class Mouse {
 			Events.mouseScrollEvent.onEvent(new EventData.MouseScrollEventData(xOffset, yOffset));
 		});
 
-		glfwSetMouseButtonCallback(Window.window, (w, button, action, mods) -> {
+		glfwSetMouseButtonCallback(Window.glfwWindow(), (w, button, action, mods) -> {
 			_button = button;
 			_action = action;
 			Events.mouseButtonEvent.onEvent(new EventData.MouseButtonEventData(button, action, mods));
@@ -80,7 +80,7 @@ public class Mouse {
 		DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
 		DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
 
-		glfwGetCursorPos(Window.window, x, y);
+		glfwGetCursorPos(Window.glfwWindow(), x, y);
 		x.rewind();
 		y.rewind();
 

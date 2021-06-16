@@ -42,7 +42,7 @@ public class Gravity extends CharacterController {
         if (!grounded) {
             velocity.y += gravity;
         }
-        gameObject.getTransform().addY(velocity.y * Engine.deltaTime);
+        gameObject.getTransform().addY(velocity.y * Engine.deltaTime());
     }
 
     public void addVelocityY (float y) {

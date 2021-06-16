@@ -65,8 +65,8 @@ public class DemoPlatformer extends Scene {
 
     public void update() {
         super.update();
-        player.getComponent(PointLight.class).intensity = Utils.map((float) Math.sin(Engine.millis() / 600), -1, 1, 80, 120);
-        booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millis() / 600), -1, 1, 70, 110);
+        player.getComponent(PointLight.class).intensity = Utils.map((float) Math.sin(Engine.millisRunning() / 600), -1, 1, 80, 120);
+        booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 
         camera.smoothFollow(player.getTransform());
 
@@ -76,14 +76,14 @@ public class DemoPlatformer extends Scene {
         }
 
         if (r <= -1) {
-            booper.getTransform().addX(-50 * Engine.deltaTime);
+            booper.getTransform().addX(-50 * Engine.deltaTime());
             if (booper.getComponent(AABB.class).isCollidingX()) {
                 booper.getComponent(Gravity.class).addVelocityY(-20);
                 Logger.logInfo("Do jump left");
             }
         }
         if (r >= 1) {
-            booper.getTransform().addX(50 * Engine.deltaTime);
+            booper.getTransform().addX(50 * Engine.deltaTime());
             if (booper.getComponent(AABB.class).isCollidingX()) {
                 booper.getComponent(Gravity.class).addVelocityY(-20);
                 Logger.logInfo("Do jump right");

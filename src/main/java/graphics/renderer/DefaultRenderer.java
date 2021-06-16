@@ -3,10 +3,11 @@ package graphics.renderer;
 import ecs.GameObject;
 import ecs.PointLight;
 import ecs.SpriteRenderer;
-import graphics.*;
+import graphics.Framebuffer;
+import graphics.Graphics;
+import graphics.Shader;
 import util.Assets;
-import util.specs.FramebufferSpec;
-import util.specs.FramebufferTextureSpec;
+import util.Engine;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,8 +55,8 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 		shader.uploadIntArray("uTextures", textureSlots);
 
 		// This is here so that all renderers can have different cameras OR no cameras at all
-		shader.uploadMat4f("uProjection", Window.currentScene.camera().getProjectionMatrix());
-		shader.uploadMat4f("uView", Window.currentScene.camera().getViewMatrix());
+		shader.uploadMat4f("uProjection", Engine.window().currentScene().camera().getProjectionMatrix());
+		shader.uploadMat4f("uView", Engine.window().currentScene().camera().getViewMatrix());
 
 		shader.uploadInt("uLightmap", 8);
 	}

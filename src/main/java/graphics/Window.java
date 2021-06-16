@@ -9,9 +9,7 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import postprocess.PostProcessing;
 import scene.Scene;
-import scenes.DemoPlatformer;
-import scenes.DemoTopDown;
-import scenes.Main;
+import scene.SceneManager;
 import util.Engine;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -19,32 +17,27 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Window {
 
-    // Define and set the current scene
-    public static Scene main = new Main();
-    public static Scene demoTopDown = new DemoTopDown();
-    public static Scene demoPlatformer = new DemoPlatformer();
-
-    public static Scene currentScene = demoPlatformer;
+    private SceneManager sceneManager;
+    //public static Scene currentScene = demoPlatformer; TODO: remove later
 
     // Window Variables
     public long frameCount = 0;
 
-    String title;
-    public static long window;
-    private GLFWVidMode videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+    private String title;
+    private static long glfwWindow;
+    private final GLFWVidMode videoMode;
 
-    public static int width;
-    public static int height;
-    private boolean recalculateProjectionOnResize;
-
-    private float dt = 0; // deltaTime (accessible from util.Engine.deltaTime)
+    private static int width;
+    private static int height;
+    private final boolean recalculateProjectionOnResize;
 
     public Window(int pwidth, int pheight, String ptitle, boolean fullscreen, float minSceneLighting, boolean recalculateProjectionOnResize) {
+        videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         width = pwidth;
         height = pheight;
         title = ptitle;
         this.recalculateProjectionOnResize = recalculateProjectionOnResize;
-        currentScene.minLighting = minSceneLighting;
+        currentScene().minLighting = minSceneLighting;
 
         // Configure GLFW
         glfwDefaultWindowHints();
@@ -54,47 +47,16 @@ public class Window {
         if (!fullscreen)
             initWindow(width, height, title, 0);
         else
-            initWindow(width, height, title, (int) glfwGetPrimaryMonitor());
-    }
-
-    public Window(int pwidth, int pheight, String ptitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
-        width = pwidth;
-        height = pheight;
-        title = ptitle;
-        this.recalculateProjectionOnResize = recalculateProjectionOnResize;
-        currentScene.minLighting = minSceneLighting;
-
-        // Configure GLFW
-        glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-
-        initWindow(width, height, title, 0);
-    }
-
-    public Window(int pwidth, int pheight, String ptitle, boolean recalculateProjectionOnResize) {
-        width = pwidth;
-        height = pheight;
-        title = ptitle;
-        this.recalculateProjectionOnResize = recalculateProjectionOnResize;
-        currentScene.minLighting = 1;
-
-        // Configure GLFW
-        glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-
-        initWindow(width, height, title, 0);
+            initWindow(width, height, title, glfwGetPrimaryMonitor());
     }
 
     public Window(String ptitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
-        GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-        width = mode.width();
-        height = mode.height();
+        videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        width = videoMode.width();
+        height = videoMode.height();
         title = ptitle;
         this.recalculateProjectionOnResize = recalculateProjectionOnResize;
-        currentScene.minLighting = minSceneLighting;
+        currentScene().minLighting = minSceneLighting;
 
         // Configure GLFW
         glfwDefaultWindowHints();
@@ -102,55 +64,38 @@ public class Window {
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
         initWindow(width, height, title, glfwGetPrimaryMonitor());
+    }
+
+    public Window(int pwidth, int pheight, String ptitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
+        this(pwidth, pheight, ptitle, false, minSceneLighting, recalculateProjectionOnResize);
+    }
+
+    public Window(int pwidth, int pheight, String ptitle, boolean recalculateProjectionOnResize) {
+        this(pwidth, pheight, ptitle, 1.0f, recalculateProjectionOnResize);
     }
 
     public Window(String ptitle, boolean recalculateProjectionOnResize) {
-        GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-        width = mode.width();
-        height = mode.height();
-        title = ptitle;
-        this.recalculateProjectionOnResize = recalculateProjectionOnResize;
-        currentScene.minLighting = 1;
-
-        // Configure GLFW
-        glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-
-        initWindow(width, height, title, glfwGetPrimaryMonitor());
+        this(ptitle, 1.0f, recalculateProjectionOnResize);
     }
 
     public Window(String ptitle) {
-        GLFWVidMode mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        this.recalculateProjectionOnResize = false;
-
-        width = mode.width();
-        height = mode.height();
-        title = ptitle;
-        currentScene.minLighting = 1;
-
-        // Configure GLFW
-        glfwDefaultWindowHints();
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-
-        initWindow(width, height, title, glfwGetPrimaryMonitor());
+        this(ptitle, false);
     }
 
-    private void initWindow (int width, int height, String title, long monitor) {
+    private void initWindow(int width, int height, String title, long monitor) {
         // Create window
-        window = glfwCreateWindow(width, height, title, monitor, 0);
+        glfwWindow = glfwCreateWindow(width, height, title, monitor, 0);
 
-        if (window == 0)
+        if (glfwWindow == 0)
             throw new IllegalStateException("[FATAL] Failed to create window.");
 
         // Set up callback
-        glfwSetWindowSizeCallback(window, (w, newWidth, newHeight) -> {
+        glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
             Window.setWidth(newWidth);
             Window.setHeight(newHeight);
 
-            if (recalculateProjectionOnResize && currentScene.camera != null) currentScene.camera.adjustProjection();
+            if (recalculateProjectionOnResize && currentScene().camera != null)
+                currentScene().camera.adjustProjection();
             Events.windowResizeEvent.onEvent(new EventData.WindowResizeEventData(newWidth, newHeight));
         });
 
@@ -158,76 +103,95 @@ public class Window {
         Keyboard.setupCallbacks();
 
         // Make the OpenGL context current
-        glfwMakeContextCurrent(window);
+        glfwMakeContextCurrent(glfwWindow);
 
         // Enable V-Sync
 //        glfwSwapInterval(1);
 
         // Center the window
-        glfwSetWindowPos(window, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
+        glfwSetWindowPos(glfwWindow, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
         GL.createCapabilities();
     }
 
     void getFPS() {
         frameCount++;
-        glfwSetWindowTitle(window, title + " @ " + Math.round((frameCount / (Engine.millis() / 1000))) + " FPS");
+        glfwSetWindowTitle(glfwWindow, title + " @ " + Math.round((frameCount / (Engine.millisRunning() / 1000))) + " FPS");
+    }
+
+    public static long glfwWindow() {
+        return glfwWindow;
+    }
+
+    public String getTitle() {
+        return title;
     }
 
     public void setTitle(String title) {
-        glfwSetWindowTitle(window, title);
+        this.title = title;
+        glfwSetWindowTitle(glfwWindow, title);
     }
 
     public void showWindow() {
         /*
          * scenes.Main game loop
          */
-        glfwShowWindow(window);
+        glfwShowWindow(glfwWindow);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        float frameBeginTime = (float)glfwGetTime();
-        float frameEndTime = (float)glfwGetTime();
+        float frameBeginTime = (float) glfwGetTime();
+        float frameEndTime;
 
-        currentScene.loadEngineResources();
+        currentScene().loadSceneResources();
 
-        currentScene.initRenderers();
-        currentScene.awake();
+        currentScene().initRenderers();
+        currentScene().awake();
 
-        currentScene.startGameObjects();
+        currentScene().startGameObjects();
 
-        while (!glfwWindowShouldClose(window)) {
-            Engine.deltaTime = dt;
+        float dt = 0;
+        Engine.updateDeltaTime(dt);
+
+        while (!glfwWindowShouldClose(glfwWindow)) {
 
             Mouse.update();
             Keyboard.update();
             // poll GLFW for input events
             glfwPollEvents();
 
-            currentScene.update();
-            currentScene.updateGameObjects();
-            currentScene.render();
+            currentScene().update();
+            currentScene().updateGameObjects();
+            currentScene().render();
             PostProcessing.prepare();
-            currentScene.postProcess(currentScene.renderer.fetchColorAttachment(0));
+            currentScene().postProcess(currentScene().renderer.fetchColorAttachment(0));
             PostProcessing.finish();
-            currentScene.debugRender();
+            currentScene().debugRender();
 
-            glfwSwapBuffers(window);
+            glfwSwapBuffers(glfwWindow);
             getFPS();
 
-            frameEndTime = (float)glfwGetTime();
+            frameEndTime = (float) glfwGetTime();
             dt = frameEndTime - frameBeginTime;
-            Engine.deltaTime = dt;
+            Engine.updateDeltaTime(dt);
             frameBeginTime = frameEndTime;
         }
 
-        currentScene.clean();
+        currentScene().clean();
         // Delete all framebuffers
         Framebuffer.clean();
 
-        glfwDestroyWindow(window);
+        glfwDestroyWindow(glfwWindow);
         glfwTerminate();
         glfwSetErrorCallback(null).free();
+    }
+
+    public Scene currentScene() {
+        return sceneManager.currentScene();
+    }
+
+    public SceneManager getSceneManager() {
+        return sceneManager;
     }
 
     private static void setHeight(int newHeight) {
@@ -238,11 +202,11 @@ public class Window {
         width = newWidth;
     }
 
-    public static int getWidth () {
+    public static int getWidth() {
         return width;
     }
 
-    public static int getHeight () {
+    public static int getHeight() {
         return height;
     }
 }
