@@ -5,31 +5,30 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 
-public class Engine {
+public final class Engine {
 
     /**
      * The Engine class initializes GLFW and the game loop.
      */
 
-    private static Engine instance;
+    private static final Engine instance = new Engine();
 
     private final long startMillis;
     private Window window;
     private boolean running;
     private float deltaTime;
 
+    //private to prevent creating new instances
     private Engine() {
         running = true;
         deltaTime = 0;
         startMillis = System.currentTimeMillis();
     }
 
+    /**
+     * Get the global unique instance of the Engine object.
+     */
     public static Engine getInstance() {
-        if (instance == null) {
-            synchronized (instance) {
-                instance = new Engine();
-            }
-        }
         return instance;
     }
 
@@ -76,7 +75,9 @@ public class Engine {
     public static void init(int windowWidth, int windowHeight, String windowTitle, float minSceneLighting) {
 
         preInit();
+
         getInstance().window = new Window(windowWidth, windowHeight, windowTitle, minSceneLighting, false);
+
         getInstance().window.showWindow();
     }
 
