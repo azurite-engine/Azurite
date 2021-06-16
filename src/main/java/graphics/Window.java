@@ -18,10 +18,9 @@ import static org.lwjgl.opengl.GL11.*;
 public class Window {
 
     private SceneManager sceneManager;
-    //public static Scene currentScene = demoPlatformer; TODO: remove later
 
     // Window Variables
-    public long frameCount = 0;
+    private long frameCount = 0;
 
     private String title;
     private static long glfwWindow;
@@ -111,9 +110,14 @@ public class Window {
         // Center the window
         glfwSetWindowPos(glfwWindow, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
         GL.createCapabilities();
+
+        //create the sceneManager to be able to set a scene
+        sceneManager = new SceneManager();
+
     }
 
     void getFPS() {
+        //TODO this wont properly display the FPS it will just count up the frames, there is no reset after a second yet
         frameCount++;
         glfwSetWindowTitle(glfwWindow, title + " @ " + Math.round((frameCount / (Engine.millisRunning() / 1000))) + " FPS");
     }

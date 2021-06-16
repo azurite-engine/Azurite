@@ -2,6 +2,7 @@ package util;
 
 import graphics.Window;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import scene.SceneManager;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 
@@ -54,6 +55,14 @@ public final class Engine {
 
     public float getDeltaTime() {
         return deltaTime;
+    }
+
+    public static void showWindow() {
+        window().showWindow();
+    }
+
+    public static SceneManager scenes() {
+        return window().getSceneManager();
     }
 
     //internal method called before any init

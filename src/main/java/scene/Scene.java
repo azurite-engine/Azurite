@@ -38,15 +38,6 @@ public abstract class Scene {
 
     private int sceneId = sceneCounter++;
 
-//    TODO: remove, old code
-//    /**
-//     * @param args Entry point to start the application
-//     */
-//    public static void main(String[] args) {
-//        Engine.init(1600, 900, "Hello World!", 1);
-//    }
-
-
     public boolean isActive() {
         return active;
     }

@@ -24,6 +24,8 @@ import static graphics.Graphics.setDefaultBackground;
 public class DemoPlatformer extends Scene {
     public static void main(String[] args) {
         Engine.init("Azurite Engine Demo 2", 0.1f);
+        Engine.scenes().switchScene(new DemoPlatformer(), true);
+        Engine.showWindow();
     }
 
     BloomEffect bloom;
@@ -90,7 +92,7 @@ public class DemoPlatformer extends Scene {
             }
         }
 
-        i ++;
+        i++;
     }
 
     @Override
