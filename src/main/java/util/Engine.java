@@ -73,12 +73,8 @@ public final class Engine {
      * @param minSceneLighting float from 0-1 indicating the minimum scene light level
      */
     public static void init(int windowWidth, int windowHeight, String windowTitle, float minSceneLighting) {
-
         preInit();
-
         getInstance().window = new Window(windowWidth, windowHeight, windowTitle, minSceneLighting, false);
-
-        getInstance().window.showWindow();
     }
 
     /**
@@ -89,12 +85,8 @@ public final class Engine {
      * @param windowTitle  Title of the window to be created
      */
     public static void init(int windowWidth, int windowHeight, String windowTitle) {
-
         preInit();
-
         getInstance().window = new Window(windowWidth, windowHeight, windowTitle, false);
-
-        getInstance().window.showWindow();
     }
 
     /**
@@ -104,21 +96,13 @@ public final class Engine {
      * @param minSceneLighting float from 0-1 indicating the minimum scene light level
      */
     public static void init(String windowTitle, float minSceneLighting) {
-
         preInit();
-
         getInstance().window = new Window(windowTitle, minSceneLighting, false);
-
-        getInstance().window.showWindow();
     }
 
     public static void init(int windowWidth, int windowHeight, String windowTitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
-
         preInit();
-
         getInstance().window = new Window(windowWidth, windowHeight, windowTitle, minSceneLighting, recalculateProjectionOnResize);
-
-        getInstance().window.showWindow();
     }
 
     /**
