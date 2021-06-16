@@ -8,11 +8,11 @@ import physics.AABB;
 import physics.Transform;
 import postprocess.BloomEffect;
 import postprocess.PostProcessStep;
+import scene.Scene;
 import tiles.Spritesheet;
 import tiles.Tilesystem;
 import util.Assets;
 import util.Engine;
-import util.Scene;
 import util.Utils;
 
 import static graphics.Graphics.setDefaultBackground;

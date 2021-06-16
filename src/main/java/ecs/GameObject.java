@@ -1,7 +1,7 @@
 package ecs;
 
-import scenes.Main;
 import physics.Transform;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class GameObject {
 		this.components = componentList;
 		this.transform = transform;
 		this.zIndex = zIndex;
-		Main.addGameObjectToScene(this);
+		//TODO remove this: Main.addGameObjectToScene(this); commented out, guess this was just for debug
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class GameObject {
 
 	/**
 	 * Takes a Transform as a parameter and sets this instance to a copy of that transform
-	 * @param transform
+	 * @param t
 	 */
 	public void setTransform (Transform t) {
 		this.transform = t.copy();
@@ -138,7 +138,7 @@ public class GameObject {
 
 	/**
 	 * Takes a parameter of a class that extends component and returns it if it is contained in the GameObject's list of components.
-	 * @param class of component (ie. "SpriteRenderer.class")
+	 * @param componentClass of component (ie. "SpriteRenderer.class")
 	 * @return Component of type passed as param is contained in GameObject
 	 */
 	public <T extends Component> T getComponent(Class<T> componentClass) {
@@ -157,7 +157,7 @@ public class GameObject {
 
 	/**
 	 * Takes a parameter of a class that extends component and removed it from the GameObject if it is contained in the list of components.
-	 * @param class of component (ie. "SpriteRenderer.class")
+	 * @param componentClass of component (ie. "SpriteRenderer.class")
 	 */
 	public <T extends Component> void removeComponent (Class<T> componentClass) {
 		for (int i = 0; i < components.size(); i ++) {
@@ -171,7 +171,7 @@ public class GameObject {
 
 	/**
 	 * Adds a new component to the GameObject's list
-     * @param component
+     * @param c
      * @return
      */
 	public GameObject addComponent (Component c) {

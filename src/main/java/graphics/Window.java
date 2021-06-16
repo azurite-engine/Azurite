@@ -4,18 +4,17 @@ package graphics;
 import event.EventData;
 import event.Events;
 import input.Keyboard;
-import postprocess.PostProcessing;
-import scenes.DemoPlatformer;
-import scenes.DemoTopDown;
-import scenes.Main;
 import input.Mouse;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
+import postprocess.PostProcessing;
+import scene.Scene;
+import scenes.DemoPlatformer;
+import scenes.DemoTopDown;
+import scenes.Main;
 import util.Engine;
-import util.Scene;
 
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Window {

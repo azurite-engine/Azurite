@@ -10,22 +10,16 @@ package scenes;
  */
 import ecs.GameObject;
 import ecs.PointLight;
-import ecs.Sprite;
-import ecs.SpriteRenderer;
 import graphics.Camera;
 import graphics.Color;
-import graphics.Texture;
-import input.Keyboard;
 import input.Mouse;
 import org.joml.Vector2f;
-import physics.Transform;
+import scene.Scene;
 import util.Engine;
 
-
-import static graphics.Graphics.background;
 import static graphics.Graphics.setDefaultBackground;
 
-public class Main extends util.Scene {
+public class Main extends Scene {
 
 	public static void main (String[] args) {
 		Engine.init(1920, 1080, "Hello World!");

@@ -1,17 +1,23 @@
 package scenes;
 
-import ecs.*;
+import ecs.CharacterControllerGravity;
+import ecs.GameObject;
+import ecs.PointLight;
+import ecs.SpriteRenderer;
 import graphics.Camera;
 import graphics.Color;
-import org.joml.Vector2f;
 import physics.AABB;
 import physics.Gravity;
 import physics.Transform;
 import postprocess.BloomEffect;
 import postprocess.PostProcessStep;
+import scene.Scene;
 import tiles.Spritesheet;
 import tiles.TilesystemSideScroll;
-import util.*;
+import util.Assets;
+import util.Engine;
+import util.Logger;
+import util.Utils;
 
 import static graphics.Graphics.setDefaultBackground;
 
