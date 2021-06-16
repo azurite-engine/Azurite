@@ -140,8 +140,8 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        float frameBeginTime = (float) glfwGetTime();
-        float frameEndTime;
+        double frameBeginTime = glfwGetTime();
+        double frameEndTime;
 
         currentScene().loadSceneResources();
 
@@ -150,10 +150,11 @@ public class Window {
 
         currentScene().startGameObjects();
 
-        float dt = 0;
-        Engine.updateDeltaTime(dt);
-
         while (!glfwWindowShouldClose(glfwWindow)) {
+
+            frameEndTime = glfwGetTime();
+            Engine.updateDeltaTime((float) (frameEndTime - frameBeginTime));
+            frameBeginTime = frameEndTime;
 
             Mouse.update();
             Keyboard.update();
@@ -170,11 +171,6 @@ public class Window {
 
             glfwSwapBuffers(glfwWindow);
             getFPS();
-
-            frameEndTime = (float) glfwGetTime();
-            dt = frameEndTime - frameBeginTime;
-            Engine.updateDeltaTime(dt);
-            frameBeginTime = frameEndTime;
         }
 
         currentScene().clean();
