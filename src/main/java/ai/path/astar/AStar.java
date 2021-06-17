@@ -7,9 +7,9 @@ import ai.path.PathfindingAlgorithm;
 import java.util.function.BiFunction;
 
 /**
- * <h1>Study Projects</h1>
+ * <h1>Azurite</h1>
  *
- * @author Julius Korweck
+ * @author Juyas
  * @version 17.06.2021
  * @since 17.06.2021
  */
@@ -96,9 +96,3 @@ public class AStar implements PathfindingAlgorithm {
     }
 
 }
-
-/***********************************************************************************************
- *
- *                  All rights reserved, SpaceParrots UG (c) copyright 2021
- *
- ***********************************************************************************************/

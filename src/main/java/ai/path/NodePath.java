@@ -1,9 +1,9 @@
 package ai.path;
 
 /**
- * <h1>Study Projects</h1>
+ * <h1>Azurite</h1>
  *
- * @author Julius Korweck
+ * @author Juyas
  * @version 17.06.2021
  * @since 17.06.2021
  */
@@ -39,9 +39,3 @@ public class NodePath {
         return "[" + start + "] -> " + next;
     }
 }
-
-/***********************************************************************************************
- *
- *                  All rights reserved, SpaceParrots UG (c) copyright 2021
- *
- ***********************************************************************************************/

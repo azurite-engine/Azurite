@@ -6,9 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * <h1>Study Projects</h1>
+ * <h1>Azurite</h1>
  *
- * @author Julius Korweck
+ * @author Juyas
  * @version 17.06.2021
  * @since 17.06.2021
  */
@@ -145,9 +145,3 @@ class AStarNode implements AStarDataNode, PathNode
         return Integer.compare( this.getFcost(), o.getFcost() ) * 2 + Integer.compare( this.getHcost(), o.getHcost() );
     }
 }
-
-/***********************************************************************************************
- *
- *                  All rights reserved, SpaceParrots UG (c) copyright 2021
- *
- ***********************************************************************************************/
