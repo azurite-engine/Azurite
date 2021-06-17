@@ -26,60 +26,70 @@ public class GameObject {
     private Transform transform;
     private int zIndex;
 
+    private final Scene parentScene;
+
     /**
      * Creates a new GameObject.
      *
+     * @param scene the scene to object will be added to
      * @param name
      * @param componentList
      * @param transform
      * @param zIndex
      */
-    public GameObject(Scene current, String name, List<Component> componentList, Transform transform, int zIndex) {
+    public GameObject(Scene scene, String name, List<Component> componentList, Transform transform, int zIndex) {
         this.name = name;
         this.components = componentList;
         this.transform = transform;
         this.zIndex = zIndex;
-        current.addGameObjectToScene(this);
+        this.parentScene = scene;
+        scene.addGameObjectToScene(this);
     }
 
     /**
+     * @param scene the scene to object will be added to
      * @param name
      * @param transform
      * @param zIndex
      */
-    public GameObject(Scene current, String name, Transform transform, int zIndex) {
-        this(current, name, new ArrayList<>(), transform, zIndex);
+    public GameObject(Scene scene, String name, Transform transform, int zIndex) {
+        this(scene, name, new ArrayList<>(), transform, zIndex);
     }
 
     /**
+     * @param scene the scene to object will be added to
      * @param name
      * @param zIndex
      */
-    public GameObject(Scene current, String name, int zIndex) {
-        this(current, name, new ArrayList<>(), new Transform(), zIndex);
+    public GameObject(Scene scene, String name, int zIndex) {
+        this(scene, name, new ArrayList<>(), new Transform(), zIndex);
     }
 
     /**
+     * @param scene the scene to object will be added to
      * @param transform
      * @param zIndex
      */
-    public GameObject(Scene current, Transform transform, int zIndex) {
-        this(current, DEFAULT_GAMEOBJECT_NAME, new ArrayList<>(), new Transform(), zIndex);
+    public GameObject(Scene scene, Transform transform, int zIndex) {
+        this(scene, DEFAULT_GAMEOBJECT_NAME, new ArrayList<>(), transform, zIndex);
 
     }
 
     /**
+     * @param scene the scene to object will be added to
      * @param transform
      */
-    public GameObject(Scene current, Transform transform) {
-        this(current, DEFAULT_GAMEOBJECT_NAME, new ArrayList<>(), transform, DEFAULT_Z_INDEX);
+    public GameObject(Scene scene, Transform transform) {
+        this(scene, DEFAULT_GAMEOBJECT_NAME, new ArrayList<>(), transform, DEFAULT_Z_INDEX);
     }
 
     /**
      * Creates an empty gameObject with an empty Transform and no Components.
+     * Its name will be GameObject.EMPTY_GAMEOBJECT_NAME
+     * @param scene the scene to object will be added to
      */
-    public GameObject(Scene current) {
-        this(current, EMPTY_GAMEOBJECT_NAME, new ArrayList<>(), new Transform(), DEFAULT_Z_INDEX);
+    public GameObject(Scene scene) {
+        this(scene, EMPTY_GAMEOBJECT_NAME, new ArrayList<>(), new Transform(), DEFAULT_Z_INDEX);
     }
 
     /**
@@ -98,6 +108,13 @@ public class GameObject {
         for (int i = 0; i < components.size(); i++) {
             components.get(i).update(dt);
         }
+    }
+
+    /**
+     * @return the parent scene of this gameObject
+     */
+    public Scene getParentScene() {
+        return parentScene;
     }
 
     /**

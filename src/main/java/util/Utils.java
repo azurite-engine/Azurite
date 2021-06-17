@@ -2,8 +2,6 @@ package util;
 
 import org.joml.Vector2f;
 
-import java.util.ArrayList;
-
 public class Utils {
 
     /**
