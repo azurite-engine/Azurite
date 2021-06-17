@@ -27,8 +27,8 @@ public class Main extends Scene {
 
 //	GameObject box = new GameObject("Two", new Transform((1080/2)-(720/2), 0, 720, 720), 10);
 //	GameObject pepper = new GameObject("Pepper", new Transform((1080/2)-(720/2), 0, 720, 720), 12);
-	GameObject light1 = new GameObject();
-	GameObject light2 = new GameObject();
+	GameObject light1 = new GameObject(this);
+	GameObject light2 = new GameObject(this);
 
 	public void awake() {
 		setDefaultBackground(Color.BLACK);

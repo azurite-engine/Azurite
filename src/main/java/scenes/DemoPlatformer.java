@@ -44,13 +44,13 @@ public class DemoPlatformer extends Scene {
         c = new Spritesheet(Assets.getTexture("src/assets/images/platformer.png"), 8, 8, 26, 0);
         t = new TilesystemSideScroll(this, c, 31, 15, 100, 100, player);
 
-        player = new GameObject("Player", new Transform(600, 600, 100, 100), 2);
+        player = new GameObject(this, "Player", new Transform(600, 600, 100, 100), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
         player.addComponent(new AABB());
         player.addComponent(new SpriteRenderer(a.getSprite(132)));
         player.addComponent(new CharacterControllerGravity());
 
-        booper = new GameObject("Booper", new Transform(800, 800, 100, 100), 2);
+        booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
         booper.addComponent(new SpriteRenderer(a.getSprite(150)));
         booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
         booper.addComponent(new AABB());
@@ -59,7 +59,6 @@ public class DemoPlatformer extends Scene {
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         bloom.init();
 
-        addGameObjectsToScene(player, booper);
     }
 
     int r;
