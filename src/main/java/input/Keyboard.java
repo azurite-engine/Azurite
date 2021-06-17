@@ -38,7 +38,7 @@ public class Keyboard {
 	 * Subscribes to key event
 	 */
 	public static void setupCallbacks() {
-		glfwSetKeyCallback(Window.window, (w, keycode, scancode, action, mods) -> {
+		glfwSetKeyCallback(Window.glfwWindow(), (w, keycode, scancode, action, mods) -> {
 			switch (action) {
 				case GLFW_PRESS: {
 					setKeyDownBit(keycode);
@@ -102,7 +102,7 @@ public class Keyboard {
 	 * @return Returns true if the key is currently pressed or held, otherwise returns false
 	 */
 	public static boolean getKey(int keycode) {
-		return glfwGetKey(Window.window, keycode) != GLFW_RELEASE;
+		return glfwGetKey(Window.glfwWindow(), keycode) != GLFW_RELEASE;
 	}
 
 	/**

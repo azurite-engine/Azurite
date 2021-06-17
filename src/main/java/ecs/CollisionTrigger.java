@@ -56,7 +56,7 @@ public class CollisionTrigger extends Component {
 
 	/** Check if this trigger is intersecting with any other AABB */
 	public boolean checkCollision() {
-		for (AABB a : AABB.colliders) {
+		for (AABB a : AABB.colliders.get(gameObject.getParentScene().sceneId())) {
 			other = a.gameObject.getTransform();
 			if (isColliding(other)) {
 				return true;
