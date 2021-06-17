@@ -13,7 +13,7 @@ import java.util.function.BiFunction;
  * @version 17.06.2021
  * @since 17.06.2021
  */
-class AStarPathfinding
+class AStarTilePathfinding
 {
 
     private final boolean diagonal;
@@ -23,15 +23,15 @@ class AStarPathfinding
     private BiFunction<AStarDataNode, AStarDataNode, Integer> hCost;
 
     //using a priorityQueue to keep the order while using an efficient structure
-    private final PriorityQueue<AStarNode> openList;
+    private final PriorityQueue<AStarTileNode> openList;
     //since this is only for the purpose of "contains"-checks, a set is sufficient
-    private final Set<AStarNode> closedList;
+    private final Set<AStarTileNode> closedList;
 
     private int offsetX, offsetY;
 
-    private AStarNode[][] nodeMap;
+    private AStarTileNode[][] nodeMap;
 
-    public AStarPathfinding( boolean canGoDiagonally, int straightCosts, int diagonalCosts, int offsetX, int offsetY )
+    public AStarTilePathfinding(boolean canGoDiagonally, int straightCosts, int diagonalCosts, int offsetX, int offsetY )
     {
         this.diagonal = canGoDiagonally;
         this.straightCosts = straightCosts;
@@ -52,13 +52,13 @@ class AStarPathfinding
     {
         int x_length = map.length;
         int y_length = map[0].length;
-        nodeMap = new AStarNode[x_length][y_length];
+        nodeMap = new AStarTileNode[x_length][y_length];
         //converting the nodes to AStarNodes to work on
         for ( int i = 0; i < x_length; i++ )
         {
             for ( int j = 0; j < y_length; j++ )
             {
-                AStarNode node = new AStarNode( i, j );
+                AStarTileNode node = new AStarTileNode( i, j );
                 node.setPassable( !map[i][j].isBlocked() );
                 nodeMap[i][j] = node;
             }
@@ -67,13 +67,13 @@ class AStarPathfinding
     }
 
     //the aStar algorithm core - loop the openList until its empty or the target node is found
-    private NodePath aStar(AStarNode startNode, AStarNode targetNode )
+    private NodePath aStar(AStarTileNode startNode, AStarTileNode targetNode )
     {
         openList.offer( startNode );
         while ( !openList.isEmpty() )
         {
             //take the next "best" node with the lowest score, the priorityQueue ensures that its sorted like this
-            AStarNode curr = openList.poll();
+            AStarTileNode curr = openList.poll();
 
             //if the current node is our target, we found our goal!
             if ( curr == targetNode )
@@ -88,10 +88,10 @@ class AStarPathfinding
         return new NodePath( startNode );
     }
 
-    private void expandNode(AStarNode[][] map, AStarNode current, AStarNode target, PriorityQueue<AStarNode> openList, Set<AStarNode> closedList )
+    private void expandNode(AStarTileNode[][] map, AStarTileNode current, AStarTileNode target, PriorityQueue<AStarTileNode> openList, Set<AStarTileNode> closedList )
     {
-        List<AStarNode> neighbors = current.getNeighbors( map, diagonal, offsetX, offsetY );
-        for ( AStarNode successor : neighbors )
+        List<AStarTileNode> neighbors = current.getNeighbors( map, diagonal, offsetX, offsetY );
+        for ( AStarTileNode successor : neighbors )
         {
             //if node is already done, go next
             if ( closedList.contains( successor ) )
@@ -109,7 +109,7 @@ class AStarPathfinding
             successor.setGcost( g );
 
             //calc or get H costs - they should not change over the calculation
-            int h = successor.getHcost() == AStarNode.DEFAULT_H_COST ? hCost.apply( successor, target ) : successor.getHcost();
+            int h = successor.getHcost() == AStarTileNode.DEFAULT_H_COST ? hCost.apply( successor, target ) : successor.getHcost();
             successor.setFcost( g + h );
             successor.setHcost( h );
 
@@ -120,9 +120,9 @@ class AStarPathfinding
     }
 
     //converting the nodeMap backwards to a path object
-    private NodePath path(AStarNode startNode, AStarNode targetNode )
+    private NodePath path(AStarTileNode startNode, AStarTileNode targetNode )
     {
-        List<AStarNode> path = new LinkedList<>();
+        List<AStarTileNode> path = new LinkedList<>();
         while ( startNode != targetNode )
         {
             path.add( targetNode );

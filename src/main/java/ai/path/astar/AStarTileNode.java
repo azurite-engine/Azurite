@@ -12,7 +12,7 @@ import java.util.List;
  * @version 17.06.2021
  * @since 17.06.2021
  */
-class AStarNode implements AStarDataNode, PathNode
+class AStarTileNode implements AStarDataNode, PathNode
 {
 
     public static final int DEFAULT_H_COST = -1;
@@ -20,7 +20,7 @@ class AStarNode implements AStarDataNode, PathNode
     private final int x;
     private final int y;
 
-    private AStarNode predecessor;
+    private AStarTileNode predecessor;
 
     private boolean passable;
 
@@ -28,15 +28,15 @@ class AStarNode implements AStarDataNode, PathNode
     private int hcost = DEFAULT_H_COST;
     private int fcost;
 
-    public AStarNode( int x, int y )
+    public AStarTileNode(int x, int y )
     {
         this.x = x;
         this.y = y;
     }
 
-    public List<AStarNode> getNeighbors( AStarNode[][] map, boolean diagonal, int offsetX, int offsetY )
+    public List<AStarTileNode> getNeighbors(AStarTileNode[][] map, boolean diagonal, int offsetX, int offsetY )
     {
-        List<AStarNode> neighbors = new LinkedList<>();
+        List<AStarTileNode> neighbors = new LinkedList<>();
         for ( int i = -1; i <= 1; i++ )
         {
             for ( int j = -1; j <= 1; j++ )
@@ -62,12 +62,12 @@ class AStarNode implements AStarDataNode, PathNode
         return neighbors;
     }
 
-    public void setPredecessor( AStarNode previous )
+    public void setPredecessor( AStarTileNode previous )
     {
         this.predecessor = previous;
     }
 
-    public AStarNode getPredecessor()
+    public AStarTileNode getPredecessor()
     {
         return predecessor;
     }
