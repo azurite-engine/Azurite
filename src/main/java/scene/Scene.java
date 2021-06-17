@@ -13,8 +13,8 @@ import postprocess.PostProcessStep;
 import util.Assets;
 import util.Engine;
 
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Scene {
@@ -25,12 +25,12 @@ public abstract class Scene {
     public LightmapRenderer lightmapRenderer = new LightmapRenderer();
     public DebugRenderer debugRenderer = new DebugRenderer();
 
-    private List<Renderer<?>> rendererRegistry = new ArrayList<>();
+    private List<Renderer<?>> rendererRegistry = new LinkedList<>();
 
     public Camera camera;
     private boolean debugMode = true;
     private boolean active = false;
-    static protected List<GameObject> gameObjects = new ArrayList<>();
+    private List<GameObject> gameObjects = new LinkedList<>();
 
     protected ForwardToTexture forwardToScreen;
 
@@ -131,6 +131,7 @@ public abstract class Scene {
 
     /**
      * Add a bunch of new gameObjects to the scene and immediately call their start method.
+     *
      * @param gameObjects dynamic GameObjects array to be added.
      */
     public void addGameObjectsToScene(GameObject... gameObjects) {

@@ -120,12 +120,8 @@ public final class Engine {
      * @param windowTitle Title of the window to be created
      */
     public static void init(String windowTitle) {
-
         preInit();
-
         getInstance().window = new Window(windowTitle);
-
-        getInstance().window.showWindow();
     }
 
     /**
