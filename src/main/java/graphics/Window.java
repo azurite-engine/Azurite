@@ -101,8 +101,8 @@ public class Window {
             Window.setWidth(newWidth);
             Window.setHeight(newHeight);
 
-            if (recalculateProjectionOnResize && currentScene().camera != null)
-                currentScene().camera.adjustProjection();
+            if (recalculateProjectionOnResize && currentScene().camera() != null)
+                currentScene().camera().adjustProjection();
             Events.windowResizeEvent.onEvent(new EventData.WindowResizeEventData(newWidth, newHeight));
         });
 

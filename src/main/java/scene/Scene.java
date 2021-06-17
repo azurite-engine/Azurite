@@ -27,7 +27,7 @@ public abstract class Scene {
 
     private List<Renderer<?>> rendererRegistry = new LinkedList<>();
 
-    public Camera camera;
+    protected Camera camera;
     private boolean debugMode = true;
     private boolean active = false;
     private List<GameObject> gameObjects = new LinkedList<>();
