@@ -7,8 +7,7 @@ package ai.path;
  * @version 17.06.2021
  * @since 17.06.2021
  */
-public interface PathNode
-{
+public interface PathNode {
 
     int getX();
 

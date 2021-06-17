@@ -12,30 +12,25 @@ public class NodePath {
     private PathNode start;
     private NodePath next;
 
-    public NodePath(PathNode start )
-    {
+    public NodePath(PathNode start) {
         this.start = start;
         this.next = null;
     }
 
-    public void setNext( NodePath next )
-    {
-        this.next = next;
-    }
-
-    public PathNode getStart()
-    {
+    public PathNode getStart() {
         return start;
     }
 
-    public NodePath getNext()
-    {
+    public NodePath getNext() {
         return next;
     }
 
+    public void setNext(NodePath next) {
+        this.next = next;
+    }
+
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "[" + start + "] -> " + next;
     }
 }

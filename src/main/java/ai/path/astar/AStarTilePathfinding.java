@@ -13,26 +13,21 @@ import java.util.function.BiFunction;
  * @version 17.06.2021
  * @since 17.06.2021
  */
-class AStarTilePathfinding
-{
+class AStarTilePathfinding {
 
     private final boolean diagonal;
     private final int straightCosts;
     private final int diagonalCosts;
-
-    private BiFunction<AStarDataNode, AStarDataNode, Integer> hCost;
-
     //using a priorityQueue to keep the order while using an efficient structure
     private final PriorityQueue<AStarTileNode> openList;
     //since this is only for the purpose of "contains"-checks, a set is sufficient
     private final Set<AStarTileNode> closedList;
-
-    private int offsetX, offsetY;
-
+    private final int offsetX;
+    private final int offsetY;
+    private BiFunction<AStarDataNode, AStarDataNode, Integer> hCost;
     private AStarTileNode[][] nodeMap;
 
-    public AStarTilePathfinding(boolean canGoDiagonally, int straightCosts, int diagonalCosts, int offsetX, int offsetY )
-    {
+    protected AStarTilePathfinding(boolean canGoDiagonally, int straightCosts, int diagonalCosts, int offsetX, int offsetY) {
         this.diagonal = canGoDiagonally;
         this.straightCosts = straightCosts;
         this.diagonalCosts = diagonalCosts;
@@ -42,98 +37,87 @@ class AStarTilePathfinding
         this.closedList = new HashSet<>();
     }
 
-    public void setHCostFunction( BiFunction<AStarDataNode, AStarDataNode, Integer> hCost )
-    {
+    protected void setHCostFunction(BiFunction<AStarDataNode, AStarDataNode, Integer> hCost) {
         this.hCost = hCost;
     }
 
     //map has to be a square or rect -> map[0].length == map[n].length
-    public NodePath findPath(PathNode[][] map, int startX, int startY, int targetX, int targetY )
-    {
+    protected NodePath findPath(PathNode[][] map, int startX, int startY, int targetX, int targetY) {
         int x_length = map.length;
         int y_length = map[0].length;
         nodeMap = new AStarTileNode[x_length][y_length];
         //converting the nodes to AStarNodes to work on
-        for ( int i = 0; i < x_length; i++ )
-        {
-            for ( int j = 0; j < y_length; j++ )
-            {
-                AStarTileNode node = new AStarTileNode( i, j );
-                node.setPassable( !map[i][j].isBlocked() );
+        for (int i = 0; i < x_length; i++) {
+            for (int j = 0; j < y_length; j++) {
+                AStarTileNode node = new AStarTileNode(i, j);
+                node.setPassable(!map[i][j].isBlocked());
                 nodeMap[i][j] = node;
             }
         }
-        return aStar( nodeMap[startX][startY], nodeMap[targetX][targetY] );
+        return aStar(nodeMap[startX][startY], nodeMap[targetX][targetY]);
     }
 
     //the aStar algorithm core - loop the openList until its empty or the target node is found
-    private NodePath aStar(AStarTileNode startNode, AStarTileNode targetNode )
-    {
-        openList.offer( startNode );
-        while ( !openList.isEmpty() )
-        {
+    private NodePath aStar(AStarTileNode startNode, AStarTileNode targetNode) {
+        openList.offer(startNode);
+        while (!openList.isEmpty()) {
             //take the next "best" node with the lowest score, the priorityQueue ensures that its sorted like this
             AStarTileNode curr = openList.poll();
 
             //if the current node is our target, we found our goal!
-            if ( curr == targetNode )
-                return path( startNode, targetNode );
+            if (curr == targetNode)
+                return path(startNode, targetNode);
 
             //curr is calculated, so don't do that again
-            closedList.add( curr );
+            closedList.add(curr);
 
             //calculate neighbor nodes for current
-            expandNode( nodeMap, curr, targetNode, openList, closedList );
+            expandNode(nodeMap, curr, targetNode, openList, closedList);
         }
-        return new NodePath( startNode );
+        return new NodePath(startNode);
     }
 
-    private void expandNode(AStarTileNode[][] map, AStarTileNode current, AStarTileNode target, PriorityQueue<AStarTileNode> openList, Set<AStarTileNode> closedList )
-    {
-        List<AStarTileNode> neighbors = current.getNeighbors( map, diagonal, offsetX, offsetY );
-        for ( AStarTileNode successor : neighbors )
-        {
+    private void expandNode(AStarTileNode[][] map, AStarTileNode current, AStarTileNode target, PriorityQueue<AStarTileNode> openList, Set<AStarTileNode> closedList) {
+        List<AStarTileNode> neighbors = current.getNeighbors(map, diagonal, offsetX, offsetY);
+        for (AStarTileNode successor : neighbors) {
             //if node is already done, go next
-            if ( closedList.contains( successor ) )
+            if (closedList.contains(successor))
                 continue;
 
             //1 for straight; 2 for diagonal
-            int move = Math.abs( successor.getX() - current.getX() ) + Math.abs( successor.getY() - current.getY() );
-            int g = current.getGcost() + ( move == 1 ? straightCosts : diagonalCosts );
+            int move = Math.abs(successor.getX() - current.getX()) + Math.abs(successor.getY() - current.getY());
+            int g = current.getGcost() + (move == 1 ? straightCosts : diagonalCosts);
 
             //if the new path is worse then an existing one go next
-            if ( openList.contains( successor ) && g >= successor.getGcost() ) continue;
+            if (openList.contains(successor) && g >= successor.getGcost()) continue;
 
             //make the new predecessor of the successor the current note, since the path is better
-            successor.setPredecessor( current );
-            successor.setGcost( g );
+            successor.setPredecessor(current);
+            successor.setGcost(g);
 
             //calc or get H costs - they should not change over the calculation
-            int h = successor.getHcost() == AStarTileNode.DEFAULT_H_COST ? hCost.apply( successor, target ) : successor.getHcost();
-            successor.setFcost( g + h );
-            successor.setHcost( h );
+            int h = successor.getHcost() == AStarTileNode.DEFAULT_H_COST ? hCost.apply(successor, target) : successor.getHcost();
+            successor.setFcost(g + h);
+            successor.setHcost(h);
 
             //add to openList if necessary
-            if ( !openList.contains( successor ) )
-                openList.offer( successor );
+            if (!openList.contains(successor))
+                openList.offer(successor);
         }
     }
 
     //converting the nodeMap backwards to a path object
-    private NodePath path(AStarTileNode startNode, AStarTileNode targetNode )
-    {
+    private NodePath path(AStarTileNode startNode, AStarTileNode targetNode) {
         List<AStarTileNode> path = new LinkedList<>();
-        while ( startNode != targetNode )
-        {
-            path.add( targetNode );
+        while (startNode != targetNode) {
+            path.add(targetNode);
             targetNode = targetNode.getPredecessor();
         }
-        NodePath result = new NodePath( path.get( path.size() - 1 ) );
+        NodePath result = new NodePath(path.get(path.size() - 1));
         NodePath tmp = result;
-        for ( int i = path.size() - 2; i >= 0; i-- )
-        {
-            NodePath next = new NodePath( path.get( i ) );
-            tmp.setNext( next );
+        for (int i = path.size() - 2; i >= 0; i--) {
+            NodePath next = new NodePath(path.get(i));
+            tmp.setNext(next);
             tmp = next;
         }
         return result;

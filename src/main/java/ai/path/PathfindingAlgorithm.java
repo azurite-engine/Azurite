@@ -7,13 +7,12 @@ package ai.path;
  * @version 17.06.2021
  * @since 17.06.2021
  */
-public interface PathfindingAlgorithm
-{
+public interface PathfindingAlgorithm {
 
-    void use( PathNode... nodes );
+    void use(PathNode... nodes);
 
-    NodePath find(PathNode start, PathNode target );
+    NodePath find(PathNode start, PathNode target);
 
-    void set( int information, Object data );
+    void set(int information, Object data);
 
 }
