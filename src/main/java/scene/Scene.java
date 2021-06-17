@@ -8,11 +8,13 @@ import graphics.renderer.LightmapRenderer;
 import graphics.renderer.Renderer;
 import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
+import physics.AABB;
 import postprocess.ForwardToTexture;
 import postprocess.PostProcessStep;
 import util.Assets;
 import util.Engine;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -72,6 +74,7 @@ public abstract class Scene {
         if (Keyboard.getKeyDown(GLFW.GLFW_KEY_GRAVE_ACCENT)) {
             debugMode = !debugMode;
         }
+        System.out.println(Arrays.toString(AABB.colliders.values().toArray()));
     }
 
     public void postProcess(int texture) {

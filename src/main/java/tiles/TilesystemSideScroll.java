@@ -27,13 +27,13 @@ public class TilesystemSideScroll {
         int i = 0;
 
 
-        background = new GameObject("Background", new Transform(0, 0, xTiles * w, yTiles * h), 0);
+        background = new GameObject(scene,"Background", new Transform(0, 0, xTiles * w, yTiles * h), 0);
         background.addComponent(new SpriteRenderer(new Color(41, 30, 49)));
         scene.addGameObjectToScene(background);
 
         for (int x = 0; x < xTiles; x++) {
             for (int y = 0; y < yTiles; y++) {
-                gameObjects[x][y] = new GameObject("Tile " + i, new Transform(x * width, y * height, width, height), 0);
+                gameObjects[x][y] = new GameObject(scene,"Tile " + i, new Transform(x * width, y * height, width, height), 0);
 
                 if (m.getMap()[x][y] == 1) {
                     gameObjects[x][y].addComponent(new AABB());
@@ -51,7 +51,6 @@ public class TilesystemSideScroll {
                         }
                     }
                 }
-                scene.addGameObjectToScene(gameObjects[x][y]);
                 i++;
             }
         }

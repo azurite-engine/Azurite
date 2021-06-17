@@ -45,7 +45,7 @@ public class Tilesystem {
         for (int y = 0; y < yTiles; y ++) {
             for (int x = 0; x < xTiles; x ++) {
 
-                gameObjects[x][y] = new GameObject("Tile " + i, new Transform(x * width, y * height, width, height), 0);
+                gameObjects[x][y] = new GameObject(scene, "Tile " + i, new Transform(x * width, y * height, width, height), 0);
 
                 if (getAt(x, y, 31) <= 255 && getAt(x, y, 31) >= 0) {
                     gameObjects[x][y].addComponent(new SpriteRenderer(a.getSprite(
@@ -60,7 +60,6 @@ public class Tilesystem {
                             (int) Utils.map(getAt(x, y, 31), 256, 256*2-1, 0, 255)
                     )));
                 }
-                scene.addGameObjectToScene(gameObjects[x][y]);
                 i ++;
             }
         }
