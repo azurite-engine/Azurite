@@ -34,8 +34,6 @@ public abstract class Scene {
 
     protected ForwardToTexture forwardToScreen;
 
-    public float minLighting;
-
     private int sceneId = sceneCounter++;
 
     public boolean isActive() {
@@ -132,6 +130,15 @@ public abstract class Scene {
     }
 
     /**
+     * Add a bunch of new gameObjects to the scene and immediately call their start method.
+     * @param gameObjects dynamic GameObjects array to be added.
+     */
+    public void addGameObjectsToScene(GameObject... gameObjects) {
+        for (GameObject object : gameObjects)
+            addGameObjectToScene(object);
+    }
+
+    /**
      * Register a renderer to this scene
      *
      * @param renderer the renderer to be registered
@@ -185,4 +192,5 @@ public abstract class Scene {
         forwardToScreen = new ForwardToTexture(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         forwardToScreen.init();
     }
+
 }

@@ -36,7 +36,11 @@ public class Window {
         height = pheight;
         title = ptitle;
         this.recalculateProjectionOnResize = recalculateProjectionOnResize;
-        currentScene().minLighting = minSceneLighting;
+
+        //create the sceneManager to be able to set a scene
+        sceneManager = new SceneManager();
+
+        sceneManager.setMinSceneLight(minSceneLighting);
 
         // Configure GLFW
         glfwDefaultWindowHints();
@@ -55,7 +59,11 @@ public class Window {
         height = videoMode.height();
         title = ptitle;
         this.recalculateProjectionOnResize = recalculateProjectionOnResize;
-        currentScene().minLighting = minSceneLighting;
+
+        //create the sceneManager to be able to set a scene
+        sceneManager = new SceneManager();
+
+        sceneManager.setMinSceneLight(minSceneLighting);
 
         // Configure GLFW
         glfwDefaultWindowHints();
@@ -111,9 +119,6 @@ public class Window {
         glfwSetWindowPos(glfwWindow, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
         GL.createCapabilities();
 
-        //create the sceneManager to be able to set a scene
-        sceneManager = new SceneManager();
-
     }
 
     void getFPS() {
@@ -147,12 +152,7 @@ public class Window {
         double frameBeginTime = glfwGetTime();
         double frameEndTime;
 
-        currentScene().loadSceneResources();
-
-        currentScene().initRenderers();
-        currentScene().awake();
-
-        currentScene().startGameObjects();
+        sceneManager.enable();
 
         while (!glfwWindowShouldClose(glfwWindow)) {
 
@@ -165,13 +165,13 @@ public class Window {
             // poll GLFW for input events
             glfwPollEvents();
 
-            currentScene().update();
-            currentScene().updateGameObjects();
-            currentScene().render();
+            sceneManager.update();
+            sceneManager.updateGameObjects();
+            sceneManager.render();
             PostProcessing.prepare();
-            currentScene().postProcess(currentScene().renderer.fetchColorAttachment(0));
+            sceneManager.postProcess(currentScene().renderer.fetchColorAttachment(0));
             PostProcessing.finish();
-            currentScene().debugRender();
+            sceneManager.debugRender();
 
             glfwSwapBuffers(glfwWindow);
             getFPS();

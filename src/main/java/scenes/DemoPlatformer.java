@@ -23,7 +23,7 @@ import static graphics.Graphics.setDefaultBackground;
 
 public class DemoPlatformer extends Scene {
     public static void main(String[] args) {
-        Engine.init("Azurite Engine Demo 2", 0.1f);
+        Engine.init("Azurite Engine Demo 2", 1.0f);
         Engine.scenes().switchScene(new DemoPlatformer(), true);
         Engine.showWindow();
     }
@@ -42,14 +42,13 @@ public class DemoPlatformer extends Scene {
 
         a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0);
         c = new Spritesheet(Assets.getTexture("src/assets/images/platformer.png"), 8, 8, 26, 0);
-        t = new TilesystemSideScroll(c, 31, 15, 100, 100, player);
+        t = new TilesystemSideScroll(this, c, 31, 15, 100, 100, player);
 
         player = new GameObject("Player", new Transform(600, 600, 100, 100), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
         player.addComponent(new AABB());
         player.addComponent(new SpriteRenderer(a.getSprite(132)));
         player.addComponent(new CharacterControllerGravity());
-
 
         booper = new GameObject("Booper", new Transform(800, 800, 100, 100), 2);
         booper.addComponent(new SpriteRenderer(a.getSprite(150)));
@@ -59,6 +58,8 @@ public class DemoPlatformer extends Scene {
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         bloom.init();
+
+        addGameObjectsToScene(player, booper);
     }
 
     int r;

@@ -19,10 +19,32 @@ public class SceneManager {
 
     private Set<Scene> scenePool;
     private Scene currentScene;
+    private boolean enabled;
+
+    private float minSceneLight;
 
     public SceneManager() {
         this.scenePool = new HashSet<>();
         this.currentScene = null;
+        this.minSceneLight = 1.0f;
+        this.enabled = false;
+    }
+
+    /**
+     * This method is used to enable the sceneManager and call all initialization methods on a possible currentScene.
+     * After this method finished, all newly added scenes will call this methods directly.
+     */
+    public void enable()
+    {
+        this.enabled = true;
+        //init the currentScene if there is one
+        if(currentScene != null)
+        {
+            currentScene.loadSceneResources();
+            currentScene.initRenderers();
+            currentScene.awake();
+            currentScene.startGameObjects();
+        }
     }
 
     /**
@@ -41,7 +63,7 @@ public class SceneManager {
      */
     public boolean addScene(Scene scene) {
         boolean add = scenePool.add(scene);
-        if (add) {
+        if (add && enabled) {
             //a newly added scene is probably raw and uninitialized
             scene.loadSceneResources();
             scene.initRenderers();
@@ -141,6 +163,14 @@ public class SceneManager {
         currentScene = newCurrent;
         currentScene.activate();
         return true;
+    }
+
+    public float getMinSceneLight() {
+        return minSceneLight;
+    }
+
+    public void setMinSceneLight(float minSceneLight) {
+        this.minSceneLight = minSceneLight;
     }
 
 }

@@ -32,7 +32,6 @@ public class GameObject {
 		this.components = componentList;
 		this.transform = transform;
 		this.zIndex = zIndex;
-		//TODO remove this: Main.addGameObjectToScene(this); commented out, guess this was just for debug
 	}
 
 	/**

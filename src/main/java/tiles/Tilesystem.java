@@ -2,10 +2,9 @@ package tiles;
 
 import ecs.GameObject;
 import ecs.SpriteRenderer;
-import graphics.Color;
-import graphics.Graphics;
 import physics.AABB;
 import physics.Transform;
+import scene.Scene;
 import util.Utils;
 
 public class Tilesystem {
@@ -34,7 +33,7 @@ public class Tilesystem {
     // hilt of blade = 87
     // should be 48
 
-    public Tilesystem(Spritesheet a, Spritesheet b, int xTiles, int yTiles, int width, int height) {
+    public Tilesystem(Scene scene, Spritesheet a, Spritesheet b, int xTiles, int yTiles, int width, int height) {
 
 
         gameObjects = new GameObject[xTiles][yTiles];
@@ -61,7 +60,7 @@ public class Tilesystem {
                             (int) Utils.map(getAt(x, y, 31), 256, 256*2-1, 0, 255)
                     )));
                 }
-
+                scene.addGameObjectToScene(gameObjects[x][y]);
                 i ++;
             }
         }
