@@ -10,6 +10,7 @@ import graphics.Shader;
 import graphics.Window;
 import sun.security.util.Debug;
 import util.Assets;
+import util.Engine;
 import util.Logger;
 import util.specs.FramebufferSpec;
 import util.specs.FramebufferTextureSpec;
@@ -48,8 +49,8 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
     @Override
     protected void uploadUniforms(Shader shader) {
         shader.uploadIntArray("uTextures", textureSlots);
-        shader.uploadMat4f("uProjection", Window.currentScene.camera().getProjectionMatrix());
-        shader.uploadMat4f("uView", Window.currentScene.camera().getViewMatrix());
+        shader.uploadMat4f("uProjection", Engine.scenes().currentScene().camera().getProjectionMatrix());
+        shader.uploadMat4f("uView", Engine.scenes().currentScene().camera().getViewMatrix());
     }
 
     /**

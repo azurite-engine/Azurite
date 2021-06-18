@@ -44,10 +44,10 @@ public class CharacterController extends Component {
 		// X
 		gameObject.setTransformX(position.x);
 		if (Keyboard.getKey(Keyboard.A_KEY) || Keyboard.getKey(Keyboard.LEFT_ARROW)) {
-			position.x += (-speed.x + sprintSpeed) * Engine.deltaTime;
+			position.x += (-speed.x + sprintSpeed) * Engine.deltaTime();
 		}
 		if (Keyboard.getKey(Keyboard.D_KEY) || Keyboard.getKey(Keyboard.RIGHT_ARROW)) {
-			position.x += (speed.x + sprintSpeed) * Engine.deltaTime;
+			position.x += (speed.x + sprintSpeed) * Engine.deltaTime();
 		}
 	}
 
@@ -56,10 +56,10 @@ public class CharacterController extends Component {
 		gameObject.setTransformY(position.y);
 
 		if (Keyboard.getKey(Keyboard.W_KEY) || Keyboard.getKey(Keyboard.UP_ARROW)) {
-			position.y += (-speed.y + sprintSpeed) * Engine.deltaTime;
+			position.y += (-speed.y + sprintSpeed) * Engine.deltaTime();
 		}
 		if (Keyboard.getKey(Keyboard.S_KEY) || Keyboard.getKey(Keyboard.DOWN_ARROW)) {
-			position.y += (speed.y + sprintSpeed) * Engine.deltaTime;
+			position.y += (speed.y + sprintSpeed) * Engine.deltaTime();
 		}
 	}
 

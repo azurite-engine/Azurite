@@ -9,6 +9,7 @@ import graphics.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import physics.Transform;
+import util.Engine;
 
 import java.util.ArrayList;
 
@@ -38,7 +39,7 @@ public class Text {
         glyphRenderers = new ArrayList<>();
 
         draw();
-        Window.currentScene.textRenderer.add(this);
+        Engine.scenes().currentScene().textRenderer.add(this);
     }
 
     public Text (String string, float x, float y) {
@@ -51,7 +52,7 @@ public class Text {
         glyphRenderers = new ArrayList<>();
 
         draw();
-        Window.currentScene.textRenderer.add(this);
+        Engine.scenes().currentScene().textRenderer.add(this);
     }
 
     public void draw () {
@@ -88,7 +89,7 @@ public class Text {
 
     public void change (String string) {
 
-        Window.currentScene.textRenderer.removeAllGlyphRenderers(glyphRenderers);
+        Engine.scenes().currentScene().textRenderer.removeAllGlyphRenderers(glyphRenderers);
         System.out.println("");
 
         String tmp = "";
@@ -99,7 +100,7 @@ public class Text {
         glyphRenderers = new ArrayList<>();
 
         generateGlyphs();
-        Window.currentScene.textRenderer.add(this);
+        Engine.scenes().currentScene().textRenderer.add(this);
     }
 
     private void generateGlyphs () {

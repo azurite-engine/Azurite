@@ -1,11 +1,9 @@
 package ecs;
 
-import input.Gamepad;
 import input.Keyboard;
 import org.joml.Vector2f;
 import physics.AABB;
 import util.Engine;
-import util.Logger;
 
 public class CharacterControllerGravity extends CharacterController {
 
@@ -47,6 +45,6 @@ public class CharacterControllerGravity extends CharacterController {
         if (!grounded) {
             velocity.y += gravity;
         }
-        gameObject.getTransform().addY(velocity.y * Engine.deltaTime);
+        gameObject.getTransform().addY(velocity.y * Engine.deltaTime());
     }
 }

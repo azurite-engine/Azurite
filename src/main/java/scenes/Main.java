@@ -22,10 +22,12 @@ import util.Utils;
 
 import static graphics.Graphics.setDefaultBackground;
 
-public class Main extends util.Scene {
+public class Main extends scene.Scene {
 
 	public static void main (String[] args) {
 		Engine.init(1000, 400, "Hello World!", 1);
+		Engine.scenes().switchScene(new Main(), true);
+		Engine.showWindow();
 	}
 
 	Text t;
@@ -43,7 +45,7 @@ public class Main extends util.Scene {
 		t = new Text("Hello World! (String 1)\nTest Text line 2.", f, 10, 0, 1);
 		t2 = new Text("Hello World! (String 2)\nTest Text line.", f, 400, 0, 1);
 
-		g = new GameObject("test", new Transform(100, 100, 100, 100), 1);
+		g = new GameObject(this, new Transform(100, 100, 100, 100), 1);
 		g.addComponent(new SpriteRenderer(Color.RED));
 
 	}
