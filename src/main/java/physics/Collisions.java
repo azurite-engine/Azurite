@@ -1,5 +1,6 @@
 package physics;
 
+import org.joml.Vector2f;
 import util.Utils;
 
 public class Collisions {
@@ -19,24 +20,24 @@ public class Collisions {
 
     /**
      * Checks if a set of X and Y coordinates are inside of a circle.
-     * @param in physics.Vector2 containing coordinates of point to check
+     * @param in physics.org.joml.Vector2f containing coordinates of point to check
      * @param circleX X position of circle
      * @param circleY Y position of circle
      * @param radius Radius of circle
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
-    public static boolean inCircle(Vector2 in, float circleX, float circleY, float radius) {
+    public static boolean inCircle(Vector2f in, float circleX, float circleY, float radius) {
         return Utils.dist(in.x, in.y, circleX, circleY) < radius * 2;
     }
 
     /**
      * Checks if a set of X and Y coordinates are inside of a circle.
-     * @param in physics.Vector2 containing coordinates of point to check
-     * @param circle physics.Vector2 containing coordinates of the circle
+     * @param in physics.Vector2f containing coordinates of point to check
+     * @param circle physics.Vector2f containing coordinates of the circle
      * @param radius Radius of circle
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
-    public static boolean inCircle(Vector2 in, Vector2 circle, float radius) {
+    public static boolean inCircle(Vector2f in, Vector2f circle, float radius) {
         return Utils.dist(in.x, in.y, circle.x, circle.y) < radius * 2;
     }
 
@@ -56,21 +57,21 @@ public class Collisions {
 
     /**
      * Checks if a set of X and Y coordinates are inside of a rectangle.
-     * @param in physics.Vector2 containing coordinates of point to check
+     * @param in physics.Vector2f containing coordinates of point to check
      * @param rectX X position of rectangle
      * @param rectY Y position of rectangle
      * @param rectWidth Width of rectangle
      * @param rectHeight Height of rectangle
      * @return Returns true if the point is inside the rectangle, otherwise returns false.
      */
-    public static boolean inRect(Vector2 in, float rectX, float rectY, float rectWidth, float rectHeight) {
+    public static boolean inRect(Vector2f in, float rectX, float rectY, float rectWidth, float rectHeight) {
         return in.x >= rectX && in.x <= (rectY + rectWidth) && in.y >= rectY && in.y <= (rectY + rectHeight);
     }
 
     /**
      * Checks if a rectangle is completely inside of another rectangle.
-     * @param Transform 1
-     * @param Transform 2
+     * @param t1
+     * @param t2
      * @return returns boolean true if t1 is inside of t2
      */
     public static boolean rectInRect(Transform t1, Transform t2) {

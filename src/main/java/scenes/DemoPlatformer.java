@@ -23,7 +23,7 @@ import static graphics.Graphics.setDefaultBackground;
 
 public class DemoPlatformer extends Scene {
     public static void main(String[] args) {
-        Engine.init("Azurite Engine Demo 2", 1.0f);
+        Engine.init(900, 600,"Azurite Engine Demo 2", 1.0f);
         Engine.scenes().switchScene(new DemoPlatformer(), true);
         Engine.showWindow();
     }
