@@ -29,6 +29,7 @@ public class Main extends util.Scene {
 	}
 
 	Text t;
+	Text t2;
 	Font f;
 
 	GameObject g;
@@ -39,7 +40,8 @@ public class Main extends util.Scene {
 		camera = new Camera();
 
 		f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 25, true);
-		t = new Text("Hello World!\nTest Text line 2.", f, 10, 0, 1);
+		t = new Text("Hello World! (String 1)\nTest Text line 2.", f, 10, 0, 1);
+		t2 = new Text("Hello World! (String 2)\nTest Text line.", f, 400, 0, 1);
 
 		g = new GameObject("test", new Transform(100, 100, 100, 100), 1);
 		g.addComponent(new SpriteRenderer(Color.RED));
@@ -49,10 +51,21 @@ public class Main extends util.Scene {
 	int x = 0;
 
 	public void update () {
+		// I believe this error is happening in textBatchRenderer, however I have not had a chance to debug yet.
+
+		// Example 1 (notice the partial character next to "H" in the first string)
+		if (x % 100 == 0) {
+			t.change("" + Utils.randomInt(0, 400) + ":" + Utils.randomInt(1, 100));
+			t2.change("" + Utils.randomInt(0, 400) + ":" + Utils.randomInt(1, 100));
+		}
+
+		// Try this to see another example
 //		if (x % 100 == 0) {
 //			t.change("" + Utils.randomInt(0, 400) + ":" + Utils.randomInt(1, 100));
+//		} else if (x % 99 == 0) {
+//			t2.change("" + Utils.randomInt(0, 400) + ":" + Utils.randomInt(1, 100));
 //		}
-//		x ++;
+		x ++;
 	}
 
 }
