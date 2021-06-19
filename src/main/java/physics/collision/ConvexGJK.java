@@ -2,8 +2,6 @@ package physics.collision;
 
 import org.joml.Vector2f;
 
-import java.util.Arrays;
-
 /**
  * <h1>Azurite</h1>
  *
@@ -14,37 +12,47 @@ import java.util.Arrays;
 public class ConvexGJK {
 
 
-    //TODO: NOT DONE YET
-    public static boolean gjkCollision(Shape shapeA, Shape shapeB) {
-        //create the "super shape" of a and b by using the minkDiff
-        Shape combinedShape = minkDiff(shapeA, shapeB);
-        Vector2f[] combinedShapePoints = combinedShape.pointsArray();
-        //sorting the array by an approx calculation of how close they are to the origin
-        Arrays.sort(combinedShapePoints, (o1, o2) -> (int) (o1.x + o1.y - (o2.x + o2.y)));
-        Vector2f startPoint = combinedShapePoints[0];
+    /**
+     * Calculates whether a shape collides/overlaps with another shape using their support function only. <p>
+     * The support function of a shape calculates the furthest point in a set direction.<p>
+     * <p>
+     * By GJKSM it is required, that both given shapes are convex shapes.
+     * If you wanna test concave shapes, you will have to split them into convex shapes first. <p>
+     * <p>
+     * This method is based on the GJKSM invariant named by and after
+     * GJK the basic underlying principle
+     * Stelly a gamedev working at valve (at least at the time)
+     * and Muratori reducing its compexity down to testing instead of heavy math.
+     * <p>
+     * This algorithm below is adjusted to 2d space instead of 3d space and therefore some checks arent necessary,
+     * since an unfinished triangle (3 points, 2 vectors) already determines collision.
+     * <p>
+     * This algorithm was implemented and alternated on 19th of June by Julius Korweck.
+     *
+     * @param shapeA shape a
+     * @param shapeB shape b
+     * @return whether shape a and shape b intersect
+     */
+    public static boolean gjksmCollision(Shape shapeA, Shape shapeB) {
+        Vector2f anyDirectionTowardsOrigin = new Vector2f(1, 1);
+        Vector2f startPoint = maxDotPointMinkDiff(shapeA, shapeB, anyDirectionTowardsOrigin);
         Vector2f direction = new Vector2f(-startPoint.x, -startPoint.y);
 
-        boolean repeat = true;
-        boolean firstPointConfirmed = false;
+        int pointsConfirmed = 0;
 
-        while (repeat) {
-            //only repeat if necessary
-            repeat = false;
+        while (pointsConfirmed < 3) {
 
             //the point furthest in the direction
-            Vector2f pointA = combinedShape.supportPoint(direction);
-            //
+            // Shape combinedShape = minkDiff(shapeA, shapeB); combinedShape.supportPoint(direction);
+            Vector2f pointA = maxDotPointMinkDiff(shapeA, shapeB, direction);
+
             if (pointA.dot(direction) < 0)
                 return false; //no intersection
-
-            //TODO: decide if the second point is correct and if the intersection was found
-            if(firstPointConfirmed)
-                return true;
 
             //do Simplex -> two points needed for that
             {
                 //vector AB
-                Vector2f ab = aToB(pointA, startPoint);
+                Vector2f ab = startPoint.sub(pointA, new Vector2f()); //aToB(pointA, startPoint);
                 //vector towards the origin of A
                 Vector2f ao = new Vector2f(-pointA.x, -pointA.y);
 
@@ -62,65 +70,30 @@ public class ConvexGJK {
 
                     //triangular check not necessary
                     //if the next point derived from the perpendicular direction can find a point
-                    //where the new point
-                    firstPointConfirmed = true;
+                    //where the new point is enclosing the origin, we got it
+                    pointsConfirmed++;
 
                 } else {
+
+                    //should only happen to search the startpoint,
+                    //any second point should be cancelled out
                     startPoint = pointA;
                     direction.set(ao);
-                    repeat = true;
+
+                    pointsConfirmed = 1;
+
                 }
             }
         }
 
-        //does not intersect, if there isnt an intersection found
-        return false;
+        //3 points are confirmed, there is intersection
+        return true;
+
     }
 
-    private static Vector2f aToB(Vector2f a, Vector2f b) {
-        return new Vector2f(b.x - a.x, b.y - a.y);
-    }
-
+    //helper function, just to define whether a certain point
     private static boolean rightDirection(Vector2f vector, Vector2f towardsOrigin) {
         return vector.dot(towardsOrigin) > 0;
-    }
-
-    /**
-     * Calculate the minkowski sum of two sets of points in 2-dimensional space.
-     * This method is not optimized at all and simple adds up all point combinations there are.
-     *
-     * @param shapeA shape a
-     * @param shapeB shape b
-     * @return the minkowski sum of both shapes
-     */
-    public static Vector2f[] minkSum(Shape shapeA, Shape shapeB) {
-        Vector2f[] sum = new Vector2f[shapeA.points() + shapeB.points()];
-        int pos = 0;
-        for (Vector2f a : shapeA.pointsArray()) {
-            for (Vector2f b : shapeB.pointsArray()) {
-                sum[pos++] = new Vector2f(a.x + b.x, a.y + b.y);
-            }
-        }
-        return sum;
-    }
-
-    /**
-     * Calculate the minkowski difference of two sets of points in 2-dimensional space.
-     * This method is using the same approach as {@link ConvexGJK#minkSum(Shape, Shape)} to do that.
-     *
-     * @param shapeA shape a
-     * @param shapeB shape b is being subtracted
-     * @return the minkowski difference of both shapes
-     */
-    public static Shape minkDiff(Shape shapeA, Shape shapeB) {
-        Vector2f[] sum = new Vector2f[shapeA.points() + shapeB.points()];
-        int pos = 0;
-        for (Vector2f a : shapeA.pointsArray()) {
-            for (Vector2f b : shapeB.pointsArray()) {
-                sum[pos++] = new Vector2f(a.x - b.x, a.y - b.y);
-            }
-        }
-        return new BasicPolygon(sum);
     }
 
     /**

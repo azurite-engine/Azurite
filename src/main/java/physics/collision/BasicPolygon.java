@@ -13,7 +13,7 @@ public class BasicPolygon implements Shape {
 
     private final Vector2f[] points;
 
-    public BasicPolygon(Vector2f[] points) {
+    public BasicPolygon(Vector2f... points) {
         this.points = points;
     }
 
