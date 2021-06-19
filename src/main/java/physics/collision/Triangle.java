@@ -11,27 +11,50 @@ import org.joml.Vector2f;
  */
 public class Triangle extends GJKSMShape {
 
-    private final Vector2f a, b, c;
-    private Vector2f pA, pB, pC;
+    private final Vector2f relativeA, relativeB, relativeC;
+    private Vector2f absoluteA, absoluteB, absoluteC;
 
-    public Triangle(Vector2f a, Vector2f b, Vector2f c) {
-        this.a = new Vector2f(a);
-        this.b = new Vector2f(b);
-        this.c = new Vector2f(c);
+    public Triangle(Vector2f relativeA, Vector2f relativeB, Vector2f relativeC) {
+        this.relativeA = new Vector2f(relativeA);
+        this.relativeB = new Vector2f(relativeB);
+        this.relativeC = new Vector2f(relativeC);
+    }
+
+    public Vector2f getAbsoluteA() {
+        return absoluteA;
+    }
+
+    public Vector2f getAbsoluteB() {
+        return absoluteB;
+    }
+
+    public Vector2f getAbsoluteC() {
+        return absoluteC;
+    }
+
+    public Vector2f getRelativeA() {
+        return relativeA;
+    }
+
+    public Vector2f getRelativeB() {
+        return relativeB;
+    }
+
+    public Vector2f getRelativeC() {
+        return relativeC;
     }
 
     @Override
-    public void setPosition(Vector2f position) {
-        super.setPosition(position);
-        this.pA = position.add(a, new Vector2f());
-        this.pB = position.add(b, new Vector2f());
-        this.pC = position.add(c, new Vector2f());
+    public void adjust() {
+        this.absoluteA = position().add(relativeA, new Vector2f());
+        this.absoluteB = position().add(relativeB, new Vector2f());
+        this.absoluteC = position().add(relativeC, new Vector2f());
     }
 
     @Override
     public Vector2f supportPoint(Vector2f v) {
-        float ma = v.dot(pA), mb = v.dot(pB), mc = v.dot(pC);
-        return ma > mb ? ma > mc ? pA : pC : mb > mc ? pB : pC;
+        float ma = v.dot(absoluteA), mb = v.dot(absoluteB), mc = v.dot(absoluteC);
+        return ma > mb ? ma > mc ? absoluteA : absoluteC : mb > mc ? absoluteB : absoluteC;
     }
 
 }

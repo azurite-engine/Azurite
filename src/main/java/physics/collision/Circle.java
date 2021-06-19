@@ -14,12 +14,11 @@ import org.joml.Vector2f;
 public class Circle extends GJKSMShape {
 
     private final float radius;
-    private final Vector2f center;
-    private Vector2f positionedCenter;
+    private final Vector2f relativeCenter;
+    private Vector2f absoluteCenter;
 
-    public Circle(Vector2f center, float radius) {
-        super();
-        this.center = new Vector2f(center);
+    public Circle(Vector2f relativeCenter, float radius) {
+        this.relativeCenter = new Vector2f(relativeCenter);
         this.radius = radius;
     }
 
@@ -28,23 +27,22 @@ public class Circle extends GJKSMShape {
     }
 
     public Vector2f getRelativeCenter() {
-        return center;
+        return relativeCenter;
     }
 
     public Vector2f getAbsoluteCenter() {
-        return positionedCenter;
+        return absoluteCenter;
     }
 
     @Override
-    public void setPosition(Vector2f position) {
-        super.setPosition(position);
-        this.positionedCenter = position.add(this.center, new Vector2f());
+    public void adjust() {
+        this.absoluteCenter = position().add(this.relativeCenter, new Vector2f());
     }
 
     @Override
     public Vector2f supportPoint(Vector2f v) {
         Vector2f normalized = v.normalize(new Vector2f());
-        return positionedCenter.add(normalized.mul(radius), new Vector2f());
+        return absoluteCenter.add(normalized.mul(radius), new Vector2f());
     }
 
 }

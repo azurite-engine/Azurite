@@ -13,22 +13,29 @@ import org.joml.Vector2f;
  */
 public class Point extends GJKSMShape {
 
-    private final Vector2f point;
-    private Vector2f positionedPoint;
+    private final Vector2f relativePoint;
+    private Vector2f absolutePoint;
 
-    public Point(Vector2f point) {
-        this.point = new Vector2f(point);
+    public Point(Vector2f relativePoint) {
+        this.relativePoint = new Vector2f(relativePoint);
+    }
+
+    public Vector2f getRelativePoint() {
+        return relativePoint;
+    }
+
+    public Vector2f getAbsolutePoint() {
+        return absolutePoint;
     }
 
     @Override
-    public void setPosition(Vector2f position) {
-        super.setPosition(position);
-        this.positionedPoint = position.add(point, new Vector2f());
+    public void adjust() {
+        this.absolutePoint = position().add(relativePoint, new Vector2f());
     }
 
     @Override
     public Vector2f supportPoint(Vector2f v) {
-        return positionedPoint;
+        return absolutePoint;
     }
 }
 

@@ -15,35 +15,33 @@ import org.joml.Vector2f;
  */
 public class BasicPolygon extends GJKSMShape {
 
-    private final Vector2f[] points;
-    private Vector2f[] positioned;
+    private final Vector2f[] relativePoints;
+    private final Vector2f[] absolutePoints;
 
-    public BasicPolygon(Vector2f... points) {
-        super();
-        this.points = new Vector2f[points.length];
-        for (int i = 0; i < points.length; i++)
-            this.points[i] = new Vector2f(points[i]);
+    public BasicPolygon(Vector2f... relativePoints) {
+        this.relativePoints = new Vector2f[relativePoints.length];
+        for (int i = 0; i < relativePoints.length; i++)
+            this.relativePoints[i] = new Vector2f(relativePoints[i]);
+        absolutePoints = new Vector2f[relativePoints.length];
     }
 
     public Vector2f[] getRelativePoints() {
-        return points;
+        return relativePoints;
     }
 
     public Vector2f[] getAbsolutePoints() {
-        return positioned;
+        return absolutePoints;
     }
 
     @Override
-    public void setPosition(Vector2f position) {
-        super.setPosition(position);
-        positioned = new Vector2f[points.length];
-        for (int i = 0; i < points.length; i++)
-            positioned[i] = position.add(points[i], new Vector2f());
+    public void adjust() {
+        for (int i = 0; i < absolutePoints.length; i++)
+            absolutePoints[i] = position().add(relativePoints[i], new Vector2f());
     }
 
     @Override
     public Vector2f supportPoint(Vector2f v) {
-        return ConvexGJKSM.maxDotPoint(positioned, v);
+        return ConvexGJKSM.maxDotPoint(absolutePoints, v);
     }
 
 }

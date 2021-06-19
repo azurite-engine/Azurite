@@ -15,19 +15,25 @@ import org.joml.Vector2f;
  */
 public class CombinedShape extends GJKSMShape {
 
-    private GJKSMShape shapeA, shapeB;
+    private final GJKSMShape shapeA, shapeB;
 
     public CombinedShape(GJKSMShape shapeA, GJKSMShape shapeB) {
-        super();
         this.shapeA = shapeA;
         this.shapeB = shapeB;
     }
 
+    public GJKSMShape getShapeA() {
+        return shapeA;
+    }
+
+    public GJKSMShape getShapeB() {
+        return shapeB;
+    }
+
     @Override
-    public void setPosition(Vector2f position) {
-        super.setPosition(position);
-        shapeA.setPosition(position);
-        shapeB.setPosition(position);
+    public void adjust() {
+        shapeA.setPosition(position());
+        shapeB.setPosition(position());
     }
 
     @Override

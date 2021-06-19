@@ -14,23 +14,22 @@ import org.joml.Vector2f;
  */
 public abstract class GJKSMShape {
 
-    private Vector2f position;
+    private Vector2f position = new Vector2f(0, 0);
 
-    public GJKSMShape(Vector2f position) {
+    public final void setPosition(Vector2f position) {
         this.position = position;
+        adjust();
     }
 
-    public GJKSMShape() {
-        this.position = new Vector2f(0, 0);
-    }
-
-    public void setPosition(Vector2f position) {
-        this.position = position;
-    }
-
-    public final Vector2f getPosition() {
+    public final Vector2f position() {
         return position;
     }
+
+    /**
+     * Will be called by {@link this#setPosition(Vector2f)} after the new position was set.
+     * Used to recalculate the absolute coordinates.
+     */
+    public abstract void adjust();
 
     /**
      * According to GJKSM this method is supposed to calculate the point of the shape, that is most in direction of v.

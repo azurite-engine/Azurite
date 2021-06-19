@@ -13,25 +13,39 @@ import org.joml.Vector2f;
  */
 public class Line extends GJKSMShape {
 
-    private final Vector2f a, b;
-    //positioned vectors
-    private Vector2f pA, pB;
+    private final Vector2f relativeA, relativeB;
+    private Vector2f absoluteA, absoluteB;
 
-    public Line(Vector2f a, Vector2f b) {
-        this.a = new Vector2f(a);
-        this.b = new Vector2f(b);
+    public Line(Vector2f relativeA, Vector2f relativeB) {
+        this.relativeA = new Vector2f(relativeA);
+        this.relativeB = new Vector2f(relativeB);
+    }
+
+    public Vector2f getRelativeA() {
+        return relativeA;
+    }
+
+    public Vector2f getRelativeB() {
+        return relativeB;
+    }
+
+    public Vector2f getAbsoluteA() {
+        return absoluteA;
+    }
+
+    public Vector2f getAbsoluteB() {
+        return absoluteB;
     }
 
     @Override
-    public void setPosition(Vector2f position) {
-        super.setPosition(position);
-        this.pA = position.add(a, new Vector2f());
-        this.pB = position.add(b, new Vector2f());
+    public void adjust() {
+        this.absoluteA = position().add(relativeA, new Vector2f());
+        this.absoluteB = position().add(relativeB, new Vector2f());
     }
 
     @Override
     public Vector2f supportPoint(Vector2f v) {
-        return pA.dot(v) > pB.dot(v) ? pA : pB;
+        return absoluteA.dot(v) > absoluteB.dot(v) ? absoluteA : absoluteB;
     }
 
 }
