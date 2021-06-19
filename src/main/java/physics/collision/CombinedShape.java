@@ -13,13 +13,21 @@ import org.joml.Vector2f;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class CombinedShape implements GJKSMShape {
+public class CombinedShape extends GJKSMShape {
 
     private GJKSMShape shapeA, shapeB;
 
     public CombinedShape(GJKSMShape shapeA, GJKSMShape shapeB) {
+        super();
         this.shapeA = shapeA;
         this.shapeB = shapeB;
+    }
+
+    @Override
+    public void setPosition(Vector2f position) {
+        super.setPosition(position);
+        shapeA.setPosition(position);
+        shapeB.setPosition(position);
     }
 
     @Override

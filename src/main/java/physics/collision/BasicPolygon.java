@@ -13,19 +13,37 @@ import org.joml.Vector2f;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class BasicPolygon implements GJKSMShape {
+public class BasicPolygon extends GJKSMShape {
 
     private final Vector2f[] points;
+    private Vector2f[] positioned;
 
     public BasicPolygon(Vector2f... points) {
+        super();
         this.points = new Vector2f[points.length];
         for (int i = 0; i < points.length; i++)
             this.points[i] = new Vector2f(points[i]);
     }
 
+    public Vector2f[] getRelativePoints() {
+        return points;
+    }
+
+    public Vector2f[] getAbsolutePoints() {
+        return positioned;
+    }
+
+    @Override
+    public void setPosition(Vector2f position) {
+        super.setPosition(position);
+        positioned = new Vector2f[points.length];
+        for (int i = 0; i < points.length; i++)
+            positioned[i] = position.add(points[i], new Vector2f());
+    }
+
     @Override
     public Vector2f supportPoint(Vector2f v) {
-        return ConvexGJKSM.maxDotPoint(points, v);
+        return ConvexGJKSM.maxDotPoint(positioned, v);
     }
 
 }

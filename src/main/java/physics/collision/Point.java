@@ -11,17 +11,24 @@ import org.joml.Vector2f;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class Point implements GJKSMShape {
+public class Point extends GJKSMShape {
 
     private final Vector2f point;
+    private Vector2f positionedPoint;
 
     public Point(Vector2f point) {
         this.point = new Vector2f(point);
     }
 
     @Override
+    public void setPosition(Vector2f position) {
+        super.setPosition(position);
+        this.positionedPoint = position.add(point, new Vector2f());
+    }
+
+    @Override
     public Vector2f supportPoint(Vector2f v) {
-        return point;
+        return positionedPoint;
     }
 }
 
