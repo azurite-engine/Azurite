@@ -9,7 +9,7 @@ import org.joml.Vector2f;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class ConvexGJK {
+public class ConvexGJKSM {
 
 
     /**
@@ -118,7 +118,7 @@ public class ConvexGJK {
     public static Vector2f maxDotPoint(Shape shape, Vector2f direction) {
         float maxDot = Float.NEGATIVE_INFINITY;
         Vector2f point = null;
-        for (Vector2f p : shape.pointsArray()) {
+        for (Vector2f p : shape.points()) {
             float dot = direction.dot(p);
             if (dot > maxDot) {
                 maxDot = dot;

@@ -22,7 +22,7 @@ public class Square implements Shape {
     }
 
     @Override
-    public Vector2f[] pointsArray() {
+    public Vector2f[] points() {
         return points;
     }
 

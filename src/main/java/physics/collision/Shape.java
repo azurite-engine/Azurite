@@ -18,25 +18,18 @@ public interface Shape {
      *
      * @return all points on the convex hull
      */
-    Vector2f[] pointsArray();
+    Vector2f[] points();
 
     /**
-     * @return the amount of points this shape consists of
-     */
-    default int points() {
-        return pointsArray().length;
-    }
-
-    /**
-     * According to GJK this method is supposed to calculate the point of the shape, that is most in direction of v.
+     * According to GJKSM this method is supposed to calculate the point of the shape, that is most in direction of v.
      * The general rule is, the more primitive the shape is, the more efficient this method can be.
      * This method may be described as max{v*x,x element of Shape} for any complex shape.
      *
      * @param v the direction
-     * @return the point of the shape that is most in the direction of v or null if and only if {@link this#pointsArray()} is empty
+     * @return the point of the shape that is most in the direction of v or null if and only if {@link this#points()} is empty
      */
     default Vector2f supportPoint(Vector2f v) {
-        return ConvexGJK.maxDotPoint(this, v);
+        return ConvexGJKSM.maxDotPoint(this, v);
     }
 
 }

@@ -20,13 +20,8 @@ public class Circle implements Shape {
     }
 
     @Override
-    public Vector2f[] pointsArray() {
+    public Vector2f[] points() {
         return new Vector2f[0]; //no need to calculate that
-    }
-
-    @Override
-    public int points() {
-        return Integer.MAX_VALUE; //infinite number of points
     }
 
     @Override
