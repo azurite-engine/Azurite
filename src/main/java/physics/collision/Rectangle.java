@@ -25,9 +25,9 @@ public class Rectangle implements GJKSMShape {
     public Rectangle(Vector2f cornerA, Vector2f cornerB) {
         //if they are parallel to one of the axis, its just a line
         if (cornerA.x == cornerB.x || cornerA.y == cornerB.y)
-            points = new Vector2f[]{cornerA, cornerB};
+            points = new Vector2f[]{new Vector2f(cornerA), new Vector2f(cornerB)};
         else
-            points = new Vector2f[]{cornerA, cornerB,
+            points = new Vector2f[]{new Vector2f(cornerA), new Vector2f(cornerB),
                     new Vector2f(cornerA.x, cornerB.y), new Vector2f(cornerB.x, cornerA.y)};
     }
 

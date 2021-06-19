@@ -16,8 +16,8 @@ public class Line implements GJKSMShape {
     private final Vector2f a, b;
 
     public Line(Vector2f a, Vector2f b) {
-        this.a = a;
-        this.b = b;
+        this.a = new Vector2f(a);
+        this.b = new Vector2f(b);
     }
 
     @Override

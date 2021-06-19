@@ -16,7 +16,7 @@ public class Point implements GJKSMShape {
     private final Vector2f point;
 
     public Point(Vector2f point) {
-        this.point = point;
+        this.point = new Vector2f(point);
     }
 
     @Override

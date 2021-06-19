@@ -14,7 +14,7 @@ public class Triangle implements GJKSMShape {
     private final Vector2f[] points;
 
     public Triangle(Vector2f a, Vector2f b, Vector2f c) {
-        this.points = new Vector2f[]{a, b, c};
+        this.points = new Vector2f[]{new Vector2f(a), new Vector2f(b), new Vector2f(c)};
     }
 
     @Override

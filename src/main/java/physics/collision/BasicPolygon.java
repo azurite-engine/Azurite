@@ -18,7 +18,9 @@ public class BasicPolygon implements GJKSMShape {
     private final Vector2f[] points;
 
     public BasicPolygon(Vector2f... points) {
-        this.points = points;
+        this.points = new Vector2f[points.length];
+        for (int i = 0; i < points.length; i++)
+            this.points[i] = new Vector2f(points[i]);
     }
 
     @Override

@@ -17,7 +17,7 @@ public class Circle implements GJKSMShape {
     private final float radius;
 
     public Circle(Vector2f center, float radius) {
-        this.center = center;
+        this.center = new Vector2f(center);
         this.radius = radius;
     }
 
