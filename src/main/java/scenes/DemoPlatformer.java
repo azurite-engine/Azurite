@@ -1,14 +1,13 @@
 package scenes;
 
-import ecs.CharacterControllerGravity;
-import ecs.GameObject;
-import ecs.PointLight;
-import ecs.SpriteRenderer;
+import ecs.*;
 import graphics.Camera;
 import graphics.Color;
+import org.joml.Vector2f;
 import physics.AABB;
 import physics.Gravity;
 import physics.Transform;
+import physics.collision.Rectangle;
 import postprocess.BloomEffect;
 import postprocess.PostProcessStep;
 import scene.Scene;
@@ -23,7 +22,7 @@ import static graphics.Graphics.setDefaultBackground;
 
 public class DemoPlatformer extends Scene {
     public static void main(String[] args) {
-        Engine.init(900, 600,"Azurite Engine Demo 2", 1.0f);
+        Engine.init(900, 600, "Azurite Engine Demo 2", 1.0f);
         Engine.scenes().switchScene(new DemoPlatformer(), true);
         Engine.showWindow();
     }
@@ -53,7 +52,8 @@ public class DemoPlatformer extends Scene {
         booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
         booper.addComponent(new SpriteRenderer(a.getSprite(150)));
         booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
-        booper.addComponent(new AABB());
+        //TODO not done yet
+        booper.addComponent(new RigidBody(new Rectangle(new Vector2f(0, 0), new Vector2f(0, 0)), 1));
         booper.addComponent(new Gravity());
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
