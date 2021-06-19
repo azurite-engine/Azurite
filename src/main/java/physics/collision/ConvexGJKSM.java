@@ -33,7 +33,7 @@ public class ConvexGJKSM {
      * @param shapeB shape b
      * @return whether shape a and shape b intersect
      */
-    public static boolean gjksmCollision(Shape shapeA, Shape shapeB) {
+    public static boolean gjksmCollision(GJKSMShape shapeA, GJKSMShape shapeB) {
         Vector2f anyDirectionTowardsOrigin = new Vector2f(1, 1);
         Vector2f startPoint = maxDotPointMinkDiff(shapeA, shapeB, anyDirectionTowardsOrigin);
         Vector2f direction = new Vector2f(-startPoint.x, -startPoint.y);
@@ -91,17 +91,17 @@ public class ConvexGJKSM {
 
     }
 
-    //helper function, just to define whether a certain point
+    //helper function, just to define whether a certain point goes in the right direction
     private static boolean rightDirection(Vector2f vector, Vector2f towardsOrigin) {
         return vector.dot(towardsOrigin) > 0;
     }
 
     /**
-     * Calculates the maximum point of a convex shape C in a specific direction, where C is considered the minkDiff(A,B).
+     * Calculates the maximum point of a convex shape C in a specific direction, where C is considered the minkowskiDiff(A,B).
      *
      * @return the maximum point in a specific direction
      */
-    public static Vector2f maxDotPointMinkDiff(Shape shapeA, Shape shapeB, Vector2f direction) {
+    private static Vector2f maxDotPointMinkDiff(GJKSMShape shapeA, GJKSMShape shapeB, Vector2f direction) {
         Vector2f pointA = shapeA.supportPoint(direction);
         Vector2f pointB = shapeB.supportPoint(new Vector2f(-direction.x, -direction.y));
         return new Vector2f(pointA.x - pointB.x, pointA.y - pointB.y);
@@ -110,6 +110,7 @@ public class ConvexGJKSM {
     /**
      * Finds the point with the highest dot product in a shape to a given direction d,
      * by doing a simple max search over all dot products dot(a,d) where a element of A.
+     * Can be used as support function for all convex polygons defined by a finite number of points.
      *
      * @param convexShapePoints all points on the convex shape
      * @param direction         the direction for the dot product calculation

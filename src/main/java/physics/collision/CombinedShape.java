@@ -13,11 +13,11 @@ import org.joml.Vector2f;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class CombinedShape implements Shape {
+public class CombinedShape implements GJKSMShape {
 
-    private Shape shapeA, shapeB;
+    private GJKSMShape shapeA, shapeB;
 
-    public CombinedShape(Shape shapeA, Shape shapeB) {
+    public CombinedShape(GJKSMShape shapeA, GJKSMShape shapeB) {
         this.shapeA = shapeA;
         this.shapeB = shapeB;
     }

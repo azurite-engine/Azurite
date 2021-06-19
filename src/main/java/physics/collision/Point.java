@@ -5,21 +5,23 @@ import org.joml.Vector2f;
 /**
  * <h1>Azurite</h1>
  *
+ * The GJKSM shape implementation of a single point.
+ *
  * @author Julius Korweck
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class Triangle implements GJKSMShape {
+public class Point implements GJKSMShape {
 
-    private final Vector2f[] points;
+    private final Vector2f point;
 
-    public Triangle(Vector2f a, Vector2f b, Vector2f c) {
-        this.points = new Vector2f[]{a, b, c};
+    public Point(Vector2f point) {
+        this.point = point;
     }
 
     @Override
     public Vector2f supportPoint(Vector2f v) {
-        return ConvexGJKSM.maxDotPoint(points, v);
+        return point;
     }
 }
 
