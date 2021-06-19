@@ -18,10 +18,9 @@ public class Triangle implements Shape {
     }
 
     @Override
-    public Vector2f[] points() {
-        return points;
+    public Vector2f supportPoint(Vector2f v) {
+        return ConvexGJKSM.maxDotPoint(points, v);
     }
-
 }
 
 /***********************************************************************************************

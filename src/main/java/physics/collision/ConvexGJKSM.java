@@ -108,17 +108,17 @@ public class ConvexGJKSM {
     }
 
     /**
-     * Finds the point with the highest dot product in a shape A to a given direction d,
-     * by doing a simple max search over all dot products dot(a,d) where A element of A.
+     * Finds the point with the highest dot product in a shape to a given direction d,
+     * by doing a simple max search over all dot products dot(a,d) where a element of A.
      *
-     * @param shape     the shape
-     * @param direction the direction for the dot product calculation
+     * @param convexShapePoints all points on the convex shape
+     * @param direction         the direction for the dot product calculation
      * @return the point with the highest dot product with the given direction
      */
-    public static Vector2f maxDotPoint(Shape shape, Vector2f direction) {
+    public static Vector2f maxDotPoint(Vector2f[] convexShapePoints, Vector2f direction) {
         float maxDot = Float.NEGATIVE_INFINITY;
         Vector2f point = null;
-        for (Vector2f p : shape.points()) {
+        for (Vector2f p : convexShapePoints) {
             float dot = direction.dot(p);
             if (dot > maxDot) {
                 maxDot = dot;
