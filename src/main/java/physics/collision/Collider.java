@@ -10,5 +10,4 @@ package physics.collision;
 public interface Collider {
 
 
-
 }

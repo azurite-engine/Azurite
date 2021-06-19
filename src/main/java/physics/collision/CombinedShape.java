@@ -4,7 +4,7 @@ import org.joml.Vector2f;
 
 /**
  * <h1>Azurite</h1>
- *
+ * <p>
  * Used to represent a combined shape consisting of 2 different shapes of any kind,
  * they might even be CombinedShapes themself.
  * Using the class will erase the points function;

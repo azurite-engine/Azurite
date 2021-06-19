@@ -4,7 +4,7 @@ import org.joml.Vector2f;
 
 /**
  * <h1>Azurite</h1>
- *
+ * <p>
  * The GJKSM shape is described by all its support vectors.
  * A support vector is a point on the convex hull of a shape, that is furthest in the direction of a specified vector v.
  *

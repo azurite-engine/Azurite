@@ -4,7 +4,7 @@ import org.joml.Vector2f;
 
 /**
  * <h1>Azurite</h1>
- *
+ * <p>
  * The GJKSM shape implementation of a single point.
  *
  * @author Julius Korweck
