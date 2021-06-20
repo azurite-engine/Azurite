@@ -4,7 +4,8 @@ import ecs.CharacterController;
 import org.joml.Vector2f;
 import util.Engine;
 
-public class Gravity extends CharacterController {
+@Deprecated
+public class Gravity_old extends CharacterController {
     private float gravity = 9f;
     Vector2f velocity = new Vector2f(0, 100);
     private boolean grounded = false;

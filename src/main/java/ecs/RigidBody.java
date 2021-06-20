@@ -1,12 +1,14 @@
 package ecs;
 
 import org.joml.Vector2f;
+import physics.CombinedForce;
+import physics.Force;
 import physics.collision.ConvexGJKSM;
 import physics.collision.GJKSMShape;
 
 /**
  * <h1>Azurite</h1>
- *
+ * <p>
  * Represents a Rigidbody with a fixed shape but changeable position.
  * Primarily used to apply physics and check collisions.
  *
@@ -30,18 +32,20 @@ public class RigidBody extends Component {
     //the collisionShape of the collider
     private final GJKSMShape collisionShape;
 
-    //contains the last position of the parent gameObject
-    private Vector2f lastPosition;
+    //the force/forces applied to this body
+    private final CombinedForce bodyForce;
 
     public RigidBody(GJKSMShape collisionShape, int[] layers, int[] maskedLayers) {
         this.collisionShape = collisionShape;
         this.collisionLayer = layerBitmask(layers);
         this.collisionMask = layerBitmask(maskedLayers);
+        this.bodyForce = new CombinedForce();
     }
 
     public RigidBody(GJKSMShape collisionShape, int layer) {
         this.collisionShape = collisionShape;
         this.collisionLayer = intToLayerBits(layer);
+        this.bodyForce = new CombinedForce();
     }
 
     public GJKSMShape getCollisionShape() {
@@ -125,19 +129,28 @@ public class RigidBody extends Component {
         this.collisionMask = (short) (active ? (this.collisionMask | intToLayerBits(layer)) : this.collisionMask & ~intToLayerBits(layer));
     }
 
+    /**
+     * Shortcut method for {@link this#getBodyForce()#applyForce(Force)}.
+     *
+     * @param force the force that should be additionally applied to this body
+     */
+    public void applyForce(Force force) {
+        getBodyForce().applyForce(force);
+    }
+
+    public CombinedForce getBodyForce() {
+        return bodyForce;
+    }
+
     @Override
     public void start() {
-        this.lastPosition = new Vector2f(gameObject.getTransform().getPosition());
     }
 
     @Override
     public void update(float dt) {
         Vector2f position = gameObject.getTransform().getPosition();
-        if (!this.lastPosition.equals(position)) {
-            //update the changed position
-            this.lastPosition.set(new Vector2f(position));
-            this.collisionShape.setPosition(this.lastPosition);
-        }
+        bodyForce.update(dt);
+        position.add(bodyForce.direction());
     }
 
 }

@@ -5,7 +5,7 @@ import graphics.Camera;
 import graphics.Color;
 import org.joml.Vector2f;
 import physics.AABB;
-import physics.Gravity;
+import physics.Gravity_old;
 import physics.Transform;
 import physics.collision.Rectangle;
 import postprocess.BloomEffect;
@@ -54,7 +54,7 @@ public class DemoPlatformer extends Scene {
         booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
         //TODO not done yet
         booper.addComponent(new RigidBody(new Rectangle(new Vector2f(0, 0), new Vector2f(0, 0)), 1));
-        booper.addComponent(new Gravity());
+        booper.addComponent(new Gravity_old());
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         bloom.init();
@@ -80,14 +80,14 @@ public class DemoPlatformer extends Scene {
         if (r <= -1) {
             booper.getTransform().addX(-50 * Engine.deltaTime());
             if (booper.getComponent(AABB.class).isCollidingX()) {
-                booper.getComponent(Gravity.class).addVelocityY(-20);
+                booper.getComponent(Gravity_old.class).addVelocityY(-20);
                 Logger.logInfo("Do jump left");
             }
         }
         if (r >= 1) {
             booper.getTransform().addX(50 * Engine.deltaTime());
             if (booper.getComponent(AABB.class).isCollidingX()) {
-                booper.getComponent(Gravity.class).addVelocityY(-20);
+                booper.getComponent(Gravity_old.class).addVelocityY(-20);
                 Logger.logInfo("Do jump right");
             }
         }
