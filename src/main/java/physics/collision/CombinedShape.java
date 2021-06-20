@@ -9,7 +9,7 @@ import org.joml.Vector2f;
  * they might even be CombinedShapes themself.
  * Using the class will erase the points function;
  *
- * @author Julius Korweck
+ * @author Juyas
  * @version 19.06.2021
  * @since 19.06.2021
  */

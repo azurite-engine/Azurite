@@ -7,7 +7,7 @@ import org.joml.Vector2f;
  * <p>
  * The GJKSM shape implementation of a circle.
  *
- * @author Julius Korweck
+ * @author Juyas
  * @version 19.06.2021
  * @since 19.06.2021
  */

@@ -8,7 +8,7 @@ import org.joml.Vector2f;
  * The GJKSM shape is described by all its support vectors.
  * A support vector is a point on the convex hull of a shape, that is furthest in the direction of a specified vector v.
  *
- * @author Julius Korweck
+ * @author Juyas
  * @version 18.06.2021
  * @since 18.06.2021
  */

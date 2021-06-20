@@ -9,7 +9,7 @@ import org.joml.Vector2f;
  * It does not ensure the points to be part of the convex hull, so this object may contain points for a concave shape.
  * If that is the case, this shape won't work correctly for GJKSM collision detection.
  *
- * @author Julius Korweck
+ * @author Juyas
  * @version 19.06.2021
  * @since 19.06.2021
  */

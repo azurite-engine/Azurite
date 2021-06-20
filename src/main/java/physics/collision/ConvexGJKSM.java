@@ -5,7 +5,7 @@ import org.joml.Vector2f;
 /**
  * <h1>Azurite</h1>
  *
- * @author Julius Korweck
+ * @author Juyas
  * @version 19.06.2021
  * @since 19.06.2021
  */
@@ -27,7 +27,7 @@ public class ConvexGJKSM {
      * This algorithm below is adjusted to 2d space instead of 3d space and therefore some checks arent necessary,
      * since an unfinished triangle (3 points, 2 vectors) already determines collision.
      * <p>
-     * This algorithm was implemented and alternated on 19th of June by Julius Korweck.
+     * This algorithm was implemented and alternated on 19th of June by Julius K.
      *
      * @param shapeA shape a
      * @param shapeB shape b

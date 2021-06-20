@@ -5,7 +5,7 @@ import org.joml.Vector2f;
 /**
  * <h1>Azurite</h1>
  *
- * @author Julius Korweck
+ * @author Juyas
  * @version 19.06.2021
  * @since 19.06.2021
  */

@@ -138,6 +138,12 @@ public class RigidBody extends Component {
         getBodyForce().applyForce(force);
     }
 
+    /**
+     * Represents the force applied to the body.
+     * May be a sum of different forces.
+     *
+     * @return the resulting force on this body
+     */
     public CombinedForce getBodyForce() {
         return bodyForce;
     }
@@ -148,9 +154,8 @@ public class RigidBody extends Component {
 
     @Override
     public void update(float dt) {
-        Vector2f position = gameObject.getTransform().getPosition();
         bodyForce.update(dt);
-        position.add(bodyForce.direction());
+        gameObject.getTransform().getPosition().add(bodyForce.direction().mul(dt, new Vector2f()));
     }
 
 }
