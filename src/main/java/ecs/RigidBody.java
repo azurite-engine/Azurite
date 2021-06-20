@@ -1,10 +1,10 @@
 package ecs;
 
 import org.joml.Vector2f;
-import physics.CombinedForce;
-import physics.Force;
 import physics.collision.ConvexGJKSM;
 import physics.collision.GJKSMShape;
+import physics.force.CombinedForce;
+import physics.force.Force;
 
 /**
  * <h1>Azurite</h1>

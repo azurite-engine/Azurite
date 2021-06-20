@@ -1,4 +1,4 @@
-package physics;
+package physics.force;
 
 import org.joml.Vector2f;
 

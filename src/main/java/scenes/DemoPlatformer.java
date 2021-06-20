@@ -3,11 +3,10 @@ package scenes;
 import ecs.*;
 import graphics.Camera;
 import graphics.Color;
-import org.joml.Vector2f;
 import physics.AABB;
 import physics.Gravity_old;
 import physics.Transform;
-import physics.collision.Rectangle;
+import physics.collision.Shapes;
 import postprocess.BloomEffect;
 import postprocess.PostProcessStep;
 import scene.Scene;
@@ -53,8 +52,10 @@ public class DemoPlatformer extends Scene {
         booper.addComponent(new SpriteRenderer(a.getSprite(150)));
         booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
         //TODO not done yet
-        booper.addComponent(new RigidBody(new Rectangle(new Vector2f(0, 0), new Vector2f(0, 0)), 1));
-        booper.addComponent(new Gravity_old());
+        RigidBody rigidBody = new RigidBody(Shapes.notRotatedRectangle(0, 0, 32, 32), 1);
+        booper.addComponent(rigidBody);
+        //booper.addComponent(new Gravity_old());
+
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         bloom.init();

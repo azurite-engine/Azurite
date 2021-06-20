@@ -3,7 +3,7 @@ package physics;
 import org.joml.Vector2f;
 import util.Utils;
 
-public class Collisions {
+public class SimpleCollisions {
 
     /**
      * Checks if a set of X and Y coordinates are inside of a circle.
