@@ -7,11 +7,12 @@ public class SimpleCollisions {
 
     /**
      * Checks if a set of X and Y coordinates are inside of a circle.
-     * @param inX X position of point to check
-     * @param inY Y position of point to check
+     *
+     * @param inX     X position of point to check
+     * @param inY     Y position of point to check
      * @param circleX X position of circle
      * @param circleY Y position of circle
-     * @param radius Radius of circle
+     * @param radius  Radius of circle
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(float inX, float inY, float circleX, float circleY, float radius) {
@@ -20,10 +21,11 @@ public class SimpleCollisions {
 
     /**
      * Checks if a set of X and Y coordinates are inside of a circle.
-     * @param in physics.org.joml.Vector2f containing coordinates of point to check
+     *
+     * @param in      physics.org.joml.Vector2f containing coordinates of point to check
      * @param circleX X position of circle
      * @param circleY Y position of circle
-     * @param radius Radius of circle
+     * @param radius  Radius of circle
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(Vector2f in, float circleX, float circleY, float radius) {
@@ -32,7 +34,8 @@ public class SimpleCollisions {
 
     /**
      * Checks if a set of X and Y coordinates are inside of a circle.
-     * @param in physics.Vector2f containing coordinates of point to check
+     *
+     * @param in     physics.Vector2f containing coordinates of point to check
      * @param circle physics.Vector2f containing coordinates of the circle
      * @param radius Radius of circle
      * @return Returns true if the point is inside the circle, otherwise returns false.
@@ -43,11 +46,12 @@ public class SimpleCollisions {
 
     /**
      * Checks if a set of X and Y coordinates are inside of a rectangle.
-     * @param inX X position of point to check
-     * @param inY Y position of point to check
-     * @param rectX X position of rectangle
-     * @param rectY Y position of rectangle
-     * @param rectWidth Width of rectangle
+     *
+     * @param inX        X position of point to check
+     * @param inY        Y position of point to check
+     * @param rectX      X position of rectangle
+     * @param rectY      Y position of rectangle
+     * @param rectWidth  Width of rectangle
      * @param rectHeight Height of rectangle
      * @return Returns true if the point is inside the rectangle, otherwise returns false.
      */
@@ -57,10 +61,11 @@ public class SimpleCollisions {
 
     /**
      * Checks if a set of X and Y coordinates are inside of a rectangle.
-     * @param in physics.Vector2f containing coordinates of point to check
-     * @param rectX X position of rectangle
-     * @param rectY Y position of rectangle
-     * @param rectWidth Width of rectangle
+     *
+     * @param in         physics.Vector2f containing coordinates of point to check
+     * @param rectX      X position of rectangle
+     * @param rectY      Y position of rectangle
+     * @param rectWidth  Width of rectangle
      * @param rectHeight Height of rectangle
      * @return Returns true if the point is inside the rectangle, otherwise returns false.
      */
@@ -70,15 +75,16 @@ public class SimpleCollisions {
 
     /**
      * Checks if a rectangle is completely inside of another rectangle.
+     *
      * @param t1
      * @param t2
      * @return returns boolean true if t1 is inside of t2
      */
     public static boolean rectInRect(Transform t1, Transform t2) {
-        return  t1.position.x < t2.scale.x 		&&
-                t1.scale.x 	  > t2.position.x 	&&
-                t1.position.y < t2.scale.y 		&&
-                t1.scale.y    > t2.position.y;
+        return t1.position.x < t2.scale.x &&
+                t1.scale.x > t2.position.x &&
+                t1.position.y < t2.scale.y &&
+                t1.scale.y > t2.position.y;
     }
 
 }

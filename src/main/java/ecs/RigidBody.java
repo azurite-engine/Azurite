@@ -1,10 +1,7 @@
 package ecs;
 
-import org.joml.Vector2f;
 import physics.collision.ConvexGJKSM;
 import physics.collision.GJKSMShape;
-import physics.force.CombinedForce;
-import physics.force.Force;
 
 /**
  * <h1>Azurite</h1>
@@ -32,20 +29,15 @@ public class RigidBody extends Component {
     //the collisionShape of the collider
     private final GJKSMShape collisionShape;
 
-    //the force/forces applied to this body
-    private final CombinedForce bodyForce;
-
     public RigidBody(GJKSMShape collisionShape, int[] layers, int[] maskedLayers) {
         this.collisionShape = collisionShape;
         this.collisionLayer = layerBitmask(layers);
         this.collisionMask = layerBitmask(maskedLayers);
-        this.bodyForce = new CombinedForce();
     }
 
     public RigidBody(GJKSMShape collisionShape, int layer) {
         this.collisionShape = collisionShape;
         this.collisionLayer = intToLayerBits(layer);
-        this.bodyForce = new CombinedForce();
     }
 
     public GJKSMShape getCollisionShape() {
@@ -129,24 +121,6 @@ public class RigidBody extends Component {
         this.collisionMask = (short) (active ? (this.collisionMask | intToLayerBits(layer)) : this.collisionMask & ~intToLayerBits(layer));
     }
 
-    /**
-     * Shortcut method for {@link this#getBodyForce()#applyForce(Force)}.
-     *
-     * @param force the force that should be additionally applied to this body
-     */
-    public void applyForce(Force force) {
-        getBodyForce().applyForce(force);
-    }
-
-    /**
-     * Represents the force applied to the body.
-     * May be a sum of different forces.
-     *
-     * @return the resulting force on this body
-     */
-    public CombinedForce getBodyForce() {
-        return bodyForce;
-    }
 
     @Override
     public void start() {
@@ -154,8 +128,7 @@ public class RigidBody extends Component {
 
     @Override
     public void update(float dt) {
-        bodyForce.update(dt);
-        gameObject.getTransform().getPosition().add(bodyForce.direction().mul(dt, new Vector2f()));
+
     }
 
 }

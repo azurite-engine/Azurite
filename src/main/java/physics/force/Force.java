@@ -13,9 +13,7 @@ public interface Force {
 
     String identifier();
 
-    boolean update(float dt);
-
-    void reset();
+    float strength();
 
     Vector2f direction();
 

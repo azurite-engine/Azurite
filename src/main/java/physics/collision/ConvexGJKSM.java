@@ -129,4 +129,28 @@ public class ConvexGJKSM {
         return point;
     }
 
+    //helper function to solve 2d linear system
+    public static Vector2f solveSimultaneousEquations(float a, float b, float c, float d, float e, float f) {
+        float det = ((a) * (d) - (b) * (c));  //instead of 1/
+        float x = ((d) * (e) - (b) * (f)) / det;
+        float y = ((a) * (f) - (c) * (e)) / det;
+        return new Vector2f(x, y);
+    }
+
+    //two ray cast intersection point calculation. ray length is limited to their own length
+    public static Vector2f rayCastIntersectionPoint(Vector2f pointA, Vector2f rayA, Vector2f pointB, Vector2f rayB) { //x,a,y,b
+        //solve the linear equation
+        Vector2f factors = solveSimultaneousEquations(rayA.x, -rayB.x, rayA.y, -rayB.y, pointB.x - pointA.x, pointB.y - pointA.y);
+        //if the lines are crossing, but factors have to be between 0 and 1 to ensure, that the given vector is sufficient to reach
+        if (factors.x > 1 || factors.x < 0 || factors.y > 1 || factors.y < 0) return null;
+        //calculate the point where the intersection happened and return
+        Vector2f dest = rayA.mul(factors.x, new Vector2f());
+        return dest.add(pointA);
+    }
+
+    //ray cast intersection point with a fixed length line
+    public static Vector2f rayCastToLineIntersectionPoint(Vector2f rayStart, Vector2f rayDirectionAndLength, Vector2f linePointA, Vector2f linePointB) {
+        return rayCastIntersectionPoint(rayStart, rayDirectionAndLength, linePointA, linePointB.sub(linePointA, new Vector2f()));
+    }
+
 }
