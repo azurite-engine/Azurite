@@ -19,7 +19,7 @@ public class Shapes {
         return new Rectangle(coords[0], coords[1], coords[2], coords[3]);
     }
 
-    public static Rectangle notRotatedRectangle(float ax, float ay, float bx, float by) {
+    public static Rectangle axisAlignedRectangle(float ax, float ay, float bx, float by) {
         Vector2f max, min, topMin, botMax;
         max = new Vector2f(Math.max(ax, bx), Math.max(ay, by));
         min = new Vector2f(Math.min(ax, bx), Math.min(ay, by));
@@ -32,8 +32,8 @@ public class Shapes {
         return new Rectangle(a, b, c, d);
     }
 
-    public static Rectangle notRotatedRectangle(Vector2f a, Vector2f b) {
-        return notRotatedRectangle(a.x, a.y, b.x, b.y);
+    public static Rectangle axisAlignedRectangle(Vector2f a, Vector2f b) {
+        return axisAlignedRectangle(a.x, a.y, b.x, b.y);
     }
 
 }

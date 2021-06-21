@@ -17,12 +17,16 @@ public class CombinedForce implements Force {
     private final Set<Force> subForces;
     private Vector2f lastForce;
     private boolean needToUpdate;
-    private final String identifier;
+    private String identifier;
     private float mass;
 
     public CombinedForce(String identifier) {
         this.identifier = identifier;
         this.subForces = new HashSet<>();
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
     }
 
     @Override
