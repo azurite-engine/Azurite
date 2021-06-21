@@ -1,7 +1,11 @@
 package ecs;
 
+import org.joml.Vector2f;
+import physics.PhysicalEntity;
 import physics.collision.ConvexGJKSM;
 import physics.collision.GJKSMShape;
+import physics.force.CombinedForce;
+import physics.force.Force;
 
 /**
  * <h1>Azurite</h1>
@@ -13,7 +17,7 @@ import physics.collision.GJKSMShape;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class RigidBody extends Component {
+public class RigidBody extends Component implements PhysicalEntity {
 
     public static final int TOTAL_LAYERS = Short.SIZE - 1;
 
@@ -29,15 +33,25 @@ public class RigidBody extends Component {
     //the collisionShape of the collider
     private final GJKSMShape collisionShape;
 
-    public RigidBody(GJKSMShape collisionShape, int[] layers, int[] maskedLayers) {
+    private float mass;
+    private final Vector2f velocity;
+    private final CombinedForce bodyForce;
+
+    public RigidBody(GJKSMShape collisionShape, int[] layers, int[] maskedLayers, float physicalMass) {
         this.collisionShape = collisionShape;
         this.collisionLayer = layerBitmask(layers);
         this.collisionMask = layerBitmask(maskedLayers);
+        this.mass = physicalMass;
+        this.velocity = new Vector2f();
+        this.bodyForce = new CombinedForce(gameObject.name);
     }
 
     public RigidBody(GJKSMShape collisionShape, int layer) {
         this.collisionShape = collisionShape;
         this.collisionLayer = intToLayerBits(layer);
+        this.mass = 1;
+        this.velocity = new Vector2f();
+        this.bodyForce = new CombinedForce(gameObject.name);
     }
 
     public GJKSMShape getCollisionShape() {
@@ -121,14 +135,45 @@ public class RigidBody extends Component {
         this.collisionMask = (short) (active ? (this.collisionMask | intToLayerBits(layer)) : this.collisionMask & ~intToLayerBits(layer));
     }
 
-
     @Override
     public void start() {
+        bodyForce.setMass(this.mass);
     }
 
     @Override
     public void update(float dt) {
+        bodyForce.update(dt);
+        velocity.add(bodyForce.direction());
+    }
 
+    public void setMass(float mass) {
+        this.mass = mass;
+        bodyForce.setMass(mass);
+    }
+
+    @Override
+    public float getMass() {
+        return mass;
+    }
+
+    @Override
+    public Force getForce() {
+        return bodyForce;
+    }
+
+    @Override
+    public Vector2f velocity() {
+        return velocity;
+    }
+
+    @Override
+    public void applyForce(Force force) {
+        bodyForce.applyForce(force);
+    }
+
+    @Override
+    public void negateForce(String identifier) {
+        bodyForce.removeForces(identifier);
     }
 
 }

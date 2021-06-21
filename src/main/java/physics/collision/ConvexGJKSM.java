@@ -131,7 +131,7 @@ public class ConvexGJKSM {
     }
 
     /**
-     * Calculates the convex hull of a given set of points.
+     * Calculates the convex hull of a given set of points using Jarvis March.
      * The result will have the same length as the input, but not all of them have to be filled in depending on the input.
      * If the input set is just a set of points already defining a convex polygon, the points are just sorted.
      *
