@@ -129,6 +129,46 @@ public class ConvexGJKSM {
         return point;
     }
 
+    /**
+     * Calculates the convex hull of a given set of points.
+     * The result will have the same length as the input, but not all of them have to be filled in depending on the input.
+     * If the input set is just a set of points already defining a convex polygon, the points are just sorted.
+     *
+     * @param points the set of points forming the convex shape
+     * @return a sorted array of points forming the convex hull of all input points
+     */
+    public static Vector2f[] convexHull(Vector2f[] points) {
+        int n = points.length;
+        //less than 3 points would not be necessary
+        if (n < 3) return points;
+
+        Vector2f[] ordered = new Vector2f[points.length];
+        int last = 0;
+
+        // find the leftmost point
+        int leftMost = 0;
+        for (int i = 1; i < n; i++)
+            if (points[i].x < points[leftMost].x)
+                leftMost = i;
+        int start = leftMost, curr;
+
+        ordered[last++] = points[start];
+        // iterate till start becomes leftMost
+        do {
+            curr = (start + 1) % n;
+            for (int i = 0; i < n; i++) {
+                Vector2f p = points[start];
+                Vector2f q = points[i];
+                Vector2f r = points[curr];
+                if ((q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y) < 0)
+                    curr = i;
+            }
+            ordered[last++] = points[curr];
+            start = curr;
+        } while (start != leftMost);
+        return ordered;
+    }
+
     //helper function to solve 2d linear system
     public static Vector2f solveSimultaneousEquations(float a, float b, float c, float d, float e, float f) {
         float det = ((a) * (d) - (b) * (c));  //instead of 1/
