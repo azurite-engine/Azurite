@@ -1,5 +1,6 @@
 package physics.collision;
 
+import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
 
 /**
@@ -169,8 +170,22 @@ public class ConvexGJKSM {
         return ordered;
     }
 
+    /**
+     * A universal linear system solver for two dimensional linear systems.
+     * Works usually by shifting the left 2x2 matrix to an identity matrix and read the results on the right side.
+     * This method here is using a mathematical approach and is designed to find only one result,
+     * if there is none, it may result in some kind of infinity. For more than 1 result the behaviour is undefined.
+     * Primarily used to find the intersection point of two lines or rays.
+     *
+     * @param linearSystem the two dimensional linear system
+     * @return the solution of linear system, {@link Matrix3x2f#m20} will be x and {@link Matrix3x2f#m21} will be y in the result vector
+     */
+    public static Vector2f solveSimultaneousEquations(Matrix3x2f linearSystem) {
+        return solveSimultaneousEquations(linearSystem.m00, linearSystem.m10, linearSystem.m01, linearSystem.m11, linearSystem.m20, linearSystem.m21);
+    }
+
     //helper function to solve 2d linear system
-    public static Vector2f solveSimultaneousEquations(float a, float b, float c, float d, float e, float f) {
+    private static Vector2f solveSimultaneousEquations(float a, float b, float c, float d, float e, float f) {
         float det = ((a) * (d) - (b) * (c));  //instead of 1/
         float x = ((d) * (e) - (b) * (f)) / det;
         float y = ((a) * (f) - (c) * (e)) / det;
