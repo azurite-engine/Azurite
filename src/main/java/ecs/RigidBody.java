@@ -19,7 +19,7 @@ import util.Utils;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class RigidBody extends Component implements PhysicalEntity, Collider {
+public class RigidBody extends Component implements Collider, PhysicalEntity {
 
     //represents a series of 0s and 1s -
     //0 means not present, 1 means present
@@ -47,7 +47,7 @@ public class RigidBody extends Component implements PhysicalEntity, Collider {
         this.collisionMask = Utils.encode(maskedLayers);
         this.mass = physicalMass;
         this.velocity = new Vector2f();
-        this.bodyForce = new CombinedForce(gameObject.name);
+        this.bodyForce = new CombinedForce("undefined");
     }
 
     public RigidBody(GJKSMShape collisionShape, int layer) {
@@ -55,7 +55,7 @@ public class RigidBody extends Component implements PhysicalEntity, Collider {
         this.collisionLayer = Utils.encode(layer);
         this.mass = 1;
         this.velocity = new Vector2f();
-        this.bodyForce = new CombinedForce(gameObject.name);
+        this.bodyForce = new CombinedForce("undefined");
     }
 
     @Override
@@ -105,13 +105,21 @@ public class RigidBody extends Component implements PhysicalEntity, Collider {
 
     @Override
     public void start() {
+        //make the bodyforce unique by using the gameobjects name
+        this.bodyForce.setIdentifier(gameObject.name);
         bodyForce.setMass(this.mass);
     }
 
     @Override
     public void update(float dt) {
+        //lets give the forces a chance to update
         bodyForce.update(dt);
+        //then assume they are fine and let them accelerate our velocity
         velocity.add(bodyForce.direction());
+        //let the velocity then modify our current position
+        gameObject.getTransform().getPosition().add(velocity);
+        //last but not least update the shape around the object
+        collisionShape.setPosition(gameObject.getTransform().getPosition());
     }
 
     public void setMass(float mass) {
@@ -144,4 +152,9 @@ public class RigidBody extends Component implements PhysicalEntity, Collider {
         bodyForce.removeForces(identifier);
     }
 
+    @Override
+    public boolean isConflictingWith(Class<? extends Component> otherComponent) {
+        //there can only be one collider and only one physics calculation
+        return Collider.class.isAssignableFrom(otherComponent) || PhysicalEntity.class.isAssignableFrom(otherComponent);
+    }
 }

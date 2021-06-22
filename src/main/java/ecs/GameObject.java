@@ -2,8 +2,10 @@ package ecs;
 
 import physics.Transform;
 import scene.Scene;
+import util.OrderPreservingList;
 
-import java.util.ArrayList;
+import java.awt.*;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -22,7 +24,7 @@ public class GameObject {
     public static final int DEFAULT_Z_INDEX = 0;
 
     public String name;
-    private List<Component> components;
+    private OrderPreservingList<Component> components;
     private Transform transform;
     private int zIndex;
 
@@ -31,7 +33,7 @@ public class GameObject {
     /**
      * Creates a new GameObject.
      *
-     * @param scene the scene to object will be added to
+     * @param scene         the scene to object will be added to
      * @param name
      * @param componentList
      * @param transform
@@ -39,7 +41,7 @@ public class GameObject {
      */
     public GameObject(Scene scene, String name, List<Component> componentList, Transform transform, int zIndex) {
         this.name = name;
-        this.components = componentList;
+        this.components = new OrderPreservingList<>(componentList);
         this.transform = transform;
         this.zIndex = zIndex;
         this.parentScene = scene;
@@ -47,57 +49,58 @@ public class GameObject {
     }
 
     /**
-     * @param scene the scene to object will be added to
+     * @param scene     the scene to object will be added to
      * @param name
      * @param transform
      * @param zIndex
      */
     public GameObject(Scene scene, String name, Transform transform, int zIndex) {
-        this(scene, name, new ArrayList<>(), transform, zIndex);
+        this(scene, name, new LinkedList<>(), transform, zIndex);
     }
 
     /**
-     * @param scene the scene to object will be added to
+     * @param scene  the scene to object will be added to
      * @param name
      * @param zIndex
      */
     public GameObject(Scene scene, String name, int zIndex) {
-        this(scene, name, new ArrayList<>(), new Transform(), zIndex);
+        this(scene, name, new LinkedList<>(), new Transform(), zIndex);
     }
 
     /**
-     * @param scene the scene to object will be added to
+     * @param scene     the scene to object will be added to
      * @param transform
      * @param zIndex
      */
     public GameObject(Scene scene, Transform transform, int zIndex) {
-        this(scene, DEFAULT_GAMEOBJECT_NAME, new ArrayList<>(), transform, zIndex);
+        this(scene, DEFAULT_GAMEOBJECT_NAME, new LinkedList<>(), transform, zIndex);
 
     }
 
     /**
-     * @param scene the scene to object will be added to
+     * @param scene     the scene to object will be added to
      * @param transform
      */
     public GameObject(Scene scene, Transform transform) {
-        this(scene, DEFAULT_GAMEOBJECT_NAME, new ArrayList<>(), transform, DEFAULT_Z_INDEX);
+        this(scene, DEFAULT_GAMEOBJECT_NAME, new LinkedList<>(), transform, DEFAULT_Z_INDEX);
     }
 
     /**
      * Creates an empty gameObject with an empty Transform and no Components.
      * Its name will be GameObject.EMPTY_GAMEOBJECT_NAME
+     *
      * @param scene the scene to object will be added to
      */
     public GameObject(Scene scene) {
-        this(scene, EMPTY_GAMEOBJECT_NAME, new ArrayList<>(), new Transform(), DEFAULT_Z_INDEX);
+        this(scene, EMPTY_GAMEOBJECT_NAME, new LinkedList<>(), new Transform(), DEFAULT_Z_INDEX);
     }
 
     /**
      * Called once on gameObject creation, also starts any components that are passed to the constructor.
      */
     public void start() {
-        for (int i = 0; i < components.size(); i++) {
-            components.get(i).start();
+        for (Component component : components) {
+            component.start();
         }
     }
 
@@ -105,8 +108,8 @@ public class GameObject {
      * Called once every frame for each GameObject, calls the update method for each component it contains
      */
     public void update(float dt) {
-        for (int i = 0; i < components.size(); i++) {
-            components.get(i).update(dt);
+        for (Component component : components) {
+            component.update(dt);
         }
     }
 
@@ -153,7 +156,9 @@ public class GameObject {
         return zIndex;
     }
 
+    @Deprecated
     public void setZindex(int z) {
+        //FIXME dangerous, currently the renderer wont be updated, I deprecated it temporarily for that
         zIndex = z;
     }
 
@@ -197,10 +202,27 @@ public class GameObject {
     }
 
     /**
-     * Adds a new component to the GameObject's list
+     * Adds a new component to the GameObject's list.
+     * If the new components conflicts with any other component, an {@link IllegalComponentStateException} will be thrown.
+     * Whether a component is conflicting with another is determined by {@link Component#isConflictingWith(Class)}.
      *
-     * @param c
-     * @return
+     * @param c the new component
+     * @return the gameobject itself
+     */
+    public GameObject addComponentSecurely(Component c) {
+        if (this.components.stream().anyMatch(component -> c.isConflictingWith(component.getClass()) || component.isConflictingWith(c.getClass())))
+            throw new IllegalComponentStateException("Component " + c.getClass() + " is conflicting with another");
+        this.components.add(c);
+        c.gameObject = this;
+        return this;
+    }
+
+    /**
+     * Adds a new component to the GameObject's list.
+     * There won't be any check to ensure that, the components of this gameobject won't break.
+     *
+     * @param c the new component
+     * @return this gameobject
      */
     public GameObject addComponent(Component c) {
         this.components.add(c);

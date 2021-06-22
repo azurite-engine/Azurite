@@ -17,6 +17,15 @@ import java.util.LinkedList;
 public class OrderPreservingList<T extends Comparable<T>> extends LinkedList<T> {
 
 
+    public OrderPreservingList(Collection<T> data) {
+        super();
+        addAll(data);
+    }
+
+    public OrderPreservingList() {
+        super();
+    }
+
     //find the next matching index for a given obj by its natural order (small to big)
     //if the obj is bigger than any other obj in the list, just add the new obj at the end i=size()
     private int findIndexToAdd(T obj) {
