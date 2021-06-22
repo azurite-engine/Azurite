@@ -6,6 +6,7 @@ import graphics.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import physics.Transform;
+import physics.TransformSensitive;
 import util.Assets;
 import util.Utils;
 
@@ -20,7 +21,7 @@ import static graphics.Color.WHITE;
  * @author Gabe
  */
 
-public class SpriteRenderer extends Component {
+public class SpriteRenderer extends Component implements TransformSensitive {
 
     public static final int ORDER = 100;
 
@@ -29,7 +30,7 @@ public class SpriteRenderer extends Component {
     private Sprite sprite;
 
     private Transform lastTransform;
-    private boolean isDirty = false; // Dirty flag, tells renderer to redraw if object components have changed
+    private boolean isDirty; // Dirty flag, tells renderer to redraw if object components have changed
 
     /**
      * Create the spriteRenderer using a color vector, no sprite.
@@ -96,10 +97,13 @@ public class SpriteRenderer extends Component {
      */
     @Override
     public void update(float dt) {
-        if (!this.lastTransform.equals(this.gameObject.getTransform())) {
-            this.gameObject.getTransform().copy(this.lastTransform);
-            isDirty = true;
-        }
+
+    }
+
+    @Override
+    public void update(Transform changedTransform) {
+        this.gameObject.getTransform().copy(this.lastTransform);
+        isDirty = true;
     }
 
     /**

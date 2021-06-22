@@ -3,13 +3,14 @@ package ecs;
 import graphics.Color;
 import org.joml.Vector3f;
 import physics.Transform;
+import physics.TransformSensitive;
 
 /**
  * A Point Light Component.
  *
  * @author VoxelRifts
  */
-public class PointLight extends Component {
+public class PointLight extends Component implements TransformSensitive {
     /**
      * Colour of the light
      */
@@ -52,8 +53,12 @@ public class PointLight extends Component {
 
     @Override
     public void update(float dt) {
-        if (!this.lastTransform.equals(this.gameObject.getTransform())) {
-            this.gameObject.getTransform().copy(this.lastTransform);
-        }
+
+    }
+
+    @Override
+    public void update(Transform changedTransform) {
+        //update the lastTransform
+        this.gameObject.getTransform().copy(this.lastTransform);
     }
 }

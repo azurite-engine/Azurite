@@ -1,10 +1,13 @@
 package ecs;
 
+import org.joml.Vector2f;
 import physics.Transform;
+import physics.TransformSensitive;
 import scene.Scene;
 import util.OrderPreservingList;
 
 import java.awt.*;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,12 +26,13 @@ public class GameObject {
     public static final String EMPTY_GAMEOBJECT_NAME = "Empty GameObject";
     public static final int DEFAULT_Z_INDEX = 0;
 
-    public String name;
+    private String name;
     private final OrderPreservingList<Component> components;
     private Transform transform;
     private int zIndex;
-
     private final Scene parentScene;
+
+    private final Collection<TransformSensitive> transformSensitives;
 
     /**
      * Creates a new GameObject.
@@ -46,6 +50,7 @@ public class GameObject {
         this.zIndex = zIndex;
         this.parentScene = scene;
         scene.addGameObjectToScene(this);
+        this.transformSensitives = new LinkedList<>();
     }
 
     /**
@@ -109,7 +114,14 @@ public class GameObject {
      */
     public void update(float dt) {
         for (Component component : components) {
+            //clear the position buffer
+            transform.resetPositionBuffer();
             component.update(dt);
+            //apply all changes made to the buffer, returns true, if there have been changes
+            if (transform.applyPositionBuffer()) {
+                //update all components that are interested in a change of the transform
+                transformSensitives.forEach(transformSensitive -> transformSensitive.update(transform));
+            }
         }
     }
 
@@ -121,35 +133,14 @@ public class GameObject {
     }
 
     /**
-     * @return Transform of the gameObject
+     * @return a new copy of the current transform of the gameObject
      */
     public Transform getTransform() {
-        return this.transform;
+        return this.transform.copy();
     }
 
-    /**
-     * Takes a Transform as a parameter and sets this instance to a copy of that transform
-     *
-     * @param t
-     */
-    public void setTransform(Transform t) {
-        this.transform = t.copy();
-    }
-
-    public void setTransformX(float x) {
-        this.transform.setX(x);
-    }
-
-    public void setTransformY(float y) {
-        this.transform.setY(y);
-    }
-
-    public void setTransformWidth(float w) {
-        this.transform.setWidth(w);
-    }
-
-    public void setTransformHeight(float h) {
-        this.transform.setHeight(h);
+    public Vector2f positionBuffer() {
+        return transform.positionBuffer();
     }
 
     public int zIndex() {
@@ -162,7 +153,7 @@ public class GameObject {
         zIndex = z;
     }
 
-    public String getName() {
+    public String name() {
         return name;
     }
 
@@ -196,6 +187,8 @@ public class GameObject {
             Component c = components.get(i);
             if (componentClass.isAssignableFrom(c.getClass())) {
                 components.remove(i);
+                if (c instanceof TransformSensitive)
+                    transformSensitives.remove(c);
                 return;
             }
         }
@@ -213,6 +206,8 @@ public class GameObject {
         if (this.components.stream().anyMatch(component -> c.isConflictingWith(component.getClass()) || component.isConflictingWith(c.getClass())))
             throw new IllegalComponentStateException("Component " + c.getClass() + " is conflicting with another");
         this.components.add(c);
+        if (c instanceof TransformSensitive)
+            this.transformSensitives.add((TransformSensitive) c);
         c.gameObject = this;
         return this;
     }
@@ -226,6 +221,8 @@ public class GameObject {
      */
     public GameObject addComponent(Component c) {
         this.components.add(c);
+        if (c instanceof TransformSensitive)
+            this.transformSensitives.add((TransformSensitive) c);
         c.gameObject = this;
         return this;
     }

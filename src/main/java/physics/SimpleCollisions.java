@@ -81,10 +81,10 @@ public class SimpleCollisions {
      * @return returns boolean true if t1 is inside of t2
      */
     public static boolean rectInRect(Transform t1, Transform t2) {
-        return t1.position.x < t2.scale.x &&
-                t1.scale.x > t2.position.x &&
-                t1.position.y < t2.scale.y &&
-                t1.scale.y > t2.position.y;
+        return t1.getPosition().x < t2.scale.x &&
+                t1.scale.x > t2.getPosition().x &&
+                t1.getPosition().y < t2.scale.y &&
+                t1.scale.y > t2.getPosition().y;
     }
 
 }

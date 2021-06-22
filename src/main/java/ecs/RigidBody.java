@@ -3,6 +3,8 @@ package ecs;
 import org.joml.Vector2f;
 import physics.Collider;
 import physics.PhysicalEntity;
+import physics.Transform;
+import physics.TransformSensitive;
 import physics.collision.ConvexGJKSM;
 import physics.collision.GJKSMShape;
 import physics.force.CombinedForce;
@@ -19,7 +21,7 @@ import util.Utils;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class RigidBody extends Component implements Collider, PhysicalEntity {
+public class RigidBody extends Component implements Collider, PhysicalEntity, TransformSensitive {
 
     //represents a series of 0s and 1s -
     //0 means not present, 1 means present
@@ -108,7 +110,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity {
     @Override
     public void start() {
         //make the bodyforce unique by using the gameobjects name
-        this.bodyForce.setIdentifier(gameObject.name);
+        this.bodyForce.setIdentifier(gameObject.name());
         bodyForce.setMass(this.mass);
     }
 
@@ -118,10 +120,8 @@ public class RigidBody extends Component implements Collider, PhysicalEntity {
         bodyForce.update(dt);
         //then assume they are fine and let them accelerate our velocity
         velocity.add(bodyForce.direction());
-        //let the velocity then modify our current position
-        gameObject.getTransform().getPosition().add(velocity);
-        //last but not least update the shape around the object
-        collisionShape.setPosition(gameObject.getTransform().getPosition());
+        //let the velocity then modify our current position - push to buffer
+        gameObject.getTransform().positionBuffer().add(velocity);
     }
 
     public void setMass(float mass) {
@@ -159,4 +159,11 @@ public class RigidBody extends Component implements Collider, PhysicalEntity {
         //there can only be one collider and only one physics calculation
         return Collider.class.isAssignableFrom(otherComponent) || PhysicalEntity.class.isAssignableFrom(otherComponent);
     }
+
+    @Override
+    public void update(Transform changedTransform) {
+        //update the shape according to changes made to transform
+        collisionShape.setPosition(gameObject.getTransform().getPosition());
+    }
+
 }
