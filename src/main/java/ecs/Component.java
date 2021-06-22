@@ -1,5 +1,6 @@
 package ecs;
 
+import org.joml.Vector2f;
 import util.debug.DebugPrimitive;
 
 /**
@@ -13,6 +14,8 @@ public abstract class Component implements Comparable<Component> {
      * Parent GameObject
      */
     public GameObject gameObject = null;
+
+    protected int order = 0;
 
     /**
      * Called once on Component initialization.
@@ -48,10 +51,14 @@ public abstract class Component implements Comparable<Component> {
         return false;
     }
 
+    protected Vector2f position() {
+        return gameObject.getTransform().getPosition();
+    }
+
     //this method is primarily used to keep all components in order to update them properly
     @Override
     public int compareTo(Component o) {
-        return 0;
+        return order;
     }
 
 }

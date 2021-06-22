@@ -29,11 +29,13 @@ public class SolidBody extends Component implements Collider {
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layers);
         this.collisionMask = Utils.encode(maskedLayers);
+        this.order = SpriteRenderer.ORDER - 1;
     }
 
     public SolidBody(GJKSMShape collisionShape, int layer) {
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layer);
+        this.order = SpriteRenderer.ORDER - 1;
     }
 
     @Override

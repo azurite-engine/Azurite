@@ -48,6 +48,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity {
         this.mass = physicalMass;
         this.velocity = new Vector2f();
         this.bodyForce = new CombinedForce("undefined");
+        this.order = SpriteRenderer.ORDER - 1;
     }
 
     public RigidBody(GJKSMShape collisionShape, int layer) {
@@ -56,6 +57,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity {
         this.mass = 1;
         this.velocity = new Vector2f();
         this.bodyForce = new CombinedForce("undefined");
+        this.order = SpriteRenderer.ORDER - 1;
     }
 
     @Override

@@ -24,7 +24,7 @@ public class GameObject {
     public static final int DEFAULT_Z_INDEX = 0;
 
     public String name;
-    private OrderPreservingList<Component> components;
+    private final OrderPreservingList<Component> components;
     private Transform transform;
     private int zIndex;
 
