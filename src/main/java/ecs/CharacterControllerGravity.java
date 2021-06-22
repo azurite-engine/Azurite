@@ -5,6 +5,7 @@ import org.joml.Vector2f;
 import physics.AABB;
 import util.Engine;
 
+@Deprecated
 public class CharacterControllerGravity extends CharacterController {
 
     private float gravity = 9f;
@@ -34,7 +35,6 @@ public class CharacterControllerGravity extends CharacterController {
         }
     }
 
-    @Override
     protected void moveY () {
         lastPosition.y = gameObject.getTransform().getY();
         if ((Keyboard.getKey(Keyboard.W_KEY)) && grounded) {

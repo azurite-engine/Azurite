@@ -9,6 +9,7 @@ import physics.Transform;
 import util.debug.DebugPrimitive;
 import util.debug.DebugRect;
 
+@Deprecated
 public class CollisionTrigger extends Component {
 	/** Transform for this component's gameobject */
 	private Transform self;

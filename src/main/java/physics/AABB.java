@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class AABB extends Component {
 
     public static final Map<Integer, List<AABB>> colliders = new HashMap<>();
@@ -39,13 +40,13 @@ public class AABB extends Component {
 
         self = gameObject.getTransform(); // Parent game object's transform
         lastPosition = self;
-        checkControllerAABB();
+//        checkControllerAABB();
         debugRect = new DebugRect(self.getX(), self.getY(), self.getWidth(), self.getHeight(), Color.GREEN);
     }
 
     @Override
     public void update(float dt) {
-        checkControllerAABB();
+//        checkControllerAABB();
         debugRect.reset(self.getX(), self.getY(), self.getWidth(), self.getHeight());
     }
 
@@ -66,25 +67,25 @@ public class AABB extends Component {
     }
 
     public void collideX() {
-        if (checkCollision()) {
-            if (lastPosition.getX() < other.getX()) {
-                gameObject.setTransformX(other.getX() - gameObject.getTransform().getWidth());
-            } else {
-                gameObject.setTransformX(other.getX() + other.getWidth());
-            }
-            collidingX = true;
-        } else collidingX = false;
+//        if (checkCollision()) {
+//            if (lastPosition.getX() < other.getX()) {
+//                gameObject.setTransformX(other.getX() - gameObject.getTransform().getWidth());
+//            } else {
+//                gameObject.setTransformX(other.getX() + other.getWidth());
+//            }
+//            collidingX = true;
+//        } else collidingX = false;
     }
 
     public void collideY() {
-        if (checkCollision()) {
-            if (lastPosition.getY() < other.getY()) {
-                gameObject.setTransformY(other.getY() - gameObject.getTransform().getHeight());
-            } else {
-                gameObject.setTransformY(other.getY() + other.getHeight());
-            }
-            collidingY = true;
-        } else collidingY = false;
+//        if (checkCollision()) {
+//            if (lastPosition.getY() < other.getY()) {
+//                gameObject.setTransformY(other.getY() - gameObject.getTransform().getHeight());
+//            } else {
+//                gameObject.setTransformY(other.getY() + other.getHeight());
+//            }
+//            collidingY = true;
+//        } else collidingY = false;
     }
 
     public boolean isCollidingX() {
@@ -109,12 +110,12 @@ public class AABB extends Component {
         return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
     }
 
-    private void checkControllerAABB() {
-        controller = gameObject.getComponent(CharacterController.class);
-        if (controller != null) {
-            if (!controller.AABB_enabled) {
-                controller.enableAABB();
-            }
-        }
-    }
+//    private void checkControllerAABB() {
+//        controller = gameObject.getComponent(CharacterController.class);
+//        if (controller != null) {
+//            if (!controller.AABB_enabled) {
+//                controller.enableAABB();
+//            }
+//        }
+//    }
 }

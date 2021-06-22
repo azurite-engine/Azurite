@@ -36,7 +36,6 @@ public class Gravity_old extends CharacterController {
         }
     }
 
-    @Override
     protected void moveY () {
         lastPosition.y = gameObject.getTransform().getY();
 
