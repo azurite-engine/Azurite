@@ -16,9 +16,16 @@ public class Line extends GJKSMShape {
     private final Vector2f relativeA, relativeB;
     private Vector2f absoluteA, absoluteB;
 
+    private final Vector2f relativeCentroid;
+    private Vector2f absoluteCentroid;
+
     public Line(Vector2f relativeA, Vector2f relativeB) {
         this.relativeA = new Vector2f(relativeA);
         this.relativeB = new Vector2f(relativeB);
+        //calc relative centroid
+        this.relativeCentroid = this.relativeB.sub(this.relativeA, new Vector2f());
+        float length = this.relativeCentroid.length();
+        this.relativeCentroid.normalize(length / 2);
     }
 
     public Vector2f getRelativeA() {
@@ -41,6 +48,12 @@ public class Line extends GJKSMShape {
     public void adjust() {
         this.absoluteA = position().add(relativeA, new Vector2f());
         this.absoluteB = position().add(relativeB, new Vector2f());
+        this.absoluteCentroid = position().add(relativeCentroid, new Vector2f());
+    }
+
+    @Override
+    public Vector2f centroid() {
+        return absoluteCentroid;
     }
 
     @Override
@@ -49,9 +62,3 @@ public class Line extends GJKSMShape {
     }
 
 }
-
-/***********************************************************************************************
- *
- *                  All rights reserved, SpaceParrots UG (c) copyright 2021
- *
- ***********************************************************************************************/

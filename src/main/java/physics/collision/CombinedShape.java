@@ -37,6 +37,11 @@ public class CombinedShape extends GJKSMShape {
     }
 
     @Override
+    public Vector2f centroid() {
+        return null; //TODO
+    }
+
+    @Override
     public Vector2f supportPoint(Vector2f v) {
         //calculate for both shapes
         Vector2f supA = shapeA.supportPoint(v);
@@ -46,9 +51,3 @@ public class CombinedShape extends GJKSMShape {
     }
 
 }
-
-/***********************************************************************************************
- *
- *                  All rights reserved, SpaceParrots UG (c) copyright 2021
- *
- ***********************************************************************************************/

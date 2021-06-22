@@ -14,10 +14,14 @@ public class Triangle extends GJKSMShape {
     private final Vector2f relativeA, relativeB, relativeC;
     private Vector2f absoluteA, absoluteB, absoluteC;
 
+    private final Vector2f relativeCentroid;
+    private Vector2f absoluteCentroid;
+
     public Triangle(Vector2f relativeA, Vector2f relativeB, Vector2f relativeC) {
         this.relativeA = new Vector2f(relativeA);
         this.relativeB = new Vector2f(relativeB);
         this.relativeC = new Vector2f(relativeC);
+        this.relativeCentroid = ConvexGJKSM.polygonCentroid(relativeA, relativeB, relativeC);
     }
 
     public Vector2f getAbsoluteA() {
@@ -49,6 +53,12 @@ public class Triangle extends GJKSMShape {
         this.absoluteA = position().add(relativeA, new Vector2f());
         this.absoluteB = position().add(relativeB, new Vector2f());
         this.absoluteC = position().add(relativeC, new Vector2f());
+        this.absoluteCentroid = position().add(relativeCentroid, new Vector2f());
+    }
+
+    @Override
+    public Vector2f centroid() {
+        return absoluteCentroid;
     }
 
     @Override
@@ -58,9 +68,3 @@ public class Triangle extends GJKSMShape {
     }
 
 }
-
-/***********************************************************************************************
- *
- *                  All rights reserved, SpaceParrots UG (c) copyright 2021
- *
- ***********************************************************************************************/

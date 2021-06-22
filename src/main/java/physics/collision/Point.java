@@ -34,13 +34,12 @@ public class Point extends GJKSMShape {
     }
 
     @Override
+    public Vector2f centroid() {
+        return absolutePoint;
+    }
+
+    @Override
     public Vector2f supportPoint(Vector2f v) {
         return absolutePoint;
     }
 }
-
-/***********************************************************************************************
- *
- *                  All rights reserved, SpaceParrots UG (c) copyright 2021
- *
- ***********************************************************************************************/

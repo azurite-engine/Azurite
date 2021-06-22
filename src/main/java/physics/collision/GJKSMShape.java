@@ -32,6 +32,13 @@ public abstract class GJKSMShape {
     public abstract void adjust();
 
     /**
+     * The center point or weight point of the shape.
+     *
+     * @return centroid of the shape
+     */
+    public abstract Vector2f centroid();
+
+    /**
      * According to GJKSM this method is supposed to calculate the point of the shape, that is most in direction of v.
      * The general rule is, the more primitive the shape is, the more efficient this method can be.
      * This method may be described as max{v*x,x element of Shape} for any complex shape.

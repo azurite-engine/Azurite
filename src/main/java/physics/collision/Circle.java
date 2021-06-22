@@ -40,6 +40,11 @@ public class Circle extends GJKSMShape {
     }
 
     @Override
+    public Vector2f centroid() {
+        return absoluteCenter;
+    }
+
+    @Override
     public Vector2f supportPoint(Vector2f v) {
         Vector2f normalized = v.normalize(new Vector2f());
         return absoluteCenter.add(normalized.mul(radius), new Vector2f());
@@ -71,6 +76,7 @@ public class Circle extends GJKSMShape {
         float lengthT = lengthA - lengthF;
         //the point on the circle is too far away
         if (lengthT > maxLength || lengthT < 0) return new RayCastResult();
+        //TODO: inverse Wurzel
         Vector2f strike = normalizedRay.mul(lengthT);
         Vector2f targetPoint = start.add(strike, new Vector2f());
         return new RayCastResult(targetPoint, targetPoint.sub(center, new Vector2f()).normalize(), strike, lengthT, true);

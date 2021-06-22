@@ -18,11 +18,15 @@ public class BasicPolygon extends GJKSMShape {
     private final Vector2f[] relativePoints;
     private final Vector2f[] absolutePoints;
 
+    private final Vector2f relativeCentroid;
+    private Vector2f absoluteCentroid;
+
     public BasicPolygon(Vector2f... relativePoints) {
         this.relativePoints = new Vector2f[relativePoints.length];
         for (int i = 0; i < relativePoints.length; i++)
             this.relativePoints[i] = new Vector2f(relativePoints[i]);
         absolutePoints = new Vector2f[relativePoints.length];
+        relativeCentroid = ConvexGJKSM.polygonCentroid(relativePoints);
     }
 
     public Vector2f[] getRelativePoints() {
@@ -37,6 +41,12 @@ public class BasicPolygon extends GJKSMShape {
     public void adjust() {
         for (int i = 0; i < absolutePoints.length; i++)
             absolutePoints[i] = position().add(relativePoints[i], new Vector2f());
+        absoluteCentroid = position().add(relativeCentroid, new Vector2f());
+    }
+
+    @Override
+    public Vector2f centroid() {
+        return absoluteCentroid;
     }
 
     @Override

@@ -16,16 +16,30 @@ public class Rectangle extends GJKSMShape {
     private final Vector2f[] relatives;
     private Vector2f[] absolutes;
 
+    private final Vector2f relativeCentroid;
+    private Vector2f absoluteCentroid;
+
+    public Rectangle(Vector2f a, Vector2f b, Vector2f c, Vector2f d) {
+        this.relatives = new Vector2f[]{new Vector2f(a), new Vector2f(b), new Vector2f(c), new Vector2f(d)};
+        this.absolutes = new Vector2f[4];
+        this.relativeCentroid = ConvexGJKSM.polygonCentroid(this.relatives);
+    }
+
     @Override
     public void adjust() {
         for (int i = 0; i < 4; i++) {
             absolutes[i] = position().add(relatives[i], new Vector2f());
         }
+        absoluteCentroid = position().add(relativeCentroid, new Vector2f());
     }
 
-    public Rectangle(Vector2f a, Vector2f b, Vector2f c, Vector2f d) {
-        this.relatives = new Vector2f[]{new Vector2f(a), new Vector2f(b), new Vector2f(c), new Vector2f(d)};
-        this.absolutes = new Vector2f[4];
+    public Vector2f[] getAbsolutePoints() {
+        return absolutes;
+    }
+
+    @Override
+    public Vector2f centroid() {
+        return absoluteCentroid;
     }
 
     @Override
