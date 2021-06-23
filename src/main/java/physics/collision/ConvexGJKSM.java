@@ -184,6 +184,38 @@ public class ConvexGJKSM {
         return solveSimultaneousEquations(linearSystem.m00, linearSystem.m10, linearSystem.m01, linearSystem.m11, linearSystem.m20, linearSystem.m21);
     }
 
+    /**
+     * Cast two rays and see if they intersect.
+     *
+     * @param pointA the starting point of ray 1
+     * @param rayA   the direction and length of ray 1
+     * @param pointB the starting point of ray 2
+     * @param rayB   the direction and length of ray 2
+     * @return true if both rays intersect within their given length and direction
+     */
+    public static Vector2f rayCastIntersectionPoint(Vector2f pointA, Vector2f rayA, Vector2f pointB, Vector2f rayB) { //x,a,y,b
+        //solve the linear equation
+        Vector2f factors = solveSimultaneousEquations(rayA.x, -rayB.x, rayA.y, -rayB.y, pointB.x - pointA.x, pointB.y - pointA.y);
+        //if the lines are crossing, but factors have to be between 0 and 1 to ensure, that the given vector is sufficient to reach
+        if (factors.x > 1 || factors.x < 0 || factors.y > 1 || factors.y < 0) return null;
+        //calculate the point where the intersection happened and return
+        Vector2f dest = rayA.mul(factors.x, new Vector2f());
+        return dest.add(pointA);
+    }
+
+    /**
+     * Cast a ray against a fixed line and see if they intersect.
+     *
+     * @param rayStart              the starting point of the ray
+     * @param rayDirectionAndLength the direction and length of the ray
+     * @param linePointA            the start point of the line
+     * @param linePointB            the end point of the line
+     * @return true if the ray cast intersects with the given line
+     */
+    public static Vector2f rayCastToLineIntersectionPoint(Vector2f rayStart, Vector2f rayDirectionAndLength, Vector2f linePointA, Vector2f linePointB) {
+        return rayCastIntersectionPoint(rayStart, rayDirectionAndLength, linePointA, linePointB.sub(linePointA, new Vector2f()));
+    }
+
     //helper function to solve 2d linear system
     private static Vector2f solveSimultaneousEquations(float a, float b, float c, float d, float e, float f) {
         float det = a * d - b * c;  //instead of 1/
@@ -192,6 +224,13 @@ public class ConvexGJKSM {
         return new Vector2f(x, y);
     }
 
+    /**
+     * Calculates the radius of a minimum sphere that contains the given polygon and shares the same centroid.
+     *
+     * @param centroid the centroid of the polygon
+     * @param vertices the vertices of the polygon
+     * @return the minimum sphere containing the polygon
+     */
     public static float boundingSphere(Vector2f centroid, Vector2f... vertices) {
         if (vertices.length < 1) return 0;
         if (vertices.length == 1) return centroid.sub(vertices[0]).length();
@@ -208,6 +247,12 @@ public class ConvexGJKSM {
         return (float) Math.sqrt(max);
     }
 
+    /**
+     * Calculate the centroid of a polygon.
+     *
+     * @param vertices the vertices of the polygon
+     * @return the centroid of a polygon
+     */
     public static Vector2f polygonCentroid(Vector2f... vertices) {
         if (vertices.length == 1) return vertices[0];
         if (vertices.length < 1) return null;
@@ -234,22 +279,6 @@ public class ConvexGJKSM {
         centroid.y /= (6.0 * signedArea);
 
         return centroid;
-    }
-
-    //two ray cast intersection point calculation. ray length is limited to their own length
-    public static Vector2f rayCastIntersectionPoint(Vector2f pointA, Vector2f rayA, Vector2f pointB, Vector2f rayB) { //x,a,y,b
-        //solve the linear equation
-        Vector2f factors = solveSimultaneousEquations(rayA.x, -rayB.x, rayA.y, -rayB.y, pointB.x - pointA.x, pointB.y - pointA.y);
-        //if the lines are crossing, but factors have to be between 0 and 1 to ensure, that the given vector is sufficient to reach
-        if (factors.x > 1 || factors.x < 0 || factors.y > 1 || factors.y < 0) return null;
-        //calculate the point where the intersection happened and return
-        Vector2f dest = rayA.mul(factors.x, new Vector2f());
-        return dest.add(pointA);
-    }
-
-    //ray cast intersection point with a fixed length line
-    public static Vector2f rayCastToLineIntersectionPoint(Vector2f rayStart, Vector2f rayDirectionAndLength, Vector2f linePointA, Vector2f linePointB) {
-        return rayCastIntersectionPoint(rayStart, rayDirectionAndLength, linePointA, linePointB.sub(linePointA, new Vector2f()));
     }
 
 }
