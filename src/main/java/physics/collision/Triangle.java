@@ -9,7 +9,7 @@ import org.joml.Vector2f;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class Triangle extends GJKSMShape {
+public class Triangle extends Shape {
 
     private final Vector2f relativeA, relativeB, relativeC;
     private Vector2f absoluteA, absoluteB, absoluteC;
@@ -17,11 +17,14 @@ public class Triangle extends GJKSMShape {
     private final Vector2f relativeCentroid;
     private Vector2f absoluteCentroid;
 
+    private Circle boundingSphere;
+
     public Triangle(Vector2f relativeA, Vector2f relativeB, Vector2f relativeC) {
         this.relativeA = new Vector2f(relativeA);
         this.relativeB = new Vector2f(relativeB);
         this.relativeC = new Vector2f(relativeC);
         this.relativeCentroid = ConvexGJKSM.polygonCentroid(relativeA, relativeB, relativeC);
+        this.boundingSphere = new Circle(relativeCentroid, ConvexGJKSM.boundingSphere(relativeCentroid, this.relativeA, this.relativeB, this.relativeC));
     }
 
     public Vector2f getAbsoluteA() {
@@ -54,11 +57,17 @@ public class Triangle extends GJKSMShape {
         this.absoluteB = position().add(relativeB, new Vector2f());
         this.absoluteC = position().add(relativeC, new Vector2f());
         this.absoluteCentroid = position().add(relativeCentroid, new Vector2f());
+        this.boundingSphere.setPosition(position());
     }
 
     @Override
     public Vector2f centroid() {
         return absoluteCentroid;
+    }
+
+    @Override
+    public Circle boundingSphere() {
+        return boundingSphere;
     }
 
     @Override

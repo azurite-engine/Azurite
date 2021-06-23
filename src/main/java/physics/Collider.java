@@ -1,6 +1,6 @@
 package physics;
 
-import physics.collision.GJKSMShape;
+import physics.collision.Shape;
 
 /**
  * <h1>Azurite</h1>
@@ -16,7 +16,7 @@ public interface Collider {
      *
      * @return the shape of the collider
      */
-    GJKSMShape getCollisionShape();
+    Shape getCollisionShape();
 
     /**
      * Determines whether a collider intersects with another collider IGNORING the collision layers.

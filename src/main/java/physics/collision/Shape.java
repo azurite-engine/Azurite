@@ -12,7 +12,7 @@ import org.joml.Vector2f;
  * @version 18.06.2021
  * @since 18.06.2021
  */
-public abstract class GJKSMShape {
+public abstract class Shape {
 
     private Vector2f position = new Vector2f(0, 0);
 
@@ -37,6 +37,14 @@ public abstract class GJKSMShape {
      * @return centroid of the shape
      */
     public abstract Vector2f centroid();
+
+    /**
+     * A minimal sphere that contains the original shape.
+     * The inner shape is supposed to be fixed inside the sphere and share the same centroid.
+     *
+     * @return the minimal sphere containing this shape
+     */
+    public abstract Circle boundingSphere();
 
     /**
      * According to GJKSM this method is supposed to calculate the point of the shape, that is most in direction of v.

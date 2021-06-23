@@ -34,7 +34,7 @@ public class ConvexGJKSM {
      * @param shapeB shape b
      * @return whether shape a and shape b intersect
      */
-    public static boolean gjksmCollision(GJKSMShape shapeA, GJKSMShape shapeB) {
+    public static boolean gjksmCollision(Shape shapeA, Shape shapeB) {
         Vector2f anyDirectionTowardsOrigin = new Vector2f(1, 1);
         Vector2f startPoint = maxDotPointMinkDiff(shapeA, shapeB, anyDirectionTowardsOrigin);
         Vector2f direction = new Vector2f(-startPoint.x, -startPoint.y);
@@ -102,7 +102,7 @@ public class ConvexGJKSM {
      *
      * @return the maximum point in a specific direction
      */
-    private static Vector2f maxDotPointMinkDiff(GJKSMShape shapeA, GJKSMShape shapeB, Vector2f direction) {
+    private static Vector2f maxDotPointMinkDiff(Shape shapeA, Shape shapeB, Vector2f direction) {
         Vector2f pointA = shapeA.supportPoint(direction);
         Vector2f pointB = shapeB.supportPoint(new Vector2f(-direction.x, -direction.y));
         return new Vector2f(pointA.x - pointB.x, pointA.y - pointB.y);
@@ -190,6 +190,22 @@ public class ConvexGJKSM {
         float x = (d * e - b * f) / det;
         float y = (a * f - c * e) / det;
         return new Vector2f(x, y);
+    }
+
+    public static float boundingSphere(Vector2f centroid, Vector2f... vertices) {
+        if (vertices.length < 1) return 0;
+        if (vertices.length == 1) return centroid.sub(vertices[0]).length();
+        float max = centroid.sub(vertices[0]).lengthSquared();
+        float currDist;
+        int current = 1;
+        do {
+            currDist = centroid.sub(vertices[current]).lengthSquared();
+            if (currDist > max)
+                max = currDist;
+            current++;
+        }
+        while (vertices.length > current);
+        return (float) Math.sqrt(max);
     }
 
     public static Vector2f polygonCentroid(Vector2f... vertices) {

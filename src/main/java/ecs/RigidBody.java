@@ -6,7 +6,7 @@ import physics.PhysicalEntity;
 import physics.Transform;
 import physics.TransformSensitive;
 import physics.collision.ConvexGJKSM;
-import physics.collision.GJKSMShape;
+import physics.collision.Shape;
 import physics.force.CombinedForce;
 import physics.force.Force;
 import util.Utils;
@@ -32,7 +32,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     private short collisionMask;
 
     //the collisionShape of the collider
-    private final GJKSMShape collisionShape;
+    private final Shape collisionShape;
 
     //the physical mass of the body
     private float mass;
@@ -43,7 +43,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     //the forces acting on the body and accelerating it
     private final CombinedForce bodyForce;
 
-    public RigidBody(GJKSMShape collisionShape, int[] layers, int[] maskedLayers, float physicalMass) {
+    public RigidBody(Shape collisionShape, int[] layers, int[] maskedLayers, float physicalMass) {
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layers);
         this.collisionMask = Utils.encode(maskedLayers);
@@ -53,7 +53,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         this.order = SpriteRenderer.ORDER - 1;
     }
 
-    public RigidBody(GJKSMShape collisionShape, int layer) {
+    public RigidBody(Shape collisionShape, int layer) {
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layer);
         this.mass = 1;
@@ -63,7 +63,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     }
 
     @Override
-    public GJKSMShape getCollisionShape() {
+    public Shape getCollisionShape() {
         return collisionShape;
     }
 

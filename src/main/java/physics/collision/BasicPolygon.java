@@ -13,7 +13,7 @@ import org.joml.Vector2f;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class BasicPolygon extends GJKSMShape {
+public class BasicPolygon extends Shape {
 
     private final Vector2f[] relativePoints;
     private final Vector2f[] absolutePoints;
@@ -21,12 +21,15 @@ public class BasicPolygon extends GJKSMShape {
     private final Vector2f relativeCentroid;
     private Vector2f absoluteCentroid;
 
+    private Circle boundingSphere;
+
     public BasicPolygon(Vector2f... relativePoints) {
         this.relativePoints = new Vector2f[relativePoints.length];
         for (int i = 0; i < relativePoints.length; i++)
             this.relativePoints[i] = new Vector2f(relativePoints[i]);
         absolutePoints = new Vector2f[relativePoints.length];
         relativeCentroid = ConvexGJKSM.polygonCentroid(relativePoints);
+        boundingSphere = new Circle(relativeCentroid, ConvexGJKSM.boundingSphere(relativeCentroid, this.relativePoints));
     }
 
     public Vector2f[] getRelativePoints() {
@@ -42,11 +45,17 @@ public class BasicPolygon extends GJKSMShape {
         for (int i = 0; i < absolutePoints.length; i++)
             absolutePoints[i] = position().add(relativePoints[i], new Vector2f());
         absoluteCentroid = position().add(relativeCentroid, new Vector2f());
+        boundingSphere.setPosition(position());
     }
 
     @Override
     public Vector2f centroid() {
         return absoluteCentroid;
+    }
+
+    @Override
+    public Circle boundingSphere() {
+        return boundingSphere;
     }
 
     @Override

@@ -11,13 +11,16 @@ import org.joml.Vector2f;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class Point extends GJKSMShape {
+public class Point extends Shape {
 
     private final Vector2f relativePoint;
     private Vector2f absolutePoint;
 
+    private Circle boundingSphere;
+
     public Point(Vector2f relativePoint) {
         this.relativePoint = new Vector2f(relativePoint);
+        this.boundingSphere = new Circle(relativePoint, Float.MIN_VALUE);
     }
 
     public Vector2f getRelativePoint() {
@@ -31,11 +34,17 @@ public class Point extends GJKSMShape {
     @Override
     public void adjust() {
         this.absolutePoint = position().add(relativePoint, new Vector2f());
+        this.boundingSphere.setPosition(position());
     }
 
     @Override
     public Vector2f centroid() {
         return absolutePoint;
+    }
+
+    @Override
+    public Circle boundingSphere() {
+        return boundingSphere;
     }
 
     @Override

@@ -11,7 +11,7 @@ import org.joml.Vector2f;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class Circle extends GJKSMShape {
+public class Circle extends Shape {
 
     private final float radius;
     private final Vector2f relativeCenter;
@@ -42,6 +42,11 @@ public class Circle extends GJKSMShape {
     @Override
     public Vector2f centroid() {
         return absoluteCenter;
+    }
+
+    @Override
+    public Circle boundingSphere() {
+        return this;
     }
 
     @Override

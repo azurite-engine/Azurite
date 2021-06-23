@@ -2,7 +2,7 @@ package ecs;
 
 import physics.Collider;
 import physics.collision.ConvexGJKSM;
-import physics.collision.GJKSMShape;
+import physics.collision.Shape;
 import util.Utils;
 
 /**
@@ -23,23 +23,23 @@ public class SolidBody extends Component implements Collider {
     private short collisionMask;
 
     //the collisionShape of the collider
-    private final GJKSMShape collisionShape;
+    private final Shape collisionShape;
 
-    public SolidBody(GJKSMShape collisionShape, int[] layers, int[] maskedLayers) {
+    public SolidBody(Shape collisionShape, int[] layers, int[] maskedLayers) {
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layers);
         this.collisionMask = Utils.encode(maskedLayers);
         this.order = SpriteRenderer.ORDER - 1;
     }
 
-    public SolidBody(GJKSMShape collisionShape, int layer) {
+    public SolidBody(Shape collisionShape, int layer) {
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layer);
         this.order = SpriteRenderer.ORDER - 1;
     }
 
     @Override
-    public GJKSMShape getCollisionShape() {
+    public Shape getCollisionShape() {
         return collisionShape;
     }
 
