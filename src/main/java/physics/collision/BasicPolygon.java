@@ -21,7 +21,7 @@ public class BasicPolygon extends Shape {
     private final Vector2f relativeCentroid;
     private Vector2f absoluteCentroid;
 
-    private Circle boundingSphere;
+    private final Circle boundingSphere;
 
     public BasicPolygon(Vector2f... relativePoints) {
         this.relativePoints = new Vector2f[relativePoints.length];

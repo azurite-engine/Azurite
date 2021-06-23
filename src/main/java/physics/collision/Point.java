@@ -16,7 +16,7 @@ public class Point extends Shape {
     private final Vector2f relativePoint;
     private Vector2f absolutePoint;
 
-    private Circle boundingSphere;
+    private final Circle boundingSphere;
 
     public Point(Vector2f relativePoint) {
         this.relativePoint = new Vector2f(relativePoint);

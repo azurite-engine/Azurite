@@ -19,7 +19,7 @@ public class Line extends Shape {
     private final Vector2f relativeCentroid;
     private Vector2f absoluteCentroid;
 
-    private Circle boundingSphere;
+    private final Circle boundingSphere;
 
     public Line(Vector2f relativeA, Vector2f relativeB) {
         this.relativeA = new Vector2f(relativeA);

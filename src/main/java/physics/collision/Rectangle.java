@@ -19,7 +19,7 @@ public class Rectangle extends Shape {
     private final Vector2f relativeCentroid;
     private Vector2f absoluteCentroid;
 
-    private Circle boundingSphere;
+    private final Circle boundingSphere;
 
     public Rectangle(Vector2f a, Vector2f b, Vector2f c, Vector2f d) {
         this.relatives = new Vector2f[]{new Vector2f(a), new Vector2f(b), new Vector2f(c), new Vector2f(d)};
