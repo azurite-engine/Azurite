@@ -14,12 +14,14 @@ import org.joml.Vector2f;
 public class Circle extends Shape {
 
     private final float radius;
+    private final float radiusSquared;
     private final Vector2f relativeCenter;
     private Vector2f absoluteCenter;
 
     public Circle(Vector2f relativeCenter, float radius) {
         this.relativeCenter = new Vector2f(relativeCenter);
         this.radius = radius;
+        this.radiusSquared = radius * radius;
     }
 
     public float getRadius() {
@@ -53,6 +55,24 @@ public class Circle extends Shape {
     public Vector2f supportPoint(Vector2f v) {
         Vector2f normalized = v.normalize(new Vector2f());
         return absoluteCenter.add(normalized.mul(radius), new Vector2f());
+    }
+
+    /**
+     * A method to make a GUESS whether two circles are colliding.
+     * This method is accurate about two circles, which do NOT intersect,
+     * but it cannot safely say, that two circle do collide.
+     *
+     * @param circle the circle to compare to
+     * @return false if and only if the circle don't intersect, true if both circles probably intersect
+     */
+    public boolean approxIntersection(Circle circle) {
+        //this approximation is not mathematically validated yet,
+        //but in over 10 million tests, this constant proofed to be valid threshold
+        float approxConstant = 2.34f;
+        //this relation is based on the distance between both circle centers,
+        // but does not use any square root for performance reasons
+        float relation = this.absoluteCenter.distanceSquared(circle.getAbsoluteCenter()) / (circle.radiusSquared + this.radiusSquared);
+        return relation < approxConstant;
     }
 
     /**
