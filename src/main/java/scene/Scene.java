@@ -1,6 +1,7 @@
 package scene;
 
 import ecs.GameObject;
+import ecs.RigidBody;
 import ecs.StaticCollider;
 import graphics.Camera;
 import graphics.renderer.DebugRenderer;
@@ -9,6 +10,7 @@ import graphics.renderer.LightmapRenderer;
 import graphics.renderer.Renderer;
 import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
+import physics.Collider;
 import postprocess.ForwardToTexture;
 import postprocess.PostProcessStep;
 import util.Assets;
@@ -33,7 +35,8 @@ public abstract class Scene {
     private boolean debugMode = true;
     private boolean active = false;
     private final List<GameObject> gameObjects = new LinkedList<>();
-    private final List<GameObject> colliders = new LinkedList<>();
+    private final List<Collider> staticColliders = new LinkedList<>();
+    private final List<Collider> bodyColliders = new LinkedList<>();
 
     protected ForwardToTexture forwardToScreen;
 
@@ -72,6 +75,24 @@ public abstract class Scene {
     public void update() {
         if (Keyboard.getKeyDown(GLFW.GLFW_KEY_GRAVE_ACCENT)) {
             debugMode = !debugMode;
+        }
+    }
+
+    private void collision() {
+        for (Collider body : bodyColliders) {
+            collisionWith(body, bodyColliders);
+            collisionWith(body, staticColliders);
+        }
+    }
+
+    private void collisionWith(Collider body, List<Collider> colliders) {
+        for (Collider other : colliders) {
+            if (other == body) continue;
+            if (!body.canCollideWith(other)) continue;
+            if (!body.getCollisionShape().boundingSphere().approxIntersection(other.getCollisionShape().boundingSphere()))
+                continue;
+            boolean collision = body.doesCollideWith(other);
+            //do some collision stuff here
         }
     }
 
@@ -122,13 +143,6 @@ public abstract class Scene {
     }
 
     /**
-     * @return the list of collidable gameobjects contained in the scene.
-     */
-    public List<GameObject> getCollidableGameObjects() {
-        return colliders;
-    }
-
-    /**
      * @param gameObject GameObject to be added.
      *                   Add a new gameObject to the scene and immediately call its start method.
      */
@@ -136,7 +150,9 @@ public abstract class Scene {
         gameObjects.add(gameObject);
         gameObject.start();
         if (gameObject.getComponent(StaticCollider.class) != null) {
-            colliders.add(gameObject);
+            staticColliders.add(gameObject.getComponent(StaticCollider.class));
+        } else if (gameObject.getComponent(RigidBody.class) != null) {
+            bodyColliders.add(gameObject.getComponent(RigidBody.class));
         }
     }
 
