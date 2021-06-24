@@ -12,7 +12,7 @@ import util.Utils;
  * @version 22.06.2021
  * @since 22.06.2021
  */
-public class SolidBody extends Component implements Collider {
+public class StaticCollider extends Component implements Collider {
 
     //represents a series of 0s and 1s -
     //0 means not present, 1 means present
@@ -25,14 +25,14 @@ public class SolidBody extends Component implements Collider {
     //the collisionShape of the collider
     private final Shape collisionShape;
 
-    public SolidBody(Shape collisionShape, int[] layers, int[] maskedLayers) {
+    public StaticCollider(Shape collisionShape, int[] layers, int[] maskedLayers) {
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layers);
         this.collisionMask = Utils.encode(maskedLayers);
         this.order = SpriteRenderer.ORDER - 1;
     }
 
-    public SolidBody(Shape collisionShape, int layer) {
+    public StaticCollider(Shape collisionShape, int layer) {
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layer);
         this.order = SpriteRenderer.ORDER - 1;

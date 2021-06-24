@@ -22,9 +22,13 @@ import java.util.List;
 
 public class GameObject {
 
+    private static long internalCounter = 0;
+
     public static final String DEFAULT_GAMEOBJECT_NAME = "Default GameObject Name";
     public static final String EMPTY_GAMEOBJECT_NAME = "Empty GameObject";
     public static final int DEFAULT_Z_INDEX = 0;
+
+    private final long objId = internalCounter++;
 
     private String name;
     private final OrderPreservingList<Component> components;
@@ -130,6 +134,13 @@ public class GameObject {
      */
     public Scene getParentScene() {
         return parentScene;
+    }
+
+    /**
+     * @return the universal and unique id among all objects
+     */
+    public long getObjId() {
+        return objId;
     }
 
     /**

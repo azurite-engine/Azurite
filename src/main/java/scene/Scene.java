@@ -1,6 +1,7 @@
 package scene;
 
 import ecs.GameObject;
+import ecs.StaticCollider;
 import graphics.Camera;
 import graphics.renderer.DebugRenderer;
 import graphics.renderer.DefaultRenderer;
@@ -13,7 +14,6 @@ import postprocess.PostProcessStep;
 import util.Assets;
 import util.Engine;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,14 +27,15 @@ public abstract class Scene {
 
     private List<Renderer<?>> rendererRegistry = new LinkedList<>();
 
+    private final int sceneId = sceneCounter++;
+
     protected Camera camera;
     private boolean debugMode = true;
     private boolean active = false;
-    private List<GameObject> gameObjects = new LinkedList<>();
+    private final List<GameObject> gameObjects = new LinkedList<>();
+    private final List<GameObject> colliders = new LinkedList<>();
 
     protected ForwardToTexture forwardToScreen;
-
-    private int sceneId = sceneCounter++;
 
     public boolean isActive() {
         return active;
@@ -114,10 +115,17 @@ public abstract class Scene {
     }
 
     /**
-     * @return Returns the List of gameObjects contained in the scene.
+     * @return the List of gameObjects contained in the scene.
      */
     public List<GameObject> getGameObjects() {
-        return Collections.unmodifiableList(gameObjects);
+        return gameObjects;
+    }
+
+    /**
+     * @return the list of collidable gameobjects contained in the scene.
+     */
+    public List<GameObject> getCollidableGameObjects() {
+        return colliders;
     }
 
     /**
@@ -127,6 +135,9 @@ public abstract class Scene {
     public void addGameObjectToScene(GameObject gameObject) {
         gameObjects.add(gameObject);
         gameObject.start();
+        if (gameObject.getComponent(StaticCollider.class) != null) {
+            colliders.add(gameObject);
+        }
     }
 
     /**
