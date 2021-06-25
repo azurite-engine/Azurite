@@ -8,26 +8,27 @@ import static org.lwjgl.opengl.GL44.GL_MIRROR_CLAMP_TO_EDGE;
  *
  * @author VoxelRifts
  */
-public class FramebufferTextureSpec {
+public class TextureSpec {
 	/**
 	 * What type of data is to be stored in the attachment
 	 */
-	public enum FramebufferTextureFormat {
+	public enum TextureFormat {
 		// None is an invalid state
-		NONE(false, GL_NONE, GL_NONE),
-		RGBA8(false, GL_RGBA8, GL_RGBA),
-		RED_INTEGER(false, GL_R32I, GL_RED_INTEGER),
-		RED_UNSIGNED_INTEGER(false, GL_R32UI, GL_RED_INTEGER),
+		NONE(false, GL_NONE, GL_NONE, GL_UNSIGNED_BYTE),
+		RGBA8(false, GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE),
+		RED_INTEGER(false, GL_R32I, GL_RED_INTEGER, GL_UNSIGNED_BYTE),
+		RED_UNSIGNED_INTEGER(false, GL_R32UI, GL_RED_INTEGER, GL_UNSIGNED_BYTE),
 
 		/* GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT are not really internal format and format but its the best
 					way (in my opinion) to add the depth formats to this enum and not make it look hideous            */
 
-		DEPTH(true, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT),
-		DEPTH24STENCIL8(true, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT);
+		DEPTH(true, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, GL_UNSIGNED_BYTE),
+		DEPTH24STENCIL8(true, GL_DEPTH24_STENCIL8, GL_DEPTH_STENCIL_ATTACHMENT, GL_UNSIGNED_BYTE);
 
 		public boolean isDepth;
 		public int internalFormat;
 		public int format;
+		public int datatype;
 
 		/**
 		 * A basic property constructor
@@ -36,10 +37,11 @@ public class FramebufferTextureSpec {
 		 * @param internalFormat int: format for the storage of data in memory
 		 * @param format int: format for the access of data from memory
 		 */
-		FramebufferTextureFormat(boolean isDepth, int internalFormat, int format) {
+		TextureFormat(boolean isDepth, int internalFormat, int format, int datatype) {
 			this.isDepth = isDepth;
 			this.internalFormat = internalFormat;
 			this.format = format;
+			this.datatype = datatype;
 		}
 	}
 
@@ -91,7 +93,7 @@ public class FramebufferTextureSpec {
 		}
 	}
 
-	public final FramebufferTextureFormat format;
+	public final TextureFormat format;
 	public final TextureResizeFilterType minificationFilter;
 	public final TextureResizeFilterType magnificationFilter;
 	public final TextureWrapFilterType rFilter;
@@ -99,23 +101,23 @@ public class FramebufferTextureSpec {
 	public final TextureWrapFilterType tFilter;
 
 	// Beyond this, just some overloaded constructors for easy Spec construction
-	public FramebufferTextureSpec() {
-		this(FramebufferTextureFormat.NONE);
+	public TextureSpec() {
+		this(TextureFormat.NONE);
 	}
 
-	public FramebufferTextureSpec(FramebufferTextureFormat format) {
+	public TextureSpec(TextureFormat format) {
 		this(format, TextureResizeFilterType.LINEAR, TextureResizeFilterType.LINEAR);
 	}
 
-	public FramebufferTextureSpec(FramebufferTextureFormat format, TextureResizeFilterType minificationFilter, TextureResizeFilterType magnificationFilter) {
+	public TextureSpec(TextureFormat format, TextureResizeFilterType minificationFilter, TextureResizeFilterType magnificationFilter) {
 		this(format, minificationFilter, magnificationFilter, TextureWrapFilterType.CLAMP_TO_EDGE);
 	}
 
-	public FramebufferTextureSpec(FramebufferTextureFormat format, TextureResizeFilterType minificationFilter, TextureResizeFilterType magnificationFilter, TextureWrapFilterType wrapFilters) {
+	public TextureSpec(TextureFormat format, TextureResizeFilterType minificationFilter, TextureResizeFilterType magnificationFilter, TextureWrapFilterType wrapFilters) {
 		this(format, minificationFilter, magnificationFilter, wrapFilters, wrapFilters, wrapFilters);
 	}
 
-	public FramebufferTextureSpec(FramebufferTextureFormat format, TextureResizeFilterType minificationFilter, TextureResizeFilterType magnificationFilter, TextureWrapFilterType rFilter, TextureWrapFilterType sFilter, TextureWrapFilterType tFilter) {
+	public TextureSpec(TextureFormat format, TextureResizeFilterType minificationFilter, TextureResizeFilterType magnificationFilter, TextureWrapFilterType rFilter, TextureWrapFilterType sFilter, TextureWrapFilterType tFilter) {
 		this.format = format;
 		this.minificationFilter = minificationFilter;
 		this.magnificationFilter = changeForMagnification(magnificationFilter);

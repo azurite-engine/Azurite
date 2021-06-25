@@ -2,6 +2,7 @@ package postprocess;
 
 import graphics.Graphics;
 import graphics.Shader;
+import graphics.Texture;
 import util.Assets;
 
 /**
@@ -9,7 +10,7 @@ import util.Assets;
  */
 public class BrightFilter extends PostProcessStep {
 	/** Id of input texture */
-	private int textureID;
+	private Texture texture;
 
 	/**
 	 * Default Constructor
@@ -35,7 +36,7 @@ public class BrightFilter extends PostProcessStep {
 	public void prepare() {
 		Graphics.background(Graphics.defaultBackground);
 
-		bindTexture(textureID, 0);
+		texture.bindToSlot(0);
 	}
 
 	/**
@@ -47,10 +48,10 @@ public class BrightFilter extends PostProcessStep {
 	}
 
 	/**
-	 * Set the input texture id
-	 * @param textureID input texture id
+	 * Set the input texture
+	 * @param texture input texture
 	 */
-	public void setTexture(int textureID) {
-		this.textureID = textureID;
+	public void setTexture(Texture texture) {
+		this.texture = texture;
 	}
 }

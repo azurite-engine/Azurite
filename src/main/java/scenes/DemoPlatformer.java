@@ -6,6 +6,7 @@ import ecs.PointLight;
 import ecs.SpriteRenderer;
 import graphics.Camera;
 import graphics.Color;
+import graphics.Texture;
 import physics.AABB;
 import physics.Gravity;
 import physics.Transform;
@@ -58,12 +59,10 @@ public class DemoPlatformer extends Scene {
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         bloom.init();
-
     }
 
     int r;
     int i = 1;
-    boolean jumpBooper = false;
 
     public void update() {
         super.update();
@@ -96,7 +95,7 @@ public class DemoPlatformer extends Scene {
     }
 
     @Override
-    public void postProcess(int texture) {
+    public void postProcess(Texture texture) {
         bloom.apply(texture);
     }
 }
