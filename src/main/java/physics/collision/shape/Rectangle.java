@@ -1,6 +1,7 @@
-package physics.collision;
+package physics.collision.shape;
 
 import org.joml.Vector2f;
+import physics.collision.CollisionUtil;
 import util.Pair;
 
 /**

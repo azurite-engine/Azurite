@@ -1,6 +1,7 @@
-package physics;
+package physics.collision;
 
 import org.joml.Vector2f;
+import physics.Transform;
 import util.Utils;
 
 public class SimpleCollisions {

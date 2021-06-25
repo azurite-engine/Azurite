@@ -5,7 +5,6 @@ import graphics.Camera;
 import graphics.Color;
 import org.joml.Vector2f;
 import physics.AABB;
-import physics.Gravity_old;
 import physics.Transform;
 import physics.collision.Shapes;
 import physics.force.ConstantForce;
@@ -46,7 +45,10 @@ public class DemoPlatformer extends Scene {
 
         player = new GameObject(this, "Player", new Transform(600, 600, 100, 100), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
-        player.addComponent(new AABB());
+        //player.addComponent(new AABB());
+        RigidBody playerBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 32, 32), 1);
+        playerBody.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.005f)));
+        player.addComponent(playerBody);
         player.addComponent(new SpriteRenderer(a.getSprite(132)));
         player.addComponent(new CharacterControllerGravity());
 
@@ -84,14 +86,12 @@ public class DemoPlatformer extends Scene {
         if (r <= -1) {
             booper.getTransform().addX(-50 * Engine.deltaTime());
             if (booper.getComponent(AABB.class).isCollidingX()) {
-                booper.getComponent(Gravity_old.class).addVelocityY(-20);
                 Logger.logInfo("Do jump left");
             }
         }
         if (r >= 1) {
             booper.getTransform().addX(50 * Engine.deltaTime());
             if (booper.getComponent(AABB.class).isCollidingX()) {
-                booper.getComponent(Gravity_old.class).addVelocityY(-20);
                 Logger.logInfo("Do jump right");
             }
         }

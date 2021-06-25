@@ -1,17 +1,17 @@
 package ecs;
 
 import org.joml.Vector2f;
-import physics.Collider;
 import physics.PhysicalEntity;
 import physics.Transform;
 import physics.TransformSensitive;
+import physics.collision.Collider;
+import physics.collision.CollisionHandler;
 import physics.collision.CollisionUtil;
-import physics.collision.Shape;
+import physics.collision.Collisions;
+import physics.collision.shape.Shape;
 import physics.force.CombinedForce;
 import physics.force.Force;
 import util.Utils;
-
-import java.util.function.Consumer;
 
 /**
  * <h1>Azurite</h1>
@@ -46,7 +46,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     private final CombinedForce bodyForce;
 
     //used to feed with objects this body is colliding with
-    private Consumer<RigidBody> collisionHandler = rigidBody -> {};
+    private CollisionHandler collisionHandler = Collisions.solid();
 
     public RigidBody(Shape collisionShape, int[] layers, int[] maskedLayers, float physicalMass) {
         this.collisionShape = collisionShape;
@@ -67,8 +67,9 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         this.order = SpriteRenderer.ORDER - 1;
     }
 
-    public void setCollisionHandler(Consumer<RigidBody> collisionHandler) {
+    public void setCollisionType(CollisionHandler collisionHandler) {
         this.collisionHandler = collisionHandler;
+        this.collisionHandler.setParentComponent(this);
     }
 
     @Override
@@ -120,7 +121,8 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     public void start() {
         //make the bodyforce unique by using the gameobjects name
         this.bodyForce.setIdentifier(gameObject.name());
-        bodyForce.setMass(this.mass);
+        this.bodyForce.setMass(this.mass);
+        this.collisionHandler.setParentComponent(this);
     }
 
     @Override

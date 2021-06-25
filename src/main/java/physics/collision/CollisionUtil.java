@@ -2,6 +2,7 @@ package physics.collision;
 
 import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
+import physics.collision.shape.Shape;
 import util.Pair;
 
 /**

@@ -10,7 +10,7 @@ import graphics.renderer.LightmapRenderer;
 import graphics.renderer.Renderer;
 import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
-import physics.Collider;
+import physics.collision.Collider;
 import postprocess.ForwardToTexture;
 import postprocess.PostProcessStep;
 import util.Assets;

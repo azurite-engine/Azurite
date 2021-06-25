@@ -1,6 +1,7 @@
 package physics.collision;
 
 import org.joml.Vector2f;
+import physics.collision.shape.Rectangle;
 
 /**
  * <h1>Azurite</h1>

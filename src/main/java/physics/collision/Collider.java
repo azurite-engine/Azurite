@@ -1,6 +1,6 @@
-package physics;
+package physics.collision;
 
-import physics.collision.Shape;
+import physics.collision.shape.Shape;
 
 /**
  * <h1>Azurite</h1>
