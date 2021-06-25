@@ -1,6 +1,7 @@
 package physics.collision;
 
 import org.joml.Vector2f;
+import util.Pair;
 
 /**
  * <h1>Azurite</h1>
@@ -28,8 +29,8 @@ public class BasicPolygon extends Shape {
         for (int i = 0; i < relativePoints.length; i++)
             this.relativePoints[i] = new Vector2f(relativePoints[i]);
         absolutePoints = new Vector2f[relativePoints.length];
-        relativeCentroid = ConvexGJKSM.polygonCentroid(relativePoints);
-        boundingSphere = new Circle(relativeCentroid, ConvexGJKSM.boundingSphere(relativeCentroid, this.relativePoints));
+        relativeCentroid = CollisionUtil.polygonCentroid(relativePoints);
+        boundingSphere = new Circle(relativeCentroid, CollisionUtil.boundingSphere(relativeCentroid, this.relativePoints));
     }
 
     public Vector2f[] getRelativePoints() {
@@ -49,6 +50,14 @@ public class BasicPolygon extends Shape {
     }
 
     @Override
+    public Vector2f reflect(Vector2f centroid, Vector2f collisionRay) {
+        Pair<Vector2f, Vector2f> normals = CollisionUtil.collisionEdgeNormals(this.absolutePoints, this.absoluteCentroid, centroid);
+        if (normals.getLeft().dot(collisionRay) >= 0)
+            return CollisionUtil.planeReflection(normals.getLeft(), collisionRay);
+        else return CollisionUtil.planeReflection(normals.getRight(), collisionRay);
+    }
+
+    @Override
     public Vector2f centroid() {
         return absoluteCentroid;
     }
@@ -60,7 +69,7 @@ public class BasicPolygon extends Shape {
 
     @Override
     public Vector2f supportPoint(Vector2f v) {
-        return ConvexGJKSM.maxDotPoint(absolutePoints, v);
+        return CollisionUtil.maxDotPoint(absolutePoints, v);
     }
 
 }

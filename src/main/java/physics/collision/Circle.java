@@ -57,36 +57,36 @@ public class Circle extends Shape {
         return absoluteCenter.add(normalized.mul(radius), new Vector2f());
     }
 
-    /**
-     * A method to make a GUESS whether two circles are colliding.
-     * This method is accurate about two circles, which do NOT intersect,
-     * but it cannot safely say, that two circle do collide.
-     *
-     * @param circle the circle to compare to
-     * @return false if and only if the circle don't intersect, true if both circles probably intersect
-     */
-    public boolean approxIntersection(Circle circle) {
-        //this approximation is not mathematically validated yet,
-        //but in over 10 million tests, this constant proofed to be valid threshold
-        float approxConstant = 2.34f;
-        //this relation is based on the distance between both circle centers,
-        // but does not use any square root for performance reasons
-        float relation = this.absoluteCenter.distanceSquared(circle.getAbsoluteCenter()) / (circle.radiusSquared + this.radiusSquared);
-        return relation < approxConstant;
+    @Override
+    public Vector2f reflect(Vector2f centroid, Vector2f collisionRay) {
+        RayCastResult rayCastResult = rayCast(centroid, absoluteCenter.sub(centroid, new Vector2f()), Float.POSITIVE_INFINITY);
+        return CollisionUtil.planeReflection(rayCastResult.getNormal(), collisionRay);
     }
 
     /**
-     * Calculate a raycast against this circle.
+     * Check intersection between two circles efficiently without using square roots.
+     * Will only produce wrong results originated in missing precision in floating point numbers.
      *
-     * @param start            the starting point of the raycast
-     * @param rayDirection     the direction of the ray, it doesnt have to be normalized, it will be by the method
-     * @param maxLength        the max length of ray, if it can't hit within this range, it doesnt hit
-     * @param onAbsoluteCoords whether your input is relative to the circle or absolute to the world origin
+     * @param circle the circle to compare to
+     * @return true if the given circle intersects with this one
+     */
+    public boolean intersection(Circle circle) {
+        double distanceSquared = this.absoluteCenter.distanceSquared(circle.getAbsoluteCenter());
+        double radiusSquared = this.radiusSquared + circle.radiusSquared + 2 * this.radius * circle.radius;
+        return distanceSquared - radiusSquared <= 0;
+    }
+
+    /**
+     * Calculate a raycast against this circle using absolute coordinates.
+     *
+     * @param start        the starting point of the raycast
+     * @param rayDirection the direction of the ray, it doesnt have to be normalized, it will be by the method
+     * @param maxLength    the max length of ray, if it can't hit within this range, it doesnt hit
      * @return the result of the raycast
      */
-    public RayCastResult rayCast(Vector2f start, Vector2f rayDirection, float maxLength, boolean onAbsoluteCoords) {
+    public RayCastResult rayCast(Vector2f start, Vector2f rayDirection, float maxLength) {
         Vector2f normalizedRay = rayDirection.normalize(new Vector2f());
-        Vector2f center = new Vector2f(onAbsoluteCoords ? absoluteCenter : relativeCenter);
+        Vector2f center = new Vector2f(absoluteCenter);
         Vector2f toCenter = center.sub(start, new Vector2f());
         //length of the raycast to a point X alligned with the center of the circle
         float lengthA = normalizedRay.dot(toCenter);

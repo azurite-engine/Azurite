@@ -47,6 +47,15 @@ public abstract class Shape {
     public abstract Circle boundingSphere();
 
     /**
+     * Calculates the reflection direction of a given collision ray
+     *
+     * @param centroid origin of the collisionRay
+     * @param collisionRay the incoming ray to reflect
+     * @return the reflection vector of the collision ray considering the current shape
+     */
+    public abstract Vector2f reflect(Vector2f centroid, Vector2f collisionRay);
+
+    /**
      * According to GJKSM this method is supposed to calculate the point of the shape, that is most in direction of v.
      * The general rule is, the more primitive the shape is, the more efficient this method can be.
      * This method may be described as max{v*x,x element of Shape} for any complex shape.

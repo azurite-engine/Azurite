@@ -1,6 +1,7 @@
 package physics.collision;
 
 import org.joml.Vector2f;
+import util.Pair;
 
 /**
  * <h1>Azurite</h1>
@@ -20,11 +21,12 @@ public class Triangle extends Shape {
     private final Circle boundingSphere;
 
     public Triangle(Vector2f relativeA, Vector2f relativeB, Vector2f relativeC) {
-        this.relativeA = new Vector2f(relativeA);
-        this.relativeB = new Vector2f(relativeB);
-        this.relativeC = new Vector2f(relativeC);
-        this.relativeCentroid = ConvexGJKSM.polygonCentroid(relativeA, relativeB, relativeC);
-        this.boundingSphere = new Circle(relativeCentroid, ConvexGJKSM.boundingSphere(relativeCentroid, this.relativeA, this.relativeB, this.relativeC));
+        Vector2f[] sorted = CollisionUtil.convexHull(new Vector2f[]{relativeA, relativeB, relativeC});
+        this.relativeA = new Vector2f(sorted[0]);
+        this.relativeB = new Vector2f(sorted[1]);
+        this.relativeC = new Vector2f(sorted[2]);
+        this.relativeCentroid = CollisionUtil.polygonCentroid(this.relativeA, this.relativeB, this.relativeC);
+        this.boundingSphere = new Circle(relativeCentroid, CollisionUtil.boundingSphere(relativeCentroid, this.relativeA, this.relativeB, this.relativeC));
     }
 
     public Vector2f getAbsoluteA() {
@@ -37,6 +39,10 @@ public class Triangle extends Shape {
 
     public Vector2f getAbsoluteC() {
         return absoluteC;
+    }
+
+    public Vector2f[] getAbsolutePoints() {
+        return new Vector2f[]{absoluteA, absoluteB, absoluteC};
     }
 
     public Vector2f getRelativeA() {
@@ -68,6 +74,14 @@ public class Triangle extends Shape {
     @Override
     public Circle boundingSphere() {
         return boundingSphere;
+    }
+
+    @Override
+    public Vector2f reflect(Vector2f centroid, Vector2f collisionRay) {
+        Pair<Vector2f, Vector2f> normals = CollisionUtil.collisionEdgeNormals(this.getAbsolutePoints(), this.absoluteCentroid, centroid);
+        if (normals.getLeft().dot(collisionRay) >= 0)
+            return CollisionUtil.planeReflection(normals.getLeft(), collisionRay);
+        else return CollisionUtil.planeReflection(normals.getRight(), collisionRay);
     }
 
     @Override

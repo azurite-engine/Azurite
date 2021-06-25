@@ -76,9 +76,10 @@ public abstract class Scene {
         if (Keyboard.getKeyDown(GLFW.GLFW_KEY_GRAVE_ACCENT)) {
             debugMode = !debugMode;
         }
+        collisionChecks();
     }
 
-    private void collision() {
+    private void collisionChecks() {
         for (Collider body : bodyColliders) {
             collisionWith(body, bodyColliders);
             collisionWith(body, staticColliders);
@@ -89,10 +90,11 @@ public abstract class Scene {
         for (Collider other : colliders) {
             if (other == body) continue;
             if (!body.canCollideWith(other)) continue;
-            if (!body.getCollisionShape().boundingSphere().approxIntersection(other.getCollisionShape().boundingSphere()))
+            if (!body.getCollisionShape().boundingSphere().intersection(other.getCollisionShape().boundingSphere()))
                 continue;
             boolean collision = body.doesCollideWith(other);
-            //do some collision stuff here
+            if (collision)
+                body.onCollide(other);
         }
     }
 

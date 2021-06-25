@@ -1,6 +1,7 @@
 package physics.collision;
 
 import org.joml.Vector2f;
+import util.Pair;
 
 /**
  * <h1>Azurite</h1>
@@ -22,10 +23,10 @@ public class Rectangle extends Shape {
     private final Circle boundingSphere;
 
     public Rectangle(Vector2f a, Vector2f b, Vector2f c, Vector2f d) {
-        this.relatives = new Vector2f[]{new Vector2f(a), new Vector2f(b), new Vector2f(c), new Vector2f(d)};
+        this.relatives = CollisionUtil.convexHull(new Vector2f[]{new Vector2f(a), new Vector2f(b), new Vector2f(c), new Vector2f(d)});
         this.absolutes = new Vector2f[4];
-        this.relativeCentroid = ConvexGJKSM.polygonCentroid(this.relatives);
-        this.boundingSphere = new Circle(relativeCentroid, ConvexGJKSM.boundingSphere(relativeCentroid, relatives));
+        this.relativeCentroid = CollisionUtil.polygonCentroid(this.relatives);
+        this.boundingSphere = new Circle(relativeCentroid, CollisionUtil.boundingSphere(relativeCentroid, relatives));
     }
 
     @Override
@@ -47,12 +48,20 @@ public class Rectangle extends Shape {
     }
 
     @Override
+    public Vector2f reflect(Vector2f centroid, Vector2f collisionRay) {
+        Pair<Vector2f, Vector2f> normals = CollisionUtil.collisionEdgeNormals(this.absolutes, this.absoluteCentroid, centroid);
+        if (normals.getLeft().dot(collisionRay) >= 0)
+            return CollisionUtil.planeReflection(normals.getLeft(), collisionRay);
+        else return CollisionUtil.planeReflection(normals.getRight(), collisionRay);
+    }
+
+    @Override
     public Circle boundingSphere() {
         return boundingSphere;
     }
 
     @Override
     public Vector2f supportPoint(Vector2f v) {
-        return ConvexGJKSM.maxDotPoint(absolutes, v);
+        return CollisionUtil.maxDotPoint(absolutes, v);
     }
 }

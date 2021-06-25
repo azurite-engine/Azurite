@@ -2,6 +2,7 @@ package physics.collision;
 
 import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
+import util.Pair;
 
 /**
  * <h1>Azurite</h1>
@@ -10,7 +11,7 @@ import org.joml.Vector2f;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class ConvexGJKSM {
+public class CollisionUtil {
 
 
     /**
@@ -102,7 +103,7 @@ public class ConvexGJKSM {
      *
      * @return the maximum point in a specific direction
      */
-    private static Vector2f maxDotPointMinkDiff(Shape shapeA, Shape shapeB, Vector2f direction) {
+    public static Vector2f maxDotPointMinkDiff(Shape shapeA, Shape shapeB, Vector2f direction) {
         Vector2f pointA = shapeA.supportPoint(direction);
         Vector2f pointB = shapeB.supportPoint(new Vector2f(-direction.x, -direction.y));
         return new Vector2f(pointA.x - pointB.x, pointA.y - pointB.y);
@@ -114,8 +115,8 @@ public class ConvexGJKSM {
      * Can be used as support function for all convex polygons defined by a finite number of points.
      *
      * @param convexShapePoints all points on the convex shape
-     * @param direction         the direction for the dot product calculation
-     * @return the point with the highest dot product with the given direction
+     * @param direction         the direction/reach to look for a point
+     * @return the point with the highest dot product by the given direction
      */
     public static Vector2f maxDotPoint(Vector2f[] convexShapePoints, Vector2f direction) {
         float maxDot = Float.NEGATIVE_INFINITY;
@@ -128,6 +129,70 @@ public class ConvexGJKSM {
             }
         }
         return point;
+    }
+
+    /**
+     * Finds the point with the highest dot product in a shape to a given direction d,
+     * by doing a simple max search over all dot products dot(a,d) where a element of A.
+     * Can be used as support function for all convex polygons defined by a finite number of points.
+     *
+     * @param convexShapePoints all points on the convex shape,which the index relates to
+     * @param direction         the direction/reach to look for a point
+     * @return the index of the point with the highest dot product by the given direction
+     */
+    public static int maxDotPointIndex(Vector2f[] convexShapePoints, Vector2f direction) {
+        float maxDot = Float.NEGATIVE_INFINITY;
+        int index = 0;
+        for (int i = 0; i < convexShapePoints.length; i++) {
+            float dot = direction.dot(convexShapePoints[i]);
+            if (dot > maxDot) {
+                maxDot = dot;
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    /**
+     * Calculate a plain reflection vector by any given normal describing the mirror plane and the direction of the incoming ray.
+     *
+     * @param normal    any normal vector describing the mirror plane, does not have to be normalized
+     * @param direction the incoming direction of the ray to be reflected. it is length sensitive
+     * @return a reflection vector for the given ray direction on the given mirror plane its the length
+     */
+    public static Vector2f planeReflection(Vector2f normal, Vector2f direction) {
+        normal = normal.normalize(new Vector2f());
+        Vector2f norm = normal.mul(2 * direction.dot(normal), new Vector2f());
+        return direction.sub(norm, new Vector2f());
+    }
+
+    /**
+     * Calculate two edges of the polygon, that are most likely to hit by the colliding object.
+     *
+     * @param polygon          the polygon that got hit
+     * @param polygonCentroid  the centeroid of the polygon that got hit
+     * @param colliderCentroid the centroid of the colliding object
+     * @return two normals describing the edges, that probably got hit
+     */
+    public static Pair<Vector2f, Vector2f> collisionEdgeNormals(Vector2f[] polygon, Vector2f polygonCentroid, Vector2f colliderCentroid) {
+        //connect both centroids
+        Vector2f connectCentroids = colliderCentroid.sub(polygonCentroid, new Vector2f());
+        //find the point thats furthest on the polygon and get its neighbors
+        int index = maxDotPointIndex(polygon, connectCentroids);
+        int pred = index == 0 ? polygon.length - 1 : index - 1;
+        int succ = index + 1 == polygon.length ? 0 : index + 1;
+
+        //calculate first normal of pred->index
+        Vector2f startA = polygon[pred];
+        Vector2f lineA = polygon[index].sub(startA, new Vector2f());
+        Vector2f normalA = new Vector2f(lineA).perpendicular();
+
+        //calculate second normal of index->succ
+        Vector2f startB = polygon[index];
+        Vector2f lineB = polygon[succ].sub(startB, new Vector2f());
+        Vector2f normalB = new Vector2f(lineB).perpendicular();
+
+        return new Pair<>(normalA, normalB);
     }
 
     /**
@@ -164,7 +229,7 @@ public class ConvexGJKSM {
                 if ((q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y) < 0)
                     curr = i;
             }
-            ordered[last++] = points[curr];
+            ordered[last++ % n] = points[curr];
             start = curr;
         } while (start != leftMost);
         return ordered;
@@ -233,12 +298,12 @@ public class ConvexGJKSM {
      */
     public static float boundingSphere(Vector2f centroid, Vector2f... vertices) {
         if (vertices.length < 1) return 0;
-        if (vertices.length == 1) return centroid.sub(vertices[0]).length();
-        float max = centroid.sub(vertices[0]).lengthSquared();
+        if (vertices.length == 1) return centroid.sub(vertices[0], new Vector2f()).length();
+        float max = centroid.sub(vertices[0], new Vector2f()).lengthSquared();
         float currDist;
         int current = 1;
         do {
-            currDist = centroid.sub(vertices[current]).lengthSquared();
+            currDist = centroid.sub(vertices[current], new Vector2f()).lengthSquared();
             if (currDist > max)
                 max = currDist;
             current++;
@@ -263,10 +328,9 @@ public class ConvexGJKSM {
         //for all vertices in a loop
         for (Vector2f next : vertices) {
             //partial area
-            double a = prev.x * next.y - next.x * prev.y;
+            float a = prev.x * next.y - next.x * prev.y;
             //move centroid towards edge with weight relative to partial area a
-            centroid.x += (prev.x + next.x) * a;
-            centroid.y += (prev.y + next.y) * a;
+            centroid.add((prev.x + next.x) * a, (prev.y + next.y) * a);
             // sum up area
             signedArea += a;
             prev = next;
@@ -277,7 +341,6 @@ public class ConvexGJKSM {
         signedArea *= 0.5;
         centroid.x /= (6.0 * signedArea);
         centroid.y /= (6.0 * signedArea);
-
         return centroid;
     }
 

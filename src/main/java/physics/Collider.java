@@ -18,6 +18,8 @@ public interface Collider {
      */
     Shape getCollisionShape();
 
+    void onCollide(Collider otherCollider);
+
     /**
      * Determines whether a collider intersects with another collider IGNORING the collision layers.
      *

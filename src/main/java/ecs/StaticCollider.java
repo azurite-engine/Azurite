@@ -1,9 +1,11 @@
 package ecs;
 
 import physics.Collider;
-import physics.collision.ConvexGJKSM;
+import physics.collision.CollisionUtil;
 import physics.collision.Shape;
 import util.Utils;
+
+import java.util.function.Consumer;
 
 /**
  * <h1>Azurite</h1>
@@ -25,6 +27,10 @@ public class StaticCollider extends Component implements Collider {
     //the collisionShape of the collider
     private final Shape collisionShape;
 
+    //used to feed with rigidBodies this static block is colliding with
+    private Consumer<RigidBody> collisionHandler = rigidBody -> {
+    };
+
     public StaticCollider(Shape collisionShape, int[] layers, int[] maskedLayers) {
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layers);
@@ -38,6 +44,10 @@ public class StaticCollider extends Component implements Collider {
         this.order = SpriteRenderer.ORDER - 1;
     }
 
+    public void setCollisionHandler(Consumer<RigidBody> collisionHandler) {
+        this.collisionHandler = collisionHandler;
+    }
+
     @Override
     public Shape getCollisionShape() {
         return collisionShape;
@@ -45,7 +55,7 @@ public class StaticCollider extends Component implements Collider {
 
     @Override
     public boolean doesCollideWith(Collider other) {
-        return ConvexGJKSM.gjksmCollision(this.collisionShape, other.getCollisionShape());
+        return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape());
     }
 
     @Override
@@ -91,6 +101,12 @@ public class StaticCollider extends Component implements Collider {
     @Override
     public void update(float dt) {
         //the position of the object should not change at any given time, therefore its solid
+    }
+
+    @Override
+    public void onCollide(Collider otherCollider) {
+        if (otherCollider instanceof RigidBody)
+            collisionHandler.accept((RigidBody) otherCollider);
     }
 
     @Override

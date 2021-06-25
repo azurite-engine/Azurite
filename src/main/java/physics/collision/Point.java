@@ -38,6 +38,11 @@ public class Point extends Shape {
     }
 
     @Override
+    public Vector2f reflect(Vector2f centroid, Vector2f collisionRay) {
+        return collisionRay.mul(-1, new Vector2f());
+    }
+
+    @Override
     public Vector2f centroid() {
         return absolutePoint;
     }

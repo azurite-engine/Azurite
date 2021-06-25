@@ -1,6 +1,7 @@
 package physics.collision;
 
 import org.joml.Vector2f;
+import util.Pair;
 
 /**
  * <h1>Azurite</h1>
@@ -16,6 +17,8 @@ public class Line extends Shape {
     private final Vector2f relativeA, relativeB;
     private Vector2f absoluteA, absoluteB;
 
+    private final Pair<Vector2f,Vector2f> normals;
+
     private final Vector2f relativeCentroid;
     private Vector2f absoluteCentroid;
 
@@ -29,6 +32,8 @@ public class Line extends Shape {
         float length = this.relativeCentroid.length();
         this.relativeCentroid.normalize(length / 2);
         this.boundingSphere = new Circle(this.relativeCentroid, length / 2);
+        this.normals = new Pair<>(this.relativeA.sub(this.relativeB, new Vector2f()).perpendicular(),
+                this.relativeB.sub(this.relativeA, new Vector2f()).perpendicular());
     }
 
     public Vector2f getRelativeA() {
@@ -53,6 +58,13 @@ public class Line extends Shape {
         this.absoluteB = position().add(relativeB, new Vector2f());
         this.absoluteCentroid = position().add(relativeCentroid, new Vector2f());
         this.boundingSphere.setPosition(position());
+    }
+
+    @Override
+    public Vector2f reflect(Vector2f centroid, Vector2f collisionRay) {
+        if (normals.getLeft().dot(collisionRay) >= 0)
+            return CollisionUtil.planeReflection(normals.getLeft(), collisionRay);
+        else return CollisionUtil.planeReflection(normals.getRight(), collisionRay);
     }
 
     @Override

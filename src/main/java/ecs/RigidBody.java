@@ -5,11 +5,13 @@ import physics.Collider;
 import physics.PhysicalEntity;
 import physics.Transform;
 import physics.TransformSensitive;
-import physics.collision.ConvexGJKSM;
+import physics.collision.CollisionUtil;
 import physics.collision.Shape;
 import physics.force.CombinedForce;
 import physics.force.Force;
 import util.Utils;
+
+import java.util.function.Consumer;
 
 /**
  * <h1>Azurite</h1>
@@ -43,6 +45,9 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     //the forces acting on the body and accelerating it
     private final CombinedForce bodyForce;
 
+    //used to feed with objects this body is colliding with
+    private Consumer<RigidBody> collisionHandler = rigidBody -> {};
+
     public RigidBody(Shape collisionShape, int[] layers, int[] maskedLayers, float physicalMass) {
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layers);
@@ -62,6 +67,10 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         this.order = SpriteRenderer.ORDER - 1;
     }
 
+    public void setCollisionHandler(Consumer<RigidBody> collisionHandler) {
+        this.collisionHandler = collisionHandler;
+    }
+
     @Override
     public Shape getCollisionShape() {
         return collisionShape;
@@ -69,7 +78,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
 
     @Override
     public boolean doesCollideWith(Collider other) {
-        return ConvexGJKSM.gjksmCollision(this.collisionShape, other.getCollisionShape());
+        return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape());
     }
 
     @Override
@@ -122,6 +131,15 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         velocity.add(bodyForce.direction());
         //let the velocity then modify our current position - push to buffer
         gameObject.getTransform().positionBuffer().add(velocity);
+    }
+
+    @Override
+    public void onCollide(Collider otherCollider) {
+        //static collisions should be handled by the static object
+        if (otherCollider instanceof StaticCollider)
+            otherCollider.onCollide(this);
+            //collisions with other rigidbodys will be handled here
+        else collisionHandler.accept((RigidBody) otherCollider);
     }
 
     public void setMass(float mass) {
