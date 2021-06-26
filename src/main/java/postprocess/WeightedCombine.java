@@ -2,6 +2,7 @@ package postprocess;
 
 import graphics.Graphics;
 import graphics.Shader;
+import graphics.Texture;
 import util.Assets;
 
 /**
@@ -10,9 +11,9 @@ import util.Assets;
  */
 public class WeightedCombine extends PostProcessStep {
 	/** Id of input texture A */
-	private int textureA;
+	private Texture textureA;
 	/** Id of input texture B */
-	private int textureB;
+	private Texture textureB;
 	/** Weight of input texture A */
 	private float weightA;
 	/** Weight of input texture B */
@@ -44,8 +45,8 @@ public class WeightedCombine extends PostProcessStep {
 	public void prepare() {
 		Graphics.background(Graphics.defaultBackground);
 
-		bindTexture(textureA, 0);
-		bindTexture(textureB, 1);
+		textureA.bindToSlot(0);
+		textureB.bindToSlot(1);
 	}
 
 	/**
@@ -61,18 +62,18 @@ public class WeightedCombine extends PostProcessStep {
 
 	/**
 	 * Set the input texture A's id
-	 * @param textureID input texture id
+	 * @param texture input texture
 	 */
-	public void setTextureA(int textureID) {
-		this.textureA = textureID;
+	public void setTextureA(Texture texture) {
+		this.textureA = texture;
 	}
 
 	/**
 	 * Set the input texture B's id
-	 * @param textureID input texture id
+	 * @param texture input texture
 	 */
-	public void setTextureB(int textureID) {
-		this.textureB = textureID;
+	public void setTextureB(Texture texture) {
+		this.textureB = texture;
 	}
 
 	/**

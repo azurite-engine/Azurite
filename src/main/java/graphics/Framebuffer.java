@@ -4,9 +4,8 @@ import event.EventData;
 import event.Events;
 import org.lwjgl.opengl.GL11;
 import util.specs.FramebufferSpec;
-import util.specs.FramebufferTextureSpec;
+import util.specs.TextureSpec;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,14 +27,14 @@ public class Framebuffer {
 	private FramebufferSpec spec;
 
 	/** The color attachment textures' specifications */
-	private List<FramebufferTextureSpec> colorAttachmentSpecs;
+	private List<TextureSpec> colorAttachmentSpecs;
 	/** The depth attachment texture's specification. Initialized to an Invalid default */
-	private FramebufferTextureSpec depthAttachmentSpec = new FramebufferTextureSpec();
+	private TextureSpec depthAttachmentSpec = new TextureSpec();
 
 	/** Color attachment textures to which the framebuffer renders to */
-	private List<Integer> colorAttachmentTextures;
+	private List<Texture> colorAttachmentTextures;
 	/** Depth attachment texture to which the framebuffer renders to */
-	private int depthAttachmentTexture;
+	private Texture depthAttachmentTexture;
 
 	/** Static list maintaining all framebuffers so as to delete them all in the end */
 	private static final List<Framebuffer> fbos = new ArrayList<>();
@@ -65,7 +64,7 @@ public class Framebuffer {
 		this.colorAttachmentTextures = new ArrayList<>();
 
 		// Sort the texture formats.
-		for (FramebufferTextureSpec format : spec.attachments) {
+		for (TextureSpec format : spec.attachments) {
 			if (!format.format.isDepth) {
 				colorAttachmentSpecs.add(format);
 			} else {
@@ -95,7 +94,7 @@ public class Framebuffer {
 		this.colorAttachmentTextures = new ArrayList<>();
 
 		// Sort the texture formats.
-		for (FramebufferTextureSpec format : spec.attachments) {
+		for (TextureSpec format : spec.attachments) {
 			if (!format.format.isDepth) {
 				colorAttachmentSpecs.add(format);
 			} else {
@@ -135,7 +134,7 @@ public class Framebuffer {
 	 * @return Framebuffer
 	 */
 	public static Framebuffer createWithColorAttachment() {
-		return new Framebuffer(Window.getWidth(), Window.getHeight(), new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)), true, false);
+		return new Framebuffer(Window.getWidth(), Window.getHeight(), new FramebufferSpec(new TextureSpec(TextureSpec.TextureFormat.RGBA8)), true, false);
 	}
 
 	/**
@@ -144,7 +143,7 @@ public class Framebuffer {
 	 * @return Framebuffer
 	 */
 	public static Framebuffer createHalfResWithColorAttachment() {
-		return new Framebuffer(Window.getWidth() / 2, Window.getHeight() / 4, new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)), false, true);
+		return new Framebuffer(Window.getWidth() / 2, Window.getHeight() / 4, new FramebufferSpec(new TextureSpec(TextureSpec.TextureFormat.RGBA8)), false, true);
 	}
 
 	/**
@@ -175,10 +174,10 @@ public class Framebuffer {
 	 * @param i index of the texture attachment required
 	 * @return the color attachment texture id at the index
 	 */
-	public int fetchColorAttachment(int i) {
+	public Texture fetchColorAttachment(int i) {
 		if (colorAttachmentTextures.size() >= i)
 			return colorAttachmentTextures.get(i);
-		return -1;
+		return null;
 	}
 
 	/**
@@ -186,7 +185,7 @@ public class Framebuffer {
 	 *
 	 * @return
 	 */
-	public int fetchDepthAttachment() {
+	public Texture fetchDepthAttachment() {
 		return depthAttachmentTexture;
 	}
 
@@ -228,34 +227,18 @@ public class Framebuffer {
 			colorAttachmentTextures.clear();
 
 			for (int i = 0; i < colorAttachmentSpecs.size(); i++) {
-				FramebufferTextureSpec format = colorAttachmentSpecs.get(i);
-				int texture = createColorTexture(this.width, this.height, format.format.internalFormat, format.format.format, GL_UNSIGNED_BYTE);
+				TextureSpec format = colorAttachmentSpecs.get(i);
+				Texture texture = new Texture(width, height, format);
 				colorAttachmentTextures.add(texture);
-
-				// Set the Texture's resizing and wrap parameters as per the specification
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, format.minificationFilter.glType);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, format.magnificationFilter.glType);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, format.rFilter.glType);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, format.sFilter.glType);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, format.tFilter.glType);
-
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture, 0);
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture.getTextureID(), 0);
 			}
 		}
 
 		// If the depth attachment spec is not the default
 		if (depthAttachmentSpec.format.isDepth) {
 			// Generate the depth texture
-			depthAttachmentTexture = createDepthTexture(this.width, this.height, depthAttachmentSpec.format.internalFormat);
-
-			// Set the Texture's resizing and wrap parameters as per the specification
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, depthAttachmentSpec.minificationFilter.glType);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, depthAttachmentSpec.magnificationFilter.glType);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, depthAttachmentSpec.rFilter.glType);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, depthAttachmentSpec.sFilter.glType);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, depthAttachmentSpec.tFilter.glType);
-
-			glFramebufferTexture2D(GL_FRAMEBUFFER, depthAttachmentSpec.format.format, GL_TEXTURE_2D, depthAttachmentTexture, 0);
+			depthAttachmentTexture = new Texture(width, height, depthAttachmentSpec);
+			glFramebufferTexture2D(GL_FRAMEBUFFER, depthAttachmentSpec.format.format, GL_TEXTURE_2D, depthAttachmentTexture.getTextureID(), 0);
 		}
 
 		// Check if the framebuffer is complete
@@ -282,42 +265,6 @@ public class Framebuffer {
 	}
 
 	/**
-	 * Creates and binds a texture. Then, allocates memory for it.
-	 *
-	 * @param width          int: width of the texture
-	 * @param height         int: height of the texture
-	 * @param internalFormat int: format for the storage of data in memory
-	 * @param format         int: format for the access of data from memory
-	 * @param type           int: type in which data is stored
-	 * @return the created texture's id
-	 */
-	private static int createColorTexture(int width, int height, int internalFormat, int format, int type) {
-		int texture = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, texture);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, type, 0);
-
-		return texture;
-	}
-
-	/**
-	 * Creates and binds a texture. Then, allocates memory for it.
-	 *
-	 * @param width          int: width of the texture
-	 * @param height         int: height of the texture
-	 * @param internalFormat int: format for the storage of data in memory
-	 * @return the created texture's id
-	 */
-	private static int createDepthTexture(int width, int height, int internalFormat) {
-		int texture = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D, texture);
-
-		glTexStorage2D(GL_TEXTURE_2D, 1, internalFormat, width, height);
-
-		return texture;
-	}
-
-	/**
 	 * Binds the framebuffer
 	 */
 	public void bind() {
@@ -338,8 +285,8 @@ public class Framebuffer {
 	 * Deletes the texture attachments and the framebuffer
 	 */
 	public void delete() {
-		colorAttachmentTextures.forEach(GL11::glDeleteTextures);
-		glDeleteTextures(depthAttachmentTexture);
+		colorAttachmentTextures.forEach(Texture::delete);
+		if (depthAttachmentTexture != null) depthAttachmentTexture.delete();
 		glDeleteFramebuffers(this.id);
 	}
 
