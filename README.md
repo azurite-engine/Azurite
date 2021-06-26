@@ -97,9 +97,9 @@ Follow this [link](https://games-with-gabe-community.github.io/Azurite-Docs/tuto
 
 ## Documentation
 * [Documentatation](https://azurite-engine.github.io/Azurite-Docs/) (Done but we are still adding stuff to it)
-* [Javadocs](https://games-with-gabe-community.github.io/azurite-javadocs/)
+* [Javadocs](https://azurite-engine.github.io/azurite-javadocs/)
 * [Contributing guidelines](https://github.com/Games-With-Gabe-Community/Azurite/blob/main/CONTRIBUTING.md)
-* [Azurite Code style]( https://games-with-gabe-community.github.io/Azurite-Docs/docs/azurite-style.html)
+* [Azurite Code style](https://azurite-engine.github.io/Azurite-Docs/docs/azurite-style.html)
 
 ### License
 Copyright (c) 2021 MIT License
