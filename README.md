@@ -3,7 +3,7 @@
     <img src="https://img.shields.io/badge/Made%20using-Java-red">
     <img src="https://img.shields.io/badge/Made%20Using-LWJGL%20-yellow">
     <img src="https://camo.githubusercontent.com/0fa78702c674a5e13004de53a25ae80ed1ce281f92c0e5d6bd5aa7701b3ab483/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f61746861756e2f454f532e737667">
-    <img src="https://github.com/Games-With-Gabe-Community/Azurite/actions/workflows/gradle.yml/badge.svg">
+    <img src="https://github.com/azurite-engine/Azurite/actions/workflows/gradle.yml/badge.svg">
 </p>
 
 <br />
@@ -13,13 +13,13 @@
   <p align="center">
     Azurite it is a 2D Java game engine built by the Games with Gabe <a href="https://discord.gg/dhyV3BXkRZ">Discord</a>/<a href="https://www.youtube.com/channel/UCQP4qSCj1eHMHisDDR4iPzw">YouTube</a> community.
     <br />
-    <a href="https://games-with-gabe-community.github.io/Azurite-Docs/"><strong>Explore the docs »</strong></a><br><br>
+    <a href="https://azurite-engine.github.io/Azurite-Docs/"><strong>Explore the docs »</strong></a><br><br>
     <a href="https://www.youtube.com/watch?v=FABUP0q9tHY">Watch the introduction video »</a>
     <br />
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template">Features</a>
     ·
-    <a href="https://github.com/Games-With-Gabe-Community/Azurite/issues">Report Bug</a>
+    <a href="https://github.com/azurite-engine/Azurite/issues">Report Bug</a>
     ·
     <a href="https://trello.com/b/hfoYA8Gn/gwg-community-project">Check the Trello</a>
   </p>
