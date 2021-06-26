@@ -164,7 +164,7 @@ public class CollisionUtil {
     public static Vector2f planeReflection(Vector2f normal, Vector2f direction) {
         normal = normal.normalize(new Vector2f());
         Vector2f norm = normal.mul(2 * direction.dot(normal), new Vector2f());
-        return direction.sub(norm, new Vector2f());
+        return direction.sub(norm, new Vector2f()).mul(-1);
     }
 
     /**
@@ -186,12 +186,12 @@ public class CollisionUtil {
         //calculate first normal of pred->index
         Vector2f startA = polygon[pred];
         Vector2f lineA = polygon[index].sub(startA, new Vector2f());
-        Vector2f normalA = new Vector2f(lineA).perpendicular();
+        Vector2f normalA = new Vector2f(lineA).perpendicular().mul(-1);
 
         //calculate second normal of index->succ
         Vector2f startB = polygon[index];
         Vector2f lineB = polygon[succ].sub(startB, new Vector2f());
-        Vector2f normalB = new Vector2f(lineB).perpendicular();
+        Vector2f normalB = new Vector2f(lineB).perpendicular().mul(-1);
 
         return new Pair<>(normalA, normalB);
     }

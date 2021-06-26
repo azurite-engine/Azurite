@@ -87,7 +87,7 @@ public class SpriteRenderer extends Component implements TransformSensitive {
      */
     @Override
     public void start() {
-        this.lastTransform = gameObject.getTransform().copy();
+        this.lastTransform = gameObject.getReadOnlyTransform();
     }
 
     /**
@@ -102,8 +102,13 @@ public class SpriteRenderer extends Component implements TransformSensitive {
 
     @Override
     public void update(Transform changedTransform) {
-        this.gameObject.getTransform().copy(this.lastTransform);
+        this.gameObject.getReadOnlyTransform().copy(this.lastTransform);
         isDirty = true;
+    }
+
+    @Override
+    public boolean transformingObject() {
+        return false;
     }
 
     /**

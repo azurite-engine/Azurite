@@ -29,12 +29,11 @@ public class OrderPreservingList<T extends Comparable<T>> extends LinkedList<T> 
     //find the next matching index for a given obj by its natural order (small to big)
     //if the obj is bigger than any other obj in the list, just add the new obj at the end i=size()
     private int findIndexToAdd(T obj) {
-        int index = size();
         for (int i = 0; i < size(); i++) {
-            if (get(i).compareTo(obj) >= 0)
-                index = i;
+            if (get(i).compareTo(obj) > 0)
+                return i;
         }
-        return index;
+        return size();
     }
 
     @Override

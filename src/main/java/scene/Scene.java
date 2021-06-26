@@ -76,25 +76,31 @@ public abstract class Scene {
         if (Keyboard.getKeyDown(GLFW.GLFW_KEY_GRAVE_ACCENT)) {
             debugMode = !debugMode;
         }
-        collisionChecks();
     }
 
-    private void collisionChecks() {
-        for (Collider body : bodyColliders) {
-            collisionWith(body, bodyColliders);
-            collisionWith(body, staticColliders);
-        }
+    /**
+     * Do a collision check for the specific collider with all known rigidBodies and staticColliders.
+     * If there is a collision, the given object will receive calls to {@link Collider#handleCollision(Collider)}.
+     *
+     * @param collider the object to check whether is collides with anything
+     */
+    public void checkCollision(Collider collider) {
+        if (collider == null) return; //ensure that the given collider is not null
+        checkCollision(collider, bodyColliders);
+        checkCollision(collider, staticColliders);
     }
 
-    private void collisionWith(Collider body, List<Collider> colliders) {
+    private void checkCollision(Collider body, List<Collider> colliders) {
         for (Collider other : colliders) {
             if (other == body) continue;
             if (!body.canCollideWith(other)) continue;
             if (!body.getCollisionShape().boundingSphere().intersection(other.getCollisionShape().boundingSphere()))
                 continue;
             boolean collision = body.doesCollideWith(other);
-            if (collision)
-                body.onCollide(other);
+            if (collision) {
+                body.handleCollision(other);
+                body.resetCollision();
+            }
         }
     }
 
@@ -125,6 +131,23 @@ public abstract class Scene {
             this.lightmapRenderer.add(gameObject);
             this.debugRenderer.add(gameObject);
             rendererRegistry.forEach(r -> r.add(gameObject));
+            updateGameObject(gameObject, true);
+        }
+    }
+
+    public final void updateGameObject(GameObject gameObject, boolean insertion) {
+        StaticCollider staticCollider = gameObject.getComponent(StaticCollider.class);
+        if (staticCollider != null && !staticColliders.contains(staticCollider)) {
+            if (insertion)
+                staticColliders.add(staticCollider);
+            else staticColliders.remove(staticCollider);
+        } else {
+            RigidBody rigidBody = gameObject.getComponent(RigidBody.class);
+            if (rigidBody != null && !bodyColliders.contains(rigidBody)) {
+                if (insertion)
+                    bodyColliders.add(rigidBody);
+                else bodyColliders.remove(rigidBody);
+            }
         }
     }
 
@@ -151,11 +174,6 @@ public abstract class Scene {
     public void addGameObjectToScene(GameObject gameObject) {
         gameObjects.add(gameObject);
         gameObject.start();
-        if (gameObject.getComponent(StaticCollider.class) != null) {
-            staticColliders.add(gameObject.getComponent(StaticCollider.class));
-        } else if (gameObject.getComponent(RigidBody.class) != null) {
-            bodyColliders.add(gameObject.getComponent(RigidBody.class));
-        }
     }
 
     /**

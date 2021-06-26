@@ -51,9 +51,13 @@ public class Rectangle extends Shape {
     @Override
     public Vector2f reflect(Vector2f centroid, Vector2f collisionRay) {
         Pair<Vector2f, Vector2f> normals = CollisionUtil.collisionEdgeNormals(this.absolutes, this.absoluteCentroid, centroid);
-        if (normals.getLeft().dot(collisionRay) >= 0)
+        if (normals.getLeft().dot(collisionRay) >= 0) {
+            //System.out.println("chose: " + normals.getLeft() + " for " + collisionRay);
             return CollisionUtil.planeReflection(normals.getLeft(), collisionRay);
-        else return CollisionUtil.planeReflection(normals.getRight(), collisionRay);
+        } else {
+            //System.out.println("chose: " + normals.getRight() + " for " + collisionRay);
+            return CollisionUtil.planeReflection(normals.getRight(), collisionRay);
+        }
     }
 
     @Override

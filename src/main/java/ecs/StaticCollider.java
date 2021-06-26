@@ -1,11 +1,16 @@
 package ecs;
 
+import graphics.Color;
+import org.joml.Vector2f;
 import physics.collision.Collider;
 import physics.collision.CollisionHandler;
 import physics.collision.CollisionUtil;
 import physics.collision.Collisions;
+import physics.collision.shape.Rectangle;
 import physics.collision.shape.Shape;
 import util.Utils;
+import util.debug.DebugLine;
+import util.debug.DebugPrimitive;
 
 /**
  * <h1>Azurite</h1>
@@ -95,7 +100,7 @@ public class StaticCollider extends Component implements Collider {
 
     @Override
     public void start() {
-        this.collisionShape.setPosition(gameObject.getTransform().getPosition());
+        this.collisionShape.setPosition(gameObject.getReadOnlyTransform().getPosition());
         this.collisionHandler.setParentComponent(this);
     }
 
@@ -105,15 +110,35 @@ public class StaticCollider extends Component implements Collider {
     }
 
     @Override
-    public void onCollide(Collider otherCollider) {
+    public void handleCollision(Collider otherCollider) {
         if (otherCollider instanceof RigidBody)
             collisionHandler.accept((RigidBody) otherCollider);
+    }
+
+    @Override
+    public void resetCollision() {
+
     }
 
     @Override
     public boolean isConflictingWith(Class<? extends Component> otherComponent) {
         //there can only be one collider
         return Collider.class.isAssignableFrom(otherComponent);
+    }
+
+    @Override
+    public DebugPrimitive[] debug() {
+        if (collisionShape instanceof Rectangle) {
+            Rectangle rect = (Rectangle) collisionShape;
+            Vector2f[] points = rect.getAbsolutePoints();
+            DebugLine[] lines = new DebugLine[4];
+            for (int i = 0; i < 4; i++) {
+                lines[i] = new DebugLine(points[i], points[(i + 1) % 4], Color.GREEN);
+            }
+            DebugPrimitive primitive = new DebugPrimitive(lines);
+            return new DebugPrimitive[]{primitive};
+        }
+        return null;
     }
 
 }

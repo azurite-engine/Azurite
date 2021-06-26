@@ -1,5 +1,6 @@
 package ecs;
 
+import graphics.Color;
 import org.joml.Vector2f;
 import physics.PhysicalEntity;
 import physics.Transform;
@@ -8,10 +9,13 @@ import physics.collision.Collider;
 import physics.collision.CollisionHandler;
 import physics.collision.CollisionUtil;
 import physics.collision.Collisions;
+import physics.collision.shape.Rectangle;
 import physics.collision.shape.Shape;
 import physics.force.CombinedForce;
 import physics.force.Force;
 import util.Utils;
+import util.debug.DebugLine;
+import util.debug.DebugPrimitive;
 
 /**
  * <h1>Azurite</h1>
@@ -49,6 +53,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     private CollisionHandler collisionHandler = Collisions.solid();
 
     public RigidBody(Shape collisionShape, int[] layers, int[] maskedLayers, float physicalMass) {
+        super(Collider.class, PhysicalEntity.class); //this class type should be unique in a gameObject
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layers);
         this.collisionMask = Utils.encode(maskedLayers);
@@ -59,6 +64,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     }
 
     public RigidBody(Shape collisionShape, int layer) {
+        super(Collider.class, PhysicalEntity.class); //this class type should be unique in a gameObject
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layer);
         this.mass = 1;
@@ -123,6 +129,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         this.bodyForce.setIdentifier(gameObject.name());
         this.bodyForce.setMass(this.mass);
         this.collisionHandler.setParentComponent(this);
+        this.collisionShape.setPosition(gameObject.getReadOnlyTransform().getPosition());
     }
 
     @Override
@@ -132,16 +139,33 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         //then assume they are fine and let them accelerate our velocity
         velocity.add(bodyForce.direction());
         //let the velocity then modify our current position - push to buffer
-        gameObject.getTransform().positionBuffer().add(velocity);
+        gameObject.positionBuffer().add(velocity);
     }
 
     @Override
-    public void onCollide(Collider otherCollider) {
+    public void handleCollision(Collider otherCollider) {
         //static collisions should be handled by the static object
         if (otherCollider instanceof StaticCollider)
-            otherCollider.onCollide(this);
+            otherCollider.handleCollision(this);
             //collisions with other rigidbodys will be handled here
         else collisionHandler.accept((RigidBody) otherCollider);
+        recentCollision = true;
+    }
+
+    boolean recentCollision = false;
+    boolean colliding = false;
+
+    @Override
+    public void resetCollision() {
+        if (!recentCollision && colliding)
+            colliding = false;
+        if (recentCollision && !colliding)
+            colliding = true;
+        recentCollision = false;
+    }
+
+    public boolean isColliding() {
+        return colliding;
     }
 
     public void setMass(float mass) {
@@ -183,7 +207,40 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     @Override
     public void update(Transform changedTransform) {
         //update the shape according to changes made to transform
-        collisionShape.setPosition(gameObject.getTransform().getPosition());
+        collisionShape.setPosition(gameObject.getReadOnlyTransform().getPosition());
+
+        //debug only
+        if (collisionShape instanceof Rectangle) {
+            Rectangle rect = (Rectangle) collisionShape;
+            Vector2f[] points = rect.getAbsolutePoints();
+            for (int i = 0; i < 4; i++) {
+                lines[i].start.set(points[i]);
+                lines[i].end.set(points[(i + 1) % 4]);
+                lines[i].markDirty();
+            }
+            lines[4].start.set(rect.centroid());
+            lines[4].end.set(rect.centroid().add(velocity().mul(50, new Vector2f()), new Vector2f()));
+            lines[4].markDirty();
+        }
+
+    }
+
+    //debug
+    DebugLine[] lines = new DebugLine[5];
+    DebugPrimitive primitive = new DebugPrimitive(lines);
+
+    @Override
+    public DebugPrimitive[] debug() {
+        if (collisionShape instanceof Rectangle) {
+            Rectangle rect = (Rectangle) collisionShape;
+            Vector2f[] points = rect.getAbsolutePoints();
+            for (int i = 0; i < 4; i++) {
+                lines[i] = new DebugLine(points[i], points[(i + 1) % 4], Color.BLUE);
+            }
+            lines[4] = new DebugLine(rect.centroid(), rect.centroid().add(velocity().mul(50, new Vector2f()), new Vector2f()), Color.YELLOW);
+            return new DebugPrimitive[]{primitive};
+        }
+        return null;
     }
 
 }

@@ -117,16 +117,27 @@ public class GameObject {
      * Called once every frame for each GameObject, calls the update method for each component it contains
      */
     public void update(float dt) {
-        for (Component component : components) {
-            //clear the position buffer
+
+        //clear position buffer at the start to only record freshly made changes
+        transform.resetPositionBuffer();
+
+        //update components, that do impact the position of the object
+        components.stream().filter(Component::transformingObject).forEach(component -> component.update(dt));
+
+        //check collision to fix the position
+        getParentScene().checkCollision(getComponent(RigidBody.class));
+
+        //apply all changes made to the position buffer
+        if (transform.applyPositionBuffer()) {
+            //reset the buffer to deny changes in transform sensitive methods
             transform.resetPositionBuffer();
-            component.update(dt);
-            //apply all changes made to the buffer, returns true, if there have been changes
-            if (transform.applyPositionBuffer()) {
-                //update all components that are interested in a change of the transform
-                transformSensitives.forEach(transformSensitive -> transformSensitive.update(transform));
-            }
+            //update all components that are interested in a change of the transform
+            transformSensitives.forEach(transformSensitive -> transformSensitive.update(transform));
         }
+
+        //update components, that update the screen visually only
+        components.stream().filter(component1 -> !component1.transformingObject()).forEach(component -> component.update(dt));
+
     }
 
     /**
@@ -146,8 +157,17 @@ public class GameObject {
     /**
      * @return a new copy of the current transform of the gameObject
      */
-    public Transform getTransform() {
+    public Transform getReadOnlyTransform() {
         return this.transform.copy();
+    }
+
+    /**
+     * Do NOT change this transform here. Use positionBuffer for that.
+     *
+     * @return the raw transform object of the gameObject
+     */
+    public Transform getRawTransform() {
+        return this.transform;
     }
 
     public Vector2f positionBuffer() {
@@ -200,10 +220,12 @@ public class GameObject {
                 components.remove(i);
                 if (c instanceof TransformSensitive)
                     transformSensitives.remove(c);
+                parentScene.updateGameObject(this, false);
                 return;
             }
         }
     }
+
 
     /**
      * Adds a new component to the GameObject's list.
@@ -213,28 +235,15 @@ public class GameObject {
      * @param c the new component
      * @return the gameobject itself
      */
-    public GameObject addComponentSecurely(Component c) {
-        if (this.components.stream().anyMatch(component -> c.isConflictingWith(component.getClass()) || component.isConflictingWith(c.getClass())))
-            throw new IllegalComponentStateException("Component " + c.getClass() + " is conflicting with another");
-        this.components.add(c);
-        if (c instanceof TransformSensitive)
-            this.transformSensitives.add((TransformSensitive) c);
-        c.gameObject = this;
-        return this;
-    }
-
-    /**
-     * Adds a new component to the GameObject's list.
-     * There won't be any check to ensure that, the components of this gameobject won't break.
-     *
-     * @param c the new component
-     * @return this gameobject
-     */
     public GameObject addComponent(Component c) {
+        if (this.components.stream().anyMatch(component -> c.isConflictingWith(component.getClass()) || component.isConflictingWith(c.getClass())))
+            throw new IllegalComponentStateException("Component " + c.getClass() + " is conflicting with existing one");
         this.components.add(c);
         if (c instanceof TransformSensitive)
             this.transformSensitives.add((TransformSensitive) c);
         c.gameObject = this;
+        //update collision maps in scene
+        parentScene.updateGameObject(this, true);
         return this;
     }
 

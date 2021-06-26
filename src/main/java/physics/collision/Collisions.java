@@ -2,6 +2,7 @@ package physics.collision;
 
 import ecs.RigidBody;
 import org.joml.Vector2f;
+import scenes.DemoPlatformer;
 
 /**
  * <h1>Azurite</h1>
@@ -16,8 +17,11 @@ public class Collisions {
         return new CollisionHandler() {
             @Override
             public void accept(RigidBody collider) {
-                Vector2f reflection = parentComponent.getCollisionShape().reflect(collider.getCollisionShape().centroid(), collider.velocity());
-                collider.velocity().add(reflection.mul(velocityFactor));
+                Vector2f direction = collider.getForce().direction();
+                Vector2f reflection = parentComponent.getCollisionShape().reflect(collider.getCollisionShape().centroid(), collider.velocity().add(direction, new Vector2f()));
+                reflection.mul(velocityFactor);
+                DemoPlatformer.last = reflection;
+                collider.velocity().add(reflection);
             }
         };
     }

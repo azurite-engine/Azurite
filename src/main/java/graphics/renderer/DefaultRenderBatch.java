@@ -63,7 +63,7 @@ public class DefaultRenderBatch extends RenderBatch {
 			}
 
 			// Load position
-			Transform spr = sprite.gameObject.getTransform();
+			Transform spr = sprite.gameObject.getReadOnlyTransform();
 			data[offset] = spr.getPosition().x + (xAdd * spr.scale.x);
 			data[offset + 1] = spr.getPosition().y + (yAdd * spr.scale.y);
 

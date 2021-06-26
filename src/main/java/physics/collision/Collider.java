@@ -18,7 +18,14 @@ public interface Collider {
      */
     Shape getCollisionShape();
 
-    void onCollide(Collider otherCollider);
+    /**
+     * Is called if there is a collision with this object.
+     *
+     * @param otherCollider the object that this object collided with
+     */
+    void handleCollision(Collider otherCollider);
+
+    void resetCollision();
 
     /**
      * Determines whether a collider intersects with another collider IGNORING the collision layers.

@@ -20,6 +20,7 @@ public class Transform {
     private void init(Vector2f position, Vector2f scale) {
         this.position = position;
         this.scale = scale;
+        this.positionBuffer = new Vector2f();
     }
 
     /**
@@ -96,7 +97,7 @@ public class Transform {
     }
 
     public boolean applyPositionBuffer() {
-        if (positionBuffer.equals(0, 0)) return false;
+        if (positionBuffer.equals(new Vector2f())) return false;
         this.position.add(positionBuffer);
         return true;
     }
@@ -110,10 +111,6 @@ public class Transform {
      */
     public float getX() {
         return this.position.x;
-    }
-
-    public void addX(float x) {
-        positionBuffer.add(x, 0);
     }
 
     public float getY() {

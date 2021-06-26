@@ -1,75 +1,63 @@
 package ecs;
 
+import input.Keyboard;
 import org.joml.Vector2f;
-import physics.AABB;
 
-@Deprecated
+import java.util.Arrays;
+
+
 public class CharacterController extends Component {
 
-    Vector2f position;
-    Vector2f speed;
-
-    float gravity;
-    private final boolean grounded;
-    protected Vector2f lastPosition;
-
-    float sprintSpeed;
-
-    protected AABB collision;
-    public boolean AABB_enabled;
+    private float movementSpeed;
+    private Vector2f currentDirection;
+    private final boolean[] keys = new boolean[3];
+    private RigidBody body;
 
     public CharacterController() {
-        position = new Vector2f(0, 0);
-        speed = new Vector2f(300, 300);
-        gravity = 9;
-        grounded = false;
-        sprintSpeed = 0;
-        AABB_enabled = false;
-        this.order = SpriteRenderer.ORDER - 2;
+        movementSpeed = 0.1f;
+        this.order = SpriteRenderer.ORDER - 5;
+        this.currentDirection = new Vector2f();
+    }
+
+    public void setMovementSpeed(float movementSpeed) {
+        this.movementSpeed = movementSpeed;
     }
 
     @Override
     public void start() {
-        lastPosition = new Vector2f();
-        position = gameObject.getTransform().getPosition();
         super.start();
+        this.body = gameObject.getComponent(RigidBody.class);
     }
 
     @Override
     public void update(float dt) {
-//        moveX();
-        if (collision != null) collision.collideX();
 
-//        moveY();
-        if (collision != null) collision.collideY();
+        if (this.body == null) return;
+
+        boolean change;
+
+        change = keys[0] != (keys[0] = Keyboard.getKeyDown(Keyboard.A_KEY) || Keyboard.getKeyHeld(Keyboard.A_KEY));
+        change = change || keys[1] != (keys[1] = Keyboard.getKeyDown(Keyboard.D_KEY) || Keyboard.getKeyHeld(Keyboard.D_KEY));
+        change = change || keys[2] != (keys[2] = Keyboard.getKeyDown(Keyboard.W_KEY) || Keyboard.getKeyHeld(Keyboard.W_KEY));
+
+        if (!change) return;
+
+        //remove old movement
+        this.body.velocity().add(currentDirection.mul(-1, 0));
+        currentDirection = new Vector2f();
+
+        //define new movement
+
+        if (keys[0] != keys[1]) {
+            currentDirection.add(keys[0] ? -movementSpeed : movementSpeed, 0);
+        }
+
+        if (keys[2] && this.body.isColliding())
+            currentDirection.add(0, -movementSpeed * 3000);
+
+        System.out.println("change move direction to: " + currentDirection + " | " + Arrays.toString(keys));
+        this.body.velocity().add(currentDirection);
+
     }
-
-//    public void enableAABB() {
-//        AABB_enabled = true;
-//        collision = gameObject.getComponent(AABB.class);
-//    }
-//
-//    protected void moveX() {
-//        // X
-//        gameObject.setTransformX(position.x);
-//        if (Keyboard.getKey(Keyboard.A_KEY) || Keyboard.getKey(Keyboard.LEFT_ARROW)) {
-//            position.x += (-speed.x + sprintSpeed) * Engine.deltaTime();
-//        }
-//        if (Keyboard.getKey(Keyboard.D_KEY) || Keyboard.getKey(Keyboard.RIGHT_ARROW)) {
-//            position.x += (speed.x + sprintSpeed) * Engine.deltaTime();
-//        }
-//    }
-//
-//    protected void moveY() {
-//        // Y
-//        gameObject.setTransformY(position.y);
-//
-//        if (Keyboard.getKey(Keyboard.W_KEY) || Keyboard.getKey(Keyboard.UP_ARROW)) {
-//            position.y += (-speed.y + sprintSpeed) * Engine.deltaTime();
-//        }
-//        if (Keyboard.getKey(Keyboard.S_KEY) || Keyboard.getKey(Keyboard.DOWN_ARROW)) {
-//            position.y += (speed.y + sprintSpeed) * Engine.deltaTime();
-//        }
-//    }
 
 }
