@@ -27,7 +27,7 @@
 
 
 <!-- TABLE OF CONTENTS -->
-## Table of Contents
+# Table of Contents
 
 * [Features](#features)
   * [Built With](#built-with)
@@ -40,12 +40,15 @@
 * [License](#license)
 * [Contact](#contact)
 
-## Features
+# Features
 
 * Modern OpenGL through the LWJGL 3 library for fast GPU rendering.
 * Entity Component System
 
-## Code Samples
+### Built With
+* [LWJGL 3](https://www.lwjgl.org/)
+
+### Code Samples
 #### BoilerPlate Code:
 ```java
 public class Main extends Scene {
@@ -61,7 +64,7 @@ public class Main extends Scene {
 }
 ```
 
-#### Simple example with sprites
+#### Simple example with sprites:
 ```java
 public class Main extends Scene {
 	
@@ -81,21 +84,22 @@ public class Main extends Scene {
 	}
 }
 ```
+# Getting Started
 
-## Prerequisites
+### Prerequisites
 * OpenGL capable graphics card (minimum `core 330`)
 * OpenGL capable graphics driver
   * Linux nouveau drivers for nvidia cards do not currently work, you will have to install proprietary drivers.
   * FOSS AMD Drivers for linux do work.
 * Java 1.8
   
-## Project Setup
+### Project Setup
 To begin contributing, create a fork of this repository.
 Using intellj, import this project from existing sources as a gradle project.
 Build gradle, then run the Main scene (located in the scenes package).
 Follow this [link](https://games-with-gabe-community.github.io/Azurite-Docs/tutorials/set-a-project.html) for tutorials on cloning and importing to either Intellj or Eclipse.
 
-## Documentation
+### Documentation
 * [Documentatation](https://azurite-engine.github.io/Azurite-Docs/) (Done but we are still adding stuff to it)
 * [Javadocs](https://azurite-engine.github.io/azurite-javadocs/)
 * [Contributing guidelines](https://github.com/Games-With-Gabe-Community/Azurite/blob/main/CONTRIBUTING.md)
@@ -103,9 +107,6 @@ Follow this [link](https://games-with-gabe-community.github.io/Azurite-Docs/tuto
 
 ### License
 Copyright (c) 2021 MIT License
-
-### Built With
-* [LWJGL 3](https://www.lwjgl.org/)
 
 ### Contact
 [Discord Server](https://discord.gg/dhyV3BXkRZ)
