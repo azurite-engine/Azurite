@@ -3,6 +3,7 @@ package scenes;
 import ecs.*;
 import graphics.Camera;
 import graphics.Color;
+import graphics.Texture;
 import org.joml.Vector2f;
 import physics.Transform;
 import physics.collision.Shapes;
@@ -19,7 +20,7 @@ import static graphics.Graphics.setDefaultBackground;
 
 public class DemoTopDown extends Scene {
     public static void main(String[] args) {
-        Engine.init("Azurite Engine Demo 1", 0.01f);
+        Engine.init(1080, 720, "Azurite Engine Demo 1", 0.01f);
         Engine.scenes().switchScene(new DemoTopDown(), true);
         Engine.showWindow();
     }
@@ -61,7 +62,6 @@ public class DemoTopDown extends Scene {
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         bloom.init();
-
     }
 
     public void update() {
@@ -74,7 +74,7 @@ public class DemoTopDown extends Scene {
     }
 
     @Override
-    public void postProcess(int texture) {
+    public void postProcess(Texture texture) {
         bloom.apply(texture);
     }
 }

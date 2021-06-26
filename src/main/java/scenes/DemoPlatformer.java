@@ -4,6 +4,7 @@ import ecs.*;
 import graphics.Camera;
 import graphics.Color;
 import org.joml.Vector2f;
+import graphics.Texture;
 import physics.Transform;
 import physics.collision.Shapes;
 import physics.force.ConstantForce;
@@ -113,7 +114,7 @@ public class DemoPlatformer extends Scene {
     }
 
     @Override
-    public void postProcess(int texture) {
+    public void postProcess(Texture texture) {
         bloom.apply(texture);
     }
 }

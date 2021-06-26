@@ -4,6 +4,7 @@ import ecs.GameObject;
 import ecs.RigidBody;
 import ecs.StaticCollider;
 import graphics.Camera;
+import graphics.Texture;
 import graphics.renderer.DebugRenderer;
 import graphics.renderer.DefaultRenderer;
 import graphics.renderer.LightmapRenderer;
@@ -104,7 +105,7 @@ public abstract class Scene {
         }
     }
 
-    public void postProcess(int texture) {
+    public void postProcess(Texture texture) {
         forwardToScreen.setTexture(texture);
         forwardToScreen.apply();
     }

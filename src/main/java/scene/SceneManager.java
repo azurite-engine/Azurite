@@ -1,5 +1,7 @@
 package scene;
 
+import graphics.Texture;
+
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -133,7 +135,7 @@ public class SceneManager {
         }
     }
 
-    public void postProcess(int texture) {
+    public void postProcess(Texture texture) {
         if (currentScene != null) {
             currentScene.postProcess(texture);
         }

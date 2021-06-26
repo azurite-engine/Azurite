@@ -1,6 +1,7 @@
 package graphics;
 
 import org.lwjgl.BufferUtils;
+import util.specs.TextureSpec;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -10,6 +11,7 @@ import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL12.GL_TEXTURE_WRAP_R;
 import static org.lwjgl.opengl.GL13.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.stb.STBImage.*;
@@ -62,6 +64,7 @@ public class Texture {
 
 		// Set texture parameters
 		// tile image in both directions
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
@@ -96,6 +99,19 @@ public class Texture {
 		}
 
 		stbi_image_free(image);
+	}
+
+	public Texture(int width, int height, TextureSpec spec) {
+		filepath = "==== Created ====";
+		textureID = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, spec.format.internalFormat, width, height, 0, spec.format.format, spec.format.datatype, 0);
+
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, spec.minificationFilter.glType);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, spec.magnificationFilter.glType);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, spec.rFilter.glType);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, spec.sFilter.glType);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, spec.tFilter.glType);
 	}
 
 	/**
@@ -201,5 +217,9 @@ public class Texture {
 
 	public void setId(int id) {
 		this.textureID = id;
+	}
+
+	public void delete() {
+		glDeleteTextures(textureID);
 	}
 }
