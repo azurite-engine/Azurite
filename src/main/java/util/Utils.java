@@ -33,6 +33,19 @@ public class Utils {
     }
 
     /**
+     * Make a dereferenced copy of a vector array
+     *
+     * @param original the original array
+     * @return a array containing a copy of each vector
+     */
+    public static Vector2f[] copy(Vector2f[] original) {
+        Vector2f[] copy = new Vector2f[original.length];
+        for (int i = 0; i < copy.length; i++)
+            copy[i] = new Vector2f(original[i]);
+        return copy;
+    }
+
+    /**
      * Re-maps a number from one range to another.
      *
      * @param value  Number to me re-mapped

@@ -11,30 +11,13 @@ import org.joml.Vector2f;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class Point extends Shape {
-
-    private final Vector2f relativePoint;
-    private Vector2f absolutePoint;
-
-    private final Circle boundingSphere;
+public class Point extends PrimitiveShape {
 
     public Point(Vector2f relativePoint) {
-        this.relativePoint = new Vector2f(relativePoint);
+        super(relativePoint);
+        this.relativeCentroid = relativePoint;
         this.boundingSphere = new Circle(relativePoint, Float.MIN_VALUE);
-    }
-
-    public Vector2f getRelativePoint() {
-        return relativePoint;
-    }
-
-    public Vector2f getAbsolutePoint() {
-        return absolutePoint;
-    }
-
-    @Override
-    public void adjust() {
-        this.absolutePoint = position().add(relativePoint, new Vector2f());
-        this.boundingSphere.setPosition(position());
+        init();
     }
 
     @Override
@@ -43,17 +26,13 @@ public class Point extends Shape {
     }
 
     @Override
-    public Vector2f centroid() {
-        return absolutePoint;
-    }
-
-    @Override
-    public Circle boundingSphere() {
-        return boundingSphere;
-    }
-
-    @Override
     public Vector2f supportPoint(Vector2f v) {
-        return absolutePoint;
+        return absolutes[0];
     }
+
+    @Override
+    public Shape shape() {
+        return Shape.POINT;
+    }
+
 }

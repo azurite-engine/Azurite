@@ -6,8 +6,8 @@ import physics.collision.Collider;
 import physics.collision.CollisionHandler;
 import physics.collision.CollisionUtil;
 import physics.collision.Collisions;
-import physics.collision.shape.Rectangle;
-import physics.collision.shape.Shape;
+import physics.collision.shape.PrimitiveShape;
+import physics.collision.shape.Quadrilateral;
 import util.Utils;
 import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
@@ -30,19 +30,19 @@ public class StaticCollider extends Component implements Collider {
     private short collisionMask;
 
     //the collisionShape of the collider
-    private final Shape collisionShape;
+    private final PrimitiveShape collisionShape;
 
     //used to feed with rigidBodies this static block is colliding with
     private CollisionHandler collisionHandler = Collisions.solid();
 
-    public StaticCollider(Shape collisionShape, int[] layers, int[] maskedLayers) {
+    public StaticCollider(PrimitiveShape collisionShape, int[] layers, int[] maskedLayers) {
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layers);
         this.collisionMask = Utils.encode(maskedLayers);
         this.order = SpriteRenderer.ORDER - 1;
     }
 
-    public StaticCollider(Shape collisionShape, int layer) {
+    public StaticCollider(PrimitiveShape collisionShape, int layer) {
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layer);
         this.order = SpriteRenderer.ORDER - 1;
@@ -54,7 +54,7 @@ public class StaticCollider extends Component implements Collider {
     }
 
     @Override
-    public Shape getCollisionShape() {
+    public PrimitiveShape getCollisionShape() {
         return collisionShape;
     }
 
@@ -128,8 +128,8 @@ public class StaticCollider extends Component implements Collider {
 
     @Override
     public DebugPrimitive[] debug() {
-        if (collisionShape instanceof Rectangle) {
-            Rectangle rect = (Rectangle) collisionShape;
+        if (collisionShape instanceof Quadrilateral) {
+            Quadrilateral rect = (Quadrilateral) collisionShape;
             Vector2f[] points = rect.getAbsolutePoints();
             DebugLine[] lines = new DebugLine[4];
             for (int i = 0; i < 4; i++) {

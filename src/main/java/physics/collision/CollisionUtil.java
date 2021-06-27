@@ -2,8 +2,12 @@ package physics.collision;
 
 import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
-import physics.collision.shape.Shape;
+import physics.collision.shape.PrimitiveShape;
+import physics.collision.shape.Triangle;
 import util.Pair;
+import util.Triple;
+
+import java.util.Optional;
 
 /**
  * <h1>Azurite</h1>
@@ -36,7 +40,7 @@ public class CollisionUtil {
      * @param shapeB shape b
      * @return whether shape a and shape b intersect
      */
-    public static boolean gjksmCollision(Shape shapeA, Shape shapeB) {
+    public static boolean gjksmCollision(PrimitiveShape shapeA, PrimitiveShape shapeB) {
         Vector2f anyDirectionTowardsOrigin = new Vector2f(1, 1);
         Vector2f startPoint = maxDotPointMinkDiff(shapeA, shapeB, anyDirectionTowardsOrigin);
         Vector2f direction = new Vector2f(-startPoint.x, -startPoint.y);
@@ -104,7 +108,7 @@ public class CollisionUtil {
      *
      * @return the maximum point in a specific direction
      */
-    public static Vector2f maxDotPointMinkDiff(Shape shapeA, Shape shapeB, Vector2f direction) {
+    public static Vector2f maxDotPointMinkDiff(PrimitiveShape shapeA, PrimitiveShape shapeB, Vector2f direction) {
         Vector2f pointA = shapeA.supportPoint(direction);
         Vector2f pointB = shapeB.supportPoint(new Vector2f(-direction.x, -direction.y));
         return new Vector2f(pointA.x - pointB.x, pointA.y - pointB.y);
@@ -162,9 +166,12 @@ public class CollisionUtil {
      * @return a reflection vector for the given ray direction on the given mirror plane its the length
      */
     public static Vector2f planeReflection(Vector2f normal, Vector2f direction) {
+        //TODO look if this can be optimized, we dont like square root
         normal = normal.normalize(new Vector2f());
         Vector2f norm = normal.mul(2 * direction.dot(normal), new Vector2f());
-        return direction.sub(norm, new Vector2f()).mul(-1);
+        Vector2f mul = direction.sub(norm, new Vector2f()).mul(-1);
+        System.out.println("norm: " + normal + ", dir: " + direction + " = " + mul);
+        return mul;
     }
 
     /**
@@ -250,6 +257,58 @@ public class CollisionUtil {
         return solveSimultaneousEquations(linearSystem.m00, linearSystem.m10, linearSystem.m01, linearSystem.m11, linearSystem.m20, linearSystem.m21);
     }
 
+    public static void main(String[] args) {
+
+        PrimitiveShape q1 = new Triangle(new Vector2f(0, 0), new Vector2f(0, 5), new Vector2f(6, 2));
+        PrimitiveShape q2 = new Triangle(new Vector2f(0, 0), new Vector2f(3, 0), new Vector2f(3, 3));
+        q1.setPosition(new Vector2f(0, 0));
+        q2.setPosition(new Vector2f(2, 2));
+
+        CollisionInformation c = new CollisionInformation(q2, q1);
+
+        requestCollisionData(c);
+
+        System.out.println(q1.centroid());
+        System.out.println(q2.centroid());
+        System.out.println(c);
+
+        q2.setPosition(q2.position().add(c.getCollisionDepth(), new Vector2f()));
+
+        System.out.println(gjksmCollision(q1, q2));
+
+    }
+
+    public static void requestCollisionData(CollisionInformation information) {
+        PrimitiveShape a = information.getA();
+        PrimitiveShape b = information.getB();
+        //using a diagonals and b faces
+        Optional<Triple<Vector2f, Vector2f, Vector2f>> collision = a.collision(b);
+        Vector2f penetration = new Vector2f();
+        float intersectionDepth = 0;
+        if (collision.isPresent()) {
+            Triple<Vector2f, Vector2f, Vector2f> intersection = collision.get();
+            information.setCollisionPoint(intersection.getLeft());
+            intersectionDepth = 1 - intersection.getMiddle().x;
+            information.setCollisionDiagonal(intersection.getRight());
+            penetration = intersection.getRight().mul(intersectionDepth, new Vector2f());
+        }
+        //using b diagonals and a faces
+        collision = b.collision(a);
+        if (collision.isPresent()) {
+            Triple<Vector2f, Vector2f, Vector2f> intersection = collision.get();
+            information.setCollisionPoint(intersection.getLeft());
+            float depth = 1 - intersection.getMiddle().x;
+            Vector2f mul = intersection.getRight().mul(depth, new Vector2f());
+            System.out.println(intersection.getRight());
+            System.out.println("alternate: " + mul + " original: " + penetration);
+            if(mul.lengthSquared() > penetration.lengthSquared()) {
+                penetration = mul;
+                information.setCollisionDiagonal(intersection.getRight());
+            }
+        }
+        information.setCollisionDepth(penetration);
+    }
+
     /**
      * Cast two rays and see if they intersect.
      *
@@ -257,16 +316,34 @@ public class CollisionUtil {
      * @param rayA   the direction and length of ray 1
      * @param pointB the starting point of ray 2
      * @param rayB   the direction and length of ray 2
-     * @return true if both rays intersect within their given length and direction
+     * @return the intersection point
+     * @see CollisionUtil#rayCastIntersection(Vector2f, Vector2f, Vector2f, Vector2f)
      */
-    public static Vector2f rayCastIntersectionPoint(Vector2f pointA, Vector2f rayA, Vector2f pointB, Vector2f rayB) { //x,a,y,b
+    public static Optional<Vector2f> rayCastIntersectionPoint(Vector2f pointA, Vector2f rayA, Vector2f pointB, Vector2f rayB) { //x,a,y,b
+        return rayCastIntersection(pointA, rayA, pointB, rayB).map(Pair::getLeft);
+    }
+
+    /**
+     * Cast two rays and see if they intersect.
+     * The solution will be calculated based on endless rays with a fixpoint and a ray direction.
+     * If a there is intersection point of both ray, they arent parallel and the factors x and y are calculated,
+     * so that intersection = pointA+x*rayA = pointB+y*rayB is valid.
+     * To ensure a finite ray, the conditions 0 <= x <= 1 and 0 <= y <= 1 are checked.
+     *
+     * @param pointA the starting point of ray 1
+     * @param rayA   the direction and length of ray 1
+     * @param pointB the starting point of ray 2
+     * @param rayB   the direction and length of ray 2
+     * @return a pair containing the intersection point first and a vector with factors x and y
+     */
+    public static Optional<Pair<Vector2f, Vector2f>> rayCastIntersection(Vector2f pointA, Vector2f rayA, Vector2f pointB, Vector2f rayB) { //x,a,y,b
         //solve the linear equation
         Vector2f factors = solveSimultaneousEquations(rayA.x, -rayB.x, rayA.y, -rayB.y, pointB.x - pointA.x, pointB.y - pointA.y);
         //if the lines are crossing, but factors have to be between 0 and 1 to ensure, that the given vector is sufficient to reach
-        if (factors.x > 1 || factors.x < 0 || factors.y > 1 || factors.y < 0) return null;
+        if (factors.x > 1 || factors.x < 0 || factors.y > 1 || factors.y < 0) return Optional.empty();
         //calculate the point where the intersection happened and return
         Vector2f dest = rayA.mul(factors.x, new Vector2f());
-        return dest.add(pointA);
+        return Optional.of(new Pair<>(dest.add(pointA), factors));
     }
 
     /**
@@ -276,18 +353,18 @@ public class CollisionUtil {
      * @param rayDirectionAndLength the direction and length of the ray
      * @param linePointA            the start point of the line
      * @param linePointB            the end point of the line
-     * @return true if the ray cast intersects with the given line
+     * @return the intersection point
      */
-    public static Vector2f rayCastToLineIntersectionPoint(Vector2f rayStart, Vector2f rayDirectionAndLength, Vector2f linePointA, Vector2f linePointB) {
+    public static Optional<Vector2f> rayCastToLineIntersectionPoint(Vector2f rayStart, Vector2f rayDirectionAndLength, Vector2f linePointA, Vector2f linePointB) {
         return rayCastIntersectionPoint(rayStart, rayDirectionAndLength, linePointA, linePointB.sub(linePointA, new Vector2f()));
     }
 
     //helper function to solve 2d linear system
     private static Vector2f solveSimultaneousEquations(float a, float b, float c, float d, float e, float f) {
-        float det = a * d - b * c;  //instead of 1/
-        float x = (d * e - b * f) / det;
-        float y = (a * f - c * e) / det;
-        return new Vector2f(x, y);
+        float det = 1 / (a * d - b * c);
+        float x = (d * e - b * f);
+        float y = (a * f - c * e);
+        return new Vector2f(x, y).mul(det);
     }
 
     /**

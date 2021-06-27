@@ -3,6 +3,7 @@ package physics.collision.shape;
 import org.joml.Vector2f;
 import physics.collision.CollisionUtil;
 import util.Pair;
+import util.Utils;
 
 /**
  * <h1>Azurite</h1>
@@ -15,62 +16,26 @@ import util.Pair;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class BasicPolygon extends Shape {
+public class BasicPolygon extends PrimitiveShape {
 
-    private final Vector2f[] relativePoints;
-    private final Vector2f[] absolutePoints;
 
-    private final Vector2f relativeCentroid;
-    private Vector2f absoluteCentroid;
-
-    private final Circle boundingSphere;
-
-    public BasicPolygon(Vector2f... relativePoints) {
-        this.relativePoints = new Vector2f[relativePoints.length];
-        for (int i = 0; i < relativePoints.length; i++)
-            this.relativePoints[i] = new Vector2f(relativePoints[i]);
-        absolutePoints = new Vector2f[relativePoints.length];
-        relativeCentroid = CollisionUtil.polygonCentroid(relativePoints);
-        boundingSphere = new Circle(relativeCentroid, CollisionUtil.boundingSphere(relativeCentroid, this.relativePoints));
-    }
-
-    public Vector2f[] getRelativePoints() {
-        return relativePoints;
-    }
-
-    public Vector2f[] getAbsolutePoints() {
-        return absolutePoints;
-    }
-
-    @Override
-    public void adjust() {
-        for (int i = 0; i < absolutePoints.length; i++)
-            absolutePoints[i] = position().add(relativePoints[i], new Vector2f());
-        absoluteCentroid = position().add(relativeCentroid, new Vector2f());
-        boundingSphere.setPosition(position());
+    public BasicPolygon(Vector2f... relatives) {
+        super(Utils.copy(relatives));
+        initSphere();
+        init();
     }
 
     @Override
     public Vector2f reflect(Vector2f centroid, Vector2f collisionRay) {
-        Pair<Vector2f, Vector2f> normals = CollisionUtil.collisionEdgeNormals(this.absolutePoints, this.absoluteCentroid, centroid);
+        Pair<Vector2f, Vector2f> normals = CollisionUtil.collisionEdgeNormals(this.absolutes, this.absoluteCentroid, centroid);
         if (normals.getLeft().dot(collisionRay) >= 0)
             return CollisionUtil.planeReflection(normals.getLeft(), collisionRay);
         else return CollisionUtil.planeReflection(normals.getRight(), collisionRay);
     }
 
     @Override
-    public Vector2f centroid() {
-        return absoluteCentroid;
-    }
-
-    @Override
-    public Circle boundingSphere() {
-        return boundingSphere;
-    }
-
-    @Override
-    public Vector2f supportPoint(Vector2f v) {
-        return CollisionUtil.maxDotPoint(absolutePoints, v);
+    public Shape shape() {
+        return Shape.POLYGON;
     }
 
 }

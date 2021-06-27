@@ -3,6 +3,9 @@ package physics.collision.shape;
 import org.joml.Vector2f;
 import physics.collision.CollisionUtil;
 import physics.collision.RayCastResult;
+import util.Triple;
+
+import java.util.Optional;
 
 /**
  * <h1>Azurite</h1>
@@ -13,55 +16,33 @@ import physics.collision.RayCastResult;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class Circle extends Shape {
+public class Circle extends PrimitiveShape {
 
     private final float radius;
     private final float radiusSquared;
-    private final Vector2f relativeCenter;
-    private Vector2f absoluteCenter;
 
     public Circle(Vector2f relativeCenter, float radius) {
-        this.relativeCenter = new Vector2f(relativeCenter);
+        super();
+        this.relativeCentroid = new Vector2f(relativeCenter);
         this.radius = radius;
         this.radiusSquared = radius * radius;
-    }
-
-    public float getRadius() {
-        return radius;
-    }
-
-    public Vector2f getRelativeCenter() {
-        return relativeCenter;
-    }
-
-    public Vector2f getAbsoluteCenter() {
-        return absoluteCenter;
+        this.boundingSphere = this;
     }
 
     @Override
     public void adjust() {
-        this.absoluteCenter = position().add(this.relativeCenter, new Vector2f());
-    }
-
-    @Override
-    public Vector2f centroid() {
-        return absoluteCenter;
-    }
-
-    @Override
-    public Circle boundingSphere() {
-        return this;
+        this.absoluteCentroid = position().add(this.relativeCentroid, new Vector2f());
     }
 
     @Override
     public Vector2f supportPoint(Vector2f v) {
-        Vector2f normalized = v.normalize(new Vector2f());
-        return absoluteCenter.add(normalized.mul(radius), new Vector2f());
+        Vector2f normalized = v.normalize(radius, new Vector2f());
+        return absoluteCentroid.add(normalized, new Vector2f());
     }
 
     @Override
     public Vector2f reflect(Vector2f centroid, Vector2f collisionRay) {
-        RayCastResult rayCastResult = rayCast(centroid, absoluteCenter.sub(centroid, new Vector2f()), Float.POSITIVE_INFINITY);
+        RayCastResult rayCastResult = rayCast(centroid, absoluteCentroid.sub(centroid, new Vector2f()), Float.POSITIVE_INFINITY);
         return CollisionUtil.planeReflection(rayCastResult.getNormal(), collisionRay);
     }
 
@@ -73,9 +54,15 @@ public class Circle extends Shape {
      * @return true if the given circle intersects with this one
      */
     public boolean intersection(Circle circle) {
-        double distanceSquared = this.absoluteCenter.distanceSquared(circle.getAbsoluteCenter());
+        double distanceSquared = this.absoluteCentroid.distanceSquared(circle.getAbsoluteCentroid());
         double radiusSquared = this.radiusSquared + circle.radiusSquared + 2 * this.radius * circle.radius;
         return distanceSquared - radiusSquared <= 0;
+    }
+
+    @Override
+    public Optional<Triple<Vector2f, Vector2f, Vector2f>> collision(PrimitiveShape other) {
+        //TODO circle collision
+        return Optional.empty();
     }
 
     /**
@@ -88,7 +75,7 @@ public class Circle extends Shape {
      */
     public RayCastResult rayCast(Vector2f start, Vector2f rayDirection, float maxLength) {
         Vector2f normalizedRay = rayDirection.normalize(new Vector2f());
-        Vector2f center = new Vector2f(absoluteCenter);
+        Vector2f center = new Vector2f(absoluteCentroid);
         Vector2f toCenter = center.sub(start, new Vector2f());
         //length of the raycast to a point X alligned with the center of the circle
         float lengthA = normalizedRay.dot(toCenter);
@@ -109,4 +96,8 @@ public class Circle extends Shape {
         return new RayCastResult(targetPoint, targetPoint.sub(center, new Vector2f()).normalize(), strike, lengthT, true);
     }
 
+    @Override
+    public Shape shape() {
+        return Shape.CIRCLE;
+    }
 }

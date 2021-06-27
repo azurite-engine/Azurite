@@ -9,8 +9,8 @@ import physics.collision.Collider;
 import physics.collision.CollisionHandler;
 import physics.collision.CollisionUtil;
 import physics.collision.Collisions;
-import physics.collision.shape.Rectangle;
-import physics.collision.shape.Shape;
+import physics.collision.shape.PrimitiveShape;
+import physics.collision.shape.Quadrilateral;
 import physics.force.CombinedForce;
 import physics.force.Force;
 import util.Utils;
@@ -38,7 +38,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     private short collisionMask;
 
     //the collisionShape of the collider
-    private final Shape collisionShape;
+    private final PrimitiveShape collisionShape;
 
     //the physical mass of the body
     private float mass;
@@ -52,7 +52,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     //used to feed with objects this body is colliding with
     private CollisionHandler collisionHandler = Collisions.solid();
 
-    public RigidBody(Shape collisionShape, int[] layers, int[] maskedLayers, float physicalMass) {
+    public RigidBody(PrimitiveShape collisionShape, int[] layers, int[] maskedLayers, float physicalMass) {
         super(Collider.class, PhysicalEntity.class); //this class type should be unique in a gameObject
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layers);
@@ -63,7 +63,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         this.order = SpriteRenderer.ORDER - 1;
     }
 
-    public RigidBody(Shape collisionShape, int layer) {
+    public RigidBody(PrimitiveShape collisionShape, int layer) {
         super(Collider.class, PhysicalEntity.class); //this class type should be unique in a gameObject
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layer);
@@ -79,7 +79,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     }
 
     @Override
-    public Shape getCollisionShape() {
+    public PrimitiveShape getCollisionShape() {
         return collisionShape;
     }
 
@@ -210,8 +210,8 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         collisionShape.setPosition(gameObject.getReadOnlyTransform().getPosition());
 
         //debug only
-        if (collisionShape instanceof Rectangle) {
-            Rectangle rect = (Rectangle) collisionShape;
+        if (collisionShape instanceof Quadrilateral) {
+            Quadrilateral rect = (Quadrilateral) collisionShape;
             Vector2f[] points = rect.getAbsolutePoints();
             for (int i = 0; i < 4; i++) {
                 lines[i].start.set(points[i]);
@@ -231,8 +231,8 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
 
     @Override
     public DebugPrimitive[] debug() {
-        if (collisionShape instanceof Rectangle) {
-            Rectangle rect = (Rectangle) collisionShape;
+        if (collisionShape instanceof Quadrilateral) {
+            Quadrilateral rect = (Quadrilateral) collisionShape;
             Vector2f[] points = rect.getAbsolutePoints();
             for (int i = 0; i < 4; i++) {
                 lines[i] = new DebugLine(points[i], points[(i + 1) % 4], Color.BLUE);

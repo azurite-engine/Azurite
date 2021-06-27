@@ -1,6 +1,6 @@
 package physics.collision;
 
-import physics.collision.shape.Shape;
+import physics.collision.shape.PrimitiveShape;
 
 /**
  * <h1>Azurite</h1>
@@ -16,7 +16,7 @@ public interface Collider {
      *
      * @return the shape of the collider
      */
-    Shape getCollisionShape();
+    PrimitiveShape getCollisionShape();
 
     /**
      * Is called if there is a collision with this object.

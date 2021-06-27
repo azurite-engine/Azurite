@@ -1,7 +1,7 @@
 package physics.collision;
 
 import org.joml.Vector2f;
-import physics.collision.shape.Rectangle;
+import physics.collision.shape.Quadrilateral;
 
 /**
  * <h1>Azurite</h1>
@@ -12,15 +12,15 @@ import physics.collision.shape.Rectangle;
  */
 public class Shapes {
 
-    public static Rectangle rectangle(float... coordPairs) {
+    public static Quadrilateral rectangle(float... coordPairs) {
         if (coordPairs.length != 8) return null;
         Vector2f[] coords = new Vector2f[coordPairs.length / 2];
         for (int i = 0; i < 4; i++)
             coords[i] = new Vector2f(coordPairs[i * 2], coordPairs[i * 2 + 1]);
-        return new Rectangle(coords[0], coords[1], coords[2], coords[3]);
+        return new Quadrilateral(coords[0], coords[1], coords[2], coords[3]);
     }
 
-    public static Rectangle axisAlignedRectangle(float ax, float ay, float bx, float by) {
+    public static Quadrilateral axisAlignedRectangle(float ax, float ay, float bx, float by) {
         Vector2f max, min, topMin, botMax;
         max = new Vector2f(Math.max(ax, bx), Math.max(ay, by));
         min = new Vector2f(Math.min(ax, bx), Math.min(ay, by));
@@ -29,11 +29,11 @@ public class Shapes {
         return rectangle(min, botMax, max, topMin);
     }
 
-    public static Rectangle rectangle(Vector2f a, Vector2f b, Vector2f c, Vector2f d) {
-        return new Rectangle(a, b, c, d);
+    public static Quadrilateral rectangle(Vector2f a, Vector2f b, Vector2f c, Vector2f d) {
+        return new Quadrilateral(a, b, c, d);
     }
 
-    public static Rectangle axisAlignedRectangle(Vector2f a, Vector2f b) {
+    public static Quadrilateral axisAlignedRectangle(Vector2f a, Vector2f b) {
         return axisAlignedRectangle(a.x, a.y, b.x, b.y);
     }
 
