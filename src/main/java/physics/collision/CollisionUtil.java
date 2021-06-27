@@ -3,9 +3,7 @@ package physics.collision;
 import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
 import physics.collision.shape.PrimitiveShape;
-import physics.collision.shape.Triangle;
 import util.Pair;
-import util.Triple;
 
 import java.util.Optional;
 
@@ -255,58 +253,6 @@ public class CollisionUtil {
      */
     public static Vector2f solveSimultaneousEquations(Matrix3x2f linearSystem) {
         return solveSimultaneousEquations(linearSystem.m00, linearSystem.m10, linearSystem.m01, linearSystem.m11, linearSystem.m20, linearSystem.m21);
-    }
-
-    public static void main(String[] args) {
-
-        PrimitiveShape q1 = new Triangle(new Vector2f(0, 0), new Vector2f(0, 5), new Vector2f(6, 2));
-        PrimitiveShape q2 = new Triangle(new Vector2f(0, 0), new Vector2f(3, 0), new Vector2f(3, 3));
-        q1.setPosition(new Vector2f(0, 0));
-        q2.setPosition(new Vector2f(2, 2));
-
-        CollisionInformation c = new CollisionInformation(q2, q1);
-
-        requestCollisionData(c);
-
-        System.out.println(q1.centroid());
-        System.out.println(q2.centroid());
-        System.out.println(c);
-
-        q2.setPosition(q2.position().add(c.getCollisionDepth(), new Vector2f()));
-
-        System.out.println(gjksmCollision(q1, q2));
-
-    }
-
-    public static void requestCollisionData(CollisionInformation information) {
-        PrimitiveShape a = information.getA();
-        PrimitiveShape b = information.getB();
-        //using a diagonals and b faces
-        Optional<Triple<Vector2f, Vector2f, Vector2f>> collision = a.collision(b);
-        Vector2f penetration = new Vector2f();
-        float intersectionDepth = 0;
-        if (collision.isPresent()) {
-            Triple<Vector2f, Vector2f, Vector2f> intersection = collision.get();
-            information.setCollisionPoint(intersection.getLeft());
-            intersectionDepth = 1 - intersection.getMiddle().x;
-            information.setCollisionDiagonal(intersection.getRight());
-            penetration = intersection.getRight().mul(intersectionDepth, new Vector2f());
-        }
-        //using b diagonals and a faces
-        collision = b.collision(a);
-        if (collision.isPresent()) {
-            Triple<Vector2f, Vector2f, Vector2f> intersection = collision.get();
-            information.setCollisionPoint(intersection.getLeft());
-            float depth = 1 - intersection.getMiddle().x;
-            Vector2f mul = intersection.getRight().mul(depth, new Vector2f());
-            System.out.println(intersection.getRight());
-            System.out.println("alternate: " + mul + " original: " + penetration);
-            if(mul.lengthSquared() > penetration.lengthSquared()) {
-                penetration = mul;
-                information.setCollisionDiagonal(intersection.getRight());
-            }
-        }
-        information.setCollisionDepth(penetration);
     }
 
     /**

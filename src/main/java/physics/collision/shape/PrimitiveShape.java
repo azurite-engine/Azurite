@@ -2,10 +2,6 @@ package physics.collision.shape;
 
 import org.joml.Vector2f;
 import physics.collision.CollisionUtil;
-import util.Pair;
-import util.Triple;
-
-import java.util.Optional;
 
 /**
  * <h1>Azurite</h1>
@@ -89,30 +85,6 @@ public abstract class PrimitiveShape {
     }
 
     /**
-     * This method will only accept shapes, that are not circles.
-     * Will perform a rayCast Face-Diagonal intersection for the given shape with the current one.
-     * The diagonals of the current shape will be checked against the faces of the other shape.
-     *
-     * @param other the other shape that intersects with the current one
-     * @return a pair containing the intersection point and the factors to calculate the intersection point
-     */
-    protected final Optional<Triple<Vector2f, Vector2f, Vector2f>> nonCircleCollision(PrimitiveShape other) {
-        if (other.shape() == Shape.CIRCLE)
-            return Optional.empty();
-        Face[] faces = other.faces();
-        //room for improvement: choose a good starting point, better diagonals might be guess by impact direction
-        for (Vector2f diagonal : diagonals) {
-            for (Face face : faces) {
-                Optional<Pair<Vector2f, Vector2f>> intersection =
-                        CollisionUtil.rayCastIntersection(absoluteCentroid, diagonal, face.getAbsoluteFixPoint(), face.getRelativeFace());
-                if (intersection.isPresent())
-                    return intersection.map(pair -> pair.extend(diagonal));
-            }
-        }
-        return Optional.empty();
-    }
-
-    /**
      * Will be called by {@link this#setPosition(Vector2f)} after the new position was set.
      * Used to recalculate the absolute coordinates.
      */
@@ -153,18 +125,6 @@ public abstract class PrimitiveShape {
      */
     public Vector2f supportPoint(Vector2f v) {
         return CollisionUtil.maxDotPoint(absolutes, v);
-    }
-
-    /**
-     * This method will be default only accept shapes, that are not circles.
-     * Should be overwritten by any shape, that are circles or cannot be defined with a finite number of points.
-     *
-     * @param other the other shape
-     * @return a pair containing the intersection point and the factors to calculate the intersection point
-     * @see #nonCircleCollision(PrimitiveShape)
-     */
-    public Optional<Triple<Vector2f, Vector2f, Vector2f>> collision(PrimitiveShape other) {
-        return nonCircleCollision(other);
     }
 
     //------------------------------------ Abstract methods ------------------------------------------------------

@@ -3,9 +3,6 @@ package physics.collision.shape;
 import org.joml.Vector2f;
 import physics.collision.CollisionUtil;
 import physics.collision.RayCastResult;
-import util.Triple;
-
-import java.util.Optional;
 
 /**
  * <h1>Azurite</h1>
@@ -57,12 +54,6 @@ public class Circle extends PrimitiveShape {
         double distanceSquared = this.absoluteCentroid.distanceSquared(circle.getAbsoluteCentroid());
         double radiusSquared = this.radiusSquared + circle.radiusSquared + 2 * this.radius * circle.radius;
         return distanceSquared - radiusSquared <= 0;
-    }
-
-    @Override
-    public Optional<Triple<Vector2f, Vector2f, Vector2f>> collision(PrimitiveShape other) {
-        //TODO circle collision
-        return Optional.empty();
     }
 
     /**
