@@ -4,7 +4,10 @@ import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
 import physics.collision.shape.PrimitiveShape;
 import util.Pair;
+import util.Triple;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -38,12 +41,17 @@ public class CollisionUtil {
      * @param shapeB shape b
      * @return whether shape a and shape b intersect
      */
-    public static boolean gjksmCollision(PrimitiveShape shapeA, PrimitiveShape shapeB) {
+    public static Optional<Triple<Vector2f, Vector2f, Vector2f>> gjksmCollision(PrimitiveShape shapeA, PrimitiveShape shapeB) {
         Vector2f anyDirectionTowardsOrigin = new Vector2f(1, 1);
         Vector2f startPoint = maxDotPointMinkDiff(shapeA, shapeB, anyDirectionTowardsOrigin);
         Vector2f direction = new Vector2f(-startPoint.x, -startPoint.y);
 
-        int pointsConfirmed = 0;
+        //will contain the triangle containing the origin
+        Triple<Vector2f, Vector2f, Vector2f> simplex = new Triple<>();
+
+        simplex.setLeft(startPoint);
+
+        int pointsConfirmed = 1;
 
         while (pointsConfirmed < 3) {
 
@@ -52,7 +60,7 @@ public class CollisionUtil {
             Vector2f pointA = maxDotPointMinkDiff(shapeA, shapeB, direction);
 
             if (pointA.dot(direction) < 0)
-                return false; //no intersection
+                return Optional.empty(); //no intersection
 
             //do Simplex -> two points needed for that
             {
@@ -65,13 +73,19 @@ public class CollisionUtil {
                 if (rightDirection(ab, ao)) {
 
                     //one of the perpendicular vectors
-                    Vector2f perpendicular = ab.perpendicular();
+                    Vector2f perpendicular = new Vector2f(ab).perpendicular();
 
                     //decide if negating is necessary - it should point towards AO, therefore dot product has to be > 0
                     if (!rightDirection(perpendicular, ao))
                         perpendicular.mul(-1);
 
                     direction.set(perpendicular);
+
+                    //points.add(ao);
+                    if (pointsConfirmed == 1)
+                        simplex.setMiddle(pointA);
+                    else if (pointsConfirmed == 2)
+                        simplex.setRight(pointA);
 
                     //triangular check not necessary
                     //if the next point derived from the perpendicular direction can find a point
@@ -84,6 +98,7 @@ public class CollisionUtil {
                     //any second point should be cancelled out
                     startPoint = pointA;
                     direction.set(ao);
+                    simplex.setLeft(pointA);
 
                     pointsConfirmed = 1;
 
@@ -92,13 +107,64 @@ public class CollisionUtil {
         }
 
         //3 points are confirmed, there is intersection
-        return true;
+        return Optional.of(simplex);
 
     }
 
     //helper function, just to define whether a certain point goes in the right direction
     private static boolean rightDirection(Vector2f vector, Vector2f towardsOrigin) {
         return vector.dot(towardsOrigin) > 0;
+    }
+
+    //should return the penetration vector
+    public static Optional<Vector2f> epa(PrimitiveShape shapeA, PrimitiveShape shapeB, Triple<Vector2f, Vector2f, Vector2f> simplex) {
+        int faceSize = shapeA.faces().length + shapeB.faces().length;
+        List<Vector2f> polygon = new ArrayList<>(faceSize);
+        polygon.add(simplex.getLeft());
+        polygon.add(simplex.getMiddle());
+        polygon.add(simplex.getRight());
+        System.out.println(polygon);
+        Vector2f normal;
+        for (int i = 0; i < faceSize + 1; i++) {
+            Object[] closestFace = closestFace(polygon); //index, dist, norm
+            float squareLength = (float) closestFace[1];
+            //vector from origin to face
+            normal = (Vector2f) closestFace[2];
+            Vector2f vector2f = maxDotPointMinkDiff(shapeA, shapeB, normal);
+            //if the vector*normal is close to normal*normal, its the point we seek
+            if (Math.abs(normal.dot(vector2f) - squareLength) < 0.001f)
+                return Optional.of(normal.mul(-1));
+            polygon.add(1 + (Integer) closestFace[0], vector2f);
+        }
+        return Optional.empty();
+    }
+
+    private static Object[] closestFace(List<Vector2f> simplex) {
+        int index = 0;
+        float dist = Float.POSITIVE_INFINITY;
+        Vector2f hitPoint = null;
+        for (int i = 0; i < simplex.size(); i++) {
+            Vector2f pointA = simplex.get(i);
+            Vector2f pointB = simplex.get((i + 1) % simplex.size());
+            Vector2f hit = faceDistanceToOriginVector(pointA, pointB);
+            float v = hit.lengthSquared();
+            if (dist > v) {
+                dist = v;
+                index = i;
+                hitPoint = hit;
+            }
+        }
+        return new Object[]{index, dist, hitPoint};
+    }
+
+    private static Vector2f faceDistanceToOriginVector(Vector2f pointA, Vector2f secondPoint) {
+        Vector2f rayA = secondPoint.sub(pointA, new Vector2f());
+        Vector2f rayB = new Vector2f(rayA).perpendicular();
+        Vector2f pointB = new Vector2f(0, 0);
+        //solve the linear equation
+        Vector2f factors = solveSimultaneousEquations(rayA.x, -rayB.x, rayA.y, -rayB.y, pointB.x - pointA.x, pointB.y - pointA.y);
+        //calculate the point where the intersection happened and return
+        return rayB.mul(factors.y); //+pointB is not necessary, its the origin
     }
 
     /**

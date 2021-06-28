@@ -60,7 +60,7 @@ public class StaticCollider extends Component implements Collider {
 
     @Override
     public boolean doesCollideWith(Collider other) {
-        return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape());
+        return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape()).isPresent();
     }
 
     @Override

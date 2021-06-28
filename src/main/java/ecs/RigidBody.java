@@ -85,7 +85,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
 
     @Override
     public boolean doesCollideWith(Collider other) {
-        return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape());
+        return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape()).isPresent();
     }
 
     @Override
