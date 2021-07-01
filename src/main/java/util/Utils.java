@@ -4,7 +4,6 @@ import org.joml.Vector2f;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -110,10 +109,10 @@ public class Utils {
     
     public static String unwrapString(String in, String opening, String closing) {
         String out = in.trim();
-        return out.substring(out.indexOf(opening) + opening.length(), out.lastIndexOf(closing));
+        return out.substring(out.indexOf(opening) + opening.length(), out.lastIndexOf(closing)).trim();
     }
     
-    public static Collection<String> splitIgnoringSubCategories(String in, Character split, Character[] subCategoryOpening, Character[] subCategoryClosing) {
+    public static List<String> splitIgnoringSubCategories(String in, Character split, Character[] subCategoryOpening, Character[] subCategoryClosing) {
         List<String> out = new ArrayList<>();
         int count = 0;
         int offset = -1;
@@ -126,7 +125,7 @@ public class Utils {
                 out.add(in.substring(offset + 1, (offset = in.indexOf(split, i))).trim());
             }
         }
-        out.add(in.substring(offset + 1));
+        out.add(in.substring(offset + 1).trim());
         return out;
     }
 }

@@ -1,7 +1,6 @@
 package io;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,32 +47,32 @@ public class ParsedJSONObject {
 		return new ParsedJSONObject(getAsString(key));
 	}
 	
-	public Collection<String> getAsStringArray(String key) {
+	public List<String> getAsStringArray(String key) {
 		String jsonArr = unwrapString(getAsString(key), "[", "]");
 		return splitIgnoringSubCategories(jsonArr, ',', new Character[]{'{', '['}, new Character[]{'}', ']'});
 	}
 	
-	public Collection<Integer> getAsIntegerArray(String key) {
+	public List<Integer> getAsIntegerArray(String key) {
 		return getAsStringArray(key).stream().map(Integer::parseInt).collect(Collectors.toList());
 	}
 	
-	public Collection<Float> getAsFloatArray(String key) {
+	public List<Float> getAsFloatArray(String key) {
 		return getAsStringArray(key).stream().map(Float::parseFloat).collect(Collectors.toList());
 	}
 	
-	public Collection<Double> getAsDoubleArray(String key) {
+	public List<Double> getAsDoubleArray(String key) {
 		return getAsStringArray(key).stream().map(Double::parseDouble).collect(Collectors.toList());
 	}
 	
-	public Collection<Character> getAsCharArray(String key) {
+	public List<Character> getAsCharArray(String key) {
 		return getAsStringArray(key).stream().map(s ->  s.charAt(0)).collect(Collectors.toList());
 	}
 	
-	public Collection<Boolean> getAsBooleanArray(String key) {
+	public List<Boolean> getAsBooleanArray(String key) {
 		return getAsStringArray(key).stream().map(Boolean::parseBoolean).collect(Collectors.toList());
 	}
 	
-	public Collection<ParsedJSONObject> getAsJsonObjectArray(String key) {
+	public List<ParsedJSONObject> getAsJsonObjectArray(String key) {
 		return getAsStringArray(key).stream().map(ParsedJSONObject::new).collect(Collectors.toList());
 	}
 	
