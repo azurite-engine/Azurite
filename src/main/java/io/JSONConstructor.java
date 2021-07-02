@@ -33,7 +33,7 @@ public class JSONConstructor {
                     field.setAccessible(true);
                 }
 
-                if(!field.getName().equals("$assertionsDisabled") && (Modifier.isTransient(field.getModifiers()) || Modifier.isStatic(field.getModifiers()) || Modifier.isFinal(field.getModifiers()) || field.get(obj) == null)) {
+                if(!field.getName().equals("$assertionsDisabled") && (Modifier.isTransient(field.getModifiers()) || Modifier.isFinal(field.getModifiers()) || field.get(obj) == null)) {
                     continue;
                 }
 
