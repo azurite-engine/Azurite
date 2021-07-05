@@ -8,9 +8,12 @@ import physics.collision.CollisionUtil;
 import physics.collision.Collisions;
 import physics.collision.shape.PrimitiveShape;
 import physics.collision.shape.Quadrilateral;
+import util.Tuple;
 import util.Utils;
 import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
+
+import java.util.Optional;
 
 /**
  * <h1>Azurite</h1>
@@ -59,8 +62,8 @@ public class StaticCollider extends Component implements Collider {
     }
 
     @Override
-    public boolean doesCollideWith(Collider other) {
-        return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape()).isPresent();
+    public Optional<Tuple<Vector2f>> doesCollideWith(Collider other) {
+        return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape());
     }
 
     @Override
@@ -110,9 +113,9 @@ public class StaticCollider extends Component implements Collider {
     }
 
     @Override
-    public void handleCollision(Collider otherCollider) {
+    public void handleCollision(Collider otherCollider, Tuple<Vector2f> gjkSimplex) {
         if (otherCollider instanceof RigidBody)
-            collisionHandler.accept((RigidBody) otherCollider);
+            collisionHandler.accept((RigidBody) otherCollider, gjkSimplex);
     }
 
     @Override

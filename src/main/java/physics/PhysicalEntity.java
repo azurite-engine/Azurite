@@ -2,6 +2,7 @@ package physics;
 
 import org.joml.Vector2f;
 import physics.force.Force;
+import physics.force.VectorFilter;
 
 /**
  * <h1>Azurite</h1>
@@ -21,5 +22,9 @@ public interface PhysicalEntity {
     void applyForce(Force force);
 
     void negateForce(String identifier);
+
+    void addFilter(VectorFilter filter);
+
+    void removeFilters(int id);
 
 }

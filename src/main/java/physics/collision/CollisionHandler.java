@@ -1,8 +1,10 @@
 package physics.collision;
 
 import ecs.RigidBody;
+import org.joml.Vector2f;
+import util.Tuple;
 
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 /**
  * <h1>Azurite</h1>
@@ -11,7 +13,7 @@ import java.util.function.Consumer;
  * @version 25.06.2021
  * @since 25.06.2021
  */
-public abstract class CollisionHandler implements Consumer<RigidBody> {
+public abstract class CollisionHandler implements BiConsumer<RigidBody, Tuple<Vector2f>> {
 
     protected Collider parentComponent;
 

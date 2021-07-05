@@ -3,8 +3,8 @@ package scenes;
 import ecs.*;
 import graphics.Camera;
 import graphics.Color;
-import org.joml.Vector2f;
 import graphics.Texture;
+import org.joml.Vector2f;
 import physics.Transform;
 import physics.collision.Shapes;
 import physics.force.ConstantForce;
@@ -49,7 +49,7 @@ public class DemoPlatformer extends Scene {
         //player.addComponent(new AABB());
         RigidBody playerBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 1);
         playerBody.setMask(2, true);
-        playerBody.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.005f)));
+        playerBody.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.010f)));
         player.addComponent(playerBody);
         player.addComponent(new SpriteRenderer(a.getSprite(132)));
         player.addComponent(new CharacterController());

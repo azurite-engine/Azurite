@@ -12,10 +12,15 @@ import physics.collision.Collisions;
 import physics.collision.shape.PrimitiveShape;
 import physics.collision.shape.Quadrilateral;
 import physics.force.CombinedForce;
+import physics.force.CombinedVectorFilter;
 import physics.force.Force;
+import physics.force.VectorFilter;
+import util.Tuple;
 import util.Utils;
 import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
+
+import java.util.Optional;
 
 /**
  * <h1>Azurite</h1>
@@ -49,6 +54,9 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     //the forces acting on the body and accelerating it
     private final CombinedForce bodyForce;
 
+    //all filters for the bodyForce to be applied, can deny forces in different ways
+    private final CombinedVectorFilter vectorFilter;
+
     //used to feed with objects this body is colliding with
     private CollisionHandler collisionHandler = Collisions.solid();
 
@@ -60,6 +68,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         this.mass = physicalMass;
         this.velocity = new Vector2f();
         this.bodyForce = new CombinedForce("undefined");
+        vectorFilter = new CombinedVectorFilter();
         this.order = SpriteRenderer.ORDER - 1;
     }
 
@@ -70,6 +79,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         this.mass = 1;
         this.velocity = new Vector2f();
         this.bodyForce = new CombinedForce("undefined");
+        this.vectorFilter = new CombinedVectorFilter();
         this.order = SpriteRenderer.ORDER - 1;
     }
 
@@ -78,14 +88,18 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         this.collisionHandler.setParentComponent(this);
     }
 
+    public Vector2f positionBuffer() {
+        return gameObject.positionBuffer();
+    }
+
     @Override
     public PrimitiveShape getCollisionShape() {
         return collisionShape;
     }
 
     @Override
-    public boolean doesCollideWith(Collider other) {
-        return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape()).isPresent();
+    public Optional<Tuple<Vector2f>> doesCollideWith(Collider other) {
+        return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape());
     }
 
     @Override
@@ -138,17 +152,19 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         bodyForce.update(dt);
         //then assume they are fine and let them accelerate our velocity
         velocity.add(bodyForce.direction());
+        //filter the velocity to prevent unwanted movement
+        velocity.set(vectorFilter.filter(velocity));
         //let the velocity then modify our current position - push to buffer
-        gameObject.positionBuffer().add(velocity);
+        gameObject.positionBuffer().add(vectorFilter.filter(velocity));
     }
 
     @Override
-    public void handleCollision(Collider otherCollider) {
+    public void handleCollision(Collider otherCollider, Tuple<Vector2f> gjkSimplex) {
         //static collisions should be handled by the static object
         if (otherCollider instanceof StaticCollider)
-            otherCollider.handleCollision(this);
+            otherCollider.handleCollision(this, gjkSimplex);
             //collisions with other rigidbodys will be handled here
-        else collisionHandler.accept((RigidBody) otherCollider);
+        else collisionHandler.accept((RigidBody) otherCollider, gjkSimplex);
         recentCollision = true;
     }
 
@@ -196,6 +212,16 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     @Override
     public void negateForce(String identifier) {
         bodyForce.removeForces(identifier);
+    }
+
+    @Override
+    public void addFilter(VectorFilter filter) {
+        vectorFilter.addFilter(filter);
+    }
+
+    @Override
+    public void removeFilters(int id) {
+        vectorFilter.removeFilters(id);
     }
 
     @Override

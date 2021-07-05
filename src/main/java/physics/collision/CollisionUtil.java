@@ -5,8 +5,10 @@ import org.joml.Vector2f;
 import physics.collision.shape.PrimitiveShape;
 import util.Pair;
 import util.Triple;
+import util.Tuple;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,9 +43,8 @@ public class CollisionUtil {
      * @param shapeB shape b
      * @return whether shape a and shape b intersect
      */
-    public static Optional<Triple<Vector2f, Vector2f, Vector2f>> gjksmCollision(PrimitiveShape shapeA, PrimitiveShape shapeB) {
-        Vector2f anyDirectionTowardsOrigin = new Vector2f(1, 1);
-        Vector2f startPoint = maxDotPointMinkDiff(shapeA, shapeB, anyDirectionTowardsOrigin);
+    public static Optional<Tuple<Vector2f>> gjksmCollision(PrimitiveShape shapeA, PrimitiveShape shapeB) {
+        Vector2f startPoint = maxDotPointMinkDiff(shapeA, shapeB, shapeA.centroid().mul(-1, new Vector2f()));
         Vector2f direction = new Vector2f(-startPoint.x, -startPoint.y);
 
         //will contain the triangle containing the origin
@@ -107,7 +108,7 @@ public class CollisionUtil {
         }
 
         //3 points are confirmed, there is intersection
-        return Optional.of(simplex);
+        return Optional.of(new Tuple<>(simplex));
 
     }
 
@@ -117,16 +118,13 @@ public class CollisionUtil {
     }
 
     //should return the penetration vector
-    public static Optional<Vector2f> epa(PrimitiveShape shapeA, PrimitiveShape shapeB, Triple<Vector2f, Vector2f, Vector2f> simplex) {
+    public static Optional<Vector2f> expandingPolytopeAlgorithm(PrimitiveShape shapeA, PrimitiveShape shapeB, Tuple<Vector2f> simplex) {
         int faceSize = shapeA.faces().length + shapeB.faces().length;
         List<Vector2f> polygon = new ArrayList<>(faceSize);
-        polygon.add(simplex.getLeft());
-        polygon.add(simplex.getMiddle());
-        polygon.add(simplex.getRight());
-        System.out.println(polygon);
+        polygon.addAll(Arrays.asList(simplex.getContent()));
         Vector2f normal;
         for (int i = 0; i < faceSize + 1; i++) {
-            Object[] closestFace = closestFace(polygon); //index, dist, norm
+            Object[] closestFace = closestFaceToOrigin(polygon); //index, dist, norm
             float squareLength = (float) closestFace[1];
             //vector from origin to face
             normal = (Vector2f) closestFace[2];
@@ -139,7 +137,7 @@ public class CollisionUtil {
         return Optional.empty();
     }
 
-    private static Object[] closestFace(List<Vector2f> simplex) {
+    private static Object[] closestFaceToOrigin(List<Vector2f> simplex) {
         int index = 0;
         float dist = Float.POSITIVE_INFINITY;
         Vector2f hitPoint = null;

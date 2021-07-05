@@ -14,7 +14,7 @@ public class CharacterController extends Component {
     private RigidBody body;
 
     public CharacterController() {
-        movementSpeed = 0.1f;
+        movementSpeed = 0.5f;
         this.order = SpriteRenderer.ORDER - 5;
         this.currentDirection = new Vector2f();
     }
@@ -53,7 +53,7 @@ public class CharacterController extends Component {
         }
 
         if (keys[2] && this.body.isColliding())
-            currentDirection.add(0, -movementSpeed * 3000);
+            currentDirection.add(0, -movementSpeed * 3);
 
         System.out.println("change move direction to: " + currentDirection + " | " + Arrays.toString(keys));
         this.body.velocity().add(currentDirection);
