@@ -7,7 +7,7 @@ package physics.collision.shape;
  * @version 27.06.2021
  * @since 27.06.2021
  */
-public enum Shape {
+public enum ShapeType {
 
     POINT,
     LINE,

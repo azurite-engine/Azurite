@@ -1,7 +1,6 @@
 package physics.collision.shape;
 
 import org.joml.Vector2f;
-import physics.collision.CollisionUtil;
 import physics.collision.RayCastResult;
 
 /**
@@ -19,7 +18,7 @@ public class Circle extends PrimitiveShape {
     private final float radiusSquared;
 
     public Circle(Vector2f relativeCenter, float radius) {
-        super();
+        super(ShapeType.CIRCLE);
         this.relativeCentroid = new Vector2f(relativeCenter);
         this.radius = radius;
         this.radiusSquared = radius * radius;
@@ -35,12 +34,6 @@ public class Circle extends PrimitiveShape {
     public Vector2f supportPoint(Vector2f v) {
         Vector2f normalized = v.normalize(radius, new Vector2f());
         return absoluteCentroid.add(normalized, new Vector2f());
-    }
-
-    @Override
-    public Vector2f reflect(Vector2f centroid, Vector2f collisionRay) {
-        RayCastResult rayCastResult = rayCast(centroid, absoluteCentroid.sub(centroid, new Vector2f()), Float.POSITIVE_INFINITY);
-        return CollisionUtil.planeReflection(rayCastResult.getNormal(), collisionRay);
     }
 
     /**
@@ -81,14 +74,9 @@ public class Circle extends PrimitiveShape {
         float lengthT = lengthA - lengthF;
         //the point on the circle is too far away
         if (lengthT > maxLength || lengthT < 0) return new RayCastResult();
-        //TODO: inverse Wurzel
         Vector2f strike = normalizedRay.mul(lengthT);
         Vector2f targetPoint = start.add(strike, new Vector2f());
         return new RayCastResult(targetPoint, targetPoint.sub(center, new Vector2f()).normalize(), strike, lengthT, true);
     }
 
-    @Override
-    public Shape shape() {
-        return Shape.CIRCLE;
-    }
 }

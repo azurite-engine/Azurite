@@ -2,6 +2,7 @@ package physics.collision.shape;
 
 import org.joml.Vector2f;
 import physics.collision.CollisionUtil;
+import util.Utils;
 
 /**
  * <h1>Azurite</h1>
@@ -19,7 +20,8 @@ public abstract class PrimitiveShape {
     protected final Vector2f[] relatives;
     protected final Vector2f[] absolutes;
     protected final Face[] faces;
-    protected final Vector2f[] diagonals;
+    protected final int vertices;
+    private final ShapeType type;
 
     protected Vector2f relativeCentroid;
     protected Vector2f absoluteCentroid;
@@ -29,10 +31,24 @@ public abstract class PrimitiveShape {
     private Vector2f position = new Vector2f(0, 0);
 
     protected PrimitiveShape(Vector2f... relatives) {
-        this.relatives = CollisionUtil.convexHull(relatives);
-        this.absolutes = new Vector2f[relatives.length];
-        this.faces = new Face[relatives.length];
-        this.diagonals = new Vector2f[relatives.length];
+        this(ShapeType.POLYGON, relatives);
+    }
+
+    protected PrimitiveShape(ShapeType type, Vector2f... relatives) {
+        this.type = type;
+        if (type == ShapeType.CIRCLE && (relatives == null || relatives.length == 0)) {
+            //implicit circles don't have any explicit points
+            this.vertices = 0;
+            this.relatives = new Vector2f[0];
+            this.absolutes = new Vector2f[0];
+            this.faces = new Face[0];
+        } else {
+            //ensures that all relative coords are sorted and dereferenced from the original ones
+            this.relatives = Utils.copy(CollisionUtil.convexHull(relatives));
+            this.vertices = relatives.length;
+            this.absolutes = new Vector2f[this.vertices];
+            this.faces = new Face[this.vertices];
+        }
     }
 
     /**
@@ -61,6 +77,10 @@ public abstract class PrimitiveShape {
         return faces;
     }
 
+    public final int vertices() {
+        return vertices;
+    }
+
     /**
      * Calculates a relative centroid and the boundingSphere for the shape.
      * In some special cases this might be done quicker in a different way.
@@ -75,12 +95,10 @@ public abstract class PrimitiveShape {
      * Calculates all relative faces and relative diagonals for a defined shape
      */
     protected final void init() {
-        for (int i = 0; i < relatives.length; i++) {
-            Vector2f line = relatives[(i + 1) % relatives.length].sub(relatives[i], new Vector2f());
+        for (int i = 0; i < this.vertices; i++) {
+            Vector2f line = relatives[(i + 1) % this.vertices].sub(relatives[i], new Vector2f());
             //define faces
             faces[i] = new Face(this, relatives[i], line);
-            //define diagonals
-            diagonals[i] = relatives[i].sub(relativeCentroid, new Vector2f());
         }
     }
 
@@ -89,7 +107,7 @@ public abstract class PrimitiveShape {
      * Used to recalculate the absolute coordinates.
      */
     public void adjust() {
-        for (int i = 0; i < absolutes.length; i++) {
+        for (int i = 0; i < this.vertices; i++) {
             absolutes[i] = position().add(relatives[i], new Vector2f());
         }
         absoluteCentroid = position().add(relativeCentroid, new Vector2f());
@@ -127,23 +145,13 @@ public abstract class PrimitiveShape {
         return CollisionUtil.maxDotPoint(absolutes, v);
     }
 
-    //------------------------------------ Abstract methods ------------------------------------------------------
-
-    /**
-     * Calculates the reflection direction of a given collision ray
-     *
-     * @param centroid     origin of the collisionRay
-     * @param collisionRay the incoming ray to reflect
-     * @return the reflection vector of the collision ray considering the current shape
-     */
-    //FIXME does work correctly
-    public abstract Vector2f reflect(Vector2f centroid, Vector2f collisionRay);
-
     /**
      * A clean description for this shape.
      *
-     * @return the {@link Shape} matching this {@link PrimitiveShape}
+     * @return the {@link ShapeType} matching this {@link PrimitiveShape}
      */
-    public abstract Shape shape();
+    public final ShapeType type() {
+        return type;
+    }
 
 }

@@ -1,7 +1,6 @@
 package physics.collision.shape;
 
 import org.joml.Vector2f;
-import physics.collision.CollisionUtil;
 
 /**
  * <h1>Azurite</h1>
@@ -15,16 +14,9 @@ import physics.collision.CollisionUtil;
 public class Line extends PrimitiveShape {
 
     public Line(Vector2f relativeA, Vector2f relativeB) {
-        super(relativeA, relativeB);
+        super(ShapeType.LINE, relativeA, relativeB);
         initSphere();
         init();
-    }
-
-    @Override
-    public Vector2f reflect(Vector2f centroid, Vector2f collisionRay) {
-        if (faces[0].getNormal().dot(collisionRay) >= 0)
-            return CollisionUtil.planeReflection(faces[0].getNormal(), collisionRay);
-        else return CollisionUtil.planeReflection(faces[1].getNormal(), collisionRay);
     }
 
     @Override
@@ -32,8 +24,4 @@ public class Line extends PrimitiveShape {
         return absolutes[0].dot(v) > absolutes[1].dot(v) ? absolutes[0] : absolutes[1];
     }
 
-    @Override
-    public Shape shape() {
-        return Shape.LINE;
-    }
 }

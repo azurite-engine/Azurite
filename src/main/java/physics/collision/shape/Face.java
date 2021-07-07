@@ -11,7 +11,7 @@ import org.joml.Vector2f;
  */
 public class Face {
 
-    private Vector2f relativeFixPoint;
+    private final Vector2f relativeFixPoint;
     private final PrimitiveShape parent;
     private final Vector2f relativeFace;
     private final Vector2f normal;

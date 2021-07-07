@@ -16,6 +16,7 @@ public class DirectionalVectorFilter implements VectorFilter {
     private boolean invalid = false;
 
     public DirectionalVectorFilter(Vector2f filterDirection, int id) {
+        //ensure that the direction is finite and has a valid length, otherwise there is no real direction to work with
         if (!filterDirection.isFinite() || filterDirection.lengthSquared() == 0) {
             invalid = true;
             this.directionNormal = new Vector2f();
@@ -33,15 +34,13 @@ public class DirectionalVectorFilter implements VectorFilter {
     @Override
     public Vector2f filter(Vector2f force) {
         float dot = directionNormal.dot(force);
-        if (invalid || dot < 0) {
+        if (invalid || dot == 0)
+            return force;
+        if (dot < 0) {
             invalid = true;
             return force;
         }
-        if (dot == 0)
-            return force;
-        Vector2f sub = force.sub(directionNormal.mul(dot, new Vector2f()), new Vector2f());
-        if (!sub.isFinite()) System.out.println("lul: " + sub + " < " + force + " - " + directionNormal + " * " + dot);
-        return sub;
+        return force.sub(directionNormal.mul(dot, new Vector2f()), new Vector2f());
     }
 
     @Override

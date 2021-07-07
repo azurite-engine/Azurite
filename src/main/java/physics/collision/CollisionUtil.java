@@ -3,7 +3,7 @@ package physics.collision;
 import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
 import physics.collision.shape.PrimitiveShape;
-import physics.collision.shape.Shape;
+import physics.collision.shape.ShapeType;
 import util.Pair;
 import util.Triple;
 import util.Tuple;
@@ -55,8 +55,8 @@ public class CollisionUtil {
 
         int pointsConfirmed = 1;
         int loop = 0;
-        int maxLoop = shapeA.faces().length + shapeB.faces().length;
-        if (shapeA.shape() == Shape.CIRCLE || shapeB.shape() == Shape.CIRCLE)
+        int maxLoop = shapeA.vertices() + shapeB.vertices();
+        if (shapeA.type() == ShapeType.CIRCLE || shapeB.type() == ShapeType.CIRCLE)
             maxLoop += 20;
 
         while (pointsConfirmed < 3) {
@@ -122,8 +122,6 @@ public class CollisionUtil {
 
     }
 
-    static int i = 0;
-
     //helper function, just to define whether a certain point goes in the right direction
     private static boolean rightDirection(Vector2f vector, Vector2f towardsOrigin) {
         return vector.dot(towardsOrigin) > 0;
@@ -131,7 +129,7 @@ public class CollisionUtil {
 
     //should return the penetration vector
     public static Optional<Vector2f> expandingPolytopeAlgorithm(PrimitiveShape shapeA, PrimitiveShape shapeB, Tuple<Vector2f> simplex) {
-        int faceSize = shapeA.faces().length + shapeB.faces().length;
+        int faceSize = shapeA.vertices() + shapeB.vertices();
         List<Vector2f> polygon = new ArrayList<>(faceSize);
         polygon.addAll(Arrays.asList(simplex.getContent()));
         Vector2f normal;
@@ -211,73 +209,6 @@ public class CollisionUtil {
     }
 
     /**
-     * Finds the point with the highest dot product in a shape to a given direction d,
-     * by doing a simple max search over all dot products dot(a,d) where a element of A.
-     * Can be used as support function for all convex polygons defined by a finite number of points.
-     *
-     * @param convexShapePoints all points on the convex shape,which the index relates to
-     * @param direction         the direction/reach to look for a point
-     * @return the index of the point with the highest dot product by the given direction
-     */
-    public static int maxDotPointIndex(Vector2f[] convexShapePoints, Vector2f direction) {
-        float maxDot = Float.NEGATIVE_INFINITY;
-        int index = 0;
-        for (int i = 0; i < convexShapePoints.length; i++) {
-            float dot = direction.dot(convexShapePoints[i]);
-            if (dot > maxDot) {
-                maxDot = dot;
-                index = i;
-            }
-        }
-        return index;
-    }
-
-    /**
-     * Calculate a plain reflection vector by any given normal describing the mirror plane and the direction of the incoming ray.
-     *
-     * @param normal    any normal vector describing the mirror plane, does not have to be normalized
-     * @param direction the incoming direction of the ray to be reflected. it is length sensitive
-     * @return a reflection vector for the given ray direction on the given mirror plane its the length
-     */
-    public static Vector2f planeReflection(Vector2f normal, Vector2f direction) {
-        //TODO look if this can be optimized, we dont like square root
-        normal = normal.normalize(new Vector2f());
-        Vector2f norm = normal.mul(2 * direction.dot(normal), new Vector2f());
-        Vector2f mul = direction.sub(norm, new Vector2f()).mul(-1);
-        System.out.println("norm: " + normal + ", dir: " + direction + " = " + mul);
-        return mul;
-    }
-
-    /**
-     * Calculate two edges of the polygon, that are most likely to hit by the colliding object.
-     *
-     * @param polygon          the polygon that got hit
-     * @param polygonCentroid  the centeroid of the polygon that got hit
-     * @param colliderCentroid the centroid of the colliding object
-     * @return two normals describing the edges, that probably got hit
-     */
-    public static Pair<Vector2f, Vector2f> collisionEdgeNormals(Vector2f[] polygon, Vector2f polygonCentroid, Vector2f colliderCentroid) {
-        //connect both centroids
-        Vector2f connectCentroids = colliderCentroid.sub(polygonCentroid, new Vector2f());
-        //find the point thats furthest on the polygon and get its neighbors
-        int index = maxDotPointIndex(polygon, connectCentroids);
-        int pred = index == 0 ? polygon.length - 1 : index - 1;
-        int succ = index + 1 == polygon.length ? 0 : index + 1;
-
-        //calculate first normal of pred->index
-        Vector2f startA = polygon[pred];
-        Vector2f lineA = polygon[index].sub(startA, new Vector2f());
-        Vector2f normalA = new Vector2f(lineA).perpendicular().mul(-1);
-
-        //calculate second normal of index->succ
-        Vector2f startB = polygon[index];
-        Vector2f lineB = polygon[succ].sub(startB, new Vector2f());
-        Vector2f normalB = new Vector2f(lineB).perpendicular().mul(-1);
-
-        return new Pair<>(normalA, normalB);
-    }
-
-    /**
      * Calculates the convex hull of a given set of points using Jarvis March.
      * The result will have the same length as the input, but not all of them have to be filled in depending on the input.
      * If the input set is just a set of points already defining a convex polygon, the points are just sorted.
@@ -290,7 +221,7 @@ public class CollisionUtil {
         //less than 3 points would not be necessary
         if (n < 3) return points;
 
-        Vector2f[] ordered = new Vector2f[points.length];
+        Vector2f[] ordered = new Vector2f[n];
         int last = 0;
 
         // find the leftmost point
@@ -314,7 +245,10 @@ public class CollisionUtil {
             ordered[last++ % n] = points[curr];
             start = curr;
         } while (start != leftMost);
-        return ordered;
+        //are any points unused for the hull
+        if (last >= n)
+            return ordered;
+        else return Arrays.copyOf(ordered, last);
     }
 
     /**
