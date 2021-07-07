@@ -7,6 +7,9 @@ import org.joml.Vector2f;
  * TODO: change to a component? - no don't do that
  */
 public class Transform {
+
+    public static final Vector2f ZERO = new Vector2f(0, 0);
+
     private Vector2f position;
     public Vector2f scale;
     private Vector2f positionBuffer;
@@ -97,7 +100,7 @@ public class Transform {
     }
 
     public boolean applyPositionBuffer() {
-        if (positionBuffer.equals(new Vector2f())) return false;
+        if (!positionBuffer.isFinite() || positionBuffer.equals(ZERO)) return false;
         this.position.add(positionBuffer);
         return true;
     }

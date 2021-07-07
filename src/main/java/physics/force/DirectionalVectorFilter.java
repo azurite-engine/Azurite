@@ -16,7 +16,12 @@ public class DirectionalVectorFilter implements VectorFilter {
     private boolean invalid = false;
 
     public DirectionalVectorFilter(Vector2f filterDirection, int id) {
-        this.directionNormal = filterDirection.normalize(new Vector2f());
+        if (!filterDirection.isFinite() || filterDirection.lengthSquared() == 0) {
+            invalid = true;
+            this.directionNormal = new Vector2f();
+        } else {
+            this.directionNormal = filterDirection.normalize(new Vector2f());
+        }
         this.id = id;
     }
 
@@ -32,7 +37,11 @@ public class DirectionalVectorFilter implements VectorFilter {
             invalid = true;
             return force;
         }
-        return force.sub(directionNormal.mul(dot, new Vector2f()), new Vector2f());
+        if (dot == 0)
+            return force;
+        Vector2f sub = force.sub(directionNormal.mul(dot, new Vector2f()), new Vector2f());
+        if (!sub.isFinite()) System.out.println("lul: " + sub + " < " + force + " - " + directionNormal + " * " + dot);
+        return sub;
     }
 
     @Override

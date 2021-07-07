@@ -94,15 +94,12 @@ public class DemoPlatformer extends Scene {
 
         camera.smoothFollow(player.getRawTransform());
 
-        //System.out.println("pos: " + player.getReadOnlyTransform().getPosition());
-
         i++;
 
         RigidBody component = player.getComponent(RigidBody.class);
         latest = "pos: " + player.getReadOnlyTransform().getPosition().toString(format) + " - vel: " + component.velocity().toString(format) + " | last reflect: " + last.toString(format);
 
-        if(collide != component.isColliding())
-        {
+        if (collide != component.isColliding()) {
             collide = component.isColliding();
             System.out.println("changed: colliding = " + collide);
         }
