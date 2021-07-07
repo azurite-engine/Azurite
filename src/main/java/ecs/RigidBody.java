@@ -29,7 +29,7 @@ import java.util.Optional;
  * Primarily used to apply physics and check collisions.
  *
  * @author Juyas
- * @version 19.06.2021
+ * @version 07.07.2021
  * @since 19.06.2021
  */
 public class RigidBody extends Component implements Collider, PhysicalEntity, TransformSensitive {
@@ -165,23 +165,11 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
             otherCollider.handleCollision(this, gjkSimplex);
             //collisions with other rigidbodys will be handled here
         else collisionHandler.accept((RigidBody) otherCollider, gjkSimplex);
-        recentCollision = true;
     }
 
-    boolean recentCollision = false;
-    boolean colliding = false;
 
     @Override
     public void resetCollision() {
-        if (!recentCollision && colliding)
-            colliding = false;
-        if (recentCollision && !colliding)
-            colliding = true;
-        recentCollision = false;
-    }
-
-    public boolean isColliding() {
-        return colliding;
     }
 
     public void setMass(float mass) {
@@ -210,7 +198,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     }
 
     @Override
-    public void negateForce(String identifier) {
+    public void removeForce(String identifier) {
         bodyForce.removeForces(identifier);
     }
 

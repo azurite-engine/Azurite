@@ -99,11 +99,6 @@ public class DemoPlatformer extends Scene {
         RigidBody component = player.getComponent(RigidBody.class);
         latest = "pos: " + player.getReadOnlyTransform().getPosition().toString(format) + " - vel: " + component.velocity().toString(format) + " | last reflect: " + last.toString(format);
 
-        if (collide != component.isColliding()) {
-            collide = component.isColliding();
-            System.out.println("changed: colliding = " + collide);
-        }
-
         if (i % 30 == 0)
             if (!latest.equals(posted))
                 System.out.println(posted = latest);

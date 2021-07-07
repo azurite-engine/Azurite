@@ -52,7 +52,7 @@ public class CharacterController extends Component {
             currentDirection.add(keys[0] ? -movementSpeed : movementSpeed, 0);
         }
 
-        if (keys[2] && this.body.isColliding())
+        if (keys[2])
             currentDirection.add(0, -movementSpeed * 3);
 
         System.out.println("change move direction to: " + currentDirection + " | " + Arrays.toString(keys));
