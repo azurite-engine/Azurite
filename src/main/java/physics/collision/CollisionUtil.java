@@ -15,6 +15,10 @@ import java.util.Optional;
 
 /**
  * <h1>Azurite</h1>
+ * A util class containing a lot of useful methods to determine collision and some math around that.
+ * Important to mention are the algorithms:
+ * * GJK
+ * * EPA with GJK
  *
  * @author Juyas
  * @version 19.06.2021
@@ -127,30 +131,43 @@ public class CollisionUtil {
         return vector.dot(towardsOrigin) > 0;
     }
 
-    //should return the penetration vector
+    /**
+     * The EPA algorithm to find a penetration vector of two given shapes and the result of the GJK algorithm.
+     * Since it depends on the GJK algorithm, this algorithm will fail in an undefined way,
+     * if the shapes do not actually collide.
+     *
+     * @param shapeA  the first shape
+     * @param shapeB  the second shape, that collides with the first one
+     * @param simplex the simplex returned by GJK or any simplex inside both shapes borders enclosing the overlapping area of both shapes
+     * @return the penetration vector of both shapes, if there is one found within a series of steps
+     */
     public static Optional<Vector2f> expandingPolytopeAlgorithm(PrimitiveShape shapeA, PrimitiveShape shapeB, Tuple<Vector2f> simplex) {
         int faceSize = shapeA.vertices() + shapeB.vertices();
         List<Vector2f> polygon = new ArrayList<>(faceSize);
         polygon.addAll(Arrays.asList(simplex.getContent()));
         Vector2f normal;
         for (int i = 0; i < faceSize + 1; i++) {
-            Object[] closestFace = closestFaceToOrigin(polygon); //index, dist, norm
-            float squareLength = (float) closestFace[1];
+            Triple<Integer, Float, Vector2f> closestFace = closestFaceToOrigin(polygon); //index, dist, norm
+            float squareLength = closestFace.getMiddle();
             //vector from origin to face
-            normal = (Vector2f) closestFace[2];
+            normal = (Vector2f) closestFace.getRight();
             Vector2f vector2f = maxDotPointMinkDiff(shapeA, shapeB, normal);
             //if the vector*normal is close to normal*normal, its the point we seek
             if (Math.abs(normal.dot(vector2f) - squareLength) < 0.001f)
                 return Optional.of(normal.mul(-1));
-            polygon.add(1 + (Integer) closestFace[0], vector2f);
+            polygon.add(1 + closestFace.getLeft(), vector2f);
         }
         return Optional.empty();
     }
 
-    private static Object[] closestFaceToOrigin(List<Vector2f> simplex) {
+    //helper method for EPA - calculates the the closest face to the origin of a given simplex representing a polygon
+    private static Triple<Integer, Float, Vector2f> closestFaceToOrigin(List<Vector2f> simplex) {
         int index = 0;
+        //ensures, that the first calculation will be less then this
         float dist = Float.POSITIVE_INFINITY;
         Vector2f hitPoint = null;
+        //calculate for all faces of the simplex its distance using the helper method
+        //and determine if the next face is closer then all faces before
         for (int i = 0; i < simplex.size(); i++) {
             Vector2f pointA = simplex.get(i);
             Vector2f pointB = simplex.get((i + 1) % simplex.size());
@@ -162,9 +179,13 @@ public class CollisionUtil {
                 hitPoint = hit;
             }
         }
-        return new Object[]{index, dist, hitPoint};
+        //return the index of the start point of the face inside the simplex,
+        //the distance squared to the origin
+        //and the point on the face, thats closed to the origin and in line with the normal of the face
+        return new Triple<>(index, dist, hitPoint);
     }
 
+    //helper method for EPA - calculates the distance of a face to the origin using linear algebra instead of expensive square roots
     private static Vector2f faceDistanceToOriginVector(Vector2f pointA, Vector2f secondPoint) {
         Vector2f rayA = secondPoint.sub(pointA, new Vector2f());
         Vector2f rayB = new Vector2f(rayA).perpendicular();
