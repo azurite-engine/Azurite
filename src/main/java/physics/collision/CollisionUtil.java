@@ -3,6 +3,7 @@ package physics.collision;
 import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
 import physics.collision.shape.PrimitiveShape;
+import physics.collision.shape.Shape;
 import util.Pair;
 import util.Triple;
 import util.Tuple;
@@ -53,11 +54,20 @@ public class CollisionUtil {
         simplex.setLeft(startPoint);
 
         int pointsConfirmed = 1;
+        int loop = 0;
+        int maxLoop = shapeA.faces().length + shapeB.faces().length;
+        if (shapeA.shape() == Shape.CIRCLE || shapeB.shape() == Shape.CIRCLE)
+            maxLoop += 20;
 
         while (pointsConfirmed < 3) {
 
+            loop++;
+            //loop at max 20 times plus the amount of both shapes faces, so that there is enough room to find collision.
+            //this is obviously not a good solution, but it should do fine for now.
+            if (loop > maxLoop) return Optional.empty();
+
             //the point furthest in the direction
-            // Shape combinedShape = minkDiff(shapeA, shapeB); combinedShape.supportPoint(direction);
+            //Shape combinedShape = minkDiff(shapeA, shapeB); combinedShape.supportPoint(direction);
             Vector2f pointA = maxDotPointMinkDiff(shapeA, shapeB, direction);
 
             if (pointA.dot(direction) < 0)
@@ -111,6 +121,8 @@ public class CollisionUtil {
         return Optional.of(new Tuple<>(simplex));
 
     }
+
+    static int i = 0;
 
     //helper function, just to define whether a certain point goes in the right direction
     private static boolean rightDirection(Vector2f vector, Vector2f towardsOrigin) {
