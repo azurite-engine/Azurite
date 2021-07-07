@@ -32,15 +32,15 @@ public class DirectionalVectorFilter implements VectorFilter {
     }
 
     @Override
-    public Vector2f filter(Vector2f force) {
-        float dot = directionNormal.dot(force);
+    public Vector2f filter(Vector2f velocity) {
+        float dot = directionNormal.dot(velocity);
         if (invalid || dot == 0)
-            return force;
+            return velocity;
         if (dot < 0) {
             invalid = true;
-            return force;
+            return velocity;
         }
-        return force.sub(directionNormal.mul(dot, new Vector2f()), new Vector2f());
+        return velocity.sub(directionNormal.mul(dot, new Vector2f()), new Vector2f());
     }
 
     @Override

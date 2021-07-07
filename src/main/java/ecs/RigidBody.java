@@ -155,7 +155,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         //filter the velocity to prevent unwanted movement
         velocity.set(vectorFilter.filter(velocity));
         //let the velocity then modify our current position - push to buffer
-        gameObject.positionBuffer().add(vectorFilter.filter(velocity));
+        gameObject.positionBuffer().add(velocity);
     }
 
     @Override

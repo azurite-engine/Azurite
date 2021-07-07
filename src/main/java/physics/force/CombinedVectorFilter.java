@@ -22,14 +22,14 @@ public class CombinedVectorFilter implements VectorFilter {
     }
 
     @Override
-    public Vector2f filter(Vector2f force) {
+    public Vector2f filter(Vector2f velocity) {
         Collection<VectorFilter> values = filters.values();
         for (VectorFilter forceFilter : values) {
-            force = forceFilter.filter(force);
+            velocity = forceFilter.filter(velocity);
             if (forceFilter.isInvalid())
                 removeFilters(forceFilter.id());
         }
-        return force;
+        return velocity;
     }
 
     @Override

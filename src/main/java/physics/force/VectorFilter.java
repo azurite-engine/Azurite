@@ -13,25 +13,25 @@ public interface VectorFilter {
 
     int id();
 
-    Vector2f filter(Vector2f force);
+    Vector2f filter(Vector2f velocity);
 
     boolean isInvalid();
 
-    default VectorFilter andThen(VectorFilter forceFilter) {
+    default VectorFilter andThen(VectorFilter vectorFilter) {
         return new VectorFilter() {
             @Override
             public int id() {
-                return forceFilter.id();
+                return vectorFilter.id();
             }
 
             @Override
-            public Vector2f filter(Vector2f force) {
-                return forceFilter.filter(VectorFilter.this.filter(force));
+            public Vector2f filter(Vector2f velocity) {
+                return vectorFilter.filter(VectorFilter.this.filter(velocity));
             }
 
             @Override
             public boolean isInvalid() {
-                return forceFilter.isInvalid() || VectorFilter.this.isInvalid();
+                return vectorFilter.isInvalid() || VectorFilter.this.isInvalid();
             }
         };
     }

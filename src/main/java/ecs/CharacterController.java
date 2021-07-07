@@ -43,7 +43,8 @@ public class CharacterController extends Component {
         if (!change) return;
 
         //remove old movement
-        this.body.velocity().add(currentDirection.mul(-1, 0));
+        if (this.body.velocity().dot(currentDirection) > 0)
+            this.body.velocity().add(currentDirection.mul(-1, 0));
         currentDirection = new Vector2f();
 
         //define new movement
