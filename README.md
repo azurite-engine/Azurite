@@ -3,7 +3,7 @@
     <img src="https://img.shields.io/badge/Made%20using-Java-red">
     <img src="https://img.shields.io/badge/Made%20Using-LWJGL%20-yellow">
     <img src="https://camo.githubusercontent.com/0fa78702c674a5e13004de53a25ae80ed1ce281f92c0e5d6bd5aa7701b3ab483/68747470733a2f2f696d672e736869656c64732e696f2f6769746875622f6c6963656e73652f61746861756e2f454f532e737667">
-    <img src="https://github.com/Games-With-Gabe-Community/Azurite/actions/workflows/gradle.yml/badge.svg">
+    <img src="https://github.com/azurite-engine/Azurite/actions/workflows/gradle.yml/badge.svg">
 </p>
 
 <br />
@@ -13,13 +13,13 @@
   <p align="center">
     Azurite it is a 2D Java game engine built by the Games with Gabe <a href="https://discord.gg/dhyV3BXkRZ">Discord</a>/<a href="https://www.youtube.com/channel/UCQP4qSCj1eHMHisDDR4iPzw">YouTube</a> community.
     <br />
-    <a href="https://games-with-gabe-community.github.io/Azurite-Docs/"><strong>Explore the docs »</strong></a><br><br>
+    <a href="https://azurite-engine.github.io/Azurite-Docs/"><strong>Explore the docs »</strong></a><br><br>
     <a href="https://www.youtube.com/watch?v=FABUP0q9tHY">Watch the introduction video »</a>
     <br />
     <br />
     <a href="https://github.com/othneildrew/Best-README-Template">Features</a>
     ·
-    <a href="https://github.com/Games-With-Gabe-Community/Azurite/issues">Report Bug</a>
+    <a href="https://github.com/azurite-engine/Azurite/issues">Report Bug</a>
     ·
     <a href="https://trello.com/b/hfoYA8Gn/gwg-community-project">Check the Trello</a>
   </p>
@@ -27,7 +27,7 @@
 
 
 <!-- TABLE OF CONTENTS -->
-## Table of Contents
+# Table of Contents
 
 * [Features](#features)
   * [Built With](#built-with)
@@ -40,12 +40,15 @@
 * [License](#license)
 * [Contact](#contact)
 
-## Features
+# Features
 
 * Modern OpenGL through the LWJGL 3 library for fast GPU rendering.
 * Entity Component System
 
-## Code Samples
+### Built With
+* [LWJGL 3](https://www.lwjgl.org/)
+
+### Code Samples
 #### BoilerPlate Code:
 ```java
 public class Main extends Scene {
@@ -61,7 +64,7 @@ public class Main extends Scene {
 }
 ```
 
-#### Simple example with sprites
+#### Simple example with sprites:
 ```java
 public class Main extends Scene {
 	
@@ -81,31 +84,29 @@ public class Main extends Scene {
 	}
 }
 ```
+# Getting Started
 
-## Prerequisites
+### Prerequisites
 * OpenGL capable graphics card (minimum `core 330`)
 * OpenGL capable graphics driver
   * Linux nouveau drivers for nvidia cards do not currently work, you will have to install proprietary drivers.
   * FOSS AMD Drivers for linux do work.
 * Java 1.8
   
-## Project Setup
+### Project Setup
 To begin contributing, create a fork of this repository.
 Using intellj, import this project from existing sources as a gradle project.
 Build gradle, then run the Main scene (located in the scenes package).
-Follow this [link](https://games-with-gabe-community.github.io/Azurite-Docs/tutorials/set-a-project.html) for tutorials on cloning and importing to either Intellj or Eclipse.
+Follow this [link](https://azurite-engine.github.io/Azurite-Docs/tutorials/set-a-project.html) for tutorials on cloning and importing to either Intellj or Eclipse.
 
-## Documentation
-* [Documentatation](https://games-with-gabe-community.github.io/Azurite-Docs/) (Done but we are still adding stuff to it)
-* [Javadocs](https://games-with-gabe-community.github.io/azurite-javadocs/)
+### Documentation
+* [Documentatation](https://azurite-engine.github.io/Azurite-Docs/) (Done but we are still adding stuff to it)
+* [Javadocs](https://azurite-engine.github.io/azurite-javadocs/)
 * [Contributing guidelines](https://github.com/Games-With-Gabe-Community/Azurite/blob/main/CONTRIBUTING.md)
-* [Azurite Code style]( https://games-with-gabe-community.github.io/Azurite-Docs/docs/azurite-style.html)
+* [Azurite Code style](https://azurite-engine.github.io/Azurite-Docs/docs/azurite-style.html)
 
 ### License
 Copyright (c) 2021 MIT License
-
-### Built With
-* [LWJGL 3](https://www.lwjgl.org/)
 
 ### Contact
 [Discord Server](https://discord.gg/dhyV3BXkRZ)

@@ -2,20 +2,13 @@ import org.gradle.internal.os.OperatingSystem
 
 plugins {
     id 'java'
+    id 'application'
 }
 
 group 'com.GwgCommunity'
 version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-}
 
 project.ext.lwjglVersion = "3.2.3"
 project.ext.jomlVersion = "1.10.1"
@@ -37,7 +30,17 @@ switch (OperatingSystem.current()) {
         break
 }
 
+repositories {
+    mavenCentral()
+}
+
+application {
+    mainClass = 'scenes.DemoPlatformer'
+}
+
 dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
     implementation "org.lwjgl:lwjgl"
