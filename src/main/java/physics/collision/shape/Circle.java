@@ -76,7 +76,7 @@ public class Circle extends PrimitiveShape {
         if (lengthT > maxLength || lengthT < 0) return new RayCastResult();
         Vector2f strike = normalizedRay.mul(lengthT);
         Vector2f targetPoint = start.add(strike, new Vector2f());
-        return new RayCastResult(targetPoint, targetPoint.sub(center, new Vector2f()).normalize(), strike, lengthT, true);
+        return new RayCastResult(targetPoint, targetPoint.sub(center, new Vector2f()).normalize(), strike, lengthT);
     }
 
 }

@@ -11,12 +11,15 @@ import org.joml.Vector2f;
  */
 public class RayCastResult {
 
-    private Vector2f point;
-    private Vector2f normal;
-    private Vector2f strike;
-    private float strikeLength;
-    private boolean hit;
+    private final Vector2f point;
+    private final Vector2f normal;
+    private final Vector2f strike;
+    private final float strikeLength;
+    private final boolean hit;
 
+    /**
+     * Create a RayCastResult, where the target was not hit.
+     */
     public RayCastResult() {
         this.point = null;
         this.normal = null;
@@ -25,44 +28,57 @@ public class RayCastResult {
         this.hit = false;
     }
 
-    public RayCastResult(Vector2f point, Vector2f normal, Vector2f strike, float strikeLength, boolean hit) {
+    /**
+     * Create a successful raycast result with details collision information.
+     *
+     * @param point        the point, where the raycast hit
+     * @param normal       the normal on the face of the object that got hit
+     * @param strike       the vector from raycast start to the point
+     * @param strikeLength the distance from the raycast start to the point
+     */
+    public RayCastResult(Vector2f point, Vector2f normal, Vector2f strike, float strikeLength) {
         this.point = point;
         this.normal = normal;
         this.strike = strike;
         this.strikeLength = strikeLength;
-        this.hit = hit;
+        this.hit = true;
     }
 
+    /**
+     * @see this#strikeLength
+     */
     public float getStrikeLength() {
         return strikeLength;
     }
 
+    /**
+     * @see this#normal
+     */
     public Vector2f getNormal() {
         return normal;
     }
 
+    /**
+     * @see this#point
+     */
     public Vector2f getPoint() {
         return point;
     }
 
+    /**
+     * @see this#strike
+     */
     public Vector2f getStrike() {
         return strike;
     }
 
+    /**
+     * @see this#hit
+     */
     public boolean didHit() {
         return hit;
     }
 
-    @Override
-    public String toString() {
-        return "RayCastResult{" +
-                "point=" + point +
-                ", normal=" + normal +
-                ", strike=" + strike +
-                ", strikeLength=" + strikeLength +
-                ", hit=" + hit +
-                '}';
-    }
 }
 
 /***********************************************************************************************
