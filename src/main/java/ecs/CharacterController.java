@@ -3,9 +3,7 @@ package ecs;
 import input.Keyboard;
 import org.joml.Vector2f;
 
-import java.util.Arrays;
-
-
+//FIXME
 public class CharacterController extends Component {
 
     private float movementSpeed;
@@ -32,6 +30,8 @@ public class CharacterController extends Component {
     @Override
     public void update(float dt) {
 
+        //FIXME this class is just for debug currently is hard coded as hell
+
         if (this.body == null) return;
 
         boolean change;
@@ -56,7 +56,6 @@ public class CharacterController extends Component {
         if (keys[2])
             currentDirection.add(0, -movementSpeed * 3);
 
-        System.out.println("change move direction to: " + currentDirection + " | " + Arrays.toString(keys));
         this.body.velocity().add(currentDirection);
 
     }

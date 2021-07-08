@@ -8,9 +8,10 @@ import java.util.Optional;
 
 /**
  * <h1>Azurite</h1>
+ * Describes an object that can collide with others.
  *
  * @author Juyas
- * @version 21.06.2021
+ * @version 08.07.2021
  * @since 21.06.2021
  */
 public interface Collider {
@@ -30,6 +31,10 @@ public interface Collider {
      */
     void handleCollision(Collider otherCollider, Tuple<Vector2f> gjkSimplex);
 
+    /**
+     * Called after collision is handled each update cycle.
+     * Can be used to determine a collision duration or collision state.
+     */
     void resetCollision();
 
     /**
@@ -42,6 +47,7 @@ public interface Collider {
 
     /**
      * Determines whether a collider could potentially intersect with another collider ONLY by their collision layers.
+     * This method can be considered part of the broad phase of collision detection.
      *
      * @param collider the other collider
      * @return true if and only if both objects could potentially collide

@@ -24,42 +24,80 @@ import java.util.Optional;
 
 /**
  * <h1>Azurite</h1>
- * <p>
- * Represents a Rigidbody with a fixed shape but changeable position.
+ * Represents a rigid body with a fixed shape but changeable position.
  * Primarily used to apply physics and check collisions.
  *
  * @author Juyas
- * @version 07.07.2021
+ * @version 08.07.2021
  * @since 19.06.2021
  */
 public class RigidBody extends Component implements Collider, PhysicalEntity, TransformSensitive {
 
-    //represents a series of 0s and 1s -
-    //0 means not present, 1 means present
+    /**
+     * A short representing a binary series of 0s and 1s.
+     * 0 means not present, 1 means present.
+     * Beeing present means, beeing present on the collision layer
+     * and allow collision with all objects having a present mask on this layer.
+     */
     private short collisionLayer;
 
-    //represents a series of 0s and 1s
-    //0 means no collision on that layer, 1 means collision
+    /**
+     * A short representing a binary series of 0s and 1s.
+     * 0 means not present, 1 means present.
+     * Beeing present means, beeing able to collide with all objects present on that layer,
+     * while its not required to be present on the layer.
+     */
     private short collisionMask;
 
-    //the collisionShape of the collider
+    /**
+     * The collision shape of the collider.
+     *
+     * @see PrimitiveShape
+     */
     private final PrimitiveShape collisionShape;
 
-    //the physical mass of the body
+    /**
+     * The physical mass of the body used for forces applied to this body.
+     * Heavier objects are less effected by the same forces then lighter objects.
+     */
     private float mass;
 
-    //the current velocity of the body
+    /**
+     * The current velocity of the body.
+     * Each update cycle the velocity decides in which direction the object will move.
+     */
     private final Vector2f velocity;
 
-    //the forces acting on the body and accelerating it
+    /**
+     * The combined forces acting on the body and accelerating it each update cycle.
+     *
+     * @see this#applyForce(Force)
+     * @see this#removeForce(String)
+     * @see this#getForce()
+     */
     private final CombinedForce bodyForce;
 
-    //all filters for the bodyForce to be applied, can deny forces in different ways
+    /**
+     * All filters for the velocity to be applied, can deny movement in different ways.
+     *
+     * @see CombinedVectorFilter
+     */
     private final CombinedVectorFilter vectorFilter;
 
-    //used to feed with objects this body is colliding with
+    /**
+     * Used to feed with objects this body is colliding with.
+     * Decides how to react to a collision. default is {@link Collisions#solid()}.
+     */
     private CollisionHandler collisionHandler = Collisions.solid();
 
+    /**
+     * Full creation of a rigidbody.
+     *
+     * @param collisionShape the shape for the collider
+     * @param layers         all layers this object should be present on
+     * @param maskedLayers   all layers this object should collide with
+     * @param physicalMass   the physical mass of this object
+     */
     public RigidBody(PrimitiveShape collisionShape, int[] layers, int[] maskedLayers, float physicalMass) {
         super(Collider.class, PhysicalEntity.class); //this class type should be unique in a gameObject
         this.collisionShape = collisionShape;
@@ -72,10 +110,19 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         this.order = SpriteRenderer.ORDER - 1;
     }
 
+    /**
+     * Minimal creation of a rigidbody.
+     * The default mass is 1.0f.
+     * There is no mask set by default.
+     *
+     * @param collisionShape the shape for the collider
+     * @param layer          the layer this object should be present on
+     */
     public RigidBody(PrimitiveShape collisionShape, int layer) {
         super(Collider.class, PhysicalEntity.class); //this class type should be unique in a gameObject
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layer);
+        this.collisionMask = 0;
         this.mass = 1;
         this.velocity = new Vector2f();
         this.bodyForce = new CombinedForce("undefined");
@@ -83,11 +130,20 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         this.order = SpriteRenderer.ORDER - 1;
     }
 
+    /**
+     * Overwrites the current collision handler
+     *
+     * @param collisionHandler the new collision handler replacing the old one
+     * @see this#collisionHandler
+     */
     public void setCollisionType(CollisionHandler collisionHandler) {
         this.collisionHandler = collisionHandler;
         this.collisionHandler.setParentComponent(this);
     }
 
+    /**
+     * @see GameObject#positionBuffer()
+     */
     public Vector2f positionBuffer() {
         return gameObject.positionBuffer();
     }
@@ -172,6 +228,12 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     public void resetCollision() {
     }
 
+    /**
+     * Set the mass of the {@link RigidBody}.
+     * Updates the mass of {@link this#bodyForce} as well.
+     *
+     * @param mass the new mass
+     */
     public void setMass(float mass) {
         this.mass = mass;
         bodyForce.setMass(mass);

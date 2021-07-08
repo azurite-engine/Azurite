@@ -17,8 +17,6 @@ import util.Assets;
 import util.Engine;
 import util.Utils;
 
-import java.text.NumberFormat;
-
 import static graphics.Graphics.setDefaultBackground;
 
 public class DemoPlatformer extends Scene {
@@ -68,24 +66,7 @@ public class DemoPlatformer extends Scene {
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         bloom.init();
 
-        format.setMinimumIntegerDigits(1);
-        format.setMinimumFractionDigits(1);
-        format.setMaximumFractionDigits(3);
-
     }
-
-    int r;
-    int i = 1;
-    boolean jumpBooper = false;
-
-    public static Vector2f last = new Vector2f();
-
-    String latest = "";
-    String posted = "";
-
-    NumberFormat format = NumberFormat.getNumberInstance();
-
-    boolean collide = false;
 
     public void update() {
         super.update();
@@ -93,15 +74,6 @@ public class DemoPlatformer extends Scene {
         booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 
         camera.smoothFollow(player.getRawTransform());
-
-        i++;
-
-        RigidBody component = player.getComponent(RigidBody.class);
-        latest = "pos: " + player.getReadOnlyTransform().getPosition().toString(format) + " - vel: " + component.velocity().toString(format) + " | last reflect: " + last.toString(format);
-
-        if (i % 30 == 0)
-            if (!latest.equals(posted))
-                System.out.println(posted = latest);
 
     }
 

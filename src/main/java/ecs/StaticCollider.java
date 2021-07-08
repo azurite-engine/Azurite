@@ -17,27 +17,51 @@ import java.util.Optional;
 
 /**
  * <h1>Azurite</h1>
+ * Represents a rigid body with a fixed shape and fixed position.
+ * Primarily used to generate terrain and walls and fixed objects that can collide in general.
  *
  * @author Juyas
- * @version 22.06.2021
+ * @version 08.07.2021
  * @since 22.06.2021
  */
 public class StaticCollider extends Component implements Collider {
 
-    //represents a series of 0s and 1s -
-    //0 means not present, 1 means present
+    /**
+     * A short representing a binary series of 0s and 1s.
+     * 0 means not present, 1 means present.
+     * Beeing present means, beeing present on the collision layer
+     * and allow collision with all objects having a present mask on this layer.
+     */
     private short collisionLayer;
 
-    //represents a series of 0s and 1s
-    //0 means no collision on that layer, 1 means collision
+    /**
+     * A short representing a binary series of 0s and 1s.
+     * 0 means not present, 1 means present.
+     * Beeing present means, beeing able to collide with all objects present on that layer,
+     * while its not required to be present on the layer.
+     */
     private short collisionMask;
 
-    //the collisionShape of the collider
+    /**
+     * The collision shape of the collider.
+     *
+     * @see PrimitiveShape
+     */
     private final PrimitiveShape collisionShape;
 
-    //used to feed with rigidBodies this static block is colliding with
+    /**
+     * Used to feed with objects this body is colliding with.
+     * Decides how to react to a collision. default is {@link Collisions#solid()}.
+     */
     private CollisionHandler collisionHandler = Collisions.solid();
 
+    /**
+     * Full creation of a {@link StaticCollider}.
+     *
+     * @param collisionShape the shape for the collider
+     * @param layers         all layers this object should be present on
+     * @param maskedLayers   all layers this object should collide with
+     */
     public StaticCollider(PrimitiveShape collisionShape, int[] layers, int[] maskedLayers) {
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layers);
@@ -45,12 +69,25 @@ public class StaticCollider extends Component implements Collider {
         this.order = SpriteRenderer.ORDER - 1;
     }
 
+    /**
+     * Minimal creation of a {@link StaticCollider}.
+     * There is no mask set by default.
+     *
+     * @param collisionShape the shape for the collider
+     * @param layer          the layer this object should be present on
+     */
     public StaticCollider(PrimitiveShape collisionShape, int layer) {
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layer);
         this.order = SpriteRenderer.ORDER - 1;
     }
 
+    /**
+     * Overwrites the current collision handler
+     *
+     * @param collisionHandler the new collision handler replacing the old one
+     * @see this#collisionHandler
+     */
     public void setCollisionHandler(CollisionHandler collisionHandler) {
         this.collisionHandler = collisionHandler;
         this.collisionHandler.setParentComponent(this);
