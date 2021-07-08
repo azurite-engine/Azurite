@@ -5,6 +5,9 @@ import java.util.function.BiFunction;
 
 /**
  * <h1>Azurite</h1>
+ * This class contains currently 2 pathfinding methods:
+ * - a-star (A*)
+ * - dijkstra
  *
  * @author Juyas
  * @version 08.07.2021
