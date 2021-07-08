@@ -9,11 +9,29 @@ package physics.collision.shape;
  */
 public enum ShapeType {
 
+    /**
+     * @see Point
+     */
     POINT,
+    /**
+     * @see Line
+     */
     LINE,
+    /**
+     * @see Triangle
+     */
     TRIANGLE,
+    /**
+     * @see Quadrilateral
+     */
     QUADRILATERAL,
+    /**
+     * @see Circle
+     */
     CIRCLE,
+    /**
+     * @see ConvexPolygon
+     */
     POLYGON;
 
 }
