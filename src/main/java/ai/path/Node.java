@@ -15,12 +15,15 @@ public interface Node<Position> {
 
     List<Path<Position>> paths();
 
-    void setMarker(Object o);
+    void setMarker(Marker<Position> o);
 
-    Object getMarker();
+    Marker<Position> getMarker();
 
     default boolean hasMarker() {
         return getMarker() != null;
+    }
+
+    interface Marker<T> {
     }
 
 }
