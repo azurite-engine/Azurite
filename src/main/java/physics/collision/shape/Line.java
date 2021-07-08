@@ -5,7 +5,7 @@ import org.joml.Vector2f;
 /**
  * <h1>Azurite</h1>
  * <p>
- * The GJKSM shape implementation of a line.
+ * The shape implementation of a line.
  *
  * @author Juyas
  * @version 19.06.2021

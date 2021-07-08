@@ -6,7 +6,7 @@ import physics.collision.RayCastResult;
 /**
  * <h1>Azurite</h1>
  * <p>
- * The GJKSM shape implementation of a circle.
+ * The shape implementation of a circle.
  *
  * @author Juyas
  * @version 19.06.2021
