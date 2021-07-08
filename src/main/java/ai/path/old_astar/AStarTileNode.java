@@ -1,6 +1,4 @@
-package ai.path.astar;
-
-import ai.path.PathNode;
+package ai.path.old_astar;
 
 import java.util.LinkedList;
 import java.util.List;

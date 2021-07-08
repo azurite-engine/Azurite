@@ -1,8 +1,4 @@
-package ai.path.astar;
-
-import ai.path.NodePath;
-import ai.path.PathNode;
-import ai.path.PathfindingAlgorithm;
+package ai.path.old_astar;
 
 import java.util.function.BiFunction;
 
@@ -116,7 +112,7 @@ public class AStar implements PathfindingAlgorithm {
     public NodePath find(PathNode start, PathNode target) {
         if (optimizedTileBased) {
             AStarTilePathfinding pathfinding = new AStarTilePathfinding(diagonal, straightCosts, diagonalCosts, offsetX, offsetY);
-            pathfinding.setHCostFunction(hCostFunction);
+        pathfinding.setHCostFunction(hCostFunction);
             return pathfinding.findPath(nodes, start.getX(), start.getY(), target.getX(), target.getY());
         } else {
             //TODO more generalized search - non-tiled-based

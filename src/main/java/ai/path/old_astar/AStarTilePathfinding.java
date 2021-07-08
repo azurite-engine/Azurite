@@ -1,7 +1,4 @@
-package ai.path.astar;
-
-import ai.path.NodePath;
-import ai.path.PathNode;
+package ai.path.old_astar;
 
 import java.util.*;
 import java.util.function.BiFunction;

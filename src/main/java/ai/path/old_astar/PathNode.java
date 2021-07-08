@@ -1,4 +1,4 @@
-package ai.path;
+package ai.path.old_astar;
 
 /**
  * <h1>Azurite</h1>
