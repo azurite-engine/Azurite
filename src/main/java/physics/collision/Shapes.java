@@ -1,8 +1,8 @@
 package physics.collision;
 
 import org.joml.Vector2f;
-import physics.collision.shape.BasicPolygon;
 import physics.collision.shape.Circle;
+import physics.collision.shape.ConvexPolygon;
 import physics.collision.shape.Quadrilateral;
 import physics.collision.shape.Triangle;
 
@@ -29,12 +29,12 @@ public class Shapes {
         return circle(new Vector2f(x, y), r);
     }
 
-    public static BasicPolygon convexPolygon(float... coordPairs) {
+    public static ConvexPolygon convexPolygon(float... coordPairs) {
         if (coordPairs.length % 2 == 1) return null;
         Vector2f[] coords = new Vector2f[coordPairs.length / 2];
         for (int i = 0; i < coords.length; i++)
             coords[i] = new Vector2f(coordPairs[i * 2], coordPairs[i * 2 + 1]);
-        return new BasicPolygon(coords);
+        return new ConvexPolygon(coords);
     }
 
     public static Triangle triangle(float ax, float ay, float bx, float by, float cx, float cy) {

@@ -12,30 +12,89 @@ import util.Utils;
  * This class may contain information about explicit points on the edge too.
  *
  * @author Juyas
- * @version 18.06.2021
+ * @version 09.07.2021
  * @since 18.06.2021
  */
 public abstract class PrimitiveShape {
 
+    /**
+     * The coordinates of the shape - relative to an imaginary origin near the shape
+     */
     protected final Vector2f[] relatives;
+
+    /**
+     * The coordinates of the shape - absolute coordinates (position is already added to it)
+     *
+     * @see #getAbsolutePoints()
+     */
     protected final Vector2f[] absolutes;
+
+    /**
+     * All faces of the shape
+     *
+     * @see #faces()
+     */
     protected final Face[] faces;
+
+    /**
+     * The amount of vertices of the shape
+     *
+     * @see #vertices()
+     */
     protected final int vertices;
+
+    /**
+     * The type of the shape as {@link ShapeType}
+     *
+     * @see #type()
+     */
     private final ShapeType type;
 
+    /**
+     * The centroid of the shape - the relative vector to an imaginary origin near the shape
+     */
     protected Vector2f relativeCentroid;
+
+    /**
+     * The centroid of the shape - the absolute vector (position is already added to it)
+     *
+     * @see #getAbsoluteCentroid()
+     */
     protected Vector2f absoluteCentroid;
 
+    /**
+     * The boundingSphere of this shape represented by a {@link Circle}.
+     * This sphere is used as broadphase for collision detection, since circle intersection checks does cost way less
+     *
+     * @see #boundingSphere()
+     */
     protected Circle boundingSphere;
 
+    /**
+     * The current position of the shape in the global grid
+     *
+     * @see #setPosition(Vector2f)
+     */
     private Vector2f position = new Vector2f(0, 0);
 
+    /**
+     * Create a polygon of the given coordinates.
+     *
+     * @param relatives all relative points on the shape
+     */
     protected PrimitiveShape(Vector2f... relatives) {
         this(ShapeType.POLYGON, relatives);
     }
 
+    /**
+     * Create a shape. Generally only used as super call from other shape classes.
+     *
+     * @param type      the type of the target shape
+     * @param relatives the points defining this shape
+     */
     protected PrimitiveShape(ShapeType type, Vector2f... relatives) {
         this.type = type;
+        //circles are not defined by points, therefore they stay empty
         if (type == ShapeType.CIRCLE && (relatives == null || relatives.length == 0)) {
             //implicit circles don't have any explicit points
             this.vertices = 0;
@@ -61,22 +120,37 @@ public abstract class PrimitiveShape {
         adjust();
     }
 
+    /**
+     * @see this#position
+     */
     public final Vector2f position() {
         return position;
     }
 
+    /**
+     * @see this#absolutes
+     */
     public final Vector2f[] getAbsolutePoints() {
         return absolutes;
     }
 
+    /**
+     * @see this#absoluteCentroid
+     */
     public final Vector2f getAbsoluteCentroid() {
         return absoluteCentroid;
     }
 
+    /**
+     * @see this#faces
+     */
     public final Face[] faces() {
         return faces;
     }
 
+    /**
+     * @see this#vertices
+     */
     public final int vertices() {
         return vertices;
     }

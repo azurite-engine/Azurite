@@ -13,10 +13,10 @@ import org.joml.Vector2f;
  * @version 19.06.2021
  * @since 19.06.2021
  */
-public class BasicPolygon extends PrimitiveShape {
+public class ConvexPolygon extends PrimitiveShape {
 
 
-    public BasicPolygon(Vector2f... relatives) {
+    public ConvexPolygon(Vector2f... relatives) {
         super(ShapeType.POLYGON, relatives);
         initSphere();
         init();
