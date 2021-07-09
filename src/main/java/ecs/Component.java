@@ -16,8 +16,17 @@ public abstract class Component implements Comparable<Component> {
      * Parent GameObject
      */
     public GameObject gameObject = null;
+
+    /**
+     * A list of conflicting class.
+     * A component that does conflict with an existing component can not be added.
+     */
     protected Class<?>[] conflicts;
 
+    /**
+     * Used to define a set order of components and their update cycle.
+     * Required to maintain consistency in the update cycle.
+     */
     protected int order = 0;
 
     public Component() {
@@ -62,6 +71,11 @@ public abstract class Component implements Comparable<Component> {
         return conflicts.length > 0 && Arrays.stream(conflicts).anyMatch(conflict -> conflict.isAssignableFrom(otherComponent));
     }
 
+    /**
+     * Shortcut to get the current position of the parent gameobject.
+     *
+     * @return the current position of the parent gameobject
+     */
     protected Vector2f position() {
         return gameObject.getReadOnlyTransform().getPosition();
     }
@@ -72,6 +86,12 @@ public abstract class Component implements Comparable<Component> {
         return order - o.order;
     }
 
+    /**
+     * Should be true, if this components will change the position of the gameobject somehow.
+     *
+     * @return false, if and only if the component will never modify the position of the gameobject in any way
+     * @see GameObject#positionBuffer()
+     */
     public boolean transformingObject() {
         return true;
     }

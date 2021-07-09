@@ -63,6 +63,7 @@ public class StaticCollider extends Component implements Collider {
      * @param maskedLayers   all layers this object should collide with
      */
     public StaticCollider(PrimitiveShape collisionShape, int[] layers, int[] maskedLayers) {
+        super(Collider.class);
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layers);
         this.collisionMask = Utils.encode(maskedLayers);
@@ -77,6 +78,7 @@ public class StaticCollider extends Component implements Collider {
      * @param layer          the layer this object should be present on
      */
     public StaticCollider(PrimitiveShape collisionShape, int layer) {
+        super(Collider.class);
         this.collisionShape = collisionShape;
         this.collisionLayer = Utils.encode(layer);
         this.order = SpriteRenderer.ORDER - 1;
