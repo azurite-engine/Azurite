@@ -108,7 +108,6 @@ public class LightmapRenderer extends Renderer<QuadRenderBatch> {
     }
 
     public void bindLightmap() {
-        GL13.glActiveTexture(GL13.GL_TEXTURE8);
-        GL11.glBindTexture(GL_TEXTURE_2D, framebuffer.fetchColorAttachment(0));
+        framebuffer.fetchColorAttachment(0).bindToSlot(8);
     }
 }

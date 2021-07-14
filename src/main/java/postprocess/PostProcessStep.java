@@ -2,6 +2,7 @@ package postprocess;
 
 import graphics.Framebuffer;
 import graphics.Shader;
+import graphics.Texture;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
@@ -56,7 +57,7 @@ public abstract class PostProcessStep {
 	 * Run this Step
 	 * @return id of the texture if the framebuffer to render to is not default.
 	 */
-	public int apply() {
+	public Texture apply() {
 		framebuffer.bind();
 		shader.attach();
 		prepare();
@@ -66,13 +67,7 @@ public abstract class PostProcessStep {
 
 		shader.detach();
 		Framebuffer.unbind();
-		return framebuffer.isDefault() ? -1 : framebuffer.fetchColorAttachment(0);
-	}
-
-	/** Texture binding utility function */
-	protected static void bindTexture(int texture, int slot) {
-		GL13.glActiveTexture(GL13.GL_TEXTURE0 + slot);
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, texture);
+		return framebuffer.isDefault() ? null : framebuffer.fetchColorAttachment(0);
 	}
 
 	/** Enum to show where to render. Framebuffer gets constructed based on this. */
