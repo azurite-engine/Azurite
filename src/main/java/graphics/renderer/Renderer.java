@@ -3,6 +3,7 @@ package graphics.renderer;
 import ecs.GameObject;
 import graphics.Framebuffer;
 import graphics.Shader;
+import graphics.Texture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public abstract class Renderer<T extends RenderBatch> {
 	 * @param index index of the required color attachment texture. Will return -1 if there is no attachment at that index.
 	 * @return the texture ID of the attachment
 	 */
-	public int fetchColorAttachment(int index) {
+	public Texture fetchColorAttachment(int index) {
 		return framebuffer.fetchColorAttachment(index);
 	}
 

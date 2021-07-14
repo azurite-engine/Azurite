@@ -1,5 +1,7 @@
 package postprocess;
 
+import graphics.Texture;
+
 /**
  * Post Processing Pipeline to apply a bloom effect to a Texture.
  */
@@ -51,18 +53,18 @@ public class BloomEffect extends PostProcessPipeline {
 	/**
 	 * Apply the bloom effect and return the final texture if not rendering to the default framebuffer
 	 *
-	 * @param texture input texture to bee processed
+	 * @param input input texture to bee processed
 	 * @return the final texture if not rendering to the default framebuffer
 	 */
 	@Override
-	public int apply(int texture) {
-		brightFilter.setTexture(texture);
-		int brights = brightFilter.apply();
+	public Texture apply(Texture input) {
+		brightFilter.setTexture(input);
+		Texture brights = brightFilter.apply();
 		hblur.setTexture(brights);
-		int hBlurred = hblur.apply();
+		Texture hBlurred = hblur.apply();
 		vblur.setTexture(hBlurred);
-		int blurred = vblur.apply();
-		combine.setTextureA(texture);
+		Texture blurred = vblur.apply();
+		combine.setTextureA(input);
 		combine.setTextureB(blurred);
 		combine.setWeightB(bloomAmt);
 		return combine.apply();

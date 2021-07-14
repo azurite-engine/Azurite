@@ -3,7 +3,12 @@ package scene;
 import ecs.GameObject;
 import ecs.Text;
 import graphics.Camera;
-import graphics.renderer.*;
+import graphics.Texture;
+import graphics.renderer.DebugRenderer;
+import graphics.renderer.DefaultRenderer;
+import graphics.renderer.LightmapRenderer;
+import graphics.renderer.Renderer;
+import graphics.renderer.TextRenderer;
 import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
 import postprocess.ForwardToTexture;
@@ -75,7 +80,7 @@ public abstract class Scene {
         }
     }
 
-    public void postProcess(int texture) {
+    public void postProcess(Texture texture) {
         forwardToScreen.setTexture(texture);
         forwardToScreen.apply();
     }
