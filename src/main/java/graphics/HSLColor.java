@@ -15,10 +15,10 @@ import java.util.Arrays;
  */
 public class HSLColor {
 
-    public static int HUE = 0;
-    public static int SATURATION = 1;
-    public static int LUMINANCE = 2;
-    public static int ALPHA = 3;
+    public static final int HUE = 0;
+    public static final int SATURATION = 1;
+    public static final int LUMINANCE = 2;
+    public static final int ALPHA = 3;
 
     private final float[] components;
     private float alpha;
