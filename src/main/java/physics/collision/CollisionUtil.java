@@ -477,10 +477,10 @@ public class CollisionUtil {
      * @return returns boolean true if t1 is inside of t2
      */
     public static boolean rectInRect(Transform t1, Transform t2) {
-        return t1.getPosition().x < t2.scale.x &&
-                t1.scale.x > t2.getPosition().x &&
-                t1.getPosition().y < t2.scale.y &&
-                t1.scale.y > t2.getPosition().y;
+        return inRect(new Vector2f(t1.getX(), t1.getY()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight()) &&
+                inRect(new Vector2f(t1.getX(), t1.getY() + t1.getHeight()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight()) &&
+                inRect(new Vector2f(t1.getX() + t1.getWidth(), t1.getY()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight()) &&
+                inRect(new Vector2f(t1.getX() + t1.getWidth(), t1.getY() + t1.getHeight()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight());
     }
 
 }
