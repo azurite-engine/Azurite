@@ -38,6 +38,20 @@ application {
     mainClass = 'scenes.DemoPlatformer'
 }
 
+sourceSets {
+    test {
+        java {
+            srcDir 'src/main/test'
+        }
+    }
+}
+
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 
