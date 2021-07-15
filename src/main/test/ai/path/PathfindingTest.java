@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * <h1>Azurite</h1>
  *
- * @author Julius Korweck
+ * @author Juyas
  * @version 14.07.2021
  * @since 14.07.2021
  */
