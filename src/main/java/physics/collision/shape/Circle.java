@@ -44,7 +44,7 @@ public class Circle extends PrimitiveShape {
      * @return true if the given circle intersects with this one
      */
     public boolean intersection(Circle circle) {
-        double distanceSquared = this.absoluteCentroid.distanceSquared(circle.getAbsoluteCentroid());
+        double distanceSquared = this.absoluteCentroid.distanceSquared(circle.centroid());
         double radiusSquared = this.radiusSquared + circle.radiusSquared + 2 * this.radius * circle.radius;
         return distanceSquared - radiusSquared <= 0;
     }

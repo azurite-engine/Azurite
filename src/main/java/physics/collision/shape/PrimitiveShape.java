@@ -58,7 +58,7 @@ public abstract class PrimitiveShape {
     /**
      * The centroid of the shape - the absolute vector (position is already added to it)
      *
-     * @see #getAbsoluteCentroid()
+     * @see #centroid()
      */
     protected Vector2f absoluteCentroid;
 
@@ -121,6 +121,15 @@ public abstract class PrimitiveShape {
     }
 
     /**
+     * @param x the x coord
+     * @param y the y coord
+     * @see #setPosition(Vector2f)
+     */
+    public final void setPosition(float x, float y) {
+        setPosition(new Vector2f(x, y));
+    }
+
+    /**
      * @see this#position
      */
     public final Vector2f position() {
@@ -132,13 +141,6 @@ public abstract class PrimitiveShape {
      */
     public final Vector2f[] getAbsolutePoints() {
         return absolutes;
-    }
-
-    /**
-     * @see this#absoluteCentroid
-     */
-    public final Vector2f getAbsoluteCentroid() {
-        return absoluteCentroid;
     }
 
     /**
@@ -192,6 +194,7 @@ public abstract class PrimitiveShape {
      * The center point or weight point of the shape.
      *
      * @return centroid of the shape
+     * @see #absoluteCentroid
      */
     public final Vector2f centroid() {
         return absoluteCentroid;
