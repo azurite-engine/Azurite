@@ -123,9 +123,11 @@ public class StateMachine {
     /**
      * Add a new transition.
      *
+     * @return false, if the states are unknown
      * @see Transition#Transition(String, Function)
      */
-    public void addTransition(String fromState, String toState, Function<State, Boolean> condition) {
+    public boolean addTransition(String fromState, String toState, Function<State, Boolean> condition) {
+        if (!hasState(fromState) || !hasState(toState)) return false;
         Transition transition = new Transition(toState, condition);
         if (this.transitions.containsKey(fromState)) {
             this.transitions.get(fromState).add(transition);
@@ -134,6 +136,7 @@ public class StateMachine {
             transitions.add(transition);
             this.transitions.put(fromState, transitions);
         }
+        return true;
     }
 
     /**

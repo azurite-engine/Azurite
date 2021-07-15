@@ -10,7 +10,7 @@ import java.util.function.Function;
  * @version 13.07.2021
  * @since 13.07.2021
  */
-public class Transition {
+class Transition {
 
     /**
      * The state to transition to, if the condition is met.
@@ -32,15 +32,6 @@ public class Transition {
     public Transition(String toState, Function<State, Boolean> condition) {
         this.toState = toState;
         this.condition = condition;
-    }
-
-    /**
-     * Create a transition, that never automatically activates, since the condition will never be met.
-     *
-     * @param toState the state to transition to
-     */
-    public Transition(String toState) {
-        this(toState, x -> false);
     }
 
     /**
