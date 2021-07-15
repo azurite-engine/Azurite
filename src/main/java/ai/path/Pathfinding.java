@@ -78,13 +78,6 @@ public class Pathfinding {
             this.cost = 0;
         }
 
-        DijkstraPath(Path<Position> path) {
-            this.path = new ArrayList<>();
-            this.path.add(path.start());
-            this.path.add(path.end());
-            this.cost = path.cost();
-        }
-
         DijkstraPath(DijkstraPath<Position> prev, Node<Position> newNode, float additionalCost) {
             path = new ArrayList<>();
             path.addAll(prev.path);
