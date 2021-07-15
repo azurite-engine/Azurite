@@ -37,7 +37,7 @@ public class Pathfinding {
             DijkstraPath<Position> poll = queue.poll();
             current = poll.target();
             //if the current shortest path is our target path, we are done here
-            if (!current.equals(map.target()))
+            if (current.equals(map.target()))
                 return Optional.of((DijkstraPath<Position>) current.getMarker());
             //mark the path as the shortest possible
             poll.blacked = true;
