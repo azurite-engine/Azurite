@@ -412,7 +412,7 @@ public class CollisionUtil {
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(float inX, float inY, float circleX, float circleY, float radius) {
-        return Utils.dist(inX, inY, circleX, circleY) < radius * 2;
+        return Utils.dist(inX, inY, circleX, circleY) <= radius;
     }
 
     /**
@@ -425,7 +425,7 @@ public class CollisionUtil {
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(Vector2f in, float circleX, float circleY, float radius) {
-        return Utils.dist(in.x, in.y, circleX, circleY) < radius * 2;
+        return Utils.dist(in.x, in.y, circleX, circleY) <= radius;
     }
 
     /**
@@ -437,7 +437,7 @@ public class CollisionUtil {
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(Vector2f in, Vector2f circle, float radius) {
-        return Utils.dist(in.x, in.y, circle.x, circle.y) < radius * 2;
+        return Utils.dist(in.x, in.y, circle.x, circle.y) <= radius;
     }
 
     /**
