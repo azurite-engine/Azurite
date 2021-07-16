@@ -136,7 +136,7 @@ public class Utils {
      * @return Constrained value as a float.
      */
     public static float constrain(float value, float min, float max) {
-        return (value > max) ? max : (value < min ? min : value);
+        return Math.min(Math.max(value, min), max);
     }
 
     /**
