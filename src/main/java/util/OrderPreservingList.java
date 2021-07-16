@@ -30,8 +30,11 @@ public class OrderPreservingList<T extends Comparable<T>> extends ArrayList<T> {
     //if the obj is bigger than any other obj in the list, just add the new obj at the end i=size()
     private int findIndexToAdd(T obj) {
         //artificial limit, in general higher length increase cost of iterative solution
-        if (size() > 10)
-            return binarySearch(obj);
+        if (size() > 10) {
+            int i = binarySearch(obj);
+            if (get(i).compareTo(obj) < 0) i++;
+            return i;
+        }
         for (int i = 0; i < size(); i++) {
             if (get(i).compareTo(obj) > 0)
                 return i;
