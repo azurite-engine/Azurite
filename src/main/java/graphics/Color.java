@@ -210,5 +210,17 @@ public class Color {
         }
     }
 
+    /**
+     * Decode a rgb color code into a {@link Color}
+     *
+     * @param colorCode the color code
+     * @return a valid rgb color
+     * @see Integer#decode(String)
+     */
+    public static Color decode(String colorCode) {
+        int i = Integer.decode(colorCode);
+        return new Color((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
+    }
+
 }
 
