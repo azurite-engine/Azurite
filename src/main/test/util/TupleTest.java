@@ -7,7 +7,7 @@ import org.junit.Test;
 /**
  * <h1>Azurite</h1>
  *
- * @author Julius Korweck
+ * @author Juyas
  * @version 16.07.2021
  * @since 16.07.2021
  */
@@ -23,6 +23,14 @@ public class TupleTest {
     public void setUp() throws Exception {
         ints = new Tuple<>(intdata);
         strs = new Tuple<>(strdata);
+    }
+
+    @Test
+    public void constructors() {
+        Tuple<String> stringTuple1 = new Tuple<>(new Pair<>("1", "2"));
+        Tuple<String> stringTuple2 = new Tuple<>(new Triple<>("1", "2", "3"));
+        Assert.assertArrayEquals(new String[]{"1", "2"}, stringTuple1.getContent());
+        Assert.assertArrayEquals(new String[]{"1", "2", "3"}, stringTuple2.getContent());
     }
 
     @Test

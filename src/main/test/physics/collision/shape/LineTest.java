@@ -9,7 +9,7 @@ import java.util.Random;
 /**
  * <h1>Azurite</h1>
  *
- * @author Julius Korweck
+ * @author Juyas
  * @version 16.07.2021
  * @since 16.07.2021
  */
