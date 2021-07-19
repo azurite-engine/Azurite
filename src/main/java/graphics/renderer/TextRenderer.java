@@ -13,7 +13,7 @@ import util.Assets;
 import util.Engine;
 import util.Logger;
 import util.specs.FramebufferSpec;
-import util.specs.FramebufferTextureSpec;
+import util.specs.TextureSpec;
 
 import java.util.ArrayList;
 import java.util.Collections;
