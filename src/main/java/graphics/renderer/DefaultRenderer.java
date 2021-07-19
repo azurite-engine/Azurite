@@ -16,15 +16,6 @@ import java.util.List;
 public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 	private static final int MAX_BATCH_SIZE = 1000;
 
-	// The light data
-	private final List<PointLight> lights;
-	private int numberOfLights;
-
-	public DefaultRenderer() {
-		lights = new ArrayList<>();
-		this.numberOfLights = 0;
-	}
-
 	/**
 	 * Create a shader
 	 *
@@ -75,12 +66,27 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 	}
 
 	/**
+	 * Remove a gameObject from this renderer
+	 *
+	 * @param gameObject the GameObject with renderable components
+	 */
+	@Override
+	public void remove(GameObject gameObject) {
+		SpriteRenderer spr = gameObject.getComponent(SpriteRenderer.class);
+		if (spr != null) {
+			spr.markDirty();
+			spr.remove();
+		}
+	}
+
+	/**
 	 * Prepare for rendering. Do anything like setting background here.
 	 */
 	@Override
 	protected void prepare() {
 		Graphics.background(Graphics.defaultBackground);
 	}
+
 	/**
 	 * Adds the SpriteRenderer to a single batch, and creates a new batch if their is no space.
 	 * @param sprite SpriteRenderer: The SpriteRenderer component to be added

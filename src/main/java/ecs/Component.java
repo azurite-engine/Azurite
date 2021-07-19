@@ -25,6 +25,11 @@ public abstract class Component {
 	public void update (float dt) {}
 
 	/**
+	 * Called when component is removed from GameObject.
+	 */
+	public void remove() {}
+
+	/**
 	 * Get an array of debug lines to be rendered in debug mode
 	 *
 	 * @return an array of lines to be rendered in debug mode

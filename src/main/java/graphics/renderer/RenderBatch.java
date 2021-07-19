@@ -4,13 +4,14 @@ import graphics.Primitive;
 import graphics.ShaderDatatype;
 import graphics.Texture;
 import org.lwjgl.BufferUtils;
+import util.Utils;
 
-import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -52,25 +53,26 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 	protected boolean shouldRebufferData;
 
 	/** Vertex Array id */
-	private int vao;
+	protected int vao;
 	/** Vertex Buffer id */
 	protected int vbo;
 	/** Index Buffer (Element Buffer) id */
 	private int ebo;
 
+	/** Parent Renderer */
+	private Renderer<?> renderer;
+
 	/**
-	 *
 	 * @param maxBatchSize the maximum number of primitives in a batch
-	 * @param zIndex the zIndex of the batch. Used to sort the batches in order of which sprites appear above others.
-	 * @param primitive the primitive
-	 * @param attributes attributes for the Vertex array
+	 * @param zIndex       the zIndex of the batch. Used to sort the batches in order of which sprites appear above others.
+	 * @param primitive    the primitive
+	 * @param attributes   attributes for the Vertex array
 	 */
 	public RenderBatch(int maxBatchSize, int zIndex, Primitive primitive, ShaderDatatype... attributes) {
 		this.maxBatchSize = maxBatchSize;
 		this.zIndex = zIndex;
 		this.primitive = primitive;
 		this.attributes = attributes;
-
 
 		spriteCount = 0;
 		hasRoom = true;
@@ -109,9 +111,25 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 	}
 
 	/**
+	 * Set the renderer this batch belongs to
+	 * @param renderer the renderer this batch belongs to
+	 */
+	public void setRenderer(Renderer<?> renderer) {
+		this.renderer = renderer;
+	}
+
+	/**
+	 * Get the renderer this batch belongs to
+	 * @return the renderer this batch belongs to
+	 */
+	public Renderer<?> getRenderer() {
+		return renderer;
+	}
+
+	/**
 	 * Load up a primitive to the data array
 	 *
-	 * @param index index of the primitive to be loaded
+	 * @param index  index of the primitive to be loaded
 	 * @param offset offset of where the primitive should start being added to the array
 	 */
 	protected abstract void loadVertexProperties(int index, int offset);
@@ -128,17 +146,24 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 
 	/**
 	 * Function for calling loadVertexProperties but also sets up necessary stuff relating
-	 *     to uploading data to the gpu.
-	 * Always prefer calling this function instead of calling loadVertexProperties()
+	 * to uploading data to the gpu.
+	 * Always call this function instead of calling loadVertexProperties()
 	 *
 	 * @param index index of the sprite to be loaded
 	 */
 	protected void load(int index) {
-		shouldRebufferData = true;
-		spriteCount++;
-		int offset = getOffset(index);
+		if (index >= spriteCount) spriteCount++;
 		primitiveVerticesOffset = 0;
-		loadVertexProperties(index, offset);
+		loadVertexProperties(index, getOffset(index));
+	}
+
+	/**
+	 * Remove the object at index
+	 * @param index the index
+	 */
+	protected void remove(int index) {
+		Utils.shiftOverwrite(data, getOffset(index), getOffset(index + 1));
+		spriteCount--;
 	}
 
 	/**
@@ -146,7 +171,7 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 	 *
 	 * @param texture the texture to be rendered
 	 * @return the index at which texture is placed.
-	 * 		The texture will be bound to this texture slot. Hence, set the texture attribute to this value.
+	 * The texture will be bound to this texture slot. Hence, set the texture attribute to this value.
 	 */
 	protected int addTexture(Texture texture) {
 		int texIndex;
@@ -162,16 +187,16 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 	/**
 	 * Update the buffer on the GPU but only if it is necessary
 	 */
-	public void updateBuffer() {
-		if (shouldRebufferData) {
-			glBindBuffer(GL_ARRAY_BUFFER, vbo);
-			glBufferSubData(GL_ARRAY_BUFFER, 0, data);
-			shouldRebufferData = false;
-		}
+	public void updateBufferFull() {
+		glBindBuffer(GL_ARRAY_BUFFER, vbo);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, data);
 	}
+
+	public void updateBuffer() { updateBufferFull(); }
 
 	/**
 	 * Update the buffer with a memory taken as a pointer from GPU and only update the sprite that needs updating
+	 *
 	 * @param spriteIndex the index of a sprite that needs updating
 	 */
 	public void updateBuffer(int spriteIndex) {
@@ -179,13 +204,16 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 		FloatBuffer vertexPtr;
 
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
-		vertexPtr = ((ByteBuffer)glMapBufferRange(GL_ARRAY_BUFFER, spriteIndex * vertexSize * Float.BYTES,  vertexSize * Float.BYTES,GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT))
+		vertexPtr = Objects.requireNonNull(glMapBufferRange(GL_ARRAY_BUFFER, spriteIndex * vertexSize * Float.BYTES,
+				vertexSize * Float.BYTES, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT))
 				.order(ByteOrder.nativeOrder()).asFloatBuffer();
 		load(spriteIndex);
-		//Get vertices from createQuad
+
+		// Get vertices from createQuad
 		vertexPtr.put(primitiveVertices).position(0);
 		glUnmapBuffer(GL_ARRAY_BUFFER);
 	}
+
 
 	/**
 	 * Binds the vertex array and all the textures to the required slots
@@ -245,11 +273,11 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 		return this.textures.size() < 8;
 	}
 
-	public boolean hasTexture (Texture tex) {
+	public boolean hasTexture(Texture tex) {
 		return this.textures.contains(tex);
 	}
 
-	public int zIndex () {
+	public int zIndex() {
 		return zIndex;
 	}
 

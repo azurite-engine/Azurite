@@ -75,6 +75,10 @@ public abstract class Scene {
         }
     }
 
+    /**
+     * Apply post processing to a texture
+     * @param texture input texture
+     */
     public void postProcess(Texture texture) {
         forwardToScreen.setTexture(texture);
         forwardToScreen.apply();
@@ -91,19 +95,6 @@ public abstract class Scene {
     }
 
     // The following methods shouldn't be overridden. For this, added final keyword
-
-    /**
-     * Loops through all gameobjects already in the scene and calls their start methods.
-     */
-    public final void startGameObjects() {
-        for (GameObject gameObject : gameObjects) {
-            gameObject.start();
-            this.renderer.add(gameObject);
-            this.lightmapRenderer.add(gameObject);
-            this.debugRenderer.add(gameObject);
-            rendererRegistry.forEach(r -> r.add(gameObject));
-        }
-    }
 
     /**
      * The sceneId is meant to represent the instance of a scene as an integer
@@ -127,7 +118,21 @@ public abstract class Scene {
      */
     public void addGameObjectToScene(GameObject gameObject) {
         gameObjects.add(gameObject);
-        gameObject.start();
+        if (active) {
+            gameObject.start();
+            addToRenderers(gameObject);
+        }
+    }
+
+    /**
+     * @param gameObject GameObject to be added.
+     */
+    public void removeGameObjectFromScene(GameObject gameObject) {
+        gameObjects.remove(gameObject);
+        this.renderer.remove(gameObject);
+        this.lightmapRenderer.remove(gameObject);
+        this.debugRenderer.remove(gameObject);
+        rendererRegistry.forEach(r -> r.remove(gameObject));
     }
 
     /**
@@ -160,18 +165,10 @@ public abstract class Scene {
         lightmapRenderer.render();
         lightmapRenderer.bindLightmap();
         renderer.render();
-        //lightmapRenderer.framebuffer.blitColorBuffersToScreen(); TODO: remove later
     }
 
     public void debugRender() {
         if (debugMode) this.debugRenderer.render();
-    }
-
-    /**
-     * Loads the shader.
-     */
-    public void loadSceneResources() {
-        Assets.getShader("src/assets/shaders/default.glsl");
     }
 
     /**
@@ -185,4 +182,14 @@ public abstract class Scene {
         forwardToScreen.init();
     }
 
+    /**
+     * Add a gameObject to all renderers
+     * @param gameObject the gameObject to be added
+     */
+    public void addToRenderers(GameObject gameObject) {
+        this.renderer.add(gameObject);
+        this.lightmapRenderer.add(gameObject);
+        this.debugRenderer.add(gameObject);
+        rendererRegistry.forEach(r -> r.add(gameObject));
+    }
 }
