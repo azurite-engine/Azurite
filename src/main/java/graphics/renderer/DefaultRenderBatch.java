@@ -101,6 +101,7 @@ public class DefaultRenderBatch extends RenderBatch {
 	 * If so, resets its data in the data[] via load().
 	 * <p>
 	 * Calls the RenderBatch::updateBuffer method to re-upload the data if required
+	 * </p>
 	 */
 	@Override
 	public void updateBuffer() {

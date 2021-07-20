@@ -49,8 +49,6 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 	public final Primitive primitive;
 	/** The attributes for the Vertex Array */
 	private final ShaderDatatype[] attributes;
-	/** Should the data array be re-uploaded to the GPU */
-	protected boolean shouldRebufferData;
 
 	/** Vertex Array id */
 	protected int vao;
@@ -185,13 +183,16 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 	}
 
 	/**
-	 * Update the buffer on the GPU but only if it is necessary
+	 * Update the buffer on the GPU
 	 */
 	public void updateBufferFull() {
 		glBindBuffer(GL_ARRAY_BUFFER, vbo);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, data);
 	}
 
+	/**
+	 * Update the buffer on the GPU
+	 */
 	public void updateBuffer() { updateBufferFull(); }
 
 	/**

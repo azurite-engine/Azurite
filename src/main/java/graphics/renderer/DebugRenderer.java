@@ -60,11 +60,12 @@ public class DebugRenderer extends Renderer<DebugRenderBatch> {
 	public void add(GameObject gameObject) {
 		for (Component c : gameObject.getComponents()) {
 			DebugPrimitive[] primitives = c.debug();
-			if (primitives != null)
+			if (primitives != null) {
 				for (DebugPrimitive primitive : primitives) {
 					for (DebugLine line : primitive.getLines())
 						addLine(line);
 				}
+			}
 		}
 	}
 

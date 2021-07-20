@@ -129,10 +129,7 @@ public abstract class Scene {
      */
     public void removeGameObjectFromScene(GameObject gameObject) {
         gameObjects.remove(gameObject);
-        this.renderer.remove(gameObject);
-        this.lightmapRenderer.remove(gameObject);
-        this.debugRenderer.remove(gameObject);
-        rendererRegistry.forEach(r -> r.remove(gameObject));
+        removeFromRenderers(gameObject);
     }
 
     /**
@@ -191,5 +188,16 @@ public abstract class Scene {
         this.lightmapRenderer.add(gameObject);
         this.debugRenderer.add(gameObject);
         rendererRegistry.forEach(r -> r.add(gameObject));
+    }
+
+    /**
+     * Remove a gameObject from all renderers
+     * @param gameObject the gameObject to be removed
+     */
+    private void removeFromRenderers(GameObject gameObject) {
+        this.renderer.remove(gameObject);
+        this.lightmapRenderer.remove(gameObject);
+        this.debugRenderer.remove(gameObject);
+        rendererRegistry.forEach(r -> r.remove(gameObject));
     }
 }
