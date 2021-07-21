@@ -4,6 +4,7 @@ import org.joml.Vector2f;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import util.Utils;
 
 /**
  * <h1>Azurite</h1>
@@ -31,6 +32,77 @@ public class PrimitiveShapeTest {
         shape1.setPosition(0, 0);
         shape2.setPosition(0, 0);
         shape3.setPosition(0, 0);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void rotationError() {
+        //if rotation around point is chosen, there has to be a point
+        shape1.rotateShape(Utils.radian(90), RotationType.AROUND_POINT, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void rotationError2() {
+        //the type of rotation has to be specified
+        shape1.rotateShape(Utils.radian(90), null, null);
+    }
+
+    @Test
+    public void rotation() {
+
+        for (int i = 1; i < 360; i++) {
+            Vector2f[] absolutes = shape1.absolutes;
+            shape1.rotateShape(Utils.radian(i), RotationType.AROUND_CENTER, null);
+            shape1.rotateShape(Utils.radian(-i), RotationType.AROUND_CENTER, null);
+            Assert.assertArrayEquals(absolutes, shape1.absolutes);
+
+            absolutes = shape2.absolutes;
+            shape2.rotateShape(Utils.radian(i), RotationType.AROUND_CENTER, null);
+            shape2.rotateShape(Utils.radian(-i), RotationType.AROUND_CENTER, null);
+            Assert.assertArrayEquals(absolutes, shape2.absolutes);
+
+            absolutes = shape3.absolutes;
+            shape3.rotateShape(Utils.radian(i), RotationType.AROUND_CENTER, null);
+            shape3.rotateShape(Utils.radian(-i), RotationType.AROUND_CENTER, null);
+            Assert.assertArrayEquals(absolutes, shape3.absolutes);
+        }
+
+        for (int i = 1; i < 360; i++) {
+            Vector2f[] absolutes = shape1.absolutes;
+            shape1.rotateShape(Utils.radian(i), RotationType.AROUND_ORIGIN, null);
+            shape1.rotateShape(Utils.radian(-i), RotationType.AROUND_ORIGIN, null);
+            Assert.assertArrayEquals(absolutes, shape1.absolutes);
+
+            absolutes = shape2.absolutes;
+            shape2.rotateShape(Utils.radian(i), RotationType.AROUND_ORIGIN, null);
+            shape2.rotateShape(Utils.radian(-i), RotationType.AROUND_ORIGIN, null);
+            Assert.assertArrayEquals(absolutes, shape2.absolutes);
+
+            absolutes = shape3.absolutes;
+            shape3.rotateShape(Utils.radian(i), RotationType.AROUND_ORIGIN, null);
+            shape3.rotateShape(Utils.radian(-i), RotationType.AROUND_ORIGIN, null);
+            Assert.assertArrayEquals(absolutes, shape3.absolutes);
+        }
+
+        //any artificial point
+        Vector2f point = new Vector2f(8, 8);
+
+        for (int i = 1; i < 360; i++) {
+            Vector2f[] absolutes = shape1.absolutes;
+            shape1.rotateShape(Utils.radian(i), RotationType.AROUND_POINT, point);
+            shape1.rotateShape(Utils.radian(-i), RotationType.AROUND_POINT, point);
+            Assert.assertArrayEquals(absolutes, shape1.absolutes);
+
+            absolutes = shape2.absolutes;
+            shape2.rotateShape(Utils.radian(i), RotationType.AROUND_POINT, point);
+            shape2.rotateShape(Utils.radian(-i), RotationType.AROUND_POINT, point);
+            Assert.assertArrayEquals(absolutes, shape2.absolutes);
+
+            absolutes = shape3.absolutes;
+            shape3.rotateShape(Utils.radian(i), RotationType.AROUND_POINT, point);
+            shape3.rotateShape(Utils.radian(-i), RotationType.AROUND_POINT, point);
+            Assert.assertArrayEquals(absolutes, shape3.absolutes);
+        }
+
     }
 
     @Test
