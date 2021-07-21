@@ -38,7 +38,7 @@ public class DemoTopDown extends Scene {
 
 	BloomEffect bloom;
 
-	boolean added = true;
+	boolean flip = true;
 
 	public void awake() {
 		camera = new Camera();
@@ -67,7 +67,6 @@ public class DemoTopDown extends Scene {
 		greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));
 
 		bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
-		bloom.init();
 	}
 
 	public void update() {
@@ -80,20 +79,28 @@ public class DemoTopDown extends Scene {
 		player.getTransform().addRotation((float) Math.toRadians(1));
 
 		if (Keyboard.getKeyDown(Keys.AZ_KEY_SPACE)) {
-//            if (added) {
-//                booper.removeComponent(PointLight.class);
-//                added = false;
-//            } else {
-//                booper.addComponent(booperLight);
-//                added = true;
-//            }
+//			if (flip) {
+//				booper.removeComponent(PointLight.class);
+//				flip = false;
+//			} else {
+//				booper.addComponent(booperLight);
+//				flip = true;
+//			}
 
-			if (added) {
-				removeGameObjectFromScene(booper);
-				added = false;
+//			if (flip) {
+//				removeGameObjectFromScene(booper);
+//				flip = false;
+//			} else {
+//				addGameObjectToScene(booper);
+//				flip = true;
+//			}
+
+			if (flip) {
+				booper.setZindex(1);
+				flip = false;
 			} else {
-				addGameObjectToScene(booper);
-				added = true;
+				booper.setZindex(2);
+				flip = true;
 			}
 		}
 
