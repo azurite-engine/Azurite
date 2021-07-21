@@ -57,7 +57,7 @@ public class DemoTopDown extends Scene {
 		booper.addComponent(booperLight);
 		booper.setTransformY(900);
 
-		player = new GameObject(this, "Player", new Transform(600, 600, (float)Math.toRadians(90), 100, 100), 2);
+		player = new GameObject(this, "Player", new Transform(600, 600, 90, 100, 100), 2);
 		player.addComponent(new PointLight(new Color(250, 255, 181), 30));
 		player.addComponent(new AABB());
 		player.addComponent(new SpriteRenderer(a.getSprite(132)));
@@ -76,7 +76,7 @@ public class DemoTopDown extends Scene {
 			booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 		greenLight.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 
-		player.getTransform().addRotation((float) Math.toRadians(1));
+		player.getTransform().addRotation(1);
 
 		if (Keyboard.getKeyDown(Keys.AZ_KEY_SPACE)) {
 //			if (flip) {

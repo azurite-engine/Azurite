@@ -66,8 +66,11 @@ public class DefaultRenderBatch extends RenderBatch {
 
 			float scaledX = (xAdd * spr.scale.x);
 			float scaledY = (yAdd * spr.scale.y);
-			data[offset] = spr.position.x + (float) ((Math.cos(spr.rotation) * scaledX) - (Math.sin(spr.rotation) * scaledY));
-			data[offset + 1] = spr.position.y + (float) ((Math.sin(spr.rotation) * scaledX) + (Math.cos(spr.rotation) * scaledY));
+
+			data[offset] = spr.position.x + (float) ((Math.cos(spr.getRotationRadians()) * scaledX)
+					- (Math.sin(spr.getRotationRadians()) * scaledY));
+			data[offset + 1] = spr.position.y + (float) ((Math.sin(spr.getRotationRadians()) * scaledX)
+					+ (Math.cos(spr.getRotationRadians()) * scaledY));
 
 			primitiveVertices[primitiveVerticesOffset] = data[offset];
 			primitiveVertices[primitiveVerticesOffset + 1] = data[offset + 1];

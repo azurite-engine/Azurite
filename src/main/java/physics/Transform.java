@@ -145,6 +145,9 @@ public class Transform {
 	public float getRotation () {
 		return this.rotation;
 	}
+	public float getRotationRadians () {
+		return (float)Math.toRadians(this.rotation);
+	}
 	public void setRotation (float r) {
 		this.rotation = r;
 	}
