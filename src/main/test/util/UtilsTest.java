@@ -3,6 +3,7 @@ package util;
 import org.joml.Vector2f;
 import org.junit.Assert;
 import org.junit.Test;
+import physics.collision.shape.Circle;
 
 /**
  * <h1>Azurite</h1>
@@ -15,6 +16,48 @@ public class UtilsTest {
 
     final float minimalDelta = Float.MIN_VALUE;
     final float smallDelta = 0.0001f;
+
+    @Test
+    public void radian() {
+        for (int i = 0; i <= 360; i++) {
+            Assert.assertEquals(Math.toRadians(i), Utils.radian(i), smallDelta);
+        }
+    }
+
+    @Test
+    public void rotateAroundOrigin() {
+        for (int i = 0; i < 100; i++) {
+            Vector2f point = new Vector2f((float) Math.random() * 10 - 5, (float) Math.random() * 10 - 5);
+            //a circle with the radius as the distance from the origin to the point, where the origin of both is 0,0
+            Circle circle = new Circle(new Vector2f(0, 0), point.length());
+            circle.setPosition(0, 0);
+            Assert.assertTrue(circle.supportPoint(point).equals(point, smallDelta));
+            //rotate 360 different angles, should be sufficient
+            for (int a = 1; i <= 360; i++) {
+                Vector2f p = Utils.rotateAroundOrigin(point, Utils.radian(a));
+                Assert.assertTrue(circle.supportPoint(p).equals(p, smallDelta));
+            }
+        }
+    }
+
+    @Test
+    public void rotateAroundPoint() {
+        for (int i = 0; i < 100; i++) {
+            Vector2f pointToRotate = new Vector2f((float) Math.random() * 10 - 5, (float) Math.random() * 10 - 5);
+            Vector2f pointToRotateAround = new Vector2f((float) Math.random() * 20 - 10, (float) Math.random() * 20 - 10);
+            Vector2f diff = pointToRotate.sub(pointToRotateAround, new Vector2f());
+            //a circle with the radius as the distance from the origin to the point, where the origin of both is 0,0
+            Circle circle = new Circle(new Vector2f(0, 0), diff.length());
+            circle.setPosition(pointToRotateAround);
+            Assert.assertTrue(circle.supportPoint(diff).equals(pointToRotate, smallDelta));
+            //rotate 360 different angles, should be sufficient
+            for (int a = 1; i <= 360; i++) {
+                Vector2f p = Utils.rotateAroundPoint(pointToRotate, pointToRotateAround, Utils.radian(a));
+                diff = p.sub(pointToRotateAround, new Vector2f());
+                Assert.assertTrue(circle.supportPoint(diff).equals(p, smallDelta));
+            }
+        }
+    }
 
     @Test
     public void encode() {

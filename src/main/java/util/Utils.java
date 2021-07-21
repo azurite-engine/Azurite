@@ -5,6 +5,44 @@ import org.joml.Vector2f;
 public class Utils {
 
     /**
+     * Transforms an angle from degree into radian.
+     *
+     * @param degree the angle in degree
+     * @return the radian angle
+     */
+    public static float radian(float degree) {
+        return (float) Math.toRadians(degree);
+    }
+
+    /**
+     * Rotates a point around the origin of the system.
+     *
+     * @param point       the point to rotate
+     * @param radianAngle the radian angle to rotate
+     * @return a new point that is rotated by radianAngle starting from the given point
+     */
+    public static Vector2f rotateAroundOrigin(Vector2f point, float radianAngle) {
+        float cos = (float) Math.cos(radianAngle);
+        float sin = (float) Math.sin(radianAngle);
+        return new Vector2f(point.x * cos - point.y * sin, point.y * cos + point.x * sin);
+    }
+
+    /**
+     * Rotates a point around a given point in the same system.
+     *
+     * @param point          the point to rotate
+     * @param relativeOrigin the point to rotate around
+     * @param radianAngle    the radian angle to rotate
+     * @return a new point that is rotated by radianAngle around the given relativeOrigin point starting from the given point
+     */
+    public static Vector2f rotateAroundPoint(Vector2f point, Vector2f relativeOrigin, float radianAngle) {
+        point = point.sub(relativeOrigin, new Vector2f());
+        float cos = (float) Math.cos(radianAngle);
+        float sin = (float) Math.sin(radianAngle);
+        return new Vector2f(point.x * cos - point.y * sin, point.y * cos + point.x * sin).add(relativeOrigin);
+    }
+
+    /**
      * Encodes all given input into a short.
      * Note, that the range of Short is 16 bytes and therefore only 0-14 (15 different values) can be encoded.
      * Any value that is not within this range, will lead to undefined behaviour.
