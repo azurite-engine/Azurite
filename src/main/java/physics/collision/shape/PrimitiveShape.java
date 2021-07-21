@@ -193,9 +193,9 @@ public abstract class PrimitiveShape {
     /**
      * Rotate a shape around a specific point and a given radianAngle.
      *
-     * @param radianAngle
-     * @param type
-     * @param point
+     * @param radianAngle the radian angle to rotate the shape
+     * @param type        the type of rotation
+     * @param point       the optional point to rotate around; if type is not {@link RotationType#AROUND_POINT}, the point can be null
      * @return true, if the rotation was successful
      * @see Utils#rotateAroundPoint(Vector2f, Vector2f, float)
      * @see Utils#radian(float)
