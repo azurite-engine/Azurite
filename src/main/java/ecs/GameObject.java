@@ -41,6 +41,7 @@ public class GameObject {
         this.name = name;
         this.components = componentList;
         this.transform = transform;
+        transform.gameObject = this;
         this.zIndex = zIndex;
         this.parentScene = scene;
         scene.addGameObjectToScene(this);
@@ -199,8 +200,8 @@ public class GameObject {
     /**
      * Adds a new component to the GameObject's list
      *
-     * @param c
-     * @return
+     * @param c Component to be added
+     * @return <code>this</code>
      */
     public GameObject addComponent(Component c) {
         this.components.add(c);

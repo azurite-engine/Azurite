@@ -1,6 +1,7 @@
 package graphics;
 
 
+import audio.AudioMaster;
 import event.EventData;
 import event.Events;
 import input.Keyboard;
@@ -121,10 +122,9 @@ public class Window {
 
     }
 
-    void getFPS() {
-        //TODO this wont properly display the FPS it will just count up the frames, there is no reset after a second yet
+    void showFPS(double fps) {
         frameCount++;
-        glfwSetWindowTitle(glfwWindow, title + " @ " + Math.round((frameCount / (Engine.millisRunning() / 1000))) + " FPS");
+        glfwSetWindowTitle(glfwWindow, title + " @ " + fps + " FPS");
     }
 
     public static long glfwWindow() {
@@ -149,16 +149,14 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        double frameBeginTime = glfwGetTime();
+        double frameBeginTime;
         double frameEndTime;
 
         sceneManager.enable();
 
         while (!glfwWindowShouldClose(glfwWindow)) {
 
-            frameEndTime = glfwGetTime();
-            Engine.updateDeltaTime((float) (frameEndTime - frameBeginTime));
-            frameBeginTime = frameEndTime;
+            frameBeginTime = System.nanoTime();
 
             Mouse.update();
             Keyboard.update();
@@ -174,12 +172,23 @@ public class Window {
             sceneManager.debugRender();
 
             glfwSwapBuffers(glfwWindow);
-            getFPS();
+
+            frameEndTime = System.nanoTime();
+
+            // frameBeginTime and frameEndTime are in nanoseconds.
+            // there are 1,000,000,000 nanoseconds in a second.
+            // if we divide the number of nanoseconds elapsed during this frame
+            // by this number, we get the number of seconds that elapsed during one frame.
+            // the reciprocal of this number is the fps.
+
+            Engine.updateDeltaTime((float) ((frameEndTime - frameBeginTime) * 1e-9));
+            showFPS((int) (1 / ((frameEndTime - frameBeginTime) * 1e-9)));
         }
 
         currentScene().clean();
         // Delete all framebuffers
         Framebuffer.clean();
+        AudioMaster.get().clean();
 
         glfwDestroyWindow(glfwWindow);
         glfwTerminate();

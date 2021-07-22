@@ -1,6 +1,5 @@
 package ecs;
 
-import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
 
 /**

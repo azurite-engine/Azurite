@@ -2,7 +2,6 @@ package graphics;
 
 import event.EventData;
 import event.Events;
-import org.lwjgl.opengl.GL11;
 import util.specs.FramebufferSpec;
 import util.specs.TextureSpec;
 

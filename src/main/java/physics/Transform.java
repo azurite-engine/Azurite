@@ -1,12 +1,12 @@
 package physics;
 
+import ecs.Component;
 import org.joml.Vector2f;
 
 /**
  * Represents the position in X and Y coordinates, and the scale (width and height) of a gameObject
- * TODO: change to a component?
  */
-public class Transform {
+public class Transform extends Component {
 	public Vector2f position;
 	public Vector2f scale;
 

@@ -44,20 +44,24 @@ public class DemoTopDown extends Scene {
         t = new Tilesystem(this, a, b, 31, 15, 200, 200);
 
         trRes = new GameObject(this, "", new Transform(new Vector2f(0, 0), new Vector2f(100)), -20);
-
+        // which one looks better...
+        // this:
         booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
         booper.addComponent(new Animation(1, a.getSprite(132), a.getSprite(150)));
         booper.addComponent(new CollisionTrigger(data -> System.out.println("Boop")));
         booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
+        
+        // or this:
+        player = new GameObject(this, "Player", new Transform(600, 600, 100, 100), 2)
+                .addComponent(new PointLight(new Color(250, 255, 181), 30))
+                .addComponent(new AABB())
+                .addComponent(new SpriteRenderer(a.getSprite(132)))
+                .addComponent(new CharacterController());
 
-        player = new GameObject(this, "Player", new Transform(600, 600, 100, 100), 2);
-        player.addComponent(new PointLight(new Color(250, 255, 181), 30));
-        player.addComponent(new AABB());
-        player.addComponent(new SpriteRenderer(a.getSprite(132)));
-        player.addComponent(new CharacterController());
+        // I can't tell
 
-        greenLight = new GameObject(this, "Green light", new Transform(3315, 300, 1, 1), 3);
-        greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));
+        greenLight = new GameObject(this, "Green light", new Transform(3315, 300, 1, 1), 3)
+                .addComponent(new PointLight(new Color(102, 255, 102), 30));
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         bloom.init();

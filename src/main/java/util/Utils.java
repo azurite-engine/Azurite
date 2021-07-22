@@ -59,9 +59,9 @@ public class Utils {
     }
 
     /**
-     * Returns the distance between two sets of X and Y coordinates in the form of "physics.Vector2"s.
-     * @param pos1 First physics.Vector2 position
-     * @param pos2 Second physics.Vector2 position
+     * Returns the distance between two sets of X and Y coordinates in the form of "org.joml.Vector2f"s.
+     * @param pos1 First Vector2f position
+     * @param pos2 Second Vector2f position
      * @return Returns the distance as a float.
      */
     public static float dist(Vector2f pos1, Vector2f pos2) {
