@@ -30,7 +30,7 @@ public class DemoTopDown extends Scene {
 	Spritesheet a;
 	Spritesheet b;
 	Tilesystem t;
-	PointLight booperLight;
+	Animation booperSprite;
 	GameObject player;
 	GameObject booper;
 	GameObject greenLight;
@@ -51,10 +51,10 @@ public class DemoTopDown extends Scene {
 		trRes = new GameObject(this, "", new Transform(new Vector2f(0, 0), new Vector2f(100)), -20);
 
 		booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
-		booper.addComponent(new Animation(1, a.getSprite(132), a.getSprite(150)));
+		booperSprite = new Animation(1, a.getSprite(132), a.getSprite(150));
+		booper.addComponent(booperSprite);
 		booper.addComponent(new CollisionTrigger(data -> System.out.println("Boop")));
-		booperLight = new PointLight(new Color(255, 153, 102), 30);
-		booper.addComponent(booperLight);
+		booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
 		booper.setTransformY(900);
 
 		player = new GameObject(this, "Player", new Transform(600, 600, 90, 100, 100), 2);
@@ -79,13 +79,13 @@ public class DemoTopDown extends Scene {
 		player.getTransform().addRotation(1);
 
 		if (Keyboard.getKeyDown(Keys.AZ_KEY_SPACE)) {
-//			if (flip) {
-//				booper.removeComponent(PointLight.class);
-//				flip = false;
-//			} else {
-//				booper.addComponent(booperLight);
-//				flip = true;
-//			}
+			if (flip) {
+				booper.removeComponent(Animation.class);
+				flip = false;
+			} else {
+				booper.addComponent(booperSprite);
+				flip = true;
+			}
 
 //			if (flip) {
 //				removeGameObjectFromScene(booper);
@@ -95,13 +95,13 @@ public class DemoTopDown extends Scene {
 //				flip = true;
 //			}
 
-			if (flip) {
-				booper.setZindex(1);
-				flip = false;
-			} else {
-				booper.setZindex(2);
-				flip = true;
-			}
+//			if (flip) {
+//				booper.setZindex(1);
+//				flip = false;
+//			} else {
+//				booper.setZindex(2);
+//				flip = true;
+//			}
 		}
 
 		camera.smoothFollow(player.getTransform());
