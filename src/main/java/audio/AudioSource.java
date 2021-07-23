@@ -26,7 +26,6 @@ public class AudioSource extends Component {
      * Index of the currently selected buffer.
      */
     private int index = 0;
-    private Vector2f firstPos;
 
     public AudioSource() {
         position = new Vector3f(1.0f, 0.0f, 0.0f);
@@ -121,10 +120,11 @@ public class AudioSource extends Component {
 
     @Override
     public void update(float dt) {
-        Vector2f secondPos = new Vector2f();
+        Vector3f secondPos = new Vector3f(gameObject.getTransform().position, 0.0f);
         alListener3f(AL_POSITION, secondPos.x, secondPos.y, 0.0f);
         alListener3f(AL_VELOCITY,
-                secondPos.x - firstPos.x,
-                secondPos.y - firstPos.y, 0.0f);
+                secondPos.x - position.x,
+                secondPos.y - position.y, 0.0f);
+        position = secondPos;
     }
 }

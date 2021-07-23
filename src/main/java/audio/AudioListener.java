@@ -19,7 +19,7 @@ public class AudioListener extends Component {
 
     }
 
-    public static AudioListener get() {
+    public static synchronized AudioListener get() {
         if (instance == null) {
             instance = new AudioListener();
         }

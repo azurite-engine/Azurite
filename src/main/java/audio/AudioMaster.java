@@ -25,7 +25,7 @@ public class AudioMaster {
 
     }
 
-    public static AudioMaster get() {
+    public static synchronized AudioMaster get() {
         if (instance == null) {
             try {
                 init();
