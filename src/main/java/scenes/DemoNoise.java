@@ -1,0 +1,94 @@
+package scenes;
+
+import audio.AudioListener;
+import audio.AudioSource;
+import ecs.*;
+import graphics.Camera;
+import graphics.Color;
+import graphics.Texture;
+import org.joml.Vector2f;
+import physics.AABB;
+import physics.Transform;
+import postprocess.BloomEffect;
+import postprocess.PostProcessStep;
+import scene.Scene;
+import tiles.Spritesheet;
+import tiles.Tilesystem;
+import util.Assets;
+import util.Engine;
+import util.Utils;
+
+import static graphics.Graphics.setDefaultBackground;
+
+/**
+ * This demo has the same stuff as <code>DemoTopDown.java</code>, but whenever you collide with
+ * the booper, it plays a noise.
+ */
+public class DemoNoise extends Scene {
+    public static void main(String[] args) {
+        Engine.init(1080, 720, "Azurite Engine Demo 1", 0.01f);
+        Engine.scenes().switchScene(new DemoNoise(), true);
+        Engine.showWindow();
+    }
+
+    Spritesheet a;
+    Spritesheet b;
+    Tilesystem t;
+    GameObject player;
+    GameObject booper;
+    GameObject greenLight;
+    GameObject trRes;
+
+    BloomEffect bloom;
+
+    public void awake() {
+        camera = new Camera();
+        setDefaultBackground(0);
+
+        a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0);
+        b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0);
+        t = new Tilesystem(this, a, b, 31, 15, 200, 200);
+
+        trRes = new GameObject(this, "", new Transform(new Vector2f(0, 0), new Vector2f(100)), -20);
+        // which one looks better...
+        // this:
+        booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
+        booper.addComponent(new Animation(1, a.getSprite(132), a.getSprite(150)));
+        booper.addComponent(new AudioSource(Assets.getAudioBuffer("src/assets/sounds/test2.wav")));
+        booper.addComponent(new CollisionTrigger(data -> {
+            System.out.println("Boop");
+            booper.getComponent(AudioSource.class).play(0);
+        }));
+        booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
+
+        // or this:
+        player = new GameObject(this, "Player", new Transform(600, 600, 100, 100), 2)
+                .addComponent(new PointLight(new Color(250, 255, 181), 30))
+                .addComponent(new AABB())
+                .addComponent(new SpriteRenderer(a.getSprite(132)))
+                .addComponent(new CharacterController())
+                .addComponent(AudioListener.get());
+
+        // I can't tell
+
+        greenLight = new GameObject(this, "Green light", new Transform(3315, 300, 1, 1), 3)
+                .addComponent(new PointLight(new Color(102, 255, 102), 30));
+
+        bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
+        bloom.init();
+    }
+
+    public void update() {
+        super.update();
+        player.getComponent(PointLight.class).intensity = Utils.map((float) Math.sin(Engine.millisRunning() / 600), -1, 1, 100, 140);
+        booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
+        greenLight.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
+
+        camera.smoothFollow(player.getTransform());
+    }
+
+    @Override
+    public void postProcess(Texture texture) {
+        bloom.apply(texture);
+    }
+}
