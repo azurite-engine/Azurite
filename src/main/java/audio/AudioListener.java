@@ -10,14 +10,14 @@ import static org.lwjgl.openal.AL10.*;
  */
 public class AudioListener extends Component {
 
+    private static AudioListener instance;
+
     /**
      * Don't instantiate me; there should only be one audio listener.
      */
     private AudioListener() {
 
     }
-
-    private static AudioListener instance;
 
     public static AudioListener get() {
         if (instance == null) {

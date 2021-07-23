@@ -3,6 +3,7 @@ package audio;
 import ecs.Component;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import util.Assets;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +29,7 @@ public class AudioSource extends Component {
     private Vector2f firstPos;
 
     public AudioSource() {
-        position = new Vector3f(0.0f, 0.0f, 0.0f);
+        position = new Vector3f(1.0f, 0.0f, 0.0f);
         AudioMaster.get().addSource(this);
     }
 
@@ -38,13 +39,31 @@ public class AudioSource extends Component {
         AudioMaster.get().addSource(this);
     }
 
+    public AudioSource(String... sources) {
+        position = new Vector3f(0.0f, 0.0f, 0.0f);
+        for (String s : sources) {
+            audioBuffers.add(Assets.getAudioBuffer(s));
+        }
+        AudioMaster.get().addSource(this);
+    }
+
     /**
      * Sets the selected buffer to whatever the index indicates, then plays all of
      * this buffer.
      */
     public void play(int index) {
         setSelectedBuffer(index);
-        play0(getSelectedBuffer().getTime());
+
+        Thread t = new Thread(() -> {
+            alSourcePlay(sourceID);
+            try {
+                Thread.sleep(audioBuffers.get(index).getTime());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        t.start();
     }
 
     /**
@@ -53,18 +72,17 @@ public class AudioSource extends Component {
      */
     public void play(int index, long millis) {
         setSelectedBuffer(index);
-        play0(millis);
-    }
 
-    // not the best way to do it...
-    private void play0(long millis) {
-        alSourcePlay(sourceID);
-        try {
-            Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        stop();
+        Thread t = new Thread(() -> {
+            alSourcePlay(sourceID);
+            try {
+                Thread.sleep(Math.min(audioBuffers.get(index).getTime(), millis));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        t.start();
     }
 
     public void stop() {
@@ -81,7 +99,7 @@ public class AudioSource extends Component {
 
     public void setSelectedBuffer(int i) {
         index = i;
-        alSourcei(sourceID, AL_BUFFER, audioBuffers.get(index).getAudioData()[0]);
+        alSourcei(sourceID, AL_BUFFER, getSelectedBuffer().getName());
     }
 
     /*

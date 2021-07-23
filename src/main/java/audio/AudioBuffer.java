@@ -9,7 +9,6 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -56,7 +55,7 @@ public class AudioBuffer {
      */
     private final IntBuffer name = BufferUtils.createIntBuffer(1);
 
-    public AudioBuffer() {
+    private AudioBuffer() {
 
     }
 
@@ -67,7 +66,7 @@ public class AudioBuffer {
     /**
      * Initializer of an audio buffer.
      */
-    public void init(String path) {
+    private void init(String path) {
         AudioInputStream stream;
 
         // i don't know if we should be able to run this twice.
@@ -77,7 +76,7 @@ public class AudioBuffer {
             alGenBuffers(name);
 
             stream = AudioSystem.getAudioInputStream(new File(path));
-            fileSize = (long) (stream.getFrameLength() * stream.getFormat().getFrameSize());
+            fileSize = stream.getFrameLength() * stream.getFormat().getFrameSize();
 
             AudioFormat audioFormat = stream.getFormat();
             if(audioFormat.isBigEndian()) throw new UnsupportedAudioFileException("Can't handle Big Endian formats yet");
@@ -101,12 +100,12 @@ public class AudioBuffer {
 
             // load data into a ByteBuffer
             audioData = new byte[stream.available()];
-            fileSize = stream.read(audioData);
-            ByteBuffer bu = ByteBuffer.wrap(audioData);
+            stream.read(audioData);
+            ByteBuffer bu = BufferUtils.createByteBuffer(audioData.length).put(audioData);
             bu.flip();
 
             alBufferData(getName(), format, bu, (int) audioFormat.getSampleRate());
-            time = (long) (1000 * stream.getFrameLength() / audioFormat.getFrameRate());
+            time = (long) (1000f * stream.getFrameLength() / audioFormat.getFrameRate());
         } catch (UnsupportedAudioFileException | IOException e) {
             assert false : "something went wrong with loading file " + path + ": " + e;
             fileSize = -1;
