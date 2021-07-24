@@ -5,9 +5,11 @@ import graphics.ShaderDatatype;
 import org.joml.Vector4f;
 import util.debug.DebugLine;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DebugRenderBatch extends RenderBatch {
-	private final DebugLine[] lines;
-	private int numberOfLines;
+	private final List<DebugLine> lines;
 
 	/**
 	 * @param maxBatchSize the maximum number of primitives in a batch
@@ -15,8 +17,7 @@ public class DebugRenderBatch extends RenderBatch {
 	 */
 	public DebugRenderBatch(int maxBatchSize, int zIndex) {
 		super(maxBatchSize, zIndex, Primitive.LINE, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4);
-		this.lines = new DebugLine[maxBatchSize];
-		numberOfLines = 0;
+		this.lines = new ArrayList<>();
 	}
 
 	/**
@@ -27,20 +28,20 @@ public class DebugRenderBatch extends RenderBatch {
 	 */
 	@Override
 	protected void loadVertexProperties(int index, int offset) {
-		DebugLine line = lines[index];
+		DebugLine line = lines.get(index);
 		Vector4f color = line.color.toNormalizedVec4f();
 
-		data[offset     ] = line.start.x;
-		data[offset + 1 ] = line.start.y;
-		data[offset + 2 ] = color.x;
-		data[offset + 3 ] = color.y;
-		data[offset + 4 ] = color.z;
-		data[offset + 5 ] = color.w;
+		data[offset] = line.start.x;
+		data[offset + 1] = line.start.y;
+		data[offset + 2] = color.x;
+		data[offset + 3] = color.y;
+		data[offset + 4] = color.z;
+		data[offset + 5] = color.w;
 
-		data[offset + 6 ] = line.end.x;
-		data[offset + 7 ] = line.end.y;
-		data[offset + 8 ] = color.x;
-		data[offset + 9 ] = color.y;
+		data[offset + 6] = line.end.x;
+		data[offset + 7] = line.end.y;
+		data[offset + 8] = color.x;
+		data[offset + 9] = color.y;
 		data[offset + 10] = color.z;
 		data[offset + 11] = color.w;
 	}
@@ -50,30 +51,56 @@ public class DebugRenderBatch extends RenderBatch {
 	 */
 	@Override
 	public void updateBuffer() {
-		for (int i = 0; i < numberOfLines; i ++) {
-			DebugLine line = lines[i];
+		boolean update = false;
+		for (int i = 0; i < lines.size(); i++) {
+			DebugLine line = lines.get(i);
 			if (line.isDirty()) {
 				load(i);
+				update = true;
 				line.markClean();
 			}
 		}
-		super.updateBuffer();
+		if (update)
+			super.updateBufferFull();
 	}
 
+	/**
+	 * Add a DebugLine to the batch
+	 *
+	 * @param line the line to be added
+	 * @return whether the line has successfully been added
+	 */
 	public boolean addLine(DebugLine line) {
+		// If the line has already been added, make sure it doesn't get added to any other batch
+		if (lines.contains(line))
+			return true;
+
 		if (hasRoomLeft()) {
 			// Get the index and add the renderObject
-			int index = this.numberOfLines++;
-			this.lines[index] = line;
+			lines.add(line);
+			line.setLocation(this, lines.size() - 1);
 
 			// Add properties to local vertices array
-			load(index);
+			load(lines.size() - 1);
 
-			if (this.numberOfLines >= this.maxBatchSize) {
+			if (lines.size() >= this.maxBatchSize) {
 				this.hasRoom = false;
 			}
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * Remove a DebugLine from the batch
+	 *
+	 * @param line the line to be removed
+	 */
+	public void removeLine(DebugLine line) {
+		if (line.getBatch() == this) {
+			lines.remove(line);
+
+			remove(line.getIndex());
+		}
 	}
 }

@@ -15,7 +15,6 @@ import org.lwjgl.glfw.GLFW;
 import physics.collision.Collider;
 import postprocess.ForwardToTexture;
 import postprocess.PostProcessStep;
-import util.Assets;
 import util.Engine;
 import util.Tuple;
 
@@ -83,8 +82,12 @@ public abstract class Scene {
     }
 
     /**
+     * Apply post processing to a texture
+     * @param texture input texture
+     */
+    /**
      * Do a collision check for the specific collider with all known rigidBodies and staticColliders.
-     * If there is a collision, the given object will receive calls to {@link Collider#handleCollision(Collider,Tuple)}.
+     * If there is a collision, the given object will receive calls to {@link Collider#handleCollision(Collider, Tuple)}.
      *
      * @param collider the object to check whether is collides with anything
      */
@@ -108,6 +111,11 @@ public abstract class Scene {
         }
     }
 
+    /**
+     * Apply post processing to a texture
+     *
+     * @param texture input texture
+     */
     public void postProcess(Texture texture) {
         forwardToScreen.setTexture(texture);
         forwardToScreen.apply();
@@ -177,7 +185,18 @@ public abstract class Scene {
      */
     public void addGameObjectToScene(GameObject gameObject) {
         gameObjects.add(gameObject);
-        gameObject.start();
+        if (active) {
+            gameObject.start();
+            addToRenderers(gameObject);
+        }
+    }
+
+    /**
+     * @param gameObject GameObject to be added.
+     */
+    public void removeGameObjectFromScene(GameObject gameObject) {
+        gameObjects.remove(gameObject);
+        removeFromRenderers(gameObject);
     }
 
     /**
@@ -210,18 +229,10 @@ public abstract class Scene {
         lightmapRenderer.render();
         lightmapRenderer.bindLightmap();
         renderer.render();
-        //lightmapRenderer.framebuffer.blitColorBuffersToScreen(); TODO: remove later
     }
 
     public void debugRender() {
         if (debugMode) this.debugRenderer.render();
-    }
-
-    /**
-     * Loads the shader.
-     */
-    public void loadSceneResources() {
-        Assets.getShader("src/assets/shaders/default.glsl");
     }
 
     /**
@@ -235,4 +246,27 @@ public abstract class Scene {
         forwardToScreen.init();
     }
 
+    /**
+     * Add a gameObject to all renderers
+     *
+     * @param gameObject the gameObject to be added
+     */
+    public void addToRenderers(GameObject gameObject) {
+        this.renderer.add(gameObject);
+        this.lightmapRenderer.add(gameObject);
+        this.debugRenderer.add(gameObject);
+        rendererRegistry.forEach(r -> r.add(gameObject));
+    }
+
+    /**
+     * Remove a gameObject from all renderers
+     *
+     * @param gameObject the gameObject to be removed
+     */
+    private void removeFromRenderers(GameObject gameObject) {
+        this.renderer.remove(gameObject);
+        this.lightmapRenderer.remove(gameObject);
+        this.debugRenderer.remove(gameObject);
+        rendererRegistry.forEach(r -> r.remove(gameObject));
+    }
 }

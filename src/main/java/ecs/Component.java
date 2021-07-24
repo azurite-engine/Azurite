@@ -87,6 +87,12 @@ public abstract class Component implements Comparable<Component> {
     }
 
     /**
+     * Called when component is removed from GameObject.
+     */
+    public void remove() {
+    }
+
+    /**
      * Should be true, if this components will change the position of the gameobject somehow.
      *
      * @return false, if and only if the component will never modify the position of the gameobject in any way

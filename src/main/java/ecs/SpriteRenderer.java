@@ -1,8 +1,10 @@
 package ecs;
 
 import graphics.Color;
+import graphics.RenderableComponent;
 import graphics.Sprite;
 import graphics.Texture;
+import graphics.renderer.DefaultRenderBatch;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import physics.Transform;
@@ -21,7 +23,7 @@ import static graphics.Color.WHITE;
  * @author Gabe
  */
 
-public class SpriteRenderer extends Component implements TransformSensitive {
+public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> implements TransformSensitive {
 
     public static final int ORDER = 100;
 
@@ -111,6 +113,11 @@ public class SpriteRenderer extends Component implements TransformSensitive {
         return false;
     }
 
+    @Override
+    public void remove() {
+        getBatch().removeSprite(this);
+    }
+
     /**
      * @return type Texture of the sprite if applicable.
      */
@@ -119,7 +126,9 @@ public class SpriteRenderer extends Component implements TransformSensitive {
     }
 
     /**
-     * Set the texture of the Sprite if reqd.
+     * Set the texture of the Sprite if required.
+     *
+     * @param texture the new texture of this sprite
      */
     public void setTexture(Texture texture) {
         if (sprite.getTexture() != texture) {
@@ -202,10 +211,16 @@ public class SpriteRenderer extends Component implements TransformSensitive {
     }
 
     /**
+     * Mark this Sprite renderer as dirty
+     */
+    public void markDirty() {
+        isDirty = true;
+    }
+
+    /**
      * Used by the renderer to reset the state of the SpriteRenderer to clean.
      */
     public void setClean() {
         isDirty = false;
     }
-
 }

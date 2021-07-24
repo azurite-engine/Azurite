@@ -4,7 +4,6 @@ import graphics.Framebuffer;
 import graphics.Shader;
 import graphics.Texture;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 
 import java.util.function.Supplier;
 
@@ -67,7 +66,7 @@ public abstract class PostProcessStep {
 
 		shader.detach();
 		Framebuffer.unbind();
-		return framebuffer.isDefault() ? null : framebuffer.fetchColorAttachment(0);
+		return framebuffer.isDefault() ? null : framebuffer.getColorAttachment(0);
 	}
 
 	/** Enum to show where to render. Framebuffer gets constructed based on this. */

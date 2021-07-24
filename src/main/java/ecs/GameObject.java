@@ -217,6 +217,8 @@ public class GameObject {
         for (int i = 0; i < components.size(); i++) {
             Component c = components.get(i);
             if (componentClass.isAssignableFrom(c.getClass())) {
+                c.remove();
+                c.gameObject = null;
                 components.remove(i);
                 if (c instanceof TransformSensitive)
                     transformSensitives.remove(c);
@@ -242,6 +244,13 @@ public class GameObject {
         if (c instanceof TransformSensitive)
             this.transformSensitives.add((TransformSensitive) c);
         c.gameObject = this;
+        //TODO check if this is necessary
+        if (getParentScene() != null) {
+            if (getParentScene().isActive()) {
+                c.start();
+                getParentScene().addToRenderers(this);
+            }
+        }
         //update collision maps in scene
         parentScene.updateGameObject(this, true);
         return this;

@@ -1,6 +1,8 @@
 package ecs;
 
 import graphics.Color;
+import graphics.RenderableComponent;
+import graphics.renderer.QuadRenderBatch;
 import org.joml.Vector3f;
 import physics.Transform;
 import physics.TransformSensitive;
@@ -10,7 +12,7 @@ import physics.TransformSensitive;
  *
  * @author VoxelRifts
  */
-public class PointLight extends Component implements TransformSensitive {
+public class PointLight extends RenderableComponent<QuadRenderBatch> implements TransformSensitive {
     /**
      * Colour of the light
      */
@@ -49,6 +51,11 @@ public class PointLight extends Component implements TransformSensitive {
     @Override
     public void start() {
         this.lastTransform = gameObject.getReadOnlyTransform();
+    }
+
+    @Override
+    public void remove() {
+        getBatch().getRenderer().remove(this.gameObject);
     }
 
     @Override
