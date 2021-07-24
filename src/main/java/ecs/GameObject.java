@@ -1,5 +1,6 @@
 package ecs;
 
+import graphics.RenderableComponent;
 import physics.Transform;
 import scene.Scene;
 import scenes.Main;
@@ -191,6 +192,8 @@ public class GameObject {
         for (int i = 0; i < components.size(); i++) {
             Component c = components.get(i);
             if (componentClass.isAssignableFrom(c.getClass())) {
+                c.remove();
+                c.gameObject = null;
                 components.remove(i);
                 return;
             }
@@ -206,6 +209,14 @@ public class GameObject {
     public GameObject addComponent(Component c) {
         this.components.add(c);
         c.gameObject = this;
+
+        if (getParentScene() != null) {
+            if (getParentScene().isActive()) {
+                c.start();
+                getParentScene().addToRenderers(this);
+            }
+        }
+
         return this;
     }
 

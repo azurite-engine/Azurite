@@ -42,11 +42,9 @@ public class SceneManager {
         //init the currentScene if there is one
         if(currentScene != null)
         {
-            currentScene.loadSceneResources();
             currentScene.initRenderers();
             currentScene.startUi();
             currentScene.awake();
-            currentScene.startGameObjects();
         }
     }
 
@@ -67,12 +65,10 @@ public class SceneManager {
     public boolean addScene(Scene scene) {
         boolean add = scenePool.add(scene);
         if (add && enabled) {
-            //a newly added scene is probably raw and uninitialized
-            scene.loadSceneResources();
+            // a newly added scene is probably raw and uninitialized
             scene.initRenderers();
             scene.startUi();
             scene.awake();
-            scene.startGameObjects();
         }
         return add;
     }

@@ -51,29 +51,66 @@ public class DebugRenderer extends Renderer<DebugRenderBatch> {
 		glLineWidth(3);
 	}
 
+	/**
+	 * Add a gameObject to this renderer
+	 *
+	 * @param gameObject the gameObject
+	 */
 	@Override
 	public void add(GameObject gameObject) {
+		for (Component c : gameObject.getComponents()) {
+			DebugPrimitive[] primitives = c.debug();
+			if (primitives != null) {
+				for (DebugPrimitive primitive : primitives) {
+					for (DebugLine line : primitive.getLines())
+						addLine(line);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Remove a gameObject from this renderer
+	 *
+	 * @param gameObject the gameObject
+	 */
+	@Override
+	public void remove(GameObject gameObject) {
 		for (Component c : gameObject.getComponents()) {
 			DebugPrimitive[] primitives = c.debug();
 			if (primitives != null)
 				for (DebugPrimitive primitive : primitives) {
 					for (DebugLine line : primitive.getLines())
-						addLine(line);
-			}
+						removeLine(line);
+				}
 		}
 	}
 
-	private void addLine(DebugLine l) {
+	/**
+	 * Add a line to an available batch
+	 *
+	 * @param line the line to be added
+	 */
+	private void addLine(DebugLine line) {
 		for (DebugRenderBatch batch : batches) {
-			if (batch.addLine(l)) {
+			if (batch.addLine(line)) {
 				return;
 			}
 		}
 
 		// If unable to add to previous batch, create a new one
-		DebugRenderBatch newBatch = new DebugRenderBatch(10, -10);
+		DebugRenderBatch newBatch = new DebugRenderBatch(50, -10);
 		newBatch.start();
 		batches.add(newBatch);
-		newBatch.addLine(l);
+		newBatch.addLine(line);
+	}
+
+	/**
+	 * Remove the line from the batch it had been added to
+	 *
+	 * @param line the line to be removed
+	 */
+	private void removeLine(DebugLine line) {
+		line.getBatch().removeLine(line);
 	}
 }
