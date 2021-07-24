@@ -18,6 +18,8 @@ import static org.lwjgl.stb.STBImage.*;
 
 /**
  * This is a class for an OpenGL texture
+ * @author Asher Haun
+ * @author VoxelRifts
  */
 public class Texture {
 	/**

@@ -26,6 +26,7 @@ import static java.awt.Font.*;
  * This class contains a font texture for drawing text.
  *
  * @author Heiko Brumme
+ * @author Asher Haun
  */
 public class Font {
 

@@ -3,11 +3,11 @@ package tiles;
 import util.Utils;
 import java.util.ArrayList;
 
-/*
-    Ported from C# version
-    http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels#:~:text=It%20is%20an%20old%20and%20fairly%20well%20documented,a%20wall%20and%205%20or%20more%20neighbors%20were.
-*/
-
+/**
+ * Ported from C# version
+ * http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels#:~:text=It%20is%20an%20old%20and%20fairly%20well%20documented,a%20wall%20and%205%20or%20more%20neighbors%20were.
+ * @author Asher Haun
+ */
 class MapHandler {
     int rand = Utils.randomInt(0, 100);
 

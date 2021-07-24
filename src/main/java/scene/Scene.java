@@ -21,6 +21,11 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author Asher Haun
+ * @author Juyas
+ * @author VoxelRifts
+ */
 public abstract class Scene {
 
     private static int sceneCounter = 0;

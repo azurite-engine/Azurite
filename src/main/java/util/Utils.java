@@ -2,6 +2,10 @@ package util;
 
 import org.joml.Vector2f;
 
+/**
+ * Contains many useful helper functions that can be used in games or the engine
+ * @author Asher Haun
+ */
 public class Utils {
 
     /**

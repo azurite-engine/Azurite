@@ -11,6 +11,7 @@ import org.joml.Vector2f;
 /**
  * Represents a Line which can be rendered by DebugRenderer
  * The most basic primitive for Debug Rendering
+ * @author VoxelRifts
  */
 public class DebugLine extends RenderableComponent<DebugRenderBatch> {
 	/** Start point for the line */

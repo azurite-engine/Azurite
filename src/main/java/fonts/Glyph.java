@@ -6,6 +6,8 @@ import org.joml.Vector2f;
 
 /**
  * This class represents a font glyph.
+ *
+ * @author Asher Haun
  */
 public class Glyph extends Sprite {
 

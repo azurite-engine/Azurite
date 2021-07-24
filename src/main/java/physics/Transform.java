@@ -4,7 +4,9 @@ import org.joml.Vector2f;
 
 /**
  * Represents the position in X and Y coordinates, and the scale (width and height) of a gameObject
- * TODO: change to a component?
+ * TODO: change to a component maybe...
+ *
+ * @author Asher Haun
  */
 public class Transform {
 	public Vector2f position;

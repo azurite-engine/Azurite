@@ -22,6 +22,9 @@ import util.Utils;
 
 import static graphics.Graphics.setDefaultBackground;
 
+/**
+ * @author Asher Haun
+ */
 public class DemoPlatformer extends Scene {
     public static void main(String[] args) {
         Engine.init("Azurite Engine Demo 2", 1.0f);

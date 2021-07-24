@@ -2,6 +2,8 @@ package postprocess;
 
 /**
  * Some Utility methods
+ *
+ * @author VoxelRifts
  */
 public class PostProcessing {
 	public static void prepare() {

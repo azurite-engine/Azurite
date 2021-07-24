@@ -15,6 +15,10 @@ import util.Engine;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * @author Asher Haun
+ * @author VoxelRifts
+ */
 public class Window {
 
     private SceneManager sceneManager;

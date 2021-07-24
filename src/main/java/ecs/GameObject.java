@@ -14,7 +14,7 @@ import java.util.List;
  * By default, each GameObject contains a Transform, which holds the X and Y position, and width and height of the object in pixels.
  *
  * @author Asher Haun
- * @author Gabe
+ * @author GamesWithGabe
  */
 
 public class GameObject {

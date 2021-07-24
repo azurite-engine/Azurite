@@ -11,6 +11,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Asher Haun
+ * may soon be deprecated and/or modified upon merge of Juyas's collision system
+ */
 public class AABB extends Component {
 
     public static final Map<Integer, List<AABB>> colliders = new HashMap<>();

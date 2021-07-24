@@ -13,6 +13,9 @@ import java.util.ArrayList;
 
 import static graphics.Color.WHITE;
 
+/**
+ * @author Asher Haun
+ */
 public class GlyphRenderer {
 
     private Vector4f color = WHITE.toNormalizedVec4f();

@@ -1,22 +1,19 @@
 package graphics.renderer;
 
-import ecs.GameObject;
-import ecs.SpriteRenderer;
 import ecs.Text;
-import fonts.Glyph;
 import fonts.GlyphRenderer;
 import graphics.Framebuffer;
 import graphics.Shader;
-import graphics.Window;
-import sun.security.util.Debug;
 import util.Assets;
 import util.Engine;
 import util.Logger;
-import util.specs.FramebufferSpec;
-import util.specs.TextureSpec;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+/**
+ * @author Asher Haun
+ */
 
 public class TextRenderer extends Renderer<TextRendererBatch> {
     private static final int MAX_BATCH_SIZE = 1000;

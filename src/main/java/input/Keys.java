@@ -1,5 +1,8 @@
 package input;
 
+/**
+ * @author Juyas
+ */
 public class Keys {
 	/** Printable keys. */
 	public static final int

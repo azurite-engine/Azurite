@@ -8,6 +8,9 @@ import java.util.Arrays;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * @author Asher Haun
+ */
 public class Keyboard {
 
 	public static int SPACE = 32; // Space Bar

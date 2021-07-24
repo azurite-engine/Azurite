@@ -10,6 +10,9 @@ import java.nio.DoubleBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * @author Asher Haun
+ */
 public class Mouse {
 	/** Position of the mouse */
 	public static Vector2f mouse;

@@ -6,6 +6,10 @@ import graphics.Texture;
 import java.io.File;
 import java.util.HashMap;
 
+/**
+ * @author GamesWithGabe
+ * @author Asher Haun
+ */
 public class Assets {
 	private static HashMap<String, Shader> shaders = new HashMap<>();
 	private static HashMap<String, Texture> textures = new HashMap<>();

@@ -7,6 +7,8 @@ import java.util.function.BiConsumer;
 
 /**
  * The basic primitive that a batch draws.
+ *
+ * @author VoxelRifts
  */
 public enum Primitive {
 	QUAD(4, 6, GL11.GL_TRIANGLES, (elements, i) -> {

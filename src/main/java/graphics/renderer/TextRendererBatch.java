@@ -9,6 +9,9 @@ import util.Logger;
 
 import java.util.ArrayList;
 
+/**
+ * @author Asher Haun
+ */
 public class TextRendererBatch extends RenderBatch {
     private ArrayList<GlyphRenderer> glyphRenderers; // even though this is an arrayList, maxBatchSize still applies
     private int numberOfGlyphRenderers;

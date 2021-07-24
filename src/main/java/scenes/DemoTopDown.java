@@ -20,6 +20,9 @@ import util.Utils;
 
 import static graphics.Graphics.setDefaultBackground;
 
+/**
+ * @author Asher Haun
+ */
 public class DemoTopDown extends Scene {
 	public static void main(String[] args) {
 		Engine.init(1080, 720, "Azurite Engine Demo 1", 0.01f);

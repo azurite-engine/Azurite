@@ -13,6 +13,9 @@ import util.Engine;
 
 import java.util.ArrayList;
 
+/**
+ * @author Asher Haun
+ */
 public class Text {
     private Vector4f color = Color.RED.toNormalizedVec4f();
 

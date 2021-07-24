@@ -6,7 +6,11 @@ import org.joml.Vector3f;
 import physics.Transform;
 import util.Utils;
 
-/** Represents a basic camera that has a View Matrix and Projection Matrix */
+/** Represents a basic camera that has a View Matrix and Projection Matrix
+ *
+ * @author GamesWithGabe
+ * @author Asher Haun
+ */
 public class Camera {
 	/** Projection Matrix of the camera */
 	private Matrix4f projectionMatrix;

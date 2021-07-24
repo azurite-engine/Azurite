@@ -7,6 +7,8 @@ import graphics.renderer.RenderBatch;
  * A Class that represents a component that can be rendered by a specific renderer
  * This is used to store the exact location of the component in the data buffer for safe removal
  * @param <T> The RenderBatch that renders the component
+ *
+ * @author VoxelRifts
  */
 public abstract class RenderableComponent<T extends RenderBatch> extends Component {
 	/** The batch in which this component has been added */

@@ -6,6 +6,11 @@ import util.Utils;
 
 import java.util.Random;
 
+/**
+ * Holds RGBA values that represent a color in a range from 0f-255f.
+ * Can be normalized to be sent to the GPU in the form of 0f-1f.
+ * @author Asher Haun
+ */
 public class Color {
 
     public static final int TYPE_RGBA = 0;
