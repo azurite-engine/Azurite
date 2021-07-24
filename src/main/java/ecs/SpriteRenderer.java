@@ -1,7 +1,9 @@
 package ecs;
 
 import graphics.Color;
+import graphics.RenderableComponent;
 import graphics.Texture;
+import graphics.renderer.DefaultRenderBatch;
 import physics.Transform;
 import util.Assets;
 import util.Utils;
@@ -18,7 +20,7 @@ import static graphics.Color.WHITE;
  * @author Gabe
  */
 
-public class SpriteRenderer extends Component {
+public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> {
 
 	private Vector4f color = new Color(255, 100, 100, 255).toNormalizedVec4f();
 
@@ -89,6 +91,11 @@ public class SpriteRenderer extends Component {
 		}
 	}
 
+	@Override
+	public void remove() {
+		getBatch().removeSprite(this);
+	}
+
 	/**
 	 * @return type Texture of the sprite if applicable.
 	 */
@@ -97,7 +104,9 @@ public class SpriteRenderer extends Component {
 	}
 
   /**
-   * Set the texture of the Sprite if reqd.
+   * Set the texture of the Sprite if required.
+   *
+   * @param texture the new texture of this sprite
    */
 	public void setTexture(Texture texture) {
 		if (sprite.getTexture() != texture) {
@@ -129,6 +138,7 @@ public class SpriteRenderer extends Component {
 
 	/**
 	 * Change the color by passing a Vector4f
+	 *
 	 * @param color vector, values should be in the range of 0-1
 	 */
 	public void setColor(Vector4f color) {
@@ -140,6 +150,7 @@ public class SpriteRenderer extends Component {
 
 	/**
 	 * Change the color by passing a Color object, converting it to a normalized Vector4f.
+	 *
 	 * @param color should be in range of 0-255
 	 */
 	public void setColor(Color color) {
@@ -172,6 +183,13 @@ public class SpriteRenderer extends Component {
 	 */
 	public boolean isDirty() {
 		return isDirty;
+	}
+
+	/**
+	 * Mark this Sprite renderer as dirty
+	 */
+	public void markDirty() {
+		isDirty = true;
 	}
 
 	/**
