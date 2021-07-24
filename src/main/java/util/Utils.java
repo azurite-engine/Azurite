@@ -100,4 +100,19 @@ public class Utils {
     public static float lerp (float start, float end, float amt) {
         return (1 - amt) * start + amt * end;
     }
+
+    /**
+     * Shifts a part of the array to overwrite the given region [fromIndex, toIndex)
+     * FromIndex is INCLUSIVE, ToIndex is EXCLUSIVE
+     * @param array the array from which the region has to be removed
+     * @param fromIndex start of the region
+     * @param toIndex end of the region
+     * @return
+     */
+    public static int shiftOverwrite(float[] array, int fromIndex, int toIndex) {
+        int length = array.length;
+        if (fromIndex > toIndex || length <= fromIndex || length < toIndex) return length;
+        System.arraycopy(array, toIndex, array, fromIndex, length - toIndex);
+        return length - (toIndex - fromIndex);
+    }
 }
