@@ -2,6 +2,7 @@ package ecs;
 
 import graphics.Sprite;
 
+@Deprecated
 public class Animation extends Component {
     /**
      * Speed of the animation in seconds

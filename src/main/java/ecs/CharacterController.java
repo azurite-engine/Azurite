@@ -3,7 +3,7 @@ package ecs;
 import input.Keyboard;
 import org.joml.Vector2f;
 
-//FIXME
+//FIXME currently only working for DemoPlatformer
 public class CharacterController extends Component {
 
     private float movementSpeed;
