@@ -23,12 +23,6 @@ import static graphics.Graphics.setDefaultBackground;
 @Deprecated
 public class DemoTopDown extends Scene {
 
-    public static void main(String[] args) {
-        Engine.init(1080, 720, "Azurite Engine Demo 1", 0.01f);
-        Engine.scenes().switchScene(new DemoTopDown(), true);
-        Engine.showWindow();
-    }
-
     Spritesheet a;
     Spritesheet b;
     Tilesystem t;
@@ -37,10 +31,14 @@ public class DemoTopDown extends Scene {
     GameObject booper;
     GameObject greenLight;
     GameObject trRes;
-
     BloomEffect bloom;
-
     boolean added = true;
+
+    public static void main(String[] args) {
+        Engine.init(1080, 720, "Azurite Engine Demo 1", 0.01f);
+        Engine.scenes().switchScene(new DemoTopDown(), true);
+        Engine.showWindow();
+    }
 
     public void awake() {
         camera = new Camera();

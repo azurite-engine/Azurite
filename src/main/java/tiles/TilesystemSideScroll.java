@@ -38,7 +38,7 @@ public class TilesystemSideScroll {
 
                 if (m.getMap()[x][y] == 1) {
                     //gameObjects[x][y].addComponent(new AABB());
-                    gameObjects[x][y].addComponent(new StaticCollider(Shapes.axisAlignedRectangle(0,0, width, height), 2));
+                    gameObjects[x][y].addComponent(new StaticCollider(Shapes.axisAlignedRectangle(0, 0, width, height), 2));
                     gameObjects[x][y].addComponent(new SpriteRenderer(s.getSprite(
                             Utils.randomInt(0, 6) == 0 ? 11 : Utils.randomInt(1, 5)
 

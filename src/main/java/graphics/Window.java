@@ -17,18 +17,15 @@ import static org.lwjgl.opengl.GL11.*;
 
 public class Window {
 
-    private SceneManager sceneManager;
-
-    // Window Variables
-    private long frameCount = 0;
-
-    private String title;
     private static long glfwWindow;
-    private final GLFWVidMode videoMode;
-
     private static int width;
     private static int height;
+    private final GLFWVidMode videoMode;
     private final boolean recalculateProjectionOnResize;
+    private SceneManager sceneManager;
+    // Window Variables
+    private long frameCount = 0;
+    private String title;
 
     public Window(int pwidth, int pheight, String ptitle, boolean fullscreen, float minSceneLighting, boolean recalculateProjectionOnResize) {
         videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -89,6 +86,26 @@ public class Window {
         this(ptitle, false);
     }
 
+    public static long glfwWindow() {
+        return glfwWindow;
+    }
+
+    public static int getWidth() {
+        return width;
+    }
+
+    private static void setWidth(int newWidth) {
+        width = newWidth;
+    }
+
+    public static int getHeight() {
+        return height;
+    }
+
+    private static void setHeight(int newHeight) {
+        height = newHeight;
+    }
+
     private void initWindow(int width, int height, String title, long monitor) {
         // Create window
         glfwWindow = glfwCreateWindow(width, height, title, monitor, 0);
@@ -125,10 +142,6 @@ public class Window {
         //TODO this wont properly display the FPS it will just count up the frames, there is no reset after a second yet
         frameCount++;
         glfwSetWindowTitle(glfwWindow, title + " @ " + Math.round((frameCount / (Engine.millisRunning() / 1000))) + " FPS");
-    }
-
-    public static long glfwWindow() {
-        return glfwWindow;
     }
 
     public String getTitle() {
@@ -191,21 +204,5 @@ public class Window {
 
     public SceneManager getSceneManager() {
         return sceneManager;
-    }
-
-    private static void setHeight(int newHeight) {
-        height = newHeight;
-    }
-
-    private static void setWidth(int newWidth) {
-        width = newWidth;
-    }
-
-    public static int getWidth() {
-        return width;
-    }
-
-    public static int getHeight() {
-        return height;
     }
 }

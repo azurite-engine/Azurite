@@ -39,17 +39,17 @@ public class Pair<L, R> {
     }
 
     /**
-     * @see #right
-     */
-    public R getRight() {
-        return right;
-    }
-
-    /**
      * @see #left
      */
     public void setLeft(L left) {
         this.left = left;
+    }
+
+    /**
+     * @see #right
+     */
+    public R getRight() {
+        return right;
     }
 
     /**

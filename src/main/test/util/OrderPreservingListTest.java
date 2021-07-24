@@ -27,7 +27,7 @@ public class OrderPreservingListTest {
         for (int i = 0; i < 1000; i++) {
             int d = data[i % data.length];
             int o = (int) (Math.random() * 20);
-            data[i%data.length] = data[o];
+            data[i % data.length] = data[o];
             data[o] = d;
         }
     }

@@ -6,9 +6,9 @@ import org.joml.Vector2f;
 //FIXME currently only working for DemoPlatformer
 public class CharacterController extends Component {
 
+    private final boolean[] keys = new boolean[3];
     private float movementSpeed;
     private Vector2f currentDirection;
-    private final boolean[] keys = new boolean[3];
     private RigidBody body;
 
     public CharacterController() {

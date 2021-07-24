@@ -42,20 +42,6 @@ public class Triple<L, M, R> {
     }
 
     /**
-     * @see #middle
-     */
-    public M getMiddle() {
-        return middle;
-    }
-
-    /**
-     * @see #right
-     */
-    public R getRight() {
-        return right;
-    }
-
-    /**
      * @see #left
      */
     public void setLeft(L left) {
@@ -65,8 +51,22 @@ public class Triple<L, M, R> {
     /**
      * @see #middle
      */
+    public M getMiddle() {
+        return middle;
+    }
+
+    /**
+     * @see #middle
+     */
     public void setMiddle(M middle) {
         this.middle = middle;
+    }
+
+    /**
+     * @see #right
+     */
+    public R getRight() {
+        return right;
     }
 
     /**

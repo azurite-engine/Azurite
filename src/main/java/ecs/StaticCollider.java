@@ -27,13 +27,18 @@ import java.util.Optional;
 public class StaticCollider extends Component implements Collider {
 
     /**
+     * The collision shape of the collider.
+     *
+     * @see PrimitiveShape
+     */
+    private final PrimitiveShape collisionShape;
+    /**
      * A short representing a binary series of 0s and 1s.
      * 0 means not present, 1 means present.
      * Beeing present means, beeing present on the collision layer
      * and allow collision with all objects having a present mask on this layer.
      */
     private short collisionLayer;
-
     /**
      * A short representing a binary series of 0s and 1s.
      * 0 means not present, 1 means present.
@@ -41,14 +46,6 @@ public class StaticCollider extends Component implements Collider {
      * while its not required to be present on the layer.
      */
     private short collisionMask;
-
-    /**
-     * The collision shape of the collider.
-     *
-     * @see PrimitiveShape
-     */
-    private final PrimitiveShape collisionShape;
-
     /**
      * Used to feed with objects this body is colliding with.
      * Decides how to react to a collision. default is {@link Collisions#solid()}.

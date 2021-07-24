@@ -25,23 +25,18 @@ import java.util.Optional;
 public abstract class Scene {
 
     private static int sceneCounter = 0;
-
-    public DefaultRenderer renderer = new DefaultRenderer();
-    public LightmapRenderer lightmapRenderer = new LightmapRenderer();
-    public DebugRenderer debugRenderer = new DebugRenderer();
-
-    private List<Renderer<?>> rendererRegistry = new LinkedList<>();
-
     private final int sceneId = sceneCounter++;
-
-    protected Camera camera;
-    private boolean debugMode = true;
-    private boolean active = false;
     private final List<GameObject> gameObjects = new LinkedList<>();
     private final List<Collider> staticColliders = new LinkedList<>();
     private final List<Collider> bodyColliders = new LinkedList<>();
-
+    public DefaultRenderer renderer = new DefaultRenderer();
+    public LightmapRenderer lightmapRenderer = new LightmapRenderer();
+    public DebugRenderer debugRenderer = new DebugRenderer();
+    protected Camera camera;
     protected ForwardToTexture forwardToScreen;
+    private List<Renderer<?>> rendererRegistry = new LinkedList<>();
+    private boolean debugMode = true;
+    private boolean active = false;
 
     public boolean isActive() {
         return active;

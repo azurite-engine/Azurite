@@ -22,21 +22,17 @@ import java.util.List;
 
 public class GameObject {
 
-    private static long internalCounter = 0;
-
     public static final String DEFAULT_GAMEOBJECT_NAME = "Default GameObject Name";
     public static final String EMPTY_GAMEOBJECT_NAME = "Empty GameObject";
     public static final int DEFAULT_Z_INDEX = 0;
-
+    private static long internalCounter = 0;
     private final long objId = internalCounter++;
-
-    private String name;
     private final OrderPreservingList<Component> components;
+    private final Scene parentScene;
+    private final Collection<TransformSensitive> transformSensitives;
+    private String name;
     private Transform transform;
     private int zIndex;
-    private final Scene parentScene;
-
-    private final Collection<TransformSensitive> transformSensitives;
 
     /**
      * Creates a new GameObject.

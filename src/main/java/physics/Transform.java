@@ -9,22 +9,9 @@ import org.joml.Vector2f;
 public class Transform {
 
     public static final Vector2f ZERO = new Vector2f(0, 0);
-
-    private Vector2f position;
     public Vector2f scale;
+    private Vector2f position;
     private Vector2f positionBuffer;
-
-    /**
-     * Used in constructors to initialize the object.
-     *
-     * @param position
-     * @param scale
-     */
-    private void init(Vector2f position, Vector2f scale) {
-        this.position = position;
-        this.scale = scale;
-        this.positionBuffer = new Vector2f();
-    }
 
     /**
      * Creates a new empty transform.
@@ -58,6 +45,18 @@ public class Transform {
      */
     public Transform(float x, float y, float w, float h) {
         init(new Vector2f(x, y), new Vector2f(w, h));
+    }
+
+    /**
+     * Used in constructors to initialize the object.
+     *
+     * @param position
+     * @param scale
+     */
+    private void init(Vector2f position, Vector2f scale) {
+        this.position = position;
+        this.scale = scale;
+        this.positionBuffer = new Vector2f();
     }
 
     /**

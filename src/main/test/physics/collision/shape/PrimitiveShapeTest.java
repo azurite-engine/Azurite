@@ -15,11 +15,10 @@ import util.Utils;
  */
 public class PrimitiveShapeTest {
 
+    final float deltaAcceptance = 0.001f;
     PrimitiveShape shape1;
     PrimitiveShape shape2;
     PrimitiveShape shape3;
-
-    final float deltaAcceptance = 0.001f;
 
     @Before
     public void setUp() {

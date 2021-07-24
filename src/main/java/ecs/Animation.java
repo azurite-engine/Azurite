@@ -9,13 +9,13 @@ public class Animation extends Component {
      */
     private final float speed;
     /**
-     * Should the animation loop
-     */
-    private boolean loop;
-    /**
      * Key frames of the animation
      */
     private final Sprite[] sprites;
+    /**
+     * Should the animation loop
+     */
+    private boolean loop;
     /**
      * Cached Sprite Renderer
      */

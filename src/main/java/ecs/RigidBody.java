@@ -34,40 +34,16 @@ import java.util.Optional;
 public class RigidBody extends Component implements Collider, PhysicalEntity, TransformSensitive {
 
     /**
-     * A short representing a binary series of 0s and 1s.
-     * 0 means not present, 1 means present.
-     * Beeing present means, beeing present on the collision layer
-     * and allow collision with all objects having a present mask on this layer.
-     */
-    private short collisionLayer;
-
-    /**
-     * A short representing a binary series of 0s and 1s.
-     * 0 means not present, 1 means present.
-     * Beeing present means, beeing able to collide with all objects present on that layer,
-     * while its not required to be present on the layer.
-     */
-    private short collisionMask;
-
-    /**
      * The collision shape of the collider.
      *
      * @see PrimitiveShape
      */
     private final PrimitiveShape collisionShape;
-
-    /**
-     * The physical mass of the body used for forces applied to this body.
-     * Heavier objects are less effected by the same forces then lighter objects.
-     */
-    private float mass;
-
     /**
      * The current velocity of the body.
      * Each update cycle the velocity decides in which direction the object will move.
      */
     private final Vector2f velocity;
-
     /**
      * The combined forces acting on the body and accelerating it each update cycle.
      *
@@ -76,7 +52,6 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
      * @see this#getForce()
      */
     private final CombinedForce bodyForce;
-
     /**
      * All filters for the velocity to be applied, can deny movement in different ways.
      *
@@ -84,6 +59,29 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
      */
     private final CombinedVectorFilter vectorFilter;
 
+    // ------ debug only -------
+    private DebugLine[] lines = new DebugLine[5];
+    private DebugPrimitive primitive = new DebugPrimitive(lines);
+
+    /**
+     * A short representing a binary series of 0s and 1s.
+     * 0 means not present, 1 means present.
+     * Beeing present means, beeing present on the collision layer
+     * and allow collision with all objects having a present mask on this layer.
+     */
+    private short collisionLayer;
+    /**
+     * A short representing a binary series of 0s and 1s.
+     * 0 means not present, 1 means present.
+     * Beeing present means, beeing able to collide with all objects present on that layer,
+     * while its not required to be present on the layer.
+     */
+    private short collisionMask;
+    /**
+     * The physical mass of the body used for forces applied to this body.
+     * Heavier objects are less effected by the same forces then lighter objects.
+     */
+    private float mass;
     /**
      * Used to feed with objects this body is colliding with.
      * Decides how to react to a collision. default is {@link Collisions#solid()}.
@@ -223,9 +221,13 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         else collisionHandler.accept((RigidBody) otherCollider, gjkSimplex);
     }
 
-
     @Override
     public void resetCollision() {
+    }
+
+    @Override
+    public float getMass() {
+        return mass;
     }
 
     /**
@@ -237,11 +239,6 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     public void setMass(float mass) {
         this.mass = mass;
         bodyForce.setMass(mass);
-    }
-
-    @Override
-    public float getMass() {
-        return mass;
     }
 
     @Override
@@ -300,10 +297,6 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         }
 
     }
-
-    //debug
-    DebugLine[] lines = new DebugLine[5];
-    DebugPrimitive primitive = new DebugPrimitive(lines);
 
     @Override
     public DebugPrimitive[] debug() {

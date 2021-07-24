@@ -192,9 +192,10 @@ public class Utils {
     /**
      * Shifts a part of the array to overwrite the given region [fromIndex, toIndex)
      * FromIndex is INCLUSIVE, ToIndex is EXCLUSIVE
-     * @param array the array from which the region has to be removed
+     *
+     * @param array     the array from which the region has to be removed
      * @param fromIndex start of the region
-     * @param toIndex end of the region
+     * @param toIndex   end of the region
      * @return
      */
     public static int shiftOverwrite(float[] array, int fromIndex, int toIndex) {

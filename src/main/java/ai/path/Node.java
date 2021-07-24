@@ -13,6 +13,9 @@ import java.util.List;
  */
 public abstract class Node<Position> {
 
+    //a marker used for pathfinding algorithms - can be anything depending on the algorithm
+    private Marker<Position> marker = null;
+
     /**
      * The external position data contained in this node.
      * The exact value of this method is ignored by the pathfinding algorithms,
@@ -29,24 +32,19 @@ public abstract class Node<Position> {
      */
     public abstract List<Path<Position>> paths();
 
-    //-------------------------------------- used by pathfinding only ---------------------------------------------
-
-    interface Marker<T> {
+    public final Marker<Position> getMarker() {
+        return marker;
     }
-
-    //a marker used for pathfinding algorithms - can be anything depending on the algorithm
-    private Marker<Position> marker = null;
 
     public final void setMarker(Marker<Position> marker) {
         this.marker = marker;
     }
 
-    public final Marker<Position> getMarker() {
-        return marker;
-    }
-
     public final boolean hasMarker() {
         return marker != null;
+    }
+
+    interface Marker<T> {
     }
 
 }
