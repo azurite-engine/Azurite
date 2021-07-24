@@ -6,6 +6,7 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 import physics.Transform;
 import util.Logger;
+import util.Utils;
 
 import java.util.ArrayList;
 
@@ -89,12 +90,17 @@ public class TextRendererBatch extends RenderBatch {
         return numberOfGlyphRenderers;
     }
 
+    /**
+     * Remove the object at index
+     * @param index the index
+     */
     public void removeIndex (int i) {
         if (glyphRenderers.size() > 0) {
             Logger.logInfo("Removed GlyphRenderer \"" + glyphRenderers.get(i).getCharacter() + "\" (" + i + ") from batch.");
             glyphRenderers.remove(i);
+            remove(i);
             numberOfGlyphRenderers --;
-//            super.updateBuffer();
+            super.updateBuffer();
         }
     }
 

@@ -50,6 +50,9 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
         shader.uploadMat4f("uView", Engine.scenes().currentScene().camera().getViewMatrix());
     }
 
+    @Override
+    protected void prepare() {}
+
     /**
      * Add a Text object to this renderer
      *
@@ -60,9 +63,6 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
             addText(textObject);
         }
     }
-
-    @Override
-    protected void prepare() {}
 
     public void removeGlyphRenderer (GlyphRenderer gr) {
         if (gr != null && gr.getBatch() != null) {
@@ -85,38 +85,18 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
         boolean createNewBatch = false;
         int continueFromIndex = 0;
         if (batches.size() == 0) createNewBatch = true;
+        // If unable to add to previous batch, create a new one
+        TextRendererBatch newBatch = new TextRendererBatch(MAX_BATCH_SIZE, text.zIndex());
+        newBatch.start();
+        batches.add(newBatch);
 
-        for (TextRendererBatch batch : batches) {
-            for (int i = 0; i < text.getGlyphRenderers().size(); i ++) {
-
-                GlyphRenderer g = text.getGlyphRenderers().get(i);
-
-                if (!batch.addGlyphRenderer(g)) {
-                    // If unable to add to current batch, create a new one
-                    createNewBatch = true;
-                    continueFromIndex = i;
-                } else {
-                    g.setRendererBatch(batch, batch.getSize() - 1);
-                    Logger.debugLog("Added GlyphRenderer \"" + g.getCharacter() + "\" (" + (batch.getSize() - 1) + ") to existing batch.");
-                }
-
-            }
+        for (int i = continueFromIndex; i < text.getGlyphRenderers().size(); i ++) {
+            GlyphRenderer g = text.getGlyphRenderers().get(i);
+            newBatch.addGlyphRenderer(g);
+            g.setRendererBatch(newBatch, newBatch.getSize() - 1);
+            Logger.debugLog("Added GlyphRenderer \"" + g.getCharacter() + "\" (" + (newBatch.getSize() - 1) + ") to new batch.");
         }
 
-        if (createNewBatch) {
-            // If unable to add to previous batch, create a new one
-            TextRendererBatch newBatch = new TextRendererBatch(MAX_BATCH_SIZE, text.zIndex());
-            newBatch.start();
-            batches.add(newBatch);
-
-            for (int i = continueFromIndex; i < text.getGlyphRenderers().size(); i ++) {
-                GlyphRenderer g = text.getGlyphRenderers().get(i);
-                newBatch.addGlyphRenderer(g);
-                g.setRendererBatch(newBatch, newBatch.getSize() - 1);
-                Logger.debugLog("Added GlyphRenderer \"" + g.getCharacter() + "\" (" + (newBatch.getSize() - 1) + ") to new batch.");
-            }
-
-            Collections.sort(batches);
-        }
+        Collections.sort(batches);
     }
 }

@@ -60,38 +60,9 @@ public class Text {
 
     public void draw () {
         generateGlyphs();
-//        int textHeight = font.getHeight(text);
-//        int lineIncreases = 0;
-//
-//        float drawX = x;
-//        float drawY = y;
-//
-//        for (int i = 0; i < text.length(); i++) {
-//            char ch = text.charAt(i);
-//            if (ch == '\n') {
-//                lineIncreases ++;
-//                /* Line feed, set x and y to draw at the next line */
-//                drawY = y + (font.getFontHeight() * lineIncreases);
-//                drawX = x;
-//                continue;
-//            }
-//            if (ch == '\r') {
-//                /* Carriage return, just skip it */
-//                continue;
-//            }
-//            Glyph g = font.getGlyphs().get(ch);
-//
-//            glyphRenderers.add(new GlyphRenderer(new Transform(drawX, drawY, g.width, g.height), g, this, ch));
-//
-//            drawX += g.width;
-//        }
-//        if (textHeight > font.getFontHeight()) {
-//            drawY += textHeight - font.getFontHeight();
-//        }
     }
 
     public void change (String string) {
-
         Engine.scenes().currentScene().textRenderer.removeAllGlyphRenderers(glyphRenderers);
         System.out.println("");
 
