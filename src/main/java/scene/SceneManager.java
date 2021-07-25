@@ -36,8 +36,7 @@ public class SceneManager {
      * This method is used to enable the sceneManager and call all initialization methods on a possible currentScene.
      * After this method finished, all newly added scenes will call this methods directly.
      */
-    public void enable()
-    {
+    public void enable() {
         this.enabled = true;
         //init the currentScene if there is one
         if(currentScene != null)
@@ -121,6 +120,12 @@ public class SceneManager {
         }
     }
 
+    public void updateUI() {
+        if (currentScene != null) {
+            currentScene.updateUI();
+        }
+    }
+
     public void updateGameObjects() {
         if (currentScene != null) {
             currentScene.updateGameObjects();
@@ -148,9 +153,9 @@ public class SceneManager {
 
     //below are internal methods
 
-
     //internal method to switch scenes, should not be used from outside, since its completely unchecked
     //will only result in false, if the input is null
+
     private boolean switchScene(Scene newCurrent) {
         if (newCurrent == null) return false;
         //we dont wanna call method if the current scene is already displayed
@@ -173,5 +178,4 @@ public class SceneManager {
     public void setMinSceneLight(float minSceneLight) {
         this.minSceneLight = minSceneLight;
     }
-
 }

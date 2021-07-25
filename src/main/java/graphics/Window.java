@@ -171,6 +171,7 @@ public class Window {
 
             sceneManager.update();
             sceneManager.updateGameObjects();
+            sceneManager.updateUI();
             sceneManager.render();
             PostProcessing.prepare();
             sceneManager.postProcess(currentScene().renderer.fetchColorAttachment(0));

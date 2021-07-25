@@ -58,7 +58,7 @@ public class DemoTopDown extends Scene {
 		booper.addComponent(new CollisionTrigger(data -> System.out.println("Boop")));
 		booperLight = new PointLight(new Color(255, 153, 102), 30);
 		booper.addComponent(booperLight);
-		booper.setTransformY(900);
+		booper.setY(900);
 
 		player = new GameObject(this, "Player", new Transform(600, 600, 100, 100), 2);
 		player.addComponent(new PointLight(new Color(250, 255, 181), 30));

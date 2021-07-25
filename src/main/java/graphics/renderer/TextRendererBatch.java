@@ -8,7 +8,15 @@ import physics.Transform;
 import util.Logger;
 import util.Utils;
 
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Objects;
+
+import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
+import static org.lwjgl.opengl.GL15.glBindBuffer;
+import static org.lwjgl.opengl.GL15.glUnmapBuffer;
+import static org.lwjgl.opengl.GL30.*;
 
 /**
  * @author Asher Haun
@@ -39,7 +47,7 @@ public class TextRendererBatch extends RenderBatch {
     @Override
     protected void loadVertexProperties(int index, int offset) {
         GlyphRenderer glyphRenderer = glyphRenderers.get(index); // todo
-        Vector4f color = Color.WHITE.toNormalizedVec4f();
+        Vector4f color = glyphRenderer.getColor().toNormalizedVec4f();
         Vector2f[] textureCoordinates = glyphRenderer.getTexCoords();
 
         int textureID;
@@ -96,13 +104,62 @@ public class TextRendererBatch extends RenderBatch {
      */
     public void removeIndex (int i) {
         if (glyphRenderers.size() > 0) {
-            Logger.logInfo("Removed GlyphRenderer \"" + glyphRenderers.get(i).getCharacter() + "\" (" + i + ") from batch.");
+//            Logger.logInfo("Removed GlyphRenderer \"" + glyphRenderers.get(i).getCharacter() + "\" (" + i + ") from batch.");
             glyphRenderers.remove(i);
             remove(i);
             numberOfGlyphRenderers --;
             super.updateBuffer();
         }
     }
+
+    @Override
+    public void updateBuffer () {
+        for (int i = 0; i < glyphRenderers.size(); i ++) {
+            if (glyphRenderers.get(i).isDirty()) {
+                load(i);
+                glyphRenderers.get(i).setClean();
+            }
+        }
+        super.updateBuffer();
+    }
+
+    /**
+     * Function for calling loadVertexProperties but also sets up necessary stuff relating
+     * to uploading data to the gpu.
+     * Always call this function instead of calling loadVertexProperties()
+     *
+     * @param index index of the sprite to be loaded
+     */
+    @Override
+    protected void load(int index) {
+        if (index >= spriteCount) spriteCount++;
+        primitiveVerticesOffset = 0;
+        loadVertexProperties(index, getOffset(index));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * Adds a Text object to this batch

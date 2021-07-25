@@ -139,6 +139,10 @@ public abstract class Scene {
         }
     }
 
+    public void addUiObject (Text t) {
+        uiObjects.add(t);
+    }
+
     /**
      * @param gameObject GameObject to be added.
      */
@@ -218,5 +222,11 @@ public abstract class Scene {
         this.lightmapRenderer.remove(gameObject);
         this.debugRenderer.remove(gameObject);
         rendererRegistry.forEach(r -> r.remove(gameObject));
+    }
+
+    public void updateUI () {
+        for (Text i : uiObjects) {
+            i.update();
+        }
     }
 }

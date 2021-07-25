@@ -46,7 +46,7 @@ public class CharacterController extends Component {
 
 	protected void moveX() {
 		// X
-		gameObject.setTransformX(position.x);
+		gameObject.setX(position.x);
 		if (Keyboard.getKey(Keyboard.A_KEY) || Keyboard.getKey(Keyboard.LEFT_ARROW)) {
 			position.x += (-speed.x + sprintSpeed) * Engine.deltaTime();
 		}
@@ -57,7 +57,7 @@ public class CharacterController extends Component {
 
 	protected void moveY() {
 		// Y
-		gameObject.setTransformY(position.y);
+		gameObject.setY(position.y);
 
 		if (Keyboard.getKey(Keyboard.W_KEY) || Keyboard.getKey(Keyboard.UP_ARROW)) {
 			position.y += (-speed.y + sprintSpeed) * Engine.deltaTime();

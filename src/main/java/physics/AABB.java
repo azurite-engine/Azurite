@@ -72,9 +72,9 @@ public class AABB extends Component {
     public void collideX() {
         if (checkCollision()) {
             if (lastPosition.getX() < other.getX()) {
-                gameObject.setTransformX(other.getX() - gameObject.getTransform().getWidth());
+                gameObject.setX(other.getX() - gameObject.getTransform().getWidth());
             } else {
-                gameObject.setTransformX(other.getX() + other.getWidth());
+                gameObject.setX(other.getX() + other.getWidth());
             }
             collidingX = true;
         } else collidingX = false;
@@ -83,9 +83,9 @@ public class AABB extends Component {
     public void collideY() {
         if (checkCollision()) {
             if (lastPosition.getY() < other.getY()) {
-                gameObject.setTransformY(other.getY() - gameObject.getTransform().getHeight());
+                gameObject.setY(other.getY() - gameObject.getTransform().getHeight());
             } else {
-                gameObject.setTransformY(other.getY() + other.getHeight());
+                gameObject.setY(other.getY() + other.getHeight());
             }
             collidingY = true;
         } else collidingY = false;

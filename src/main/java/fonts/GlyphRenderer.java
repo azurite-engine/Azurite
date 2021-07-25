@@ -11,6 +11,7 @@ import util.Utils;
 
 import java.util.ArrayList;
 
+import static graphics.Color.BLUE;
 import static graphics.Color.WHITE;
 
 /**
@@ -18,14 +19,14 @@ import static graphics.Color.WHITE;
  */
 public class GlyphRenderer {
 
-    private Vector4f color = WHITE.toNormalizedVec4f();
+    private Vector4f color = BLUE.toNormalizedVec4f();
 
     private Glyph glyph;
     private char character;
     private Text parentText;
 
     private Transform localTransform;
-    private Transform lastTransform;
+    private Transform lastTransform = new Transform();
     private boolean isDirty = false; // Dirty flag, tells renderer to redraw if object has changed
 
     private TextRendererBatch batch;
@@ -39,7 +40,7 @@ public class GlyphRenderer {
     public GlyphRenderer(Transform transform, Glyph glyph, Text parentText, char c) {
         this.localTransform = transform;
         this.glyph = glyph;
-        this.color = WHITE.toNormalizedVec4f();
+        this.color = BLUE.toNormalizedVec4f();
         this.parentText = parentText;
         this.isDirty = true;
         this.character = c;
@@ -49,12 +50,11 @@ public class GlyphRenderer {
      * Update method called every frame by parent 
      * @param dt Engine.deltaTime
      */
-
     public void update(float dt) {
-//        if (!this.lastTransform.equals(this.gameObject.getTransform())) {
-
-//            isDirty = true;
-//        }
+        if (!this.lastTransform.equals(this.localTransform)) {
+            this.localTransform.copy(this.lastTransform);
+            isDirty = true;
+        }
     }
 
     public void setRendererBatch (TextRendererBatch batch, int index) {
@@ -98,6 +98,14 @@ public class GlyphRenderer {
 
     public Transform getLocalTransform () {
         return localTransform;
+    }
+
+    public void addX (float x) {
+        localTransform.addX(x);
+    }
+
+    public void addY (float x) {
+        localTransform.addY(x);
     }
 
     /**

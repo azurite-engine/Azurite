@@ -135,19 +135,35 @@ public class GameObject {
         this.transform = t.copy();
     }
 
-    public void setTransformX(float x) {
-        this.transform.setX(x);
+    public float getX () {
+        return transform.getX();
     }
 
-    public void setTransformY(float y) {
-        this.transform.setY(y);
+    public void setX (float x) {
+        transform.setX(x);
     }
 
-    public void setTransformWidth(float w) {
+    public float getY () {
+        return transform.getY();
+    }
+
+    public void setY (float y) {
+        transform.setY(y);
+    }
+
+    public void addY (float y) {
+        transform.addY(y);
+    }
+
+    public void addX (float x) {
+        transform.addX(x);
+    }
+
+    public void setWidth(float w) {
         this.transform.setWidth(w);
     }
 
-    public void setTransformHeight(float h) {
+    public void setHeight(float h) {
         this.transform.setHeight(h);
     }
 

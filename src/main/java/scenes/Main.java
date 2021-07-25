@@ -33,21 +33,18 @@ public class Main extends scene.Scene {
 
 		f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 25, true);
 		t = new Text("Hello World! (String 1)\nTest Text line 2.", f, 10, 0, 1);
-		t2 = new Text("Hello World! (String 2)\nTest Text line.", f, 400, 0, 1);
-
-		g = new GameObject(this, new Transform(100, 100, 100, 100), 1).addComponent(new SpriteRenderer(Color.RED));
-
-
-		t.change("Change");
 	}
 
 	int x = 0;
 
 	public void update () {
-		if (x % 100 == 0) {
-			t.change("" + Utils.randomInt(0, 400) + ":" + Utils.randomInt(1, 100));
-			t2.change("" + Utils.randomInt(0, 400) + ":" + Utils.randomInt(1, 100));
-		}
+//		if (x % 100 == 0) {
+//			t.change("" + Utils.randomInt(0, 400) + ":" + Utils.randomInt(1, 100));
+//			t2.change("" + Utils.randomInt(0, 400) + ":" + Utils.randomInt(1, 100));
+//		}
+
+//		t.addX(0.3f);
+
 		x ++;
 	}
 

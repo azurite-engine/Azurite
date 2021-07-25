@@ -4,67 +4,81 @@ import fonts.Font;
 import fonts.Glyph;
 import fonts.GlyphRenderer;
 import graphics.Color;
-import graphics.Texture;
-import graphics.Window;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import physics.Transform;
 import util.Engine;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  * @author Asher Haun
  */
 public class Text {
-    private Vector4f color = Color.RED.toNormalizedVec4f();
+    private Vector4f color = Color.BLUE.toNormalizedVec4f();
 
     private Sprite sprite;
 
-    private Transform lastTransform;
+    private Transform lastTransform = new Transform();
     private boolean isDirty = false; // Dirty flag, tells renderer to redraw if object components have changed
 
     int zIndex;
 
     ArrayList<GlyphRenderer> glyphRenderers;
 
-    float x, y;
+    Transform transform = new Transform();
     Font font;
     CharSequence text;
 
     public Text (String string, Font font, float x, float y, int zIndex) {
         this.text = string;
         this.font = font;
-        this.x = x;
-        this.y = y;
+        this.transform.setX(x);
+        this.transform.setY(y);
         this.zIndex = zIndex;
 
         glyphRenderers = new ArrayList<>();
 
         draw();
         Engine.scenes().currentScene().textRenderer.add(this);
+        Engine.scenes().currentScene().addUiObject(this);
     }
 
     public Text (String string, float x, float y) {
         this.text = string;
         this.font = new Font();
-        this.x = x;
-        this.y = y;
+        this.transform.setX(x);
+        this.transform.setY(y);
         this.zIndex = 1;
 
         glyphRenderers = new ArrayList<>();
 
         draw();
         Engine.scenes().currentScene().textRenderer.add(this);
+        Engine.scenes().currentScene().addUiObject(this);
     }
 
     public void draw () {
         generateGlyphs();
     }
 
+    public void update () {
+        if (!lastTransform.equals(this.transform)) {
+            Vector2f movementDelta = transform.getPosition().sub(lastTransform.getPosition());
+            transform.copy(lastTransform);
+            for (GlyphRenderer i : glyphRenderers) {
+                i.addX(movementDelta.x);
+                i.addY(movementDelta.y);
+            }
+        }
+        for (GlyphRenderer i : glyphRenderers) {
+            i.update(Engine.deltaTime());
+        }
+    }
+
     public void change (String string) {
         Engine.scenes().currentScene().textRenderer.removeAllGlyphRenderers(glyphRenderers);
-        System.out.println("");
 
         String tmp = "";
         for (int i = 0; i < this.text.length() - string.length(); i ++) {
@@ -81,16 +95,16 @@ public class Text {
         int textHeight = font.getHeight(text);
         int lineIncreases = 0;
 
-        float drawX = x;
-        float drawY = y;
+        float drawX = transform.getX();
+        float drawY = transform.getY();
 
         for (int i = 0; i < text.length(); i++) {
             char ch = text.charAt(i);
             if (ch == '\n') {
                 lineIncreases ++;
                 /* Line feed, set x and y to draw at the next line */
-                drawY = y + (font.getFontHeight() * lineIncreases);
-                drawX = x;
+                drawY = transform.getY() + (font.getFontHeight() * lineIncreases);
+                drawX = transform.getX();
                 continue;
             }
             if (ch == '\r') {
@@ -112,31 +126,51 @@ public class Text {
         return glyphRenderers;
     }
 
+    /**
+     * @return Transform of the gameObject
+     */
+    public Transform getTransform() {
+        return this.transform;
+    }
+
+    /**
+     * Takes a Transform as a parameter and sets this instance to a copy of that transform
+     *
+     * @param t
+     */
+    public void setTransform(Transform t) {
+        this.transform = t.copy();
+    }
+
     public int zIndex () {
         return zIndex;
     }
 
+    public void setZindex(int z) {
+        zIndex = z;
+    }
+
     public float getX () {
-        return x;
+        return transform.getX();
     }
 
     public void setX (float x) {
-        this.x = x;
+        transform.setX(x);
     }
 
     public float getY () {
-        return y;
+        return transform.getY();
     }
 
     public void setY (float y) {
-        this.y = y;
+        transform.setY(y);
     }
 
-    public float addY (float y) {
-        return y += y;
+    public void addY (float y) {
+        transform.addY(y);
     }
 
     public void addX (float x) {
-        this.x = x;
+        transform.addX(x);
     }
 }

@@ -94,7 +94,7 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
             GlyphRenderer g = text.getGlyphRenderers().get(i);
             newBatch.addGlyphRenderer(g);
             g.setRendererBatch(newBatch, newBatch.getSize() - 1);
-            Logger.debugLog("Added GlyphRenderer \"" + g.getCharacter() + "\" (" + (newBatch.getSize() - 1) + ") to new batch.");
+//            Logger.debugLog("Added GlyphRenderer \"" + g.getCharacter() + "\" (" + (newBatch.getSize() - 1) + ") to new batch.");
         }
 
         Collections.sort(batches);
