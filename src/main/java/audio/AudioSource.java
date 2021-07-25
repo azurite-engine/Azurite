@@ -1,7 +1,6 @@
 package audio;
 
 import ecs.Component;
-import org.joml.Vector2f;
 import org.joml.Vector3f;
 import util.Assets;
 
@@ -19,7 +18,6 @@ public class AudioSource extends Component {
     public Vector3f position;
     /**
      * List of audio buffers this source can play.<br>
-     * TODO: make an audio batch to reduce OpenAL calls?
      */
     public List<AudioBuffer> audioBuffers = new ArrayList<>();
     /**
