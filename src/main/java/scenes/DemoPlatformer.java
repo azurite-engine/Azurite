@@ -65,7 +65,7 @@ public class DemoPlatformer extends Scene {
         bloom.init();
 
         f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 25, true);
-        text = new Text("Azurite Engine demo", f, 15, 10, 1, true);
+        text = new Text("Azurite Engine demo", f, 15, 10, 100, true);
     }
 
     int r;

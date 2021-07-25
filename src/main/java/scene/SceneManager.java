@@ -123,6 +123,7 @@ public class SceneManager {
     public void updateUI() {
         if (currentScene != null) {
             currentScene.updateUI();
+            currentScene.textRender();
         }
     }
 
@@ -146,16 +147,11 @@ public class SceneManager {
 
     public void debugRender() {
         if (currentScene != null) {
-            currentScene.textRender(); // TODO, maybe move this into its own method later, it just needs to be called before debugRender and after post processing
             currentScene.debugRender();
         }
     }
 
-    //below are internal methods
-
-    //internal method to switch scenes, should not be used from outside, since its completely unchecked
-    //will only result in false, if the input is null
-
+    // Below are internal methods
     private boolean switchScene(Scene newCurrent) {
         if (newCurrent == null) return false;
         //we dont wanna call method if the current scene is already displayed

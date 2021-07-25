@@ -171,12 +171,12 @@ public class Window {
 
             sceneManager.update();
             sceneManager.updateGameObjects();
-            sceneManager.updateUI();
             sceneManager.render();
             PostProcessing.prepare();
             sceneManager.postProcess(currentScene().renderer.fetchColorAttachment(0));
             PostProcessing.finish();
             sceneManager.debugRender();
+            sceneManager.updateUI();
 
             glfwSwapBuffers(glfwWindow);
             getFPS();

@@ -183,10 +183,6 @@ public abstract class Scene {
         renderer.render();
     }
 
-    public final void textRender() {
-        textRenderer.render();
-    }
-
     public void debugRender() {
         if (debugMode) this.debugRenderer.render();
     }
@@ -222,6 +218,10 @@ public abstract class Scene {
         this.lightmapRenderer.remove(gameObject);
         this.debugRenderer.remove(gameObject);
         rendererRegistry.forEach(r -> r.remove(gameObject));
+    }
+
+    public final void textRender() {
+        textRenderer.render();
     }
 
     public void updateUI () {

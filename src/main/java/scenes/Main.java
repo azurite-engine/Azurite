@@ -21,7 +21,6 @@ import static graphics.Graphics.setDefaultBackground;
  * clean up code
  * fix debug rendering order
  * speed improvements
- *
  */
 
 public class Main extends scene.Scene {
@@ -43,7 +42,7 @@ public class Main extends scene.Scene {
 		camera = new Camera();
 
 		f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 25, true);
-		t = new Text("Hello World! (String 1)\nTest Text line 2.", f, 10, 0, 1, true);
+		t = new Text("Hello World! (String 1)\nTest Text line 2.", f, 10, 0, 1, false);
 
 		g = new GameObject(this, new Transform(300, 10, 100, 100), 1).addComponent(new SpriteRenderer(Color.WHITE));
 	}
