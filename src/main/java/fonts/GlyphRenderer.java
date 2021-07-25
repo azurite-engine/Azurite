@@ -19,7 +19,7 @@ import static graphics.Color.WHITE;
  */
 public class GlyphRenderer {
 
-    private Vector4f color = BLUE.toNormalizedVec4f();
+    private Vector4f color = WHITE.toNormalizedVec4f();
 
     private Glyph glyph;
     private char character;
@@ -32,18 +32,21 @@ public class GlyphRenderer {
     private TextRendererBatch batch;
     private int batchIndex;
 
+    private boolean isSticky = false;
+
     /**
      * Create a spriteRenderer using a sprite that is already loaded.
      * Default tint color is white (no tinting visible).
      * @param glyph
      */
-    public GlyphRenderer(Transform transform, Glyph glyph, Text parentText, char c) {
+    public GlyphRenderer(Transform transform, Glyph glyph, Text parentText, char c, boolean isSticky, Color color) {
         this.localTransform = transform;
         this.glyph = glyph;
         this.color = BLUE.toNormalizedVec4f();
         this.parentText = parentText;
         this.isDirty = true;
         this.character = c;
+        this.isSticky = isSticky;
     }
 
     /**
@@ -169,5 +172,9 @@ public class GlyphRenderer {
 
     public Text getParentText () {
         return parentText;
+    }
+
+    public boolean isSticky () {
+        return isSticky;
     }
 }

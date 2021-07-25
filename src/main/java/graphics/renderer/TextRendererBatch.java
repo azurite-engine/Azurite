@@ -32,7 +32,7 @@ public class TextRendererBatch extends RenderBatch {
      * @param zIndex       zIndex of the batch. Used for sorting.
      */
     TextRendererBatch(int maxBatchSize, int zIndex) {
-        super(maxBatchSize, zIndex, Primitive.QUAD, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT);
+        super(maxBatchSize, zIndex, Primitive.QUAD, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT, ShaderDatatype.FLOAT);
 
         this.glyphRenderers = new ArrayList<>();
         this.numberOfGlyphRenderers = 0;
@@ -90,6 +90,9 @@ public class TextRendererBatch extends RenderBatch {
             // Load texture ID
             data[offset + 8] = textureID;
 
+            // Sticky to camera or not
+            data[offset + 9] = glyphRenderer.isSticky() ? 1.0f : 0.0f;
+
             offset += vertexCount;
         }
     }
@@ -100,7 +103,7 @@ public class TextRendererBatch extends RenderBatch {
 
     /**
      * Remove the object at index
-     * @param index the index
+     * @param i the index
      */
     public void removeIndex (int i) {
         if (glyphRenderers.size() > 0) {
@@ -136,30 +139,6 @@ public class TextRendererBatch extends RenderBatch {
         primitiveVerticesOffset = 0;
         loadVertexProperties(index, getOffset(index));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     /**
      * Adds a Text object to this batch

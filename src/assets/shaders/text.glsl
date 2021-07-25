@@ -4,6 +4,7 @@ layout (location=0) in vec2 aPos;
 layout (location=1) in vec4 aColor;
 layout (location=2) in vec2 aTexCoords;
 layout (location=3) in float aTexId;
+layout (location=4) in float sticky;
 
 uniform mat4 uProjection;
 uniform mat4 uView;
@@ -17,7 +18,13 @@ void main() {
     fTexCoords = aTexCoords;
     fTexId = aTexId;
 
-    gl_Position = uProjection * uView * vec4(aPos, 0.0, 1.0);
+    if (sticky > 0.5) {
+        // if 1 then stick to camera
+        gl_Position = uProjection * vec4(aPos, 0.0, 1.0);
+    } else {
+        // if 0, then be affected by camera view matrix (move with world)
+        gl_Position = uProjection * uView * vec4(aPos, 0.0, 1.0);
+    }
 }
 
 #type fragment

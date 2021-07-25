@@ -16,13 +16,13 @@ import java.util.logging.Logger;
  * @author Asher Haun
  */
 public class Text {
-    private Vector4f color = Color.BLUE.toNormalizedVec4f();
+    private Vector4f color = Color.WHITE.toNormalizedVec4f();
 
     private Sprite sprite;
 
     private Transform lastTransform = new Transform();
     private boolean isDirty = false; // Dirty flag, tells renderer to redraw if object components have changed
-
+    private boolean isSticky = false;
     int zIndex;
 
     ArrayList<GlyphRenderer> glyphRenderers;
@@ -31,12 +31,13 @@ public class Text {
     Font font;
     CharSequence text;
 
-    public Text (String string, Font font, float x, float y, int zIndex) {
+    public Text (String string, Font font, float x, float y, int zIndex, boolean isSticky) {
         this.text = string;
         this.font = font;
         this.transform.setX(x);
         this.transform.setY(y);
         this.zIndex = zIndex;
+        this.isSticky = isSticky;
 
         glyphRenderers = new ArrayList<>();
 
@@ -113,7 +114,7 @@ public class Text {
             }
             Glyph g = font.getGlyphs().get(ch);
 
-            glyphRenderers.add(new GlyphRenderer(new Transform(drawX, drawY, g.width, g.height), g, this, ch));
+            glyphRenderers.add(new GlyphRenderer(new Transform(drawX, drawY, g.width, g.height), g, this, ch, isSticky));
 
             drawX += g.width;
         }
@@ -124,6 +125,10 @@ public class Text {
 
     public ArrayList<GlyphRenderer> getGlyphRenderers () {
         return glyphRenderers;
+    }
+
+    public boolean isSticky () {
+        return isSticky;
     }
 
     /**
