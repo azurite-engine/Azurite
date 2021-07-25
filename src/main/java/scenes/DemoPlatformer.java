@@ -1,9 +1,7 @@
 package scenes;
 
-import ecs.CharacterControllerGravity;
-import ecs.GameObject;
-import ecs.PointLight;
-import ecs.SpriteRenderer;
+import ecs.*;
+import fonts.Font;
 import graphics.Camera;
 import graphics.Color;
 import graphics.Texture;
@@ -27,7 +25,7 @@ import static graphics.Graphics.setDefaultBackground;
  */
 public class DemoPlatformer extends Scene {
     public static void main(String[] args) {
-        Engine.init("Azurite Engine Demo 2", 1.0f);
+        Engine.init("Azurite Engine Demo 2", 0.4f);
         Engine.scenes().switchScene(new DemoPlatformer(), true);
         Engine.showWindow();
     }
@@ -39,6 +37,9 @@ public class DemoPlatformer extends Scene {
     TilesystemSideScroll t;
     GameObject player;
     GameObject booper;
+
+    Text text;
+    Font f;
 
     public void awake() {
         camera = new Camera();
@@ -62,6 +63,9 @@ public class DemoPlatformer extends Scene {
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         bloom.init();
+
+        f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 25, true);
+        text = new Text("Azurite Engine demo", f, 15, 10, 1, true);
     }
 
     int r;
@@ -95,6 +99,8 @@ public class DemoPlatformer extends Scene {
         }
 
         i++;
+
+        text.change("Azurite Engine demo\nDT: " + Engine.deltaTime());
     }
 
     @Override

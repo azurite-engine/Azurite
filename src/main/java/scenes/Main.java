@@ -13,6 +13,17 @@ import util.Utils;
 
 import static graphics.Graphics.setDefaultBackground;
 
+/**
+ *
+ * font rendering todo:
+ * hot swap sticky rendering?
+ * colors and hot swappable colors
+ * clean up code
+ * fix debug rendering order
+ * speed improvements
+ *
+ */
+
 public class Main extends scene.Scene {
 
 	public static void main (String[] args) {
@@ -32,7 +43,9 @@ public class Main extends scene.Scene {
 		camera = new Camera();
 
 		f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 25, true);
-		t = new Text("Hello World! (String 1)\nTest Text line 2.", f, 10, 0, 1);
+		t = new Text("Hello World! (String 1)\nTest Text line 2.", f, 10, 0, 1, true);
+
+		g = new GameObject(this, new Transform(300, 10, 100, 100), 1).addComponent(new SpriteRenderer(Color.WHITE));
 	}
 
 	int x = 0;
@@ -43,7 +56,7 @@ public class Main extends scene.Scene {
 //			t2.change("" + Utils.randomInt(0, 400) + ":" + Utils.randomInt(1, 100));
 //		}
 
-//		t.addX(0.3f);
+		t.addX(0.6f);
 
 		x ++;
 	}
