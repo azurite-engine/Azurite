@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @author Asher Haun
  */
 public class Text {
-    private Vector4f color = Color.WHITE.toNormalizedVec4f();
+    private Color color = Color.WHITE;
 
     private Sprite sprite;
 
@@ -114,7 +114,7 @@ public class Text {
             }
             Glyph g = font.getGlyphs().get(ch);
 
-            glyphRenderers.add(new GlyphRenderer(new Transform(drawX, drawY, g.width, g.height), g, this, ch, isSticky));
+            glyphRenderers.add(new GlyphRenderer(new Transform(drawX, drawY, g.width, g.height), g, this, ch, isSticky, this.color));
 
             drawX += g.width;
         }

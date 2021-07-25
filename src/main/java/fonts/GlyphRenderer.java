@@ -47,6 +47,7 @@ public class GlyphRenderer {
         this.isDirty = true;
         this.character = c;
         this.isSticky = isSticky;
+        this.color = color.toNormalizedVec4f();
     }
 
     /**
