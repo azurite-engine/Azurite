@@ -1,13 +1,18 @@
 package util.debug;
 
 import graphics.Color;
+import graphics.RenderableComponent;
+import graphics.renderer.DebugRenderBatch;
 import org.joml.Vector2f;
+
+// NOTE: Even though this is not a component, it extends RenderableComponent. This was the easiest
+// way I found to make these debug lines work with the removal system.
 
 /**
  * Represents a Line which can be rendered by DebugRenderer
  * The most basic primitive for Debug Rendering
  */
-public class DebugLine {
+public class DebugLine extends RenderableComponent<DebugRenderBatch> {
 	/** Start point for the line */
 	public Vector2f start;
 	/** End point of the line */

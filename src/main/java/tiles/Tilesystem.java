@@ -52,7 +52,6 @@ public class Tilesystem {
                         getAt(x, y, 31)
                     )));
                     if (getAt(x, y, 31) == 1) {
-                        System.out.println("called");
                         gameObjects[x][y].addComponent(new AABB());
                     }
                 } else if (getAt(x, y, 31) >= 256) {

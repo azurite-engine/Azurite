@@ -173,7 +173,7 @@ public class Framebuffer {
 	 * @param i index of the texture attachment required
 	 * @return the color attachment texture id at the index
 	 */
-	public Texture fetchColorAttachment(int i) {
+	public Texture getColorAttachment(int i) {
 		if (colorAttachmentTextures.size() >= i)
 			return colorAttachmentTextures.get(i);
 		return null;
@@ -182,9 +182,9 @@ public class Framebuffer {
 	/**
 	 * Get the depth attachment texture from this framebuffer
 	 *
-	 * @return
+	 * @return the depth attachment texture id
 	 */
-	public Texture fetchDepthAttachment() {
+	public Texture getDepthAttachment() {
 		return depthAttachmentTexture;
 	}
 

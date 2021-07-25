@@ -1,6 +1,8 @@
 package ecs;
 
 import graphics.Color;
+import graphics.RenderableComponent;
+import graphics.renderer.QuadRenderBatch;
 import org.joml.Vector3f;
 import physics.Transform;
 
@@ -9,7 +11,7 @@ import physics.Transform;
  *
  * @author VoxelRifts
  */
-public class PointLight extends Component {
+public class PointLight extends RenderableComponent<QuadRenderBatch> {
 	/**
 	 * Colour of the light
 	 */
@@ -46,6 +48,11 @@ public class PointLight extends Component {
 	@Override
 	public void start() {
 		this.lastTransform = gameObject.getTransform().copy();
+	}
+
+	@Override
+	public void remove() {
+		getBatch().getRenderer().remove(this.gameObject);
 	}
 
 	@Override

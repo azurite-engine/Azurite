@@ -48,10 +48,16 @@ public abstract class Renderer<T extends RenderBatch> {
 	protected abstract void uploadUniforms(Shader shader);
 
 	/**
-	 * Add a gameObject to the renderer, and if it contains a component that affects rendering, like a sprite or light, those are added to the batch.
+	 * Add a gameObject to the renderer, and if it contains a component that affects rendering, like a sprite or light, those are added to a batch.
 	 * @param gameObject the GameObject with renderable components
 	 */
 	public void add(GameObject gameObject) {}
+
+	/**
+	 * Remove a gameObject from the renderer if it contains the component that gets rendered.
+	 * @param gameObject the GameObject with renderable components
+	 */
+	public void remove(GameObject gameObject) {}
 
 	/**
 	 * Creates the renderer's shader and framebuffer
@@ -68,7 +74,7 @@ public abstract class Renderer<T extends RenderBatch> {
 	 * @return the texture ID of the attachment
 	 */
 	public Texture fetchColorAttachment(int index) {
-		return framebuffer.fetchColorAttachment(index);
+		return framebuffer.getColorAttachment(index);
 	}
 
 	/**
