@@ -38,7 +38,7 @@ public abstract class Scene {
     private List<Renderer<?>> rendererRegistry = new LinkedList<>();
 
     protected Camera camera;
-    private boolean debugMode = true;
+    private boolean debugMode = false;
     private boolean active = false;
     private List<GameObject> gameObjects = new LinkedList<>();
     private ArrayList<Text> uiObjects = new ArrayList<>();

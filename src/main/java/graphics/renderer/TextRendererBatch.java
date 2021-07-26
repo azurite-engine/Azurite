@@ -107,11 +107,11 @@ public class TextRendererBatch extends RenderBatch {
      */
     public void removeIndex (int i) {
         if (glyphRenderers.size() > 0) {
-//            Logger.logInfo("Removed GlyphRenderer \"" + glyphRenderers.get(i).getCharacter() + "\" (" + i + ") from batch.");
             glyphRenderers.remove(i);
             remove(i);
             numberOfGlyphRenderers --;
-            super.updateBuffer();
+            if (i >= 1)
+                super.updateBuffer(i - 1);
         }
     }
 

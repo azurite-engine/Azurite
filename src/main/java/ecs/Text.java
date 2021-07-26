@@ -5,12 +5,11 @@ import fonts.Glyph;
 import fonts.GlyphRenderer;
 import graphics.Color;
 import org.joml.Vector2f;
-import org.joml.Vector4f;
 import physics.Transform;
 import util.Engine;
+import util.Logger;
 
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 /**
  * @author Asher Haun
@@ -72,20 +71,16 @@ public class Text {
                 i.addX(movementDelta.x);
                 i.addY(movementDelta.y);
             }
-        }
-        for (GlyphRenderer i : glyphRenderers) {
-            i.update(Engine.deltaTime());
+            for (GlyphRenderer i : glyphRenderers) {
+                i.update(Engine.deltaTime());
+            }
         }
     }
 
     public void change (String string) {
         Engine.scenes().currentScene().textRenderer.removeAllGlyphRenderers(glyphRenderers);
 
-        String tmp = "";
-        for (int i = 0; i < this.text.length() - string.length(); i ++) {
-            tmp += " ";
-        }
-        this.text = string + tmp;
+        this.text = string;
         glyphRenderers = new ArrayList<>();
 
         generateGlyphs();

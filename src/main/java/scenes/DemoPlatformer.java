@@ -25,7 +25,7 @@ import static graphics.Graphics.setDefaultBackground;
  */
 public class DemoPlatformer extends Scene {
     public static void main(String[] args) {
-        Engine.init("Azurite Engine Demo 2", 0.4f);
+        Engine.init(1920, 1080, "Azurite Engine Demo 2", 0.4f);
         Engine.scenes().switchScene(new DemoPlatformer(), true);
         Engine.showWindow();
     }
@@ -65,7 +65,7 @@ public class DemoPlatformer extends Scene {
         bloom.init();
 
         f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 25, true);
-        text = new Text("Azurite Engine demo", f, 15, 10, 100, true);
+        text = new Text("Azurite Engine demo", f, 15, 5, 100, true);
     }
 
     int r;
@@ -78,29 +78,27 @@ public class DemoPlatformer extends Scene {
 
         camera.smoothFollow(player.getTransform());
 
-        if (i % 400 == 0) {
+        i++;
+        if (i % 200 == 0) {
             r = Utils.randomInt(-3, 3);
-            Logger.logInfo("" + r);
         }
 
         if (r <= -1) {
             booper.getTransform().addX(-50 * Engine.deltaTime());
             if (booper.getComponent(AABB.class).isCollidingX()) {
                 booper.getComponent(Gravity.class).addVelocityY(-20);
-                Logger.logInfo("Do jump left");
             }
         }
         if (r >= 1) {
             booper.getTransform().addX(50 * Engine.deltaTime());
             if (booper.getComponent(AABB.class).isCollidingX()) {
                 booper.getComponent(Gravity.class).addVelocityY(-20);
-                Logger.logInfo("Do jump right");
             }
         }
 
-        i++;
 
-        text.change("Azurite Engine demo\nDT: " + Engine.deltaTime());
+        text.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS() + "\n\n");
+        // text.addX(i); // TODO: add doesn't work right
     }
 
     @Override
