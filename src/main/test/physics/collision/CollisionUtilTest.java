@@ -5,6 +5,10 @@ import org.joml.Vector2f;
 import org.junit.Assert;
 import org.junit.Test;
 import physics.Transform;
+import util.Utils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <h1>Azurite</h1>
@@ -36,11 +40,6 @@ public class CollisionUtilTest {
     }
 
     @Test
-    public void convexHull() {
-        //TODO hard to test
-    }
-
-    @Test
     public void solveSimultaneousEquations() {
         //TODO hard to test
     }
@@ -61,13 +60,23 @@ public class CollisionUtilTest {
     }
 
     @Test
-    public void boundingSphere() {
-        //TODO hard to test
-    }
-
-    @Test
-    public void polygonCentroid() {
-        //TODO hard to test
+    public void centroidAndSphere() {
+        List<Vector2f> points = new ArrayList<>(10);
+        for (int i = 0; i < 10; i++) {
+            //chance to have less points
+            if (Math.random() > 0.3) {
+                points.add(new Vector2f(Utils.random(-100, 100), Utils.random(-100, 100)));
+            }
+        }
+        Vector2f[] convexHull = CollisionUtil.convexHull(points.toArray(new Vector2f[0]));
+        //no real checks for convexHull
+        Assert.assertTrue(convexHull.length <= points.size());
+        Vector2f centroid = CollisionUtil.polygonCentroid(convexHull);
+        float radius = CollisionUtil.boundingSphere(centroid, convexHull);
+        //checks for boundingSphere
+        for (Vector2f point : convexHull) {
+            Assert.assertTrue(radius >= centroid.distance(point));
+        }
     }
 
     @Test
