@@ -1,6 +1,8 @@
 package util;
 
+import graphics.Camera;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 
 public class Utils {
 
@@ -114,5 +116,23 @@ public class Utils {
         if (fromIndex > toIndex || length <= fromIndex || length < toIndex) return length;
         System.arraycopy(array, toIndex, array, fromIndex, length - toIndex);
         return length - (toIndex - fromIndex);
+    }
+
+    /**
+     * Converts world coordinates (numbers stored in game objects, for example) to their position on the screen.
+     * @param coords world coordinates
+     * @param camera reference camera, used for it's projection matrix and position
+     * @return position on the screen
+     */
+    public static Vector2f worldToScreenCoords(Vector2f coords, Camera camera) {
+        Vector4f newCoords = new Vector4f(
+                coords.x - camera.getPosition().x,
+                coords.y - camera.getPosition().x,
+                0.0f, 0.0f
+        );
+
+        newCoords = newCoords.mul(camera.getProjectionMatrix());
+
+        return new Vector2f(newCoords.x, newCoords.y);
     }
 }

@@ -1,13 +1,15 @@
 package audio;
 
 import ecs.Component;
-import org.joml.Vector3f;
+import org.joml.Vector2f;
 import util.Assets;
+import util.Engine;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.openal.AL10.*;
+import static util.Utils.worldToScreenCoords;
 
 /**
  * Object representing a sound's source as well as it's velocity (for applying the doppler effect).
@@ -15,7 +17,7 @@ import static org.lwjgl.openal.AL10.*;
 public class AudioSource extends Component {
 
     public int sourceID;
-    public Vector3f position;
+    public Vector2f position;
     /**
      * List of audio buffers this source can play.<br>
      */
@@ -26,18 +28,18 @@ public class AudioSource extends Component {
     private int index = 0;
 
     public AudioSource() {
-        position = new Vector3f(1.0f, 0.0f, 0.0f);
+        position = new Vector2f(1.0f, 0.0f);
         AudioMaster.get().addSource(this);
     }
 
     public AudioSource(AudioBuffer buffer) {
-        position = new Vector3f(0.0f, 0.0f, 0.0f);
+        position = new Vector2f(0.0f, 0.0f);
         audioBuffers.add(buffer);
         AudioMaster.get().addSource(this);
     }
 
     public AudioSource(String... sources) {
-        position = new Vector3f(0.0f, 0.0f, 0.0f);
+        position = new Vector2f(0.0f, 0.0f);
         for (String s : sources) {
             audioBuffers.add(Assets.getAudioBuffer(s));
         }
@@ -107,8 +109,9 @@ public class AudioSource extends Component {
     @Override
     public void start() {
         sourceID = alGenSources();
+        Vector2f screenPos = worldToScreenCoords(position, Engine.scenes().currentScene().camera());
         alSourcei(sourceID, AL_BUFFER, getSelectedBuffer().getName());
-        alSource3f(sourceID, AL_POSITION, 0f, 0f, 0f);
+        alSource3f(sourceID, AL_POSITION, screenPos.x, screenPos.y, 0f);
         alSource3f(sourceID, AL_VELOCITY, 0f, 0f, 0f);
 
         alSourcef(sourceID, AL_PITCH, 1);
@@ -118,7 +121,7 @@ public class AudioSource extends Component {
 
     @Override
     public void update(float dt) {
-        Vector3f secondPos = new Vector3f(gameObject.getTransform().position, 0.0f);
+        Vector2f secondPos = worldToScreenCoords(gameObject.getTransform().position, Engine.scenes().currentScene().camera());
         alListener3f(AL_POSITION, secondPos.x, secondPos.y, 0.0f);
         alListener3f(AL_VELOCITY,
                 secondPos.x - position.x,
