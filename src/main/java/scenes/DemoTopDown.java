@@ -18,6 +18,8 @@ import util.Assets;
 import util.Engine;
 import util.Utils;
 
+import java.util.Arrays;
+
 import static graphics.Graphics.setDefaultBackground;
 
 @Deprecated
@@ -51,10 +53,14 @@ public class DemoTopDown extends Scene {
         trRes = new GameObject(this, "", new Transform(new Vector2f(0, 0), new Vector2f(100)), -20);
 
         booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
-        booper.addComponent(new Animation(1, a.getSprite(132), a.getSprite(150)));
         booperLight = new PointLight(new Color(255, 153, 102), 30);
         booper.addComponent(booperLight);
-        //booper.addComponent(new Animation(1, a.getSprite(132), a.getSprite(150)));
+        SpriteRenderer booperRenderer = new SpriteRenderer(a.getSprite(132));
+        SpriteAnimation booperAnimation = new SpriteAnimation(booperRenderer, a.getSprite(132), 1);
+        booperAnimation.setAnimation("idle", Arrays.asList(a.getSprite(132), a.getSprite(150)));
+        booperAnimation.nextAnimation("idle", -1);
+        this.booper.addComponent(booperRenderer);
+        this.booper.addComponent(booperAnimation);
 
         player = new GameObject(this, "Player", new Transform(600, 600, 100, 100), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
