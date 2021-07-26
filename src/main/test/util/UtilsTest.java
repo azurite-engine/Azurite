@@ -147,4 +147,34 @@ public class UtilsTest {
         Assert.assertEquals(0.5f, Utils.lerp(0, 1, 0.5f), minimalDelta);
     }
 
+    @Test
+    public void shiftOverwrite() {
+        //error checks
+        float[] arr1 = new float[]{1, 2, 3, 4, 5};
+        float[] arr1Copy = new float[]{1, 2, 3, 4, 5};
+        //without indices 1 and 2
+        float[] reduced = new float[]{1, 4, 5, 4, 5};
+
+        //case: given indices doesnt match size
+        int newL = Utils.shiftOverwrite(arr1, 0, 6);
+        Assert.assertEquals(arr1Copy.length, newL);
+        Assert.assertArrayEquals(arr1Copy, arr1, Float.MIN_VALUE);
+
+        //case: given indices doesnt match size
+        int newL2 = Utils.shiftOverwrite(arr1, 5, 5);
+        Assert.assertEquals(arr1Copy.length, newL2);
+        Assert.assertArrayEquals(arr1Copy, arr1, Float.MIN_VALUE);
+
+        //case: given to < from
+        int newL3 = Utils.shiftOverwrite(arr1, 3, 2);
+        Assert.assertEquals(arr1Copy.length, newL3);
+        Assert.assertArrayEquals(arr1Copy, arr1, Float.MIN_VALUE);
+
+        //remove from first and keep last 2
+        int newL4 = Utils.shiftOverwrite(arr1, 1, arr1.length - 2);
+        Assert.assertEquals(3, newL4);
+        Assert.assertArrayEquals(reduced, arr1, 0);
+
+    }
+
 }
