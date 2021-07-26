@@ -49,7 +49,7 @@ public class DemoPlatformer extends Scene {
         playerBody.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.010f)));
         player.addComponent(playerBody);
         player.addComponent(new SpriteRenderer(a.getSprite(132)));
-        player.addComponent(new CharacterController());
+        player.addComponent(new CharacterController(CharacterController.standardPlatformer(playerBody), 1));
 
         booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
         booper.addComponent(new SpriteRenderer(a.getSprite(150)));

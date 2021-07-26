@@ -22,7 +22,6 @@ import java.util.Arrays;
 
 import static graphics.Graphics.setDefaultBackground;
 
-@Deprecated
 public class DemoTopDown extends Scene {
 
     Spritesheet a;
@@ -52,6 +51,7 @@ public class DemoTopDown extends Scene {
 
         trRes = new GameObject(this, "", new Transform(new Vector2f(0, 0), new Vector2f(100)), -20);
 
+        //BOOPER
         booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
         booperLight = new PointLight(new Color(255, 153, 102), 30);
         booper.addComponent(booperLight);
@@ -62,14 +62,14 @@ public class DemoTopDown extends Scene {
         this.booper.addComponent(booperRenderer);
         this.booper.addComponent(booperAnimation);
 
+        //PLAYER
         player = new GameObject(this, "Player", new Transform(600, 600, 100, 100), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
         RigidBody playerBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 1);
         playerBody.setMask(2, true);
         player.addComponent(playerBody);
         player.addComponent(new SpriteRenderer(a.getSprite(132)));
-        //FIXME this controller currently does not work, how its supposed to, since it was used for tests for DemoPlatformer
-        player.addComponent(new CharacterController());
+        player.addComponent(new CharacterController(CharacterController.standardTopDown(playerBody), 3));
 
         greenLight = new GameObject(this, "Green light", new Transform(3315, 300, 1, 1), 3);
         greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));
