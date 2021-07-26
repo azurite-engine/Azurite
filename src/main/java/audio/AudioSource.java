@@ -16,8 +16,6 @@ import static util.Utils.worldToScreenCoords;
  */
 public class AudioSource extends Component {
 
-    public int sourceID;
-    public Vector2f position;
     /**
      * List of audio buffers this source can play.<br>
      */
@@ -26,6 +24,9 @@ public class AudioSource extends Component {
      * Index of the currently selected buffer.
      */
     private int index = 0;
+
+    private int sourceID;
+    private Vector2f position;
 
     public AudioSource() {
         position = new Vector2f(1.0f, 0.0f);
@@ -121,11 +122,12 @@ public class AudioSource extends Component {
 
     @Override
     public void update(float dt) {
+        Vector2f firstPos = worldToScreenCoords(position, Engine.scenes().currentScene().camera());
         Vector2f secondPos = worldToScreenCoords(gameObject.getTransform().position, Engine.scenes().currentScene().camera());
         alListener3f(AL_POSITION, secondPos.x, secondPos.y, 0.0f);
         alListener3f(AL_VELOCITY,
-                secondPos.x - position.x,
-                secondPos.y - position.y, 0.0f);
-        position = secondPos;
+                secondPos.x - firstPos.x,
+                secondPos.y - firstPos.y, 0.0f);
+        position = gameObject.getTransform().position;
     }
 }
