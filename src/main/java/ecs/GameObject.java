@@ -155,7 +155,9 @@ public class GameObject {
     }
 
     public void setZindex(int z) {
+        parentScene.removeGameObjectFromScene(this);
         zIndex = z;
+        parentScene.addGameObjectToScene(this);
     }
 
     public String getName() {
