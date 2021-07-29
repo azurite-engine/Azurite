@@ -60,10 +60,6 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
      */
     protected float[] data;
     /**
-     * Variable for gathering vertices of a single primitive
-     */
-    protected int primitiveVerticesOffset = 0;
-    /**
      * Internal count of how many primitives have been submitted to this batch
      */
     protected int spriteCount;
@@ -182,7 +178,6 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
      */
     protected void load(int index) {
         if (index >= spriteCount) spriteCount++;
-        primitiveVerticesOffset = 0;
         loadVertexProperties(index, getOffset(index));
     }
 
