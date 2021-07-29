@@ -176,8 +176,9 @@ public class GameObject {
 
     @Deprecated
     public void setZindex(int z) {
-        //FIXME dangerous, currently the renderer wont be updated, I deprecated it temporarily for that
+        parentScene.removeGameObjectFromScene(this);
         zIndex = z;
+        parentScene.addGameObjectToScene(this);
     }
 
     public String name() {

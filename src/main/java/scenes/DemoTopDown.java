@@ -33,7 +33,7 @@ public class DemoTopDown extends Scene {
     GameObject greenLight;
     GameObject trRes;
     BloomEffect bloom;
-    boolean added = true;
+	boolean flip = true;
 
     public static void main(String[] args) {
         Engine.init(1080, 720, "Azurite Engine Demo 1", 0.01f);
@@ -75,7 +75,6 @@ public class DemoTopDown extends Scene {
         greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
-        bloom.init();
     }
 
     public void update() {
@@ -84,6 +83,8 @@ public class DemoTopDown extends Scene {
         if (booper.getComponent(PointLight.class) != null)
             booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
         greenLight.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
+
+		player.getTransform().addRotation(1);
 
         camera.smoothFollow(player.getRawTransform());
         if (Keyboard.getKeyDown(Keys.AZ_KEY_SPACE)) {
@@ -95,13 +96,22 @@ public class DemoTopDown extends Scene {
 //                added = true;
 //            }
 
-            if (added) {
-                removeGameObjectFromScene(booper);
-                added = false;
-            } else {
-                addGameObjectToScene(booper);
-                added = true;
-            }
+			if (flip) {
+//				removeGameObjectFromScene(booper);
+//				flip = false;
+//			} else {
+//				addGameObjectToScene(booper);
+//				flip = true;
+//			}
+
+//			if (flip) {
+//				booper.setZindex(1);
+//				flip = false;
+//			} else {
+//				booper.setZindex(2);
+//				flip = true;
+//			}
+
         }
 
     }

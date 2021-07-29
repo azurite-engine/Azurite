@@ -3,7 +3,7 @@ package physics;
 import org.joml.Vector2f;
 
 /**
- * Represents the position in X and Y coordinates, and the scale (width and height) of a gameObject
+ * Represents the position in X and Y coordinates,rotation and the scale (width and height) of a gameObject
  * TODO: change to a component? - no don't do that
  */
 public class Transform {
@@ -12,21 +12,30 @@ public class Transform {
     public Vector2f scale;
     private Vector2f position;
     private Vector2f positionBuffer;
+    private float rotation;
 
     /**
      * Creates a new empty transform.
      */
     public Transform() {
-        init(new Vector2f(), new Vector2f());
+        init(new Vector2f(),0, new Vector2f());
     }
 
     /**
      * If only the position is passed, the scale is not, scale is created as an empty Vector2f.
-     *
      * @param position X and Y coordinates as a Vector2f
      */
-    public Transform(Vector2f position) {
-        init(position, new Vector2f());
+    public Transform (Vector2f position) {
+        init(position, 0, new Vector2f());
+    }
+
+    /**
+     * If only the position is passed, the scale is not, scale is created as an empty Vector2f.
+     * @param position X and Y coordinates as a Vector2f
+     * @param rotation Rotation of the object in degrees
+     */
+    public Transform(Vector2f position, float rotation) {
+        init(position,rotation, new Vector2f());
     }
 
     /**
@@ -34,7 +43,16 @@ public class Transform {
      * @param scale    scale (width and height) of the object as a Vector2f
      */
     public Transform(Vector2f position, Vector2f scale) {
-        init(position, scale);
+        init(position,0, scale);
+    }
+
+    /**
+     * @param position X and Y coordinates as a Vector2f
+     * @param rotation Rotation of the object in degrees
+     * @param scale scale (width and height) of the object as a Vector2f
+     */
+    public Transform (Vector2f position, float rotation, Vector2f scale) {
+        init(position, rotation, scale);
     }
 
     /**
@@ -44,19 +62,30 @@ public class Transform {
      * @param h height of the object
      */
     public Transform(float x, float y, float w, float h) {
-        init(new Vector2f(x, y), new Vector2f(w, h));
+        init(new Vector2f(x, y),0, new Vector2f(w, h));
+    }
+
+    /**
+     * @param x X coordinate of the object
+     * @param y Y coordinate of the object
+     * @param r Rotation of the object in degrees
+     * @param w width of the object
+     * @param h height of the object
+     */
+    public Transform (float x, float y, float r, float w, float h) {
+        init(new Vector2f(x, y), r, new Vector2f(w, h));
     }
 
     /**
      * Used in constructors to initialize the object.
-     *
      * @param position
+     * @param rotation
      * @param scale
      */
-    private void init(Vector2f position, Vector2f scale) {
+    private void init (Vector2f position, float rotation, Vector2f scale) {
         this.position = position;
+        this.rotation = rotation;
         this.scale = scale;
-        this.positionBuffer = new Vector2f();
     }
 
     /**
@@ -73,6 +102,7 @@ public class Transform {
      */
     public void copy(Transform to) {
         to.position.set(this.position);
+        to.rotation = this.rotation;
         to.scale.set(this.scale);
     }
 
@@ -91,7 +121,7 @@ public class Transform {
             return false;
         }
         Transform t = (Transform) o;
-        return t.position.equals(this.position) && t.scale.equals(this.scale);
+        return t.position.equals(this.position) && t.rotation == this.rotation && t.scale.equals(this.scale);
     }
 
     public void resetPositionBuffer() {
@@ -129,6 +159,22 @@ public class Transform {
 
     public float getHeight() {
         return this.scale.y;
+    }
+
+    public float getRotation() {
+        return this.rotation;
+    }
+
+    public float getRotationRadians() {
+        return (float) Math.toRadians(this.rotation);
+    }
+
+    public void setRotation(float r) {
+        this.rotation = r;
+    }
+
+    public void addRotation(float r) {
+        this.rotation += r;
     }
 
     public Vector2f getPosition() {
