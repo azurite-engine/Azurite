@@ -44,6 +44,8 @@ public class DefaultRenderBatch extends RenderBatch {
         else
             textureID = 0;
 
+        int primitiveVerticesOffset = 0;
+
         // Add vertex with the appropriate properties
         float xAdd = 1.0f;
         float yAdd = 1.0f;

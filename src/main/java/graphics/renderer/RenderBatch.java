@@ -237,10 +237,9 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
     public void updateBuffer(int spriteIndex) {
         //Create a pointer to a buffer memory where the mapping will begin
         FloatBuffer vertexPtr;
-
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        vertexPtr = Objects.requireNonNull(glMapBufferRange(GL_ARRAY_BUFFER, spriteIndex * vertexSize * Float.BYTES,
-                vertexSize * Float.BYTES, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT))
+        vertexPtr = Objects.requireNonNull(glMapBufferRange(GL_ARRAY_BUFFER, spriteIndex * primitive.vertexCount * vertexSize,
+                primitive.vertexCount * vertexSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT))
                 .order(ByteOrder.nativeOrder()).asFloatBuffer();
         load(spriteIndex);
 

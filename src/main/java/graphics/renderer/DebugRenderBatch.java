@@ -38,12 +38,26 @@ public class DebugRenderBatch extends RenderBatch {
         data[offset + 4] = color.z;
         data[offset + 5] = color.w;
 
+        primitiveVertices[0] = data[offset];
+        primitiveVertices[1] = data[offset + 1];
+        primitiveVertices[2] = data[offset + 2];
+        primitiveVertices[3] = data[offset + 3];
+        primitiveVertices[4] = data[offset + 4];
+        primitiveVertices[5] = data[offset + 5];
+
         data[offset + 6] = line.end.x;
         data[offset + 7] = line.end.y;
         data[offset + 8] = color.x;
         data[offset + 9] = color.y;
         data[offset + 10] = color.z;
         data[offset + 11] = color.w;
+
+        primitiveVertices[6] = data[offset + 6];
+        primitiveVertices[7] = data[offset + 7];
+        primitiveVertices[8] = data[offset + 8];
+        primitiveVertices[9] = data[offset + 9];
+        primitiveVertices[10] = data[offset + 10];
+        primitiveVertices[11] = data[offset + 11];
     }
 
     /**
@@ -55,13 +69,12 @@ public class DebugRenderBatch extends RenderBatch {
         for (int i = 0; i < lines.size(); i++) {
             DebugLine line = lines.get(i);
             if (line.isDirty()) {
-                load(i);
+                super.updateBuffer(i);
                 update = true;
                 line.markClean();
             }
         }
-        if (update)
-            super.updateBufferFull();
+//		if (update) super.updateBufferFull();
     }
 
     /**

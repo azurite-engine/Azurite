@@ -52,6 +52,7 @@ public class DebugLine extends RenderableComponent<DebugRenderBatch> {
         this.start = start;
         this.end = end;
         this.color = color;
+        markDirty();
     }
 
     /**
