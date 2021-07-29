@@ -33,7 +33,7 @@ public class DemoTopDown extends Scene {
     GameObject greenLight;
     GameObject trRes;
     BloomEffect bloom;
-	boolean flip = true;
+    boolean flip = true;
 
     public static void main(String[] args) {
         Engine.init(1080, 720, "Azurite Engine Demo 1", 0.01f);
@@ -84,7 +84,8 @@ public class DemoTopDown extends Scene {
             booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
         greenLight.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 
-		player.getTransform().addRotation(1);
+        //TODO this is not clean
+        player.getRawTransform().addRotation(1);
 
         camera.smoothFollow(player.getRawTransform());
         if (Keyboard.getKeyDown(Keys.AZ_KEY_SPACE)) {
@@ -96,7 +97,7 @@ public class DemoTopDown extends Scene {
 //                added = true;
 //            }
 
-			if (flip) {
+//            if (flip) {
 //				removeGameObjectFromScene(booper);
 //				flip = false;
 //			} else {
@@ -112,12 +113,12 @@ public class DemoTopDown extends Scene {
 //				flip = true;
 //			}
 
+            }
+
         }
 
+        @Override
+        public void postProcess (Texture texture){
+            bloom.apply(texture);
+        }
     }
-
-    @Override
-    public void postProcess(Texture texture) {
-        bloom.apply(texture);
-    }
-}

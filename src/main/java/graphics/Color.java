@@ -55,6 +55,7 @@ public class Color {
      * Alpha component for this color. Range: 0-255
      */
     public float a;
+
     /**
      * Creates new color with specified rgba values
      *

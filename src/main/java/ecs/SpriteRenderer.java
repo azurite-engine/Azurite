@@ -113,10 +113,10 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
         return false;
     }
 
-	@Override
-	public void remove() {
-		getBatch().getRenderer().remove(this.gameObject);
-	}
+    @Override
+    public void remove() {
+        getBatch().getRenderer().remove(this.gameObject);
+    }
 
     /**
      * @return type Texture of the sprite if applicable.

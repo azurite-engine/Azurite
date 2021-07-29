@@ -25,31 +25,6 @@ public class CharacterController extends Component {
         this.order = SpriteRenderer.ORDER - 5;
     }
 
-    public void setSpeedModifier(float speedModifier) {
-        this.speedModifier = speedModifier;
-    }
-
-    @Override
-    public void update(float dt) {
-
-        boolean change;
-
-        change = keys[0] != (keys[0] = Keyboard.getKeyDown(Keyboard.A_KEY) || Keyboard.getKeyHeld(Keyboard.A_KEY));
-        change = change || keys[1] != (keys[1] = Keyboard.getKeyDown(Keyboard.D_KEY) || Keyboard.getKeyHeld(Keyboard.D_KEY));
-        change = change || keys[2] != (keys[2] = Keyboard.getKeyDown(Keyboard.W_KEY) || Keyboard.getKeyHeld(Keyboard.W_KEY));
-        change = change || keys[3] != (keys[3] = Keyboard.getKeyDown(Keyboard.S_KEY) || Keyboard.getKeyHeld(Keyboard.S_KEY));
-
-        //if something changed, update input
-        if (change)
-            changeInputEvent.accept(this);
-
-    }
-
-    public boolean isKeyUsed(int key) {
-        if (key < 0 || key > 3) return false;
-        return keys[key];
-    }
-
     public static Consumer<CharacterController> standardPlatformer(RigidBody body) {
         return new Consumer<CharacterController>() {
             Vector2f lastDirection = new Vector2f(0, 0);
@@ -103,6 +78,31 @@ public class CharacterController extends Component {
                 body.velocity().add(direction);
             }
         };
+    }
+
+    public void setSpeedModifier(float speedModifier) {
+        this.speedModifier = speedModifier;
+    }
+
+    @Override
+    public void update(float dt) {
+
+        boolean change;
+
+        change = keys[0] != (keys[0] = Keyboard.getKeyDown(Keyboard.A_KEY) || Keyboard.getKeyHeld(Keyboard.A_KEY));
+        change = change || keys[1] != (keys[1] = Keyboard.getKeyDown(Keyboard.D_KEY) || Keyboard.getKeyHeld(Keyboard.D_KEY));
+        change = change || keys[2] != (keys[2] = Keyboard.getKeyDown(Keyboard.W_KEY) || Keyboard.getKeyHeld(Keyboard.W_KEY));
+        change = change || keys[3] != (keys[3] = Keyboard.getKeyDown(Keyboard.S_KEY) || Keyboard.getKeyHeld(Keyboard.S_KEY));
+
+        //if something changed, update input
+        if (change)
+            changeInputEvent.accept(this);
+
+    }
+
+    public boolean isKeyUsed(int key) {
+        if (key < 0 || key > 3) return false;
+        return keys[key];
     }
 
 }

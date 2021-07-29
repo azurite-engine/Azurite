@@ -4,7 +4,6 @@ import ecs.SpriteRenderer;
 import graphics.Primitive;
 import graphics.ShaderDatatype;
 import graphics.Texture;
-import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import physics.Transform;
@@ -45,32 +44,32 @@ public class DefaultRenderBatch extends RenderBatch {
         else
             textureID = 0;
 
-		// Add vertex with the appropriate properties
-		float xAdd = 0.5f;
-		float yAdd = 0.5f;
-		for (int i = 0; i < 4; i++) {
-			switch (i) {
-				case 1:
-					yAdd = -0.5f;
-					break;
-				case 2:
-					xAdd = -0.5f;
-					break;
-				case 3:
-					yAdd = 0.5f;
-					break;
-			}
+        // Add vertex with the appropriate properties
+        float xAdd = 0.5f;
+        float yAdd = 0.5f;
+        for (int i = 0; i < 4; i++) {
+            switch (i) {
+                case 1:
+                    yAdd = -0.5f;
+                    break;
+                case 2:
+                    xAdd = -0.5f;
+                    break;
+                case 3:
+                    yAdd = 0.5f;
+                    break;
+            }
 
-			// Load position
-			Transform spr = sprite.gameObject.getReadOnlyTransform();
+            // Load position
+            Transform spr = sprite.gameObject.getReadOnlyTransform();
 
-			float scaledX = (xAdd * spr.scale.x);
-			float scaledY = (yAdd * spr.scale.y);
+            float scaledX = (xAdd * spr.scale.x);
+            float scaledY = (yAdd * spr.scale.y);
 
-			data[offset] = spr.position.x + (float) ((Math.cos(spr.getRotationRadians()) * scaledX)
-					- (Math.sin(spr.getRotationRadians()) * scaledY));
-			data[offset + 1] = spr.position.y + (float) ((Math.sin(spr.getRotationRadians()) * scaledX)
-					+ (Math.cos(spr.getRotationRadians()) * scaledY));
+            data[offset] = spr.getPosition().x + (float) ((Math.cos(spr.getRotationRadians()) * scaledX)
+                    - (Math.sin(spr.getRotationRadians()) * scaledY));
+            data[offset + 1] = spr.getPosition().y + (float) ((Math.sin(spr.getRotationRadians()) * scaledX)
+                    + (Math.cos(spr.getRotationRadians()) * scaledY));
 
             primitiveVertices[primitiveVerticesOffset] = data[offset];
             primitiveVertices[primitiveVerticesOffset + 1] = data[offset + 1];

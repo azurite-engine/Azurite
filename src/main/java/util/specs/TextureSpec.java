@@ -15,13 +15,16 @@ public class TextureSpec {
     public final TextureWrapFilterType rFilter;
     public final TextureWrapFilterType sFilter;
     public final TextureWrapFilterType tFilter;
+
     // Beyond this, just some overloaded constructors for easy Spec construction
     public TextureSpec() {
         this(TextureFormat.NONE);
     }
+
     public TextureSpec(TextureFormat format) {
         this(format, TextureResizeFilterType.LINEAR, TextureResizeFilterType.LINEAR);
     }
+
     public TextureSpec(TextureFormat format, TextureResizeFilterType minificationFilter, TextureResizeFilterType magnificationFilter) {
         this(format, minificationFilter, magnificationFilter, TextureWrapFilterType.CLAMP_TO_EDGE);
     }

@@ -73,7 +73,7 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
         if (spr != null) {
             spr.markDirty();
             spr.remove();
-			spr.getBatch().removeSprite(spr);
+            spr.getBatch().removeSprite(spr);
         }
     }
 
@@ -98,7 +98,7 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
         }
         // If unable to add to previous batch, create a new one
         DefaultRenderBatch newBatch = new DefaultRenderBatch(MAX_BATCH_SIZE, sprite.gameObject.zIndex());
-		newBatch.setRenderer(this);
+        newBatch.setRenderer(this);
         newBatch.start();
         batches.add(newBatch);
         newBatch.addSprite(sprite);
