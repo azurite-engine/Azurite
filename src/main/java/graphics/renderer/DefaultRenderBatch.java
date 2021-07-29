@@ -26,9 +26,8 @@ public class DefaultRenderBatch extends RenderBatch {
         this.primitiveVertices = new float[vertexCount * 4];
     }
 
-    //FIXME this method breaks everything, since the origin of an object is NOT the center - calculate it instead of redefining it!
     /**
-     * This function figures out how to add vertices with an origin at the center
+     * This function figures out how to add vertices with an origin at the top left
      *
      * @param index  index of the primitive to be loaded
      * @param offset offset of where the primitive should start being added to the array
@@ -45,32 +44,28 @@ public class DefaultRenderBatch extends RenderBatch {
         else
             textureID = 0;
 
+        int primitiveVerticesOffset = 0;
+
         // Add vertex with the appropriate properties
-        float xAdd = 0.5f;
-        float yAdd = 0.5f;
+        float xAdd = 1.0f;
+        float yAdd = 1.0f;
         for (int i = 0; i < 4; i++) {
             switch (i) {
                 case 1:
-                    yAdd = -0.5f;
+                    yAdd = 0.0f;
                     break;
                 case 2:
-                    xAdd = -0.5f;
+                    xAdd = 0.0f;
                     break;
                 case 3:
-                    yAdd = 0.5f;
+                    yAdd = 1.0f;
                     break;
             }
 
             // Load position
             Transform spr = sprite.gameObject.getReadOnlyTransform();
-
-            float scaledX = (xAdd * spr.scale.x);
-            float scaledY = (yAdd * spr.scale.y);
-
-            data[offset] = spr.getPosition().x + (float) ((Math.cos(spr.getRotationRadians()) * scaledX)
-                    - (Math.sin(spr.getRotationRadians()) * scaledY));
-            data[offset + 1] = spr.getPosition().y + (float) ((Math.sin(spr.getRotationRadians()) * scaledX)
-                    + (Math.cos(spr.getRotationRadians()) * scaledY));
+            data[offset] = spr.getPosition().x + (xAdd * spr.scale.x);
+            data[offset + 1] = spr.getPosition().y + (yAdd * spr.scale.y);
 
             primitiveVertices[primitiveVerticesOffset] = data[offset];
             primitiveVertices[primitiveVerticesOffset + 1] = data[offset + 1];
