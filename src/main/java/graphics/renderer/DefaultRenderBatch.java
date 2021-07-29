@@ -26,6 +26,7 @@ public class DefaultRenderBatch extends RenderBatch {
         this.primitiveVertices = new float[vertexCount * 4];
     }
 
+    //FIXME this method breaks everything, since the origin of an object is NOT the center - calculate it instead of redefining it!
     /**
      * This function figures out how to add vertices with an origin at the center
      *
