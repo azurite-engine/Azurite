@@ -6,9 +6,7 @@ import graphics.Color;
 import graphics.Texture;
 import io.JSONInstance;
 import io.JSONParser;
-import io.jsonfields.JSONArray;
-import io.jsonfields.JSONObject;
-import io.jsonfields.jsonprimitives.*;
+import io.SerializationTest;
 import physics.AABB;
 import physics.Gravity;
 import physics.Transform;
@@ -21,6 +19,10 @@ import util.Assets;
 import util.Engine;
 import util.Logger;
 import util.Utils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static graphics.Graphics.setDefaultBackground;
 
@@ -62,26 +64,16 @@ public class DemoPlatformer extends Scene {
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         bloom.init();
 
-        JSONInstance jsonInstance = new JSONInstance();
-        jsonInstance.addField(new JSONString("test1", "testValue"));
-        jsonInstance.addField(new JSONInteger("test2", 69));
-        jsonInstance.addField(new JSONFloat("test3", 69.420f));
-        jsonInstance.addField(new JSONChar("test4", 'a'));
-        jsonInstance.addField(new JSONBoolean("test5", true));
+        List<String> l = new ArrayList<>();
+        l.add("lElement1");
+        l.add("lElement2");
+        l.add("lElement3");
+        l.add("lElement4");
+        l.add("lElement5");
 
-        JSONObject object = new JSONObject("test6");
-        object.addField(new JSONChar("objectTest1", 's'));
-        object.addField(new JSONInteger("objectTest2", 123));
-        object.addField(new JSONBoolean("objectTest3", true));
-        object.addField(new JSONLong("objectTest4", 123456789L));
-        object.addField(new JSONString("objectTest5", "testValue1"));
+        SerializationTest test = new SerializationTest(69, true, 'c', "sss", l);
 
-        jsonInstance.addField(object);
-
-        JSONInstance jsonInstance1 = new JSONInstance(player);
-
-        JSONParser.setPrettyPrint(true);
-        System.out.println(JSONParser.parse(jsonInstance1));
+        System.out.println(JSONParser.serialize(new JSONInstance(test)));
     }
 
     int r;
