@@ -1,6 +1,9 @@
 package scenes;
 
-import ecs.*;
+import ecs.CharacterControllerGravity;
+import ecs.GameObject;
+import ecs.PointLight;
+import ecs.SpriteRenderer;
 import graphics.Camera;
 import graphics.Color;
 import graphics.Texture;
@@ -21,7 +24,7 @@ import static graphics.Graphics.setDefaultBackground;
 
 public class DemoPlatformer extends Scene {
     public static void main(String[] args) {
-        Engine.init(1366, 768, "Azurite Engine Demo 2");
+        Engine.init("Azurite Engine Demo 2", 1.0f);
         Engine.scenes().switchScene(new DemoPlatformer(), true);
         Engine.showWindow();
     }
@@ -60,9 +63,9 @@ public class DemoPlatformer extends Scene {
 
     int r;
     int i = 1;
+
     public void update() {
         super.update();
-
         player.getComponent(PointLight.class).intensity = Utils.map((float) Math.sin(Engine.millisRunning() / 600), -1, 1, 80, 120);
         booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 

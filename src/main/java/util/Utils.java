@@ -38,7 +38,7 @@ public class Utils {
     }
 
     /**
-     * This is for people who are too lazy to even import Math, but do want to import util.Utils. ¯\_(ツ) wdsa_/¯
+     * This is for people who are too lazy to even import Math, but do want to import util.Utils. ¯\_(ツ)_/¯
      * @param x Number to be rounded
      * @return Returns the rounded number "x".
      */
