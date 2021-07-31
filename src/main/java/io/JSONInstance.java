@@ -36,7 +36,7 @@ public class JSONInstance {
                     fields.add(new JSONField((Object[]) field.get(object), field.getName(), field.getType()));
                 }
                 else if(field.getType().isAssignableFrom(List.class)) {
-
+                    fields.add(new JSONField(((List<?>) field.get(object)).toArray(), field.getName(), field.getType()));
                 }
                 else {
                     fields.add(new JSONField(field.get(object), field.getName(), field.getType()));

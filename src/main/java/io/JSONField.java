@@ -55,7 +55,7 @@ public class JSONField {
                     generatedFields.add(new JSONField((Object[]) field.get(value), field.getName(), field.getType()));
                 }
                 else if(field.getType().isAssignableFrom(List.class)) {
-                    continue;
+                    generatedFields.add(new JSONField(((List<?>) field.get(value)).toArray(), field.getName(), field.getType()));
                 }
                 else {
                     generatedFields.add(new JSONField(field.get(value), field.getName(), field.getType()));
