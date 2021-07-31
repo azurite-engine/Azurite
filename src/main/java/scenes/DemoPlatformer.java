@@ -4,9 +4,6 @@ import ecs.*;
 import graphics.Camera;
 import graphics.Color;
 import graphics.Texture;
-import io.JSONInstance;
-import io.JSONParser;
-import io.SerializationTest;
 import physics.AABB;
 import physics.Gravity;
 import physics.Transform;
@@ -19,8 +16,6 @@ import util.Assets;
 import util.Engine;
 import util.Logger;
 import util.Utils;
-
-import java.util.Collections;
 
 import static graphics.Graphics.setDefaultBackground;
 
