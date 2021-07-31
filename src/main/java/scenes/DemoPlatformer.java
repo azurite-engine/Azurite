@@ -20,9 +20,7 @@ import util.Engine;
 import util.Logger;
 import util.Utils;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 import static graphics.Graphics.setDefaultBackground;
 
@@ -63,22 +61,10 @@ public class DemoPlatformer extends Scene {
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         bloom.init();
-
-        List<String> l = new ArrayList<>();
-        l.add("lElement1");
-        l.add("lElement2");
-        l.add("lElement3");
-        l.add("lElement4");
-        l.add("lElement5");
-
-        SerializationTest test = new SerializationTest(69, true, 'c', "sss", l);
-
-        System.out.println(JSONParser.serialize(new JSONInstance(test)));
     }
 
     int r;
     int i = 1;
-
     public void update() {
         super.update();
 

@@ -1,16 +1,5 @@
 package io;
-
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Target;
 import java.util.List;
-
-@Target(ElementType.FIELD)
-@interface NoSerialize { }
-
-@Target(ElementType.FIELD)
-@interface CustomSerialize {
-    String value();
-}
 
 public final class JSONParser {
     private static boolean prettyPrint = true;
@@ -41,6 +30,10 @@ public final class JSONParser {
                 }
                 else if(field.getType().isAssignableFrom(String.class)) {
                     stringBuilder.append(tabs(numTabs + 1)).append(string(field.getName(), (String) field.getValue()))
+                            .append(endLine(!isLastField));
+                }
+                else if(field.getType().isAssignableFrom(List.class)) {
+                    stringBuilder.append(tabs(numTabs + 1)).append(array(field.getName(), field.getFields(), numTabs))
                             .append(endLine(!isLastField));
                 }
                 else if(field.isPrimitive()) {
@@ -94,6 +87,8 @@ public final class JSONParser {
             stringBuilder.append(prettyPrint ? "{\n" : "{ ");
         }
 
+        System.out.println("sss");
+
         int numTabs = tabs + 1;
 
         try {
@@ -115,6 +110,10 @@ public final class JSONParser {
                 }
                 else if(field.getType().isAssignableFrom(String.class)) {
                     stringBuilder.append(tabs(numTabs + 1)).append(string(field.getName(), (String) field.getValue()))
+                            .append(endLine(!isLastField));
+                }
+                else if(field.getType().isAssignableFrom(List.class)) {
+                    stringBuilder.append(tabs(numTabs + 1)).append(array(field.getName(), field.getFields(), numTabs))
                             .append(endLine(!isLastField));
                 }
                 else if(field.isPrimitive()) {
@@ -188,7 +187,9 @@ public final class JSONParser {
         StringBuilder stringBuilder = new StringBuilder();
 
         for(int i = 0; i < numTabs; i++) {
-            stringBuilder.append(prettyPrint ? "\t" : " ");
+            if(prettyPrint) {
+                stringBuilder.append("\t");
+            }
         }
 
         return stringBuilder.toString();
