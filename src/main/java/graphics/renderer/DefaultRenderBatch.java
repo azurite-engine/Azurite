@@ -63,9 +63,16 @@ public class DefaultRenderBatch extends RenderBatch {
             }
 
             // Load position
-            Transform spr = sprite.gameObject.getReadOnlyTransform();
-            data[offset] = spr.getPosition().x + (xAdd * spr.scale.x);
-            data[offset + 1] = spr.getPosition().y + (yAdd * spr.scale.y);
+            Transform spr = sprite.gameObject.getTransform();
+
+            Vector2f shifted = spr.position.add(spr.getScale().div(2, new Vector2f()), new Vector2f());
+            float scaledX = (xAdd * spr.scale.x);
+            float scaledY = (yAdd * spr.scale.y);
+
+            data[offset] = shifted.x + (float) ((Math.cos(spr.getRotationRadians()) * scaledX)
+                    - (Math.sin(spr.getRotationRadians()) * scaledY));
+            data[offset + 1] = shifted.y + (float) ((Math.sin(spr.getRotationRadians()) * scaledX)
+                    + (Math.cos(spr.getRotationRadians()) * scaledY));
 
             primitiveVertices[primitiveVerticesOffset] = data[offset];
             primitiveVertices[primitiveVerticesOffset + 1] = data[offset + 1];

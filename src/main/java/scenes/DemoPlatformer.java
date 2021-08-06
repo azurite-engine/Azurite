@@ -50,6 +50,7 @@ public class DemoPlatformer extends Scene {
         player.addComponent(playerBody);
         player.addComponent(new SpriteRenderer(a.getSprite(132)));
         player.addComponent(new CharacterController(CharacterController.standardPlatformer(playerBody), 1));
+        player.getRawTransform().setRotation(90);
 
         booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
         booper.addComponent(new SpriteRenderer(a.getSprite(150)));

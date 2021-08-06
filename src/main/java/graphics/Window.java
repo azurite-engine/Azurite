@@ -26,6 +26,7 @@ public class Window {
     // Window Variables
     private long frameCount = 0;
     private String title;
+    private boolean sleeping = false;
 
     public Window(int pwidth, int pheight, String ptitle, boolean fullscreen, float minSceneLighting, boolean recalculateProjectionOnResize) {
         videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -86,26 +87,6 @@ public class Window {
         this(ptitle, false);
     }
 
-    public static long glfwWindow() {
-        return glfwWindow;
-    }
-
-    public static int getWidth() {
-        return width;
-    }
-
-    private static void setWidth(int newWidth) {
-        width = newWidth;
-    }
-
-    public static int getHeight() {
-        return height;
-    }
-
-    private static void setHeight(int newHeight) {
-        height = newHeight;
-    }
-
     private void initWindow(int width, int height, String title, long monitor) {
         // Create window
         glfwWindow = glfwCreateWindow(width, height, title, monitor, 0);
@@ -115,6 +96,11 @@ public class Window {
 
         // Set up callback
         glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
+            if (newWidth == 0 || newHeight == 0) {
+                sleeping = true;
+                return;
+            }
+            sleeping = false;
             Window.setWidth(newWidth);
             Window.setHeight(newHeight);
 
@@ -172,19 +158,18 @@ public class Window {
             frameEndTime = glfwGetTime();
             Engine.updateDeltaTime((float) (frameEndTime - frameBeginTime));
             frameBeginTime = frameEndTime;
-
-            Mouse.update();
-            // poll GLFW for input events
             glfwPollEvents();
 
-            sceneManager.update();
-            sceneManager.updateGameObjects();
-            sceneManager.render();
-            PostProcessing.prepare();
-            sceneManager.postProcess(currentScene().renderer.fetchColorAttachment(0));
-            PostProcessing.finish();
-            sceneManager.debugRender();
-
+            if (!sleeping) {
+                Mouse.update();
+                sceneManager.update();
+                sceneManager.updateGameObjects();
+                sceneManager.render();
+                PostProcessing.prepare();
+                sceneManager.postProcess(currentScene().renderer.fetchColorAttachment(0));
+                PostProcessing.finish();
+                sceneManager.debugRender();
+            }
             glfwSwapBuffers(glfwWindow);
             getFPS();
         }
