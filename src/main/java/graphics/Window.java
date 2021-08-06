@@ -23,6 +23,7 @@ public class Window {
     private long frameCount = 0;
 
     private String title;
+    private boolean sleeping = false;
     private static long glfwWindow;
     private final GLFWVidMode videoMode;
 
@@ -98,6 +99,11 @@ public class Window {
 
         // Set up callback
         glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
+            if (newWidth == 0 || newHeight == 0) {
+                sleeping = true;
+                return;
+            }
+            sleeping = false;
             Window.setWidth(newWidth);
             Window.setHeight(newHeight);
 
@@ -159,20 +165,20 @@ public class Window {
             frameEndTime = glfwGetTime();
             Engine.updateDeltaTime((float) (frameEndTime - frameBeginTime));
             frameBeginTime = frameEndTime;
-
-            Mouse.update();
-            Keyboard.update();
-            // poll GLFW for input events
             glfwPollEvents();
+            if (!sleeping) {
+                Mouse.update();
+                Keyboard.update();
+                // poll GLFW for input events
 
-            sceneManager.update();
-            sceneManager.updateGameObjects();
-            sceneManager.render();
-            PostProcessing.prepare();
-            sceneManager.postProcess(currentScene().renderer.fetchColorAttachment(0));
-            PostProcessing.finish();
-            sceneManager.debugRender();
-
+                sceneManager.update();
+                sceneManager.updateGameObjects();
+                sceneManager.render();
+                PostProcessing.prepare();
+                sceneManager.postProcess(currentScene().renderer.fetchColorAttachment(0));
+                PostProcessing.finish();
+                sceneManager.debugRender();
+            }
             glfwSwapBuffers(glfwWindow);
             getFPS();
         }
