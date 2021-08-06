@@ -63,9 +63,9 @@ public class DefaultRenderBatch extends RenderBatch {
             }
 
             // Load position
-            Transform spr = sprite.gameObject.getTransform();
+            Transform spr = sprite.gameObject.getReadOnlyTransform();
 
-            Vector2f shifted = spr.position.add(spr.getScale().div(2, new Vector2f()), new Vector2f());
+            Vector2f shifted = spr.getPosition().add(spr.getScale().div(2, new Vector2f()), new Vector2f());
             float scaledX = (xAdd * spr.scale.x);
             float scaledY = (yAdd * spr.scale.y);
 

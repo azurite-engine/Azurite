@@ -101,8 +101,8 @@ public class Window {
                 return;
             }
             sleeping = false;
-            Window.setWidth(newWidth);
-            Window.setHeight(newHeight);
+            Window.width = newWidth;
+            Window.height = newHeight;
 
             if (recalculateProjectionOnResize && currentScene().camera() != null)
                 currentScene().camera().adjustProjection();
