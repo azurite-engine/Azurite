@@ -134,6 +134,18 @@ public class Window {
         return title;
     }
 
+    public static int getHeight() {
+        return height;
+    }
+
+    public static int getWidth() {
+        return width;
+    }
+
+    public static long glfwWindow() {
+        return glfwWindow;
+    }
+
     public void setTitle(String title) {
         this.title = title;
         glfwSetWindowTitle(glfwWindow, title);
