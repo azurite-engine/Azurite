@@ -4,6 +4,7 @@ import ecs.SpriteRenderer;
 import graphics.Primitive;
 import graphics.ShaderDatatype;
 import graphics.Texture;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import physics.Transform;
@@ -27,7 +28,7 @@ public class DefaultRenderBatch extends RenderBatch {
 	}
 
 	/**
-	 * This function figures out how to add vertices with an origin at the top left
+	 * This function figures out how to add vertices with an origin at the center
 	 *
 	 * @param index  index of the primitive to be loaded
 	 * @param offset offset of where the primitive should start being added to the array
@@ -45,25 +46,31 @@ public class DefaultRenderBatch extends RenderBatch {
 			textureID = 0;
 
 		// Add vertex with the appropriate properties
-		float xAdd = 1.0f;
-		float yAdd = 1.0f;
+		float xAdd = 0.5f;
+		float yAdd = 0.5f;
 		for (int i = 0; i < 4; i++) {
 			switch (i) {
 				case 1:
-					yAdd = 0.0f;
+					yAdd = -0.5f;
 					break;
 				case 2:
-					xAdd = 0.0f;
+					xAdd = -0.5f;
 					break;
 				case 3:
-					yAdd = 1.0f;
+					yAdd = 0.5f;
 					break;
 			}
 
 			// Load position
 			Transform spr = sprite.gameObject.getTransform();
-			data[offset] = spr.position.x + (xAdd * spr.scale.x);
-			data[offset + 1] = spr.position.y + (yAdd * spr.scale.y);
+
+			float scaledX = (xAdd * spr.scale.x);
+			float scaledY = (yAdd * spr.scale.y);
+
+			data[offset] = spr.position.x + (float) ((Math.cos(spr.getRotationRadians()) * scaledX)
+					- (Math.sin(spr.getRotationRadians()) * scaledY));
+			data[offset + 1] = spr.position.y + (float) ((Math.sin(spr.getRotationRadians()) * scaledX)
+					+ (Math.cos(spr.getRotationRadians()) * scaledY));
 
 			primitiveVertices[primitiveVerticesOffset] = data[offset];
 			primitiveVertices[primitiveVerticesOffset + 1] = data[offset + 1];

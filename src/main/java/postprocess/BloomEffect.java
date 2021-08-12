@@ -33,6 +33,7 @@ public class BloomEffect extends PostProcessPipeline {
 	public BloomEffect(PostProcessStep.Target dest, float bloomAmt) {
 		this.dest = dest;
 		this.bloomAmt = bloomAmt;
+		init();
 	}
 
 	/**
