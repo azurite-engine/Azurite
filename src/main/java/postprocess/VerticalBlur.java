@@ -11,6 +11,7 @@ import util.Assets;
  * <p>
  * NOTE: If you want a more blurry texture, consider using Target.ONE_COLOR_HALF_SIZE_TEXTURE_FRAMEBUFFER
  * to get a smaller framebuffer size and in turn, a more blurrier texture
+ * @author VoxelRifts
  */
 public class VerticalBlur extends PostProcessStep {
 	/** Id of input texture */

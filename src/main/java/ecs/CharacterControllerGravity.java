@@ -5,6 +5,10 @@ import org.joml.Vector2f;
 import physics.AABB;
 import util.Engine;
 
+/**
+ * @author Asher Haun
+ * TODO: this will need to be updated once Juyas's PR is merged
+ */
 public class CharacterControllerGravity extends CharacterController {
 
     private float gravity = 9f;

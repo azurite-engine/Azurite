@@ -12,6 +12,9 @@ import java.util.HashMap;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 
+/**
+ * @author GamesWithGabe
+ */
 public class Shader {
 	/** The Shader Program's ID */
 	private int shaderProgramID;

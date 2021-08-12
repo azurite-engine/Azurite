@@ -8,7 +8,8 @@ import graphics.Texture;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
+import static org.lwjgl.opengl.GL11.glDrawElements;
 
 public abstract class Renderer<T extends RenderBatch> {
 	/** Texture slots to be uploaded to the shader. You don't have to upload them in your custom renderer. */

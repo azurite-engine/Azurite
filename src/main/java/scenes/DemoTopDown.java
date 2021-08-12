@@ -20,6 +20,9 @@ import util.Utils;
 
 import static graphics.Graphics.setDefaultBackground;
 
+/**
+ * @author Asher Haun
+ */
 public class DemoTopDown extends Scene {
 	public static void main(String[] args) {
 		Engine.init(1080, 720, "Azurite Engine Demo 1", 0.01f);
@@ -54,8 +57,9 @@ public class DemoTopDown extends Scene {
 		booperSprite = new Animation(1, a.getSprite(132), a.getSprite(150));
 		booper.addComponent(booperSprite);
 		booper.addComponent(new CollisionTrigger(data -> System.out.println("Boop")));
-		booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
-		booper.setTransformY(900);
+		booperLight = new PointLight(new Color(255, 153, 102), 30);
+		booper.addComponent(booperLight);
+
 
 		player = new GameObject(this, "Player", new Transform(600, 600, 90, 100, 100), 2);
 		player.addComponent(new PointLight(new Color(250, 255, 181), 30));

@@ -4,6 +4,8 @@ import static org.lwjgl.opengl.GL11.*;
 
 /**
  * Represents a datatype in GLSL
+ *
+ * @author VoxelRifts
  */
 public enum ShaderDatatype {
 	INT(1, Integer.BYTES, GL_INT),

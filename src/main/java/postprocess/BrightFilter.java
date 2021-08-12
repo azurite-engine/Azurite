@@ -7,6 +7,8 @@ import util.Assets;
 
 /**
  * A Post Processing Step that only renders bright parts of the scene
+ *
+ * @author VoxelRifts
  */
 public class BrightFilter extends PostProcessStep {
 	/** Id of input texture */

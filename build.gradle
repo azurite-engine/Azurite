@@ -41,7 +41,7 @@ application {
 jar {
     manifest {
         attributes(
-                'Main-Class': 'scenes.DemoTopDown',
+                'Main-Class': 'scenes.DemoPlatformer',
         )
     }
 }

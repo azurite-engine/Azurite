@@ -1,12 +1,14 @@
 package scene;
 
 import ecs.GameObject;
+import ecs.Text;
 import graphics.Camera;
 import graphics.Texture;
 import graphics.renderer.DebugRenderer;
 import graphics.renderer.DefaultRenderer;
 import graphics.renderer.LightmapRenderer;
 import graphics.renderer.Renderer;
+import graphics.renderer.TextRenderer;
 import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
 import postprocess.ForwardToTexture;
@@ -14,10 +16,16 @@ import postprocess.PostProcessStep;
 import util.Assets;
 import util.Engine;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author Asher Haun
+ * @author Juyas
+ * @author VoxelRifts
+ */
 public abstract class Scene {
 
     private static int sceneCounter = 0;
@@ -25,13 +33,15 @@ public abstract class Scene {
     public DefaultRenderer renderer = new DefaultRenderer();
     public LightmapRenderer lightmapRenderer = new LightmapRenderer();
     public DebugRenderer debugRenderer = new DebugRenderer();
+    public TextRenderer textRenderer = new TextRenderer();
 
     private List<Renderer<?>> rendererRegistry = new LinkedList<>();
 
     protected Camera camera;
-    private boolean debugMode = true;
+    private boolean debugMode = false;
     private boolean active = false;
     private List<GameObject> gameObjects = new LinkedList<>();
+    private ArrayList<Text> uiObjects = new ArrayList<>();
 
     protected ForwardToTexture forwardToScreen;
 
@@ -91,10 +101,15 @@ public abstract class Scene {
         this.renderer.clean();
         this.lightmapRenderer.clean();
         this.debugRenderer.clean();
+        this.textRenderer.clean();
         rendererRegistry.forEach(Renderer::clean);
     }
 
     // The following methods shouldn't be overridden. For this, added final keyword
+
+    public final void startUi () {
+        textRenderer.init();
+    }
 
     /**
      * The sceneId is meant to represent the instance of a scene as an integer
@@ -122,6 +137,10 @@ public abstract class Scene {
             gameObject.start();
             addToRenderers(gameObject);
         }
+    }
+
+    public void addUiObject (Text t) {
+        uiObjects.add(t);
     }
 
     /**
@@ -199,5 +218,15 @@ public abstract class Scene {
         this.lightmapRenderer.remove(gameObject);
         this.debugRenderer.remove(gameObject);
         rendererRegistry.forEach(r -> r.remove(gameObject));
+    }
+
+    public final void textRender() {
+        textRenderer.render();
+    }
+
+    public void updateUI () {
+        for (Text i : uiObjects) {
+            i.update();
+        }
     }
 }
