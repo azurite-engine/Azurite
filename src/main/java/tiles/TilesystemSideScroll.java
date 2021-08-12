@@ -4,6 +4,7 @@ import ecs.GameObject;
 import ecs.SpriteRenderer;
 import ecs.StaticCollider;
 import graphics.Color;
+import graphics.Window;
 import physics.Transform;
 import physics.collision.Shapes;
 import scene.Scene;
@@ -26,11 +27,6 @@ public class TilesystemSideScroll {
         h = height;
 
         int i = 0;
-
-
-        background = new GameObject(scene, "Background", new Transform(0, 0, xTiles * w, yTiles * h), 0);
-        background.addComponent(new SpriteRenderer(new Color(41, 30, 49)));
-        scene.addGameObjectToScene(background);
 
         for (int x = 0; x < xTiles; x++) {
             for (int y = 0; y < yTiles; y++) {

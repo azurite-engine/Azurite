@@ -5,15 +5,9 @@ import org.joml.Vector2f;
 import physics.Transform;
 import physics.collision.shape.PrimitiveShape;
 import physics.collision.shape.ShapeType;
-import util.Pair;
-import util.Triple;
-import util.Tuple;
-import util.Utils;
+import util.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * <h1>Azurite</h1>
@@ -146,7 +140,14 @@ public class CollisionUtil {
     public static Optional<Vector2f> expandingPolytopeAlgorithm(PrimitiveShape shapeA, PrimitiveShape shapeB, Tuple<Vector2f> simplex) {
         int faceSize = shapeA.vertices() + shapeB.vertices();
         List<Vector2f> polygon = new ArrayList<>(faceSize);
-        polygon.addAll(Arrays.asList(simplex.getContent()));
+
+        Object[] test = simplex.getContent();
+        ArrayList<Vector2f> simplexVertices = new ArrayList<>();
+        for (Object i : test) {
+            simplexVertices.add((Vector2f)i);
+        }
+        polygon.addAll(simplexVertices);
+
         Vector2f normal;
         for (int i = 0; i < faceSize + 1; i++) {
             Triple<Integer, Float, Vector2f> closestFace = closestFaceToOrigin(polygon); //index, dist, norm

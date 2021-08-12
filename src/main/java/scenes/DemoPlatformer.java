@@ -28,14 +28,14 @@ public class DemoPlatformer extends Scene {
     GameObject booper;
 
     public static void main(String[] args) {
-        Engine.init(1200, 900, "Azurite Engine Demo 2", 1.0f);
+        Engine.init(1920, 1080, "Azurite Engine Demo 2", 1.0f);
         Engine.scenes().switchScene(new DemoPlatformer(), true);
         Engine.showWindow();
     }
 
     public void awake() {
         camera = new Camera();
-        setDefaultBackground(new Color(3, 1, 4));
+        setDefaultBackground(new Color(41, 30, 49));
 
         a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0);
         c = new Spritesheet(Assets.getTexture("src/assets/images/platformer.png"), 8, 8, 26, 0);

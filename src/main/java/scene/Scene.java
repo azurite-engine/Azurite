@@ -35,7 +35,7 @@ public abstract class Scene {
     protected Camera camera;
     protected ForwardToTexture forwardToScreen;
     private List<Renderer<?>> rendererRegistry = new LinkedList<>();
-    private boolean debugMode = true;
+    private boolean debugMode = false;
     private boolean active = false;
 
     public boolean isActive() {
