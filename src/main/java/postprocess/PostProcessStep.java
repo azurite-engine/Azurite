@@ -9,8 +9,6 @@ import java.util.function.Supplier;
 
 /**
  * Denotes A Step in Post Processing
- *
- * @author VoxelRifts
  */
 public abstract class PostProcessStep {
 	/** The shader to be used for this step */

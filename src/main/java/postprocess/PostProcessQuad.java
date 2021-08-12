@@ -7,9 +7,6 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.glBindVertexArray;
 import static org.lwjgl.opengl.GL30.glGenVertexArrays;
 
-/***
- * @author VoxelRifts
- */
 public class PostProcessQuad {
 	/** Only one PostProcessQuad can exist */
 	private static PostProcessQuad instance;

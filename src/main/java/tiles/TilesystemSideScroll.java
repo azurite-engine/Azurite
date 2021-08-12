@@ -8,10 +8,6 @@ import physics.Transform;
 import scene.Scene;
 import util.Utils;
 
-// TODO: deprecate this and make a more flexible version that works for both top and side view tilesystems
-/**
- * @author Asher Haun
- */
 public class TilesystemSideScroll {
     Spritesheet sheet;
     GameObject[][] gameObjects = new GameObject[0][0];

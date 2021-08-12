@@ -6,8 +6,6 @@ import util.debug.DebugPrimitive;
 /**
  * Abstract structure for ECS Components.
  * It is highly recommended to use this when implementing any system that can/should be applied to a GameObject.
- *
- * @author GamesWithGabe
  */
 
 public abstract class Component {

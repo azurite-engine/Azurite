@@ -11,15 +11,10 @@ import postprocess.PostProcessing;
 import scene.Scene;
 import scene.SceneManager;
 import util.Engine;
-import util.Utils;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-/**
- * @author Asher Haun
- * @author VoxelRifts
- */
 public class Window {
 
     private SceneManager sceneManager;
@@ -118,12 +113,18 @@ public class Window {
         glfwMakeContextCurrent(glfwWindow);
 
         // Enable V-Sync
-        glfwSwapInterval(1);
+//        glfwSwapInterval(1);
 
         // Center the window
         glfwSetWindowPos(glfwWindow, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
         GL.createCapabilities();
 
+    }
+
+    void getFPS() {
+        //TODO this wont properly display the FPS it will just count up the frames, there is no reset after a second yet
+        frameCount++;
+        glfwSetWindowTitle(glfwWindow, title + " @ " + Math.round((frameCount / (Engine.millisRunning() / 1000))) + " FPS");
     }
 
     public static long glfwWindow() {
@@ -139,13 +140,6 @@ public class Window {
         glfwSetWindowTitle(glfwWindow, title);
     }
 
-    public float getFPS() {
-        //TODO this wont properly display the FPS it will just count up the frames, there is no reset after a second yet
-        float fps = 1/Engine.deltaTime();
-        glfwSetWindowTitle(glfwWindow, title + " @ " + (int)fps + " FPS");
-        return fps;
-    }
-
     public void showWindow() {
         /*
          * scenes.Main game loop
@@ -155,13 +149,14 @@ public class Window {
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        sceneManager.enable();
-
         double frameBeginTime = glfwGetTime();
-        double frameEndTime = glfwGetTime();
+        double frameEndTime;
+
+        sceneManager.enable();
 
         while (!glfwWindowShouldClose(glfwWindow)) {
 
+            frameEndTime = glfwGetTime();
             Engine.updateDeltaTime((float) (frameEndTime - frameBeginTime));
             frameBeginTime = frameEndTime;
 
@@ -177,11 +172,9 @@ public class Window {
             sceneManager.postProcess(currentScene().renderer.fetchColorAttachment(0));
             PostProcessing.finish();
             sceneManager.debugRender();
-            sceneManager.updateUI();
 
             glfwSwapBuffers(glfwWindow);
             getFPS();
-            frameEndTime = glfwGetTime();
         }
 
         currentScene().clean();

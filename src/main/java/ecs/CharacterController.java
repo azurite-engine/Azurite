@@ -5,10 +5,6 @@ import org.joml.Vector2f;
 import physics.AABB;
 import util.Engine;
 
-/**
- * @author Asher Haun
- * TODO: this will need to be updated once Juyas's PR is merged
- */
 public class CharacterController extends Component {
 
 	Vector2f position = new Vector2f(0, 0);
@@ -46,7 +42,7 @@ public class CharacterController extends Component {
 
 	protected void moveX() {
 		// X
-		gameObject.setX(position.x);
+		gameObject.setTransformX(position.x);
 		if (Keyboard.getKey(Keyboard.A_KEY) || Keyboard.getKey(Keyboard.LEFT_ARROW)) {
 			position.x += (-speed.x + sprintSpeed) * Engine.deltaTime();
 		}
@@ -57,7 +53,7 @@ public class CharacterController extends Component {
 
 	protected void moveY() {
 		// Y
-		gameObject.setY(position.y);
+		gameObject.setTransformY(position.y);
 
 		if (Keyboard.getKey(Keyboard.W_KEY) || Keyboard.getKey(Keyboard.UP_ARROW)) {
 			position.y += (-speed.y + sprintSpeed) * Engine.deltaTime();

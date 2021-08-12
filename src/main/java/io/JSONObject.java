@@ -5,9 +5,6 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author
- */
 public class JSONObject {
     private StringBuilder stringBuilder = new StringBuilder();
 

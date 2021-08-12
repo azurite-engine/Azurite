@@ -1,12 +1,8 @@
 package physics;
 
-import org.joml.Vector2f;
 import util.Utils;
 
-/**
- * @author Asher Haun
- */
-public class CollisionUtils {
+public class Collisions {
 
     /**
      * Checks if a set of X and Y coordinates are inside of a circle.
@@ -29,7 +25,7 @@ public class CollisionUtils {
      * @param radius Radius of circle
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
-    public static boolean inCircle(Vector2f in, float circleX, float circleY, float radius) {
+    public static boolean inCircle(Vector2 in, float circleX, float circleY, float radius) {
         return Utils.dist(in.x, in.y, circleX, circleY) < radius * 2;
     }
 
@@ -40,7 +36,7 @@ public class CollisionUtils {
      * @param radius Radius of circle
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
-    public static boolean inCircle(Vector2f in, Vector2f circle, float radius) {
+    public static boolean inCircle(Vector2 in, Vector2 circle, float radius) {
         return Utils.dist(in.x, in.y, circle.x, circle.y) < radius * 2;
     }
 
@@ -67,7 +63,7 @@ public class CollisionUtils {
      * @param rectHeight Height of rectangle
      * @return Returns true if the point is inside the rectangle, otherwise returns false.
      */
-    public static boolean inRect(Vector2f in, float rectX, float rectY, float rectWidth, float rectHeight) {
+    public static boolean inRect(Vector2 in, float rectX, float rectY, float rectWidth, float rectHeight) {
         return in.x >= rectX && in.x <= (rectY + rectWidth) && in.y >= rectY && in.y <= (rectY + rectHeight);
     }
 

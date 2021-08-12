@@ -4,8 +4,6 @@ import graphics.Texture;
 
 /**
  * Post Processing Pipeline to apply a bloom effect to a Texture.
- *
- * @author VoxelRifts
  */
 public class BloomEffect extends PostProcessPipeline {
 	/* The Post Processing Steps required */

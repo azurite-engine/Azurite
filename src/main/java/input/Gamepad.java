@@ -5,9 +5,7 @@ import util.Engine;
 import static org.lwjgl.glfw.GLFW.*;
 
 // https://github.com/LWJGL/lwjgl3-wiki/wiki/2.6.3-Input-handling-with-GLFW#joystick-input
-/**
- * @author Asher Haun
- */
+
 public class Gamepad {
 
     public static int LEFT_STICK_HORIZONTAL = 0;

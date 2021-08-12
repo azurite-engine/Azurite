@@ -1,8 +1,5 @@
 package ecs;
 
-/**
- * @author VoxelRifts
- */
 public class Animation extends Component {
 	/** Speed of the animation in seconds */
 	private final float speed;

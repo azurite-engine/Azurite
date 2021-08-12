@@ -1,7 +1,9 @@
 package scenes;
 
-import ecs.*;
-import fonts.Font;
+import ecs.CharacterControllerGravity;
+import ecs.GameObject;
+import ecs.PointLight;
+import ecs.SpriteRenderer;
 import graphics.Camera;
 import graphics.Color;
 import graphics.Texture;
@@ -20,12 +22,9 @@ import util.Utils;
 
 import static graphics.Graphics.setDefaultBackground;
 
-/**
- * @author Asher Haun
- */
 public class DemoPlatformer extends Scene {
     public static void main(String[] args) {
-        Engine.init(1920, 1080, "Azurite Engine Demo 2", 0.4f);
+        Engine.init("Azurite Engine Demo 2", 1.0f);
         Engine.scenes().switchScene(new DemoPlatformer(), true);
         Engine.showWindow();
     }
@@ -37,9 +36,6 @@ public class DemoPlatformer extends Scene {
     TilesystemSideScroll t;
     GameObject player;
     GameObject booper;
-
-    Text text;
-    Font f;
 
     public void awake() {
         camera = new Camera();
@@ -63,9 +59,6 @@ public class DemoPlatformer extends Scene {
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         bloom.init();
-
-        f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 25, true);
-        text = new Text("Azurite Engine demo", f, 15, 5, 100, true);
     }
 
     int r;
@@ -78,27 +71,27 @@ public class DemoPlatformer extends Scene {
 
         camera.smoothFollow(player.getTransform());
 
-        i++;
-        if (i % 200 == 0) {
+        if (i % 400 == 0) {
             r = Utils.randomInt(-3, 3);
+            Logger.logInfo("" + r);
         }
 
         if (r <= -1) {
             booper.getTransform().addX(-50 * Engine.deltaTime());
             if (booper.getComponent(AABB.class).isCollidingX()) {
                 booper.getComponent(Gravity.class).addVelocityY(-20);
+                Logger.logInfo("Do jump left");
             }
         }
         if (r >= 1) {
             booper.getTransform().addX(50 * Engine.deltaTime());
             if (booper.getComponent(AABB.class).isCollidingX()) {
                 booper.getComponent(Gravity.class).addVelocityY(-20);
+                Logger.logInfo("Do jump right");
             }
         }
 
-
-        text.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS() + "\n\n");
-        // text.addX(i); // TODO: add doesn't work right
+        i++;
     }
 
     @Override

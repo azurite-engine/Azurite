@@ -8,7 +8,6 @@ import util.Assets;
 /**
  * A Post Processing Step that combines two textures multiplying them
  *  with corresponding weights and then adding them
- * @author VoxelRifts
  */
 public class WeightedCombine extends PostProcessStep {
 	/** Id of input texture A */

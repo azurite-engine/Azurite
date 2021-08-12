@@ -3,7 +3,6 @@ package util.debug;
 /**
  * A Primitive that consists of a bunch of lines.
  * These lines are rendered by the DebugRenderer
- * @author VoxelRifts
  */
 public class DebugPrimitive {
 	/** The lines making up this primitive */

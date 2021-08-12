@@ -6,11 +6,7 @@ import org.joml.Vector3f;
 import physics.Transform;
 import util.Utils;
 
-/** Represents a basic camera that has a View Matrix and Projection Matrix
- *
- * @author GamesWithGabe
- * @author Asher Haun
- */
+/** Represents a basic camera that has a View Matrix and Projection Matrix */
 public class Camera {
 	/** Projection Matrix of the camera */
 	private Matrix4f projectionMatrix;
@@ -55,13 +51,13 @@ public class Camera {
 		Vector3f cameraUp = new Vector3f(0, 1, 0);
 		this.viewMatrix.identity();
 		viewMatrix.lookAt(new Vector3f(position.x, position.y, 20), cameraFront.add(position.x, position.y, 0), cameraUp);
-
+		
 		return this.viewMatrix;
 	}
 	
 	/** Get the camera's projection matrix */
 	public Matrix4f getProjectionMatrix () {
-		return this.projectionMatrix;
+		return this.projectionMatrix;		
 	}
 
 	/** Smoothly center the camera on to a transform */
@@ -71,16 +67,10 @@ public class Camera {
 		float smoothing = 0.045f;
 		Vector2f desiredPosition = new Vector2f(c.getX() - Window.getWidth()/2f,c.getY() - Window.getHeight()/2f);
 		Vector2f smoothedPosition = new Vector2f(Utils.lerp(position.x, desiredPosition.x, smoothing), Utils.lerp(position.y, desiredPosition.y, smoothing));
-//		if (!(desiredPosition.x - position.x < 13))
-//			smoothedPosition.x = Utils.round(smoothedPosition.x);
-//
-//		if (!(desiredPosition.y - position.y < 13))
-//			smoothedPosition.y = Utils.round(smoothedPosition.y);
-
-		// Lines in beteen sprites on tilemaps are caused by non pixel perfect (floating point) camera positions, unfortunately rounding the position can cause slight jitteryness.
-
-		if (Utils.dist(desiredPosition, position) < 20)
+		// If you notice black bars while the camera is panning, it is because floating point positions can cause discrepencies, unfortunately casing the lerp to an int makes the motion a little  bit choppy
+		if (Utils.dist(desiredPosition, position) < 10) {
 			position = desiredPosition;
+		}
 		position = smoothedPosition;
 	}
 

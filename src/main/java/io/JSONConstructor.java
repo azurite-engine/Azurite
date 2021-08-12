@@ -7,9 +7,6 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author
- */
 public class JSONConstructor {
     private JSONObject serializedObject;
 

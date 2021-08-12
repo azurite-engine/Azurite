@@ -10,8 +10,6 @@ import util.Assets;
  * Perfect for debugging steps.
  *
  * NOTE: If you want to forward any texture to the screen, the scene class has a forwardToScreen field that can be used
- *
- * @author VoxelRifts
  */
 public class ForwardToTexture extends PostProcessStep {
 	/** Id of input texture */

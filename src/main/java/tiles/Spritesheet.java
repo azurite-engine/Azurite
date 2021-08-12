@@ -6,10 +6,6 @@ import org.joml.Vector2f;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @author GamesWithGabe
- * @author Asher Haun
- */
 public class Spritesheet {
 
     private Texture texture;

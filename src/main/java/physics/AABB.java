@@ -11,10 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author Asher Haun
- * may soon be deprecated and/or modified upon merge of Juyas's collision system
- */
 public class AABB extends Component {
 
     public static final Map<Integer, List<AABB>> colliders = new HashMap<>();
@@ -72,9 +68,9 @@ public class AABB extends Component {
     public void collideX() {
         if (checkCollision()) {
             if (lastPosition.getX() < other.getX()) {
-                gameObject.setX(other.getX() - gameObject.getTransform().getWidth());
+                gameObject.setTransformX(other.getX() - gameObject.getTransform().getWidth());
             } else {
-                gameObject.setX(other.getX() + other.getWidth());
+                gameObject.setTransformX(other.getX() + other.getWidth());
             }
             collidingX = true;
         } else collidingX = false;
@@ -83,9 +79,9 @@ public class AABB extends Component {
     public void collideY() {
         if (checkCollision()) {
             if (lastPosition.getY() < other.getY()) {
-                gameObject.setY(other.getY() - gameObject.getTransform().getHeight());
+                gameObject.setTransformY(other.getY() - gameObject.getTransform().getHeight());
             } else {
-                gameObject.setY(other.getY() + other.getHeight());
+                gameObject.setTransformY(other.getY() + other.getHeight());
             }
             collidingY = true;
         } else collidingY = false;

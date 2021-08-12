@@ -1,10 +1,6 @@
 package event;
 
-/**
- * A base class to be extended by classes that are going to function as Data for the Event System
- *
- * @author VoxelRifts
- */
+/** A base class to be extended by classes that are going to function as Data for the Event System */
 public class EventData {
     /** Event Data for the Window Resized Event */
     public static class WindowResizeEventData extends EventData {

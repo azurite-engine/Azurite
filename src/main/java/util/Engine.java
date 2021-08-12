@@ -7,12 +7,12 @@ import util.safety.Preconditions;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 
-/**
- * The Engine class initializes GLFW and the game loop.
- * @author Asher Haun
- * @author PixelRifts
- */
 public final class Engine {
+
+    /**
+     * The Engine class initializes GLFW and the game loop.
+     */
+
     private static final Engine instance = new Engine();
 
     private final long startMillis;

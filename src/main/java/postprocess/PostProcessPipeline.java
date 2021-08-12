@@ -4,8 +4,6 @@ import graphics.Texture;
 
 /**
  * This class should be used if you want to chain multiple steps
- *
- * @author VoxelRifts
  */
 public abstract class PostProcessPipeline {
 	/**
