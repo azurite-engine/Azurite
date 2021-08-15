@@ -34,30 +34,20 @@ public class Main extends scene.Scene {
 	Text t;
 	Text t2;
 	Font f;
-
-	GameObject g;
+	Font f2;
 
 	public void awake() {
 		setDefaultBackground(Color.BLACK);
 		camera = new Camera();
 
 		f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 25, true);
-		t = new Text("Hello World! (String 1)\nTest Text line 2.", f, 10, 0, 1, false);
-
-		g = new GameObject(this, new Transform(300, 10, 100, 100), 1).addComponent(new SpriteRenderer(Color.WHITE));
+		f2 = new Font("src/assets/fonts/Maghrib-MVZpx.ttf", 40, true);
+		t = new Text("Hello World!", f, 10, 10, 1, false);
+		t2 = new Text("Other font", f2, 10, 40, 1, false);
 	}
 
-	int x = 0;
-
 	public void update () {
-//		if (x % 100 == 0) {
-//			t.change("" + Utils.randomInt(0, 400) + ":" + Utils.randomInt(1, 100));
-//			t2.change("" + Utils.randomInt(0, 400) + ":" + Utils.randomInt(1, 100));
-//		}
 
-		t.addX(0.6f);
-
-		x ++;
 	}
 
 }

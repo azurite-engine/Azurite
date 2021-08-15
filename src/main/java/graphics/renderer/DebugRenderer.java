@@ -100,6 +100,7 @@ public class DebugRenderer extends Renderer<DebugRenderBatch> {
 
 		// If unable to add to previous batch, create a new one
 		DebugRenderBatch newBatch = new DebugRenderBatch(50, -10);
+		newBatch.setRenderer(this);
 		newBatch.start();
 		batches.add(newBatch);
 		newBatch.addLine(line);

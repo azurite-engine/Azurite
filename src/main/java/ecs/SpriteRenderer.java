@@ -94,7 +94,7 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> {
 
 	@Override
 	public void remove() {
-		getBatch().removeSprite(this);
+		getBatch().getRenderer().remove(this.gameObject);
 	}
 
 	/**

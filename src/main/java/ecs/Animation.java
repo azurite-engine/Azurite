@@ -64,6 +64,11 @@ public class Animation extends Component {
 		}
 	}
 
+	@Override
+	public void remove() {
+		spriteRendererComponent.remove();
+	}
+
 	/**
 	 * Updates the sprite of the parent GameObject
 	 * @param dt Engine.deltaTime
