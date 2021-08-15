@@ -3,7 +3,6 @@ package util;
 /**
  * <h1>Azurite</h1>
  * A {@link Pair} is a tupel of two different values with potentially two different types.
- * If both types are identical, its worth considering {@link Tuple} instead.
  *
  * @author Juyas
  * @version 12.07.2021

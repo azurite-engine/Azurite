@@ -2,7 +2,6 @@ package physics.collision;
 
 import ecs.RigidBody;
 import org.joml.Vector2f;
-import util.Tuple;
 
 import java.util.function.BiConsumer;
 
@@ -16,7 +15,7 @@ import java.util.function.BiConsumer;
  * @see Collisions
  * @since 25.06.2021
  */
-public abstract class CollisionHandler implements BiConsumer<RigidBody, Tuple<Vector2f>> {
+public abstract class CollisionHandler implements BiConsumer<RigidBody, Vector2f[]> {
 
     protected Collider parentComponent;
 

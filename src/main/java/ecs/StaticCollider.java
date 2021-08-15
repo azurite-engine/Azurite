@@ -8,7 +8,6 @@ import physics.collision.CollisionUtil;
 import physics.collision.Collisions;
 import physics.collision.shape.PrimitiveShape;
 import physics.collision.shape.Quadrilateral;
-import util.Tuple;
 import util.Utils;
 import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
@@ -98,7 +97,7 @@ public class StaticCollider extends Component implements Collider {
     }
 
     @Override
-    public Optional<Tuple<Vector2f>> doesCollideWith(Collider other) {
+    public Optional<Vector2f[]> doesCollideWith(Collider other) {
         return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape());
     }
 
@@ -149,7 +148,7 @@ public class StaticCollider extends Component implements Collider {
     }
 
     @Override
-    public void handleCollision(Collider otherCollider, Tuple<Vector2f> gjkSimplex) {
+    public void handleCollision(Collider otherCollider, Vector2f[] gjkSimplex) {
         if (otherCollider instanceof RigidBody)
             collisionHandler.accept((RigidBody) otherCollider, gjkSimplex);
     }

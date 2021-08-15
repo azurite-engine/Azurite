@@ -15,7 +15,6 @@ import physics.force.CombinedForce;
 import physics.force.CombinedVectorFilter;
 import physics.force.Force;
 import physics.force.VectorFilter;
-import util.Tuple;
 import util.Utils;
 import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
@@ -152,7 +151,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     }
 
     @Override
-    public Optional<Tuple<Vector2f>> doesCollideWith(Collider other) {
+    public Optional<Vector2f[]> doesCollideWith(Collider other) {
         return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape());
     }
 
@@ -213,7 +212,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     }
 
     @Override
-    public void handleCollision(Collider otherCollider, Tuple<Vector2f> gjkSimplex) {
+    public void handleCollision(Collider otherCollider, Vector2f[] gjkSimplex) {
         //static collisions should be handled by the static object
         if (otherCollider instanceof StaticCollider)
             otherCollider.handleCollision(this, gjkSimplex);

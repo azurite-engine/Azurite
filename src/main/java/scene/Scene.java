@@ -16,7 +16,6 @@ import physics.collision.Collider;
 import postprocess.ForwardToTexture;
 import postprocess.PostProcessStep;
 import util.Engine;
-import util.Tuple;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -77,12 +76,8 @@ public abstract class Scene {
     }
 
     /**
-     * Apply post processing to a texture
-     * @param texture input texture
-     */
-    /**
      * Do a collision check for the specific collider with all known rigidBodies and staticColliders.
-     * If there is a collision, the given object will receive calls to {@link Collider#handleCollision(Collider, Tuple)}.
+     * If there is a collision, the given object will receive calls to {@link Collider#handleCollision(Collider, Vector2f[])}.
      *
      * @param collider the object to check whether is collides with anything
      */
@@ -98,7 +93,7 @@ public abstract class Scene {
             if (!body.canCollideWith(other)) continue;
             if (!body.getCollisionShape().boundingSphere().intersection(other.getCollisionShape().boundingSphere()))
                 continue;
-            Optional<Tuple<Vector2f>> collision = body.doesCollideWith(other);
+            Optional<Vector2f[]> collision = body.doesCollideWith(other);
             if (collision.isPresent()) {
                 body.handleCollision(other, collision.get());
                 body.resetCollision();

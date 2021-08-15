@@ -3,7 +3,6 @@ package physics.collision;
 import ecs.RigidBody;
 import org.joml.Vector2f;
 import physics.force.DirectionalVectorFilter;
-import util.Tuple;
 
 import java.util.Optional;
 
@@ -33,7 +32,7 @@ public class Collisions {
     public static CollisionHandler solidBouncy(float velocityFactor) {
         return new CollisionHandler() {
             @Override
-            public void accept(RigidBody collider, Tuple<Vector2f> simplex) {
+            public void accept(RigidBody collider, Vector2f[] simplex) {
                 //find penetration vector with EPA
                 Optional<Vector2f> epa = CollisionUtil.expandingPolytopeAlgorithm(collider.getCollisionShape(), parentComponent.getCollisionShape(), simplex);
                 Vector2f reflection = epa.get();
@@ -53,7 +52,7 @@ public class Collisions {
     public static CollisionHandler solid() {
         return new CollisionHandler() {
             @Override
-            public void accept(RigidBody collider, Tuple<Vector2f> simplex) {
+            public void accept(RigidBody collider, Vector2f[] simplex) {
                 //find penetration vector with EPA
                 Optional<Vector2f> epa = CollisionUtil.expandingPolytopeAlgorithm(collider.getCollisionShape(), parentComponent.getCollisionShape(), simplex);
                 Vector2f reflection = epa.get();

@@ -3,7 +3,6 @@ package util;
 /**
  * <h1>Azurite</h1>
  * A {@link Triple} is a tupel of three different values with potentially three different types.
- * If all types are identical, its worth considering {@link Tuple} instead.
  *
  * @author Juyas
  * @version 12.07.2021

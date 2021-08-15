@@ -5,9 +5,14 @@ import org.joml.Vector2f;
 import physics.Transform;
 import physics.collision.shape.PrimitiveShape;
 import physics.collision.shape.ShapeType;
-import util.*;
+import util.Pair;
+import util.Triple;
+import util.Utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * <h1>Azurite</h1>
@@ -44,7 +49,7 @@ public class CollisionUtil {
      * @param shapeB shape b
      * @return whether shape a and shape b intersect
      */
-    public static Optional<Tuple<Vector2f>> gjksmCollision(PrimitiveShape shapeA, PrimitiveShape shapeB) {
+    public static Optional<Vector2f[]> gjksmCollision(PrimitiveShape shapeA, PrimitiveShape shapeB) {
         Vector2f startPoint = maxDotPointMinkDiff(shapeA, shapeB, shapeA.centroid().mul(-1, new Vector2f()));
         Vector2f direction = new Vector2f(-startPoint.x, -startPoint.y);
 
@@ -118,7 +123,7 @@ public class CollisionUtil {
         }
 
         //3 points are confirmed, there is intersection
-        return Optional.of(new Tuple<>(simplex));
+        return Optional.of(Arrays.asList(simplex.getLeft(), simplex.getMiddle(), simplex.getRight()).toArray(new Vector2f[0]));
 
     }
 
@@ -137,23 +142,17 @@ public class CollisionUtil {
      * @param simplex the simplex returned by GJK or any simplex inside both shapes borders enclosing the overlapping area of both shapes
      * @return the penetration vector of both shapes, if there is one found within a series of steps
      */
-    public static Optional<Vector2f> expandingPolytopeAlgorithm(PrimitiveShape shapeA, PrimitiveShape shapeB, Tuple<Vector2f> simplex) {
+    public static Optional<Vector2f> expandingPolytopeAlgorithm(PrimitiveShape shapeA, PrimitiveShape shapeB, Vector2f[] simplex) {
         int faceSize = shapeA.vertices() + shapeB.vertices();
         List<Vector2f> polygon = new ArrayList<>(faceSize);
-
-        Object[] test = simplex.getContent();
-        ArrayList<Vector2f> simplexVertices = new ArrayList<>();
-        for (Object i : test) {
-            simplexVertices.add((Vector2f)i);
-        }
-        polygon.addAll(simplexVertices);
+        polygon.addAll(Arrays.asList(simplex));
 
         Vector2f normal;
         for (int i = 0; i < faceSize + 1; i++) {
             Triple<Integer, Float, Vector2f> closestFace = closestFaceToOrigin(polygon); //index, dist, norm
             float squareLength = closestFace.getMiddle();
             //vector from origin to face
-            normal = (Vector2f) closestFace.getRight();
+            normal = closestFace.getRight();
             Vector2f vector2f = maxDotPointMinkDiff(shapeA, shapeB, normal);
             //if the vector*normal is close to normal*normal, its the point we seek
             if (Math.abs(normal.dot(vector2f) - squareLength) < 0.001f)
