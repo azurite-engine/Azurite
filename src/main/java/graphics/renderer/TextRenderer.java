@@ -71,9 +71,11 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
     }
 
     public void removeAllGlyphRenderers (ArrayList<GlyphRenderer> grs) {
+        TextRendererBatch batchToRemove = grs.get(0).getBatch();
         for (int i = grs.size() - 1; i >= 0; i --) {
             removeGlyphRenderer(grs.get(i));
         }
+        batches.remove(batchToRemove);
     }
 
     /**

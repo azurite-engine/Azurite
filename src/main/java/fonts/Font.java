@@ -389,55 +389,6 @@ public class Font {
     }
 
     /**
-     * Draw text at the specified position and color.
-     *
-     * @param renderer The renderer to use
-     * @param text     Text to draw
-     * @param x        X coordinate of the text position
-     * @param y        Y coordinate of the text position
-     * @param c        Color to use
-     */
-    public void drawText(CharSequence text, float x, float y, Color c) {
-        int textHeight = getHeight(text);
-
-        float drawX = x;
-        float drawY = y;
-        if (textHeight > fontHeight) {
-            drawY += textHeight - fontHeight;
-        }
-
-        for (int i = 0; i < text.length(); i++) {
-            char ch = text.charAt(i);
-            if (ch == '\n') {
-                /* Line feed, set x and y to draw at the next line */
-                drawY -= fontHeight;
-                drawX = x;
-                continue;
-            }
-            if (ch == '\r') {
-                /* Carriage return, just skip it */
-                continue;
-            }
-            Glyph g = glyphs.get(ch);
-//            renderer.drawTextureRegion(texture, drawX, drawY, g.x, g.y, g.width, g.height, c);
-            drawX += g.width;
-        }
-
-    }
-
-    /**
-     * Draw text at the specified position.
-     *
-     * @param renderer The renderer to use
-     * @param text     Text to draw
-     * @param x        X coordinate of the text position
-     * @param y        Y coordinate of the text position
-     */
-    public void drawText(CharSequence text, float x, float y) {
-        drawText(text, x, y, Color.WHITE);
-    }
-
-    /**
      * Disposes the font.
      */
 //    public void dispose() {
