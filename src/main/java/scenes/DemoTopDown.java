@@ -33,7 +33,7 @@ public class DemoTopDown extends Scene {
 	Spritesheet a;
 	Spritesheet b;
 	Tilesystem t;
-	PointLight booperLight;
+	Animation booperSprite;
 	GameObject player;
 	GameObject booper;
 	GameObject greenLight;
@@ -41,7 +41,7 @@ public class DemoTopDown extends Scene {
 
 	BloomEffect bloom;
 
-	boolean added = true;
+	boolean flip = true;
 
 	public void awake() {
 		camera = new Camera();
@@ -54,13 +54,13 @@ public class DemoTopDown extends Scene {
 		trRes = new GameObject(this, "", new Transform(new Vector2f(0, 0), new Vector2f(100)), -20);
 
 		booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
-		booper.addComponent(new Animation(1, a.getSprite(132), a.getSprite(150)));
+		booperSprite = new Animation(1, a.getSprite(132), a.getSprite(150));
+		booper.addComponent(booperSprite);
 		booper.addComponent(new CollisionTrigger(data -> System.out.println("Boop")));
-		booperLight = new PointLight(new Color(255, 153, 102), 30);
-		booper.addComponent(booperLight);
-		booper.setY(900);
+		booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
 
-		player = new GameObject(this, "Player", new Transform(600, 600, 100, 100), 2);
+
+		player = new GameObject(this, "Player", new Transform(600, 600, 90, 100, 100), 2);
 		player.addComponent(new PointLight(new Color(250, 255, 181), 30));
 		player.addComponent(new AABB());
 		player.addComponent(new SpriteRenderer(a.getSprite(132)));
@@ -70,7 +70,6 @@ public class DemoTopDown extends Scene {
 		greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));
 
 		bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
-		bloom.init();
 	}
 
 	public void update() {
@@ -80,22 +79,32 @@ public class DemoTopDown extends Scene {
 			booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 		greenLight.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 
-		if (Keyboard.getKeyDown(Keys.AZ_KEY_SPACE)) {
-//            if (added) {
-//                booper.removeComponent(PointLight.class);
-//                added = false;
-//            } else {
-//                booper.addComponent(booperLight);
-//                added = true;
-//            }
+		player.getTransform().addRotation(1);
 
-			if (added) {
-				removeGameObjectFromScene(booper);
-				added = false;
+		if (Keyboard.getKeyDown(Keys.AZ_KEY_SPACE)) {
+			if (flip) {
+				booper.removeComponent(Animation.class);
+				flip = false;
 			} else {
-				addGameObjectToScene(booper);
-				added = true;
+				booper.addComponent(booperSprite);
+				flip = true;
 			}
+
+//			if (flip) {
+//				removeGameObjectFromScene(booper);
+//				flip = false;
+//			} else {
+//				addGameObjectToScene(booper);
+//				flip = true;
+//			}
+
+//			if (flip) {
+//				booper.setZindex(1);
+//				flip = false;
+//			} else {
+//				booper.setZindex(2);
+//				flip = true;
+//			}
 		}
 
 		camera.smoothFollow(player.getTransform());
