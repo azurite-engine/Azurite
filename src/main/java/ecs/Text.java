@@ -4,6 +4,7 @@ import fonts.Font;
 import fonts.Glyph;
 import fonts.GlyphRenderer;
 import graphics.Color;
+import graphics.renderer.TextRendererBatch;
 import org.joml.Vector2f;
 import physics.Transform;
 import util.Engine;
@@ -30,6 +31,8 @@ public class Text {
     Font font;
     CharSequence text;
 
+    TextRendererBatch currentBatch;
+
     public Text (String string, Font font, float x, float y, int zIndex, boolean isSticky) {
         this.text = string;
         this.font = font;
@@ -40,9 +43,11 @@ public class Text {
 
         glyphRenderers = new ArrayList<>();
 
-        draw();
+        generateGlyphs();
         Engine.scenes().currentScene().textRenderer.add(this);
         Engine.scenes().currentScene().addUiObject(this);
+
+        currentBatch = glyphRenderers.get(0).getBatch();
     }
 
     public Text (String string, float x, float y) {
@@ -54,13 +59,11 @@ public class Text {
 
         glyphRenderers = new ArrayList<>();
 
-        draw();
+        generateGlyphs();
         Engine.scenes().currentScene().textRenderer.add(this);
         Engine.scenes().currentScene().addUiObject(this);
-    }
 
-    public void draw () {
-        generateGlyphs();
+        currentBatch = glyphRenderers.get(0).getBatch();
     }
 
     public void update () {
@@ -78,13 +81,13 @@ public class Text {
     }
 
     public void change (String string) {
-        Engine.scenes().currentScene().textRenderer.removeAllGlyphRenderers(glyphRenderers);
+        currentBatch = glyphRenderers.get(0).getBatch();
+        glyphRenderers.clear();
 
         this.text = string;
-        glyphRenderers = new ArrayList<>();
 
         generateGlyphs();
-        Engine.scenes().currentScene().textRenderer.add(this);
+        Engine.scenes().currentScene().textRenderer.changeText(this, currentBatch);
     }
 
     private void generateGlyphs () {
@@ -116,6 +119,11 @@ public class Text {
         if (textHeight > font.getFontHeight()) {
             drawY += textHeight - font.getFontHeight();
         }
+    }
+
+    public int getBatchIndex () {
+        if (glyphRenderers.size() == 0) return -1;
+        return glyphRenderers.get(0).getBatchIndex();
     }
 
     public ArrayList<GlyphRenderer> getGlyphRenderers () {

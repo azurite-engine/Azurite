@@ -54,9 +54,22 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
     protected void prepare() {}
 
     /**
+     *
+     *
+     */
+    public void changeText (Text textObject, TextRendererBatch textBatch) {
+        textBatch.removeGlyphRenderers();
+
+        for (GlyphRenderer g : textObject.getGlyphRenderers()) {
+            textBatch.addGlyphRenderer(g);
+            g.setRendererBatch(textBatch, textBatch.getSize() - 1);
+        }
+    }
+
+    /**
      * Add a Text object to this renderer
      *
-     * @param textObject the Text with renderable glpyhs
+     * @param textObject the Text with renderable glyphs
      */
     public void add(Text textObject) {
         if (textObject != null) {
@@ -64,39 +77,18 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
         }
     }
 
-    public void removeGlyphRenderer (GlyphRenderer gr) {
-        if (gr != null && gr.getBatch() != null) {
-            gr.getBatch().removeIndex(gr.getBatchIndex());
-        }
-    }
-
-    public void removeAllGlyphRenderers (ArrayList<GlyphRenderer> grs) {
-        TextRendererBatch batchToRemove = grs.get(0).getBatch();
-        for (int i = grs.size() - 1; i >= 0; i --) {
-            removeGlyphRenderer(grs.get(i));
-        }
-        batches.remove(batchToRemove);
-    }
-
     /**
-     * Adds the Text component to a single batch, and creates a new batch if their is no space.
+     * Adds the Text component to a single batch
      * @param text Text: The text component to be added
      */
     protected void addText (Text text) {
-
-        boolean createNewBatch = false;
-        int continueFromIndex = 0;
-        if (batches.size() == 0) createNewBatch = true;
-        // If unable to add to previous batch, create a new one
         TextRendererBatch newBatch = new TextRendererBatch(MAX_BATCH_SIZE, text.zIndex());
         newBatch.start();
         batches.add(newBatch);
 
-        for (int i = continueFromIndex; i < text.getGlyphRenderers().size(); i ++) {
-            GlyphRenderer g = text.getGlyphRenderers().get(i);
+        for (GlyphRenderer g : text.getGlyphRenderers()) {
             newBatch.addGlyphRenderer(g);
             g.setRendererBatch(newBatch, newBatch.getSize() - 1);
-//            Logger.debugLog("Added GlyphRenderer \"" + g.getCharacter() + "\" (" + (newBatch.getSize() - 1) + ") to new batch.");
         }
 
         Collections.sort(batches);

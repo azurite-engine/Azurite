@@ -46,6 +46,7 @@ public class TextRendererBatch extends RenderBatch {
      */
     @Override
     protected void loadVertexProperties(int index, int offset) {
+
         GlyphRenderer glyphRenderer = glyphRenderers.get(index); // todo
         Vector4f color = glyphRenderer.getColor().toNormalizedVec4f();
         Vector2f[] textureCoordinates = glyphRenderer.getTexCoords();
@@ -115,6 +116,12 @@ public class TextRendererBatch extends RenderBatch {
         }
     }
 
+    public void removeGlyphRenderers () {
+        glyphRenderers.clear();
+        this.numberOfGlyphRenderers = 0;
+        data = new float[maxBatchSize * primitive.vertexCount * vertexCount];
+    }
+
     @Override
     public void updateBuffer () {
         for (int i = 0; i < glyphRenderers.size(); i ++) {
@@ -153,6 +160,7 @@ public class TextRendererBatch extends RenderBatch {
             if (tex == null || (hasTexture(tex) || hasTextureRoom())) {
                 // Get the index and add the renderObject
                 int index = this.numberOfGlyphRenderers;
+//                glyphR.setRendererBatch(this, index);
                 this.glyphRenderers.add(glyphR); // = glyphR;
                 this.numberOfGlyphRenderers++;
 
