@@ -1,6 +1,8 @@
 package scene;
 
 import ecs.GameObject;
+import ecs.RigidBody;
+import ecs.StaticCollider;
 import graphics.Camera;
 import graphics.Texture;
 import graphics.renderer.DebugRenderer;
@@ -8,34 +10,32 @@ import graphics.renderer.DefaultRenderer;
 import graphics.renderer.LightmapRenderer;
 import graphics.renderer.Renderer;
 import input.Keyboard;
+import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
+import physics.collision.Collider;
 import postprocess.ForwardToTexture;
 import postprocess.PostProcessStep;
-import util.Assets;
 import util.Engine;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class Scene {
 
     private static int sceneCounter = 0;
-
+    private final int sceneId = sceneCounter++;
+    private final List<GameObject> gameObjects = new LinkedList<>();
+    private final List<Collider> staticColliders = new LinkedList<>();
+    private final List<Collider> bodyColliders = new LinkedList<>();
     public DefaultRenderer renderer = new DefaultRenderer();
     public LightmapRenderer lightmapRenderer = new LightmapRenderer();
     public DebugRenderer debugRenderer = new DebugRenderer();
-
-    private List<Renderer<?>> rendererRegistry = new LinkedList<>();
-
     protected Camera camera;
-    private boolean debugMode = true;
-    private boolean active = false;
-    private List<GameObject> gameObjects = new LinkedList<>();
-
     protected ForwardToTexture forwardToScreen;
-
-    private int sceneId = sceneCounter++;
+    private List<Renderer<?>> rendererRegistry = new LinkedList<>();
+    private boolean debugMode = false;
+    private boolean active = false;
 
     public boolean isActive() {
         return active;
@@ -76,7 +76,34 @@ public abstract class Scene {
     }
 
     /**
+     * Do a collision check for the specific collider with all known rigidBodies and staticColliders.
+     * If there is a collision, the given object will receive calls to {@link Collider#handleCollision(Collider, Vector2f[])}.
+     *
+     * @param collider the object to check whether is collides with anything
+     */
+    public void checkCollision(Collider collider) {
+        if (collider == null) return; //ensure that the given collider is not null
+        checkCollision(collider, bodyColliders);
+        checkCollision(collider, staticColliders);
+    }
+
+    private void checkCollision(Collider body, List<Collider> colliders) {
+        for (Collider other : colliders) {
+            if (other == body) continue;
+            if (!body.canCollideWith(other)) continue;
+            if (!body.getCollisionShape().boundingSphere().intersection(other.getCollisionShape().boundingSphere()))
+                continue;
+            Optional<Vector2f[]> collision = body.doesCollideWith(other);
+            if (collision.isPresent()) {
+                body.handleCollision(other, collision.get());
+                body.resetCollision();
+            }
+        }
+    }
+
+    /**
      * Apply post processing to a texture
+     *
      * @param texture input texture
      */
     public void postProcess(Texture texture) {
@@ -97,6 +124,36 @@ public abstract class Scene {
     // The following methods shouldn't be overridden. For this, added final keyword
 
     /**
+     * Loops through all gameobjects already in the scene and calls their start methods.
+     */
+    public final void startGameObjects() {
+        for (GameObject gameObject : gameObjects) {
+            gameObject.start();
+            this.renderer.add(gameObject);
+            this.lightmapRenderer.add(gameObject);
+            this.debugRenderer.add(gameObject);
+            rendererRegistry.forEach(r -> r.add(gameObject));
+            updateGameObject(gameObject, true);
+        }
+    }
+
+    public final void updateGameObject(GameObject gameObject, boolean insertion) {
+        StaticCollider staticCollider = gameObject.getComponent(StaticCollider.class);
+        if (staticCollider != null && !staticColliders.contains(staticCollider)) {
+            if (insertion)
+                staticColliders.add(staticCollider);
+            else staticColliders.remove(staticCollider);
+        } else {
+            RigidBody rigidBody = gameObject.getComponent(RigidBody.class);
+            if (rigidBody != null && !bodyColliders.contains(rigidBody)) {
+                if (insertion)
+                    bodyColliders.add(rigidBody);
+                else bodyColliders.remove(rigidBody);
+            }
+        }
+    }
+
+    /**
      * The sceneId is meant to represent the instance of a scene as an integer
      *
      * @see SceneManager
@@ -106,10 +163,10 @@ public abstract class Scene {
     }
 
     /**
-     * @return Returns the List of gameObjects contained in the scene.
+     * @return the List of gameObjects contained in the scene.
      */
     public List<GameObject> getGameObjects() {
-        return Collections.unmodifiableList(gameObjects);
+        return gameObjects;
     }
 
     /**
@@ -181,6 +238,7 @@ public abstract class Scene {
 
     /**
      * Add a gameObject to all renderers
+     *
      * @param gameObject the gameObject to be added
      */
     public void addToRenderers(GameObject gameObject) {
@@ -192,6 +250,7 @@ public abstract class Scene {
 
     /**
      * Remove a gameObject from all renderers
+     *
      * @param gameObject the gameObject to be removed
      */
     private void removeFromRenderers(GameObject gameObject) {
