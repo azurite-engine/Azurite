@@ -1,4 +1,4 @@
-package graphics;
+package graphics;//{This comment is intentionally added to create a git merge conflict}
 
 import org.lwjgl.BufferUtils;
 import util.specs.TextureSpec;

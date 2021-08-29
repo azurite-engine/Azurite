@@ -1,4 +1,4 @@
-package scenes;
+package scenes;//{This comment is intentionally added to create a git merge conflict}
 
 import ecs.*;
 import fonts.Font;

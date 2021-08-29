@@ -1,5 +1,5 @@
 package ecs;
-
+//{This comment is intentionally added to create a git merge conflict}
 import fonts.Font;
 import fonts.Glyph;
 import fonts.GlyphRenderer;

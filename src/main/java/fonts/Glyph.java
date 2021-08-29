@@ -1,4 +1,4 @@
-package fonts;
+package fonts;//{This comment is intentionally added to create a git merge conflict}
 
 import ecs.Sprite;
 import graphics.Texture;

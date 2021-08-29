@@ -1,4 +1,4 @@
-package graphics.renderer;
+package graphics.renderer;//{This comment is intentionally added to create a git merge conflict}
 
 import ecs.Text;
 import fonts.GlyphRenderer;

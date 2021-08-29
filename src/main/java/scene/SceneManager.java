@@ -1,4 +1,4 @@
-package scene;
+package scene;//{This comment is intentionally added to create a git merge conflict}
 
 import graphics.Texture;
 
