@@ -50,85 +50,6 @@ public class HSLColor {
     }
 
     /**
-     * Convert this {@link HSLColor} to a RGB {@link Color} using {@link HSLColor#toRGBA(float[])}
-     *
-     * @return a RGB {@link Color} representing the same color
-     */
-    public Color toRGBColor() {
-        float[] floats = toRGBA(components);
-        return new Color(floats[0] * 255, floats[1] * 255, floats[2] * 255, alpha * 255);
-    }
-
-    /**
-     * Convert this {@link HSLColor} to a normalized RGB {@link Color} using {@link HSLColor#toRGBA(float[])}
-     *
-     * @return a normalized RGB {@link Color} representing the same color
-     */
-    public Color toNormalizedRGBColor() {
-        float[] floats = toRGBA(components);
-        return new Color(floats[0], floats[1], floats[2], alpha);
-    }
-
-    /**
-     * Set a component of this color.
-     *
-     * @param component the component from 0-3.
-     *                  Named representations are {@link #HUE}, {@link #SATURATION}, {@link #LUMINANCE} and {@link #ALPHA}
-     * @param newValue  the new value for the component
-     */
-    public void set(int component, float newValue) {
-        if (component == ALPHA)
-            this.alpha = newValue;
-        this.components[component] = newValue;
-    }
-
-    /**
-     * Get a component of this color.
-     *
-     * @param component the component from 0-3.
-     *                  Named representations are {@link #HUE}, {@link #SATURATION}, {@link #LUMINANCE} and {@link #ALPHA}
-     * @return the value of the component
-     */
-    public float get(int component) {
-        if (component == ALPHA) return alpha;
-        return components[component];
-    }
-
-    /**
-     * Create a {@link Vector3f} containing the HSL values.
-     *
-     * @return a vector containing (h,s,l)
-     */
-    public Vector3f toHSLVector() {
-        return new Vector3f(components[0], components[1], components[2]);
-    }
-
-    /**
-     * Create a {@link Vector4f} containing the HSLA values.
-     *
-     * @return a vector containing (h,s,l,a)
-     */
-    public Vector4f toHSLAVector() {
-        return new Vector4f(components[0], components[1], components[2], alpha);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        HSLColor hslColor = (HSLColor) o;
-        if (Float.compare(hslColor.alpha, alpha) != 0) return false;
-        return Arrays.equals(components, hslColor.components);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Arrays.hashCode(components);
-        result = 31 * result + (alpha != +0.0f ? Float.floatToIntBits(alpha) : 0);
-        return result;
-    }
-
-    /**
      * Convert a RGBA color to it corresponding HSLA color.
      * RGBA ranges are [0-1,0-1,0-1,0-1].
      * HSLA output ranges are [0-360,0-100,0-100,0-1].
@@ -214,6 +135,85 @@ public class HSLColor {
         if (2 * h < 1) return q;
         if (3 * h < 2) return p + ((q - p) * 6 * ((2.0f / 3.0f) - h));
         return p;
+    }
+
+    /**
+     * Convert this {@link HSLColor} to a RGB {@link Color} using {@link HSLColor#toRGBA(float[])}
+     *
+     * @return a RGB {@link Color} representing the same color
+     */
+    public Color toRGBColor() {
+        float[] floats = toRGBA(components);
+        return new Color(floats[0] * 255, floats[1] * 255, floats[2] * 255, alpha * 255);
+    }
+
+    /**
+     * Convert this {@link HSLColor} to a normalized RGB {@link Color} using {@link HSLColor#toRGBA(float[])}
+     *
+     * @return a normalized RGB {@link Color} representing the same color
+     */
+    public Color toNormalizedRGBColor() {
+        float[] floats = toRGBA(components);
+        return new Color(floats[0], floats[1], floats[2], alpha);
+    }
+
+    /**
+     * Set a component of this color.
+     *
+     * @param component the component from 0-3.
+     *                  Named representations are {@link #HUE}, {@link #SATURATION}, {@link #LUMINANCE} and {@link #ALPHA}
+     * @param newValue  the new value for the component
+     */
+    public void set(int component, float newValue) {
+        if (component == ALPHA)
+            this.alpha = newValue;
+        this.components[component] = newValue;
+    }
+
+    /**
+     * Get a component of this color.
+     *
+     * @param component the component from 0-3.
+     *                  Named representations are {@link #HUE}, {@link #SATURATION}, {@link #LUMINANCE} and {@link #ALPHA}
+     * @return the value of the component
+     */
+    public float get(int component) {
+        if (component == ALPHA) return alpha;
+        return components[component];
+    }
+
+    /**
+     * Create a {@link Vector3f} containing the HSL values.
+     *
+     * @return a vector containing (h,s,l)
+     */
+    public Vector3f toHSLVector() {
+        return new Vector3f(components[0], components[1], components[2]);
+    }
+
+    /**
+     * Create a {@link Vector4f} containing the HSLA values.
+     *
+     * @return a vector containing (h,s,l,a)
+     */
+    public Vector4f toHSLAVector() {
+        return new Vector4f(components[0], components[1], components[2], alpha);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HSLColor hslColor = (HSLColor) o;
+        if (Float.compare(hslColor.alpha, alpha) != 0) return false;
+        return Arrays.equals(components, hslColor.components);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Arrays.hashCode(components);
+        result = 31 * result + (alpha != +0.0f ? Float.floatToIntBits(alpha) : 0);
+        return result;
     }
 
 }

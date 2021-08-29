@@ -7,13 +7,11 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author
- */
 public class JSONConstructor {
     private JSONObject serializedObject;
 
-    public JSONConstructor() { }
+    public JSONConstructor() {
+    }
 
     public JSONConstructor(JSONObject jsonObject) {
         this.serializedObject = jsonObject;
@@ -36,59 +34,45 @@ public class JSONConstructor {
                     field.setAccessible(true);
                 }
 
-                if(!field.getName().equals("$assertionsDisabled") && (Modifier.isTransient(field.getModifiers()) || Modifier.isFinal(field.getModifiers()) || field.get(obj) == null)) {
+                if (!field.getName().equals("$assertionsDisabled") && (Modifier.isTransient(field.getModifiers()) || Modifier.isFinal(field.getModifiers()) || field.get(obj) == null)) {
                     continue;
                 }
 
-                if(i == fields.size() - 1) {
+                if (i == fields.size() - 1) {
                     isNotLastField = false;
                 }
 
                 if (field.getType() == int.class) {
                     serializedObject.addVar(field.getName(), field.getInt(obj), numTabs, true, isNotLastField);
-                }
-                else if (field.getType() == float.class) {
+                } else if (field.getType() == float.class) {
                     serializedObject.addVar(field.getName(), field.getFloat(obj), numTabs, true, isNotLastField);
-                }
-                else if (field.getType() == double.class) {
+                } else if (field.getType() == double.class) {
                     serializedObject.addVar(field.getName(), field.getDouble(obj), numTabs, true, isNotLastField);
-                }
-                else if (field.getType() == char.class) {
+                } else if (field.getType() == char.class) {
                     serializedObject.addVar(field.getName(), field.getChar(obj), numTabs, true, isNotLastField);
-                }
-                else if(field.getType() == String.class) {
+                } else if (field.getType() == String.class) {
                     serializedObject.addVar(field.getName(), (String) field.get(obj), numTabs, true, isNotLastField);
-                }
-                else if (field.getType() == boolean.class) {
+                } else if (field.getType() == boolean.class) {
                     serializedObject.addVar(field.getName(), field.getBoolean(obj), numTabs, true, isNotLastField);
-                }
-                else if(field.getType().isArray()) {
-                    if(field.getType().getComponentType() == int.class) {
+                } else if (field.getType().isArray()) {
+                    if (field.getType().getComponentType() == int.class) {
                         serializedObject.addArray(field.getName(), (int[]) field.get(obj), numTabs, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == float.class) {
+                    } else if (field.getType().getComponentType() == float.class) {
                         serializedObject.addArray(field.getName(), (float[]) field.get(obj), numTabs, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == double.class) {
+                    } else if (field.getType().getComponentType() == double.class) {
                         serializedObject.addArray(field.getName(), (double[]) field.get(obj), numTabs, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == char.class) {
+                    } else if (field.getType().getComponentType() == char.class) {
                         serializedObject.addArray(field.getName(), (char[]) field.get(obj), numTabs, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == String.class) {
+                    } else if (field.getType().getComponentType() == String.class) {
                         serializedObject.addArray(field.getName(), (String[]) field.get(obj), numTabs, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == boolean.class) {
+                    } else if (field.getType().getComponentType() == boolean.class) {
                         serializedObject.addArray(field.getName(), (boolean[]) field.get(obj), numTabs, true, isNotLastField);
-                    }
-                    else if(!field.getType().isPrimitive()) {
+                    } else if (!field.getType().isPrimitive()) {
                         serializedObject.addArray(field.getName(), (Object[]) field.get(obj), numTabs, true, isNotLastField);
                     }
-                }
-                else if(field.getType().isAssignableFrom(List.class)) {
+                } else if (field.getType().isAssignableFrom(List.class)) {
                     serializedObject.addList(field.getName(), (List<?>) field.get(obj), numTabs, true, isNotLastField);
-                }
-                else if (!field.getType().isPrimitive()) {
+                } else if (!field.getType().isPrimitive()) {
                     serializedObject.addObject(field.getName(), field.get(obj), numTabs, true, isNotLastField);
                 }
 
@@ -96,8 +80,7 @@ public class JSONConstructor {
                     field.setAccessible(false);
                 }
             }
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -109,8 +92,7 @@ public class JSONConstructor {
             FileWriter myWriter = new FileWriter(filePath);
             myWriter.write(serializedObject.getJSON());
             myWriter.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

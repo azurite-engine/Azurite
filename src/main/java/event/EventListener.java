@@ -4,8 +4,6 @@ package event;
  * A Simple listener interface
  *
  * @param <T> Type of Data for this listener
- *
- * @author VoxelRifts
  */
 @FunctionalInterface
 public interface EventListener<T extends EventData> {

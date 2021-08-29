@@ -1,14 +1,12 @@
 package event;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
  * A class which can handle Event listeners. Automatically calls all listeners when event occurs
  *
  * @param <T> Type of Event Data this event is for
- *
- * @author VoxelRifts
  */
 public class EventNode<T extends EventData> {
     /**
@@ -20,7 +18,7 @@ public class EventNode<T extends EventData> {
      * A default constructor
      */
     public EventNode() {
-        listeners = new ArrayList<>();
+        listeners = new LinkedList<>();
     }
 
     /**

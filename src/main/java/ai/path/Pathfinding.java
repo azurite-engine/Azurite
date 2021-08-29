@@ -66,41 +66,6 @@ public class Pathfinding {
         return Optional.empty();
     }
 
-    //helper class describing a path to a specific node in the dijkstra algorithm
-    private static class DijkstraPath<Position> implements ResultPath<Position>, Node.Marker<Position> {
-        private boolean blacked = false; //true means this path is the shortest one
-        float cost;
-        List<Node<Position>> path;
-
-        DijkstraPath(Node<Position> node) {
-            this.path = new ArrayList<>();
-            this.path.add(node);
-            this.cost = 0;
-        }
-
-        DijkstraPath(DijkstraPath<Position> prev, Node<Position> newNode, float additionalCost) {
-            path = new ArrayList<>();
-            path.addAll(prev.path);
-            path.add(newNode);
-            this.cost = prev.cost + additionalCost;
-        }
-
-        @Override
-        public Node<Position> start() {
-            return path.get(0);
-        }
-
-        @Override
-        public Node<Position> target() {
-            return path.get(path.size() - 1);
-        }
-
-        @Override
-        public List<Node<Position>> fullPath() {
-            return path;
-        }
-    }
-
     /**
      * A fully modifiable version of the A* (a-star) algorithm.
      * It uses a finite possibly directional weighted graph structure
@@ -201,6 +166,41 @@ public class Pathfinding {
                 return fullPath;
             }
         };
+    }
+
+    //helper class describing a path to a specific node in the dijkstra algorithm
+    private static class DijkstraPath<Position> implements ResultPath<Position>, Node.Marker<Position> {
+        float cost;
+        List<Node<Position>> path;
+        private boolean blacked = false; //true means this path is the shortest one
+
+        DijkstraPath(Node<Position> node) {
+            this.path = new ArrayList<>();
+            this.path.add(node);
+            this.cost = 0;
+        }
+
+        DijkstraPath(DijkstraPath<Position> prev, Node<Position> newNode, float additionalCost) {
+            path = new ArrayList<>();
+            path.addAll(prev.path);
+            path.add(newNode);
+            this.cost = prev.cost + additionalCost;
+        }
+
+        @Override
+        public Node<Position> start() {
+            return path.get(0);
+        }
+
+        @Override
+        public Node<Position> target() {
+            return path.get(path.size() - 1);
+        }
+
+        @Override
+        public List<Node<Position>> fullPath() {
+            return path;
+        }
     }
 
     private static class AStarMarker<Position> implements Node.Marker<Position> {

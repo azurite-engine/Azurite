@@ -7,12 +7,12 @@ import util.safety.Preconditions;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 
-/**
- * The Engine class initializes GLFW and the game loop.
- * @author Asher Haun
- * @author PixelRifts
- */
 public final class Engine {
+
+    /**
+     * The Engine class initializes GLFW and the game loop.
+     */
+
     private static final Engine instance = new Engine();
 
     private final long startMillis;
@@ -48,14 +48,6 @@ public final class Engine {
 
     public static Window window() {
         return getInstance().getWindow();
-    }
-
-    public Window getWindow() {
-        return window;
-    }
-
-    public float getDeltaTime() {
-        return deltaTime;
     }
 
     public static void showWindow() {
@@ -134,6 +126,14 @@ public final class Engine {
      */
     public static double millisRunning() {
         return System.currentTimeMillis() - getInstance().startMillis;
+    }
+
+    public Window getWindow() {
+        return window;
+    }
+
+    public float getDeltaTime() {
+        return deltaTime;
     }
 
 }
