@@ -75,8 +75,8 @@ public class TextRendererBatch extends RenderBatch {
 
             // Load position
             Transform spr = glyphRenderer.getLocalTransform();
-            data[offset] = spr.position.x + (xAdd * spr.scale.x);
-            data[offset + 1] = spr.position.y + (yAdd * spr.scale.y);
+            data[offset] = spr.getPosition().x + (xAdd * spr.scale.x);
+            data[offset + 1] = spr.getPosition().y + (yAdd * spr.scale.y);
 
             // Load color
             data[offset + 2] = color.x; // Red
@@ -143,7 +143,7 @@ public class TextRendererBatch extends RenderBatch {
     @Override
     protected void load(int index) {
         if (index >= spriteCount) spriteCount++;
-        primitiveVerticesOffset = 0;
+//        primitiveVerticesOffset = 0;
         loadVertexProperties(index, getOffset(index));
     }
 

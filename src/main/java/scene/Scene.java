@@ -3,12 +3,10 @@ package scene;//{This comment is intentionally added to create a git merge confl
 import ecs.GameObject;
 import ecs.RigidBody;
 import ecs.StaticCollider;
+import ecs.Text;
 import graphics.Camera;
 import graphics.Texture;
-import graphics.renderer.DebugRenderer;
-import graphics.renderer.DefaultRenderer;
-import graphics.renderer.LightmapRenderer;
-import graphics.renderer.Renderer;
+import graphics.renderer.*;
 import input.Keyboard;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
@@ -17,10 +15,16 @@ import postprocess.ForwardToTexture;
 import postprocess.PostProcessStep;
 import util.Engine;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Asher Haun
+ * @author Juyas
+ * @author VoxelRifts
+ */
 public abstract class Scene {
 
     private static int sceneCounter = 0;
@@ -31,11 +35,13 @@ public abstract class Scene {
     public DefaultRenderer renderer = new DefaultRenderer();
     public LightmapRenderer lightmapRenderer = new LightmapRenderer();
     public DebugRenderer debugRenderer = new DebugRenderer();
+    public TextRenderer textRenderer = new TextRenderer();
     protected Camera camera;
     protected ForwardToTexture forwardToScreen;
     private List<Renderer<?>> rendererRegistry = new LinkedList<>();
     private boolean debugMode = false;
     private boolean active = false;
+    private ArrayList<Text> uiObjects = new ArrayList<>();
 
     public boolean isActive() {
         return active;
@@ -118,10 +124,15 @@ public abstract class Scene {
         this.renderer.clean();
         this.lightmapRenderer.clean();
         this.debugRenderer.clean();
+        this.textRenderer.clean();
         rendererRegistry.forEach(Renderer::clean);
     }
 
     // The following methods shouldn't be overridden. For this, added final keyword
+
+    public final void startUi () {
+        textRenderer.init();
+    }
 
     /**
      * Loops through all gameobjects already in the scene and calls their start methods.
@@ -234,6 +245,20 @@ public abstract class Scene {
         renderer.init();
         forwardToScreen = new ForwardToTexture(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         forwardToScreen.init();
+    }
+
+    public void addUiObject (Text t) {
+        uiObjects.add(t);
+    }
+
+    public final void textRender() {
+        textRenderer.render();
+    }
+
+    public void updateUI () {
+        for (Text i : uiObjects) {
+            i.update();
+        }
     }
 
     /**

@@ -141,9 +141,6 @@ public class Transform {
         return positionBuffer;
     }
 
-    /*
-     * I don't think that these need any explanation...
-     */
     public float getX() {
         return this.position.x;
     }
@@ -152,8 +149,16 @@ public class Transform {
         return this.position.y;
     }
 
-    public void addY(float y) {
-        positionBuffer.add(0, y);
+    public void setY (float y) { this.position.y = y; }
+
+    public void setX (float x) { this.position.x = x; }
+
+    public void addY (float y) {
+        this.position.add(0, y);
+    }
+
+    public void addX (float x) {
+        this.position.add(x, 0);
     }
 
     public float getWidth() {

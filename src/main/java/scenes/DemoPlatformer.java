@@ -1,6 +1,7 @@
 package scenes;//{This comment is intentionally added to create a git merge conflict}
 
 import ecs.*;
+import fonts.Font;
 import graphics.Camera;
 import graphics.Color;
 import graphics.Texture;
@@ -27,6 +28,9 @@ public class DemoPlatformer extends Scene {
     GameObject player;
     GameObject booper;
 
+    Text text;
+    Font f;
+
     public static void main(String[] args) {
         Engine.init(1920, 1080, "Azurite Engine Demo 2", 1.0f);
         Engine.scenes().switchScene(new DemoPlatformer(), true);
@@ -34,6 +38,10 @@ public class DemoPlatformer extends Scene {
     }
 
     public void awake() {
+
+        f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 25, true);
+        text = new Text("Azurite Engine demo", f, 15, 5, 100, true);
+
         camera = new Camera();
         setDefaultBackground(new Color(41, 30, 49));
 
@@ -72,6 +80,8 @@ public class DemoPlatformer extends Scene {
         super.update();
         player.getComponent(PointLight.class).intensity = Utils.map((float) Math.sin(Engine.millisRunning() / 600), -1, 1, 80, 120);
         booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
+
+        text.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS() + "\n\n");
 
         camera.smoothFollow(player.getRawTransform());
 
