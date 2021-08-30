@@ -35,6 +35,10 @@ public class Collisions {
             public void accept(RigidBody collider, Vector2f[] simplex) {
                 //find penetration vector with EPA
                 Optional<Vector2f> epa = CollisionUtil.expandingPolytopeAlgorithm(collider.getCollisionShape(), parentComponent.getCollisionShape(), simplex);
+
+                //if two rigitbodies collide, the first one will handle the collision
+                if(!epa.isPresent()) return;
+
                 Vector2f reflection = epa.get();
                 //solid intersection prevention
                 collider.positionBuffer().add(reflection);
@@ -55,6 +59,10 @@ public class Collisions {
             public void accept(RigidBody collider, Vector2f[] simplex) {
                 //find penetration vector with EPA
                 Optional<Vector2f> epa = CollisionUtil.expandingPolytopeAlgorithm(collider.getCollisionShape(), parentComponent.getCollisionShape(), simplex);
+
+                //if two rigitbodies collide, the first one will handle the collision
+                if(!epa.isPresent()) return;
+
                 Vector2f reflection = epa.get();
                 //solid intersection prevention
                 collider.positionBuffer().add(reflection);
