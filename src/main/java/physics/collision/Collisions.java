@@ -37,7 +37,7 @@ public class Collisions {
                 Optional<Vector2f> epa = CollisionUtil.expandingPolytopeAlgorithm(collider.getCollisionShape(), parentComponent.getCollisionShape(), simplex);
                 Vector2f reflection = epa.get();
                 //solid intersection prevention
-                collider.positionBuffer().add(reflection);
+                collider.locationBuffer().add(reflection.x, reflection.y, 0);
                 //bouncy factor applied
                 collider.velocity().add(reflection.mul(velocityFactor, new Vector2f()));
                 //prevents movement in the direction of the collision, therefore negative factors "should" have no impact
@@ -57,7 +57,7 @@ public class Collisions {
                 Optional<Vector2f> epa = CollisionUtil.expandingPolytopeAlgorithm(collider.getCollisionShape(), parentComponent.getCollisionShape(), simplex);
                 Vector2f reflection = epa.get();
                 //solid intersection prevention
-                collider.positionBuffer().add(reflection);
+                collider.locationBuffer().add(reflection.x, reflection.y, 0);
                 //prevents movement in the direction of the collision
                 addFilter(collider, reflection);
             }

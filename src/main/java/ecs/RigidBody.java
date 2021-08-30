@@ -2,9 +2,9 @@ package ecs;
 
 import graphics.Color;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
+import physics.LocationSensitive;
 import physics.PhysicalEntity;
-import physics.Transform;
-import physics.TransformSensitive;
 import physics.collision.Collider;
 import physics.collision.CollisionHandler;
 import physics.collision.CollisionUtil;
@@ -30,7 +30,7 @@ import java.util.Optional;
  * @version 08.07.2021
  * @since 19.06.2021
  */
-public class RigidBody extends Component implements Collider, PhysicalEntity, TransformSensitive {
+public class RigidBody extends Component implements Collider, PhysicalEntity, LocationSensitive {
 
     /**
      * The collision shape of the collider.
@@ -139,10 +139,10 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     }
 
     /**
-     * @see GameObject#positionBuffer()
+     * @see GameObject#locationBuffer()
      */
-    public Vector2f positionBuffer() {
-        return gameObject.positionBuffer();
+    public Vector3f locationBuffer() {
+        return gameObject.locationBuffer();
     }
 
     @Override
@@ -196,7 +196,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         this.bodyForce.setIdentifier(gameObject.name());
         this.bodyForce.setMass(this.mass);
         this.collisionHandler.setParentComponent(this);
-        this.collisionShape.setPosition(gameObject.getReadOnlyTransform().getPosition());
+        this.collisionShape.setPosition(gameObject.getReadOnlyPosition());
     }
 
     @Override
@@ -208,7 +208,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
         //filter the velocity to prevent unwanted movement
         velocity.set(vectorFilter.filter(velocity));
         //let the velocity then modify our current position - push to buffer
-        gameObject.positionBuffer().add(velocity);
+        locationBuffer().add(velocity.x, velocity.y, 0);
     }
 
     @Override
@@ -277,9 +277,9 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     }
 
     @Override
-    public void update(Transform changedTransform) {
+    public void update(Vector3f changedLocationData) {
         //update the shape according to changes made to transform
-        collisionShape.setPosition(gameObject.getReadOnlyTransform().getPosition());
+        collisionShape.setPosition(gameObject.getReadOnlyPosition());
 
         //debug only
         if (collisionShape instanceof Quadrilateral) {

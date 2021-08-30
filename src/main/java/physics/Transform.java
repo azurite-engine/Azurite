@@ -8,10 +8,15 @@ import org.joml.Vector2f;
  */
 public class Transform {
 
-    public static final Vector2f ZERO = new Vector2f(0, 0);
     public Vector2f scale;
     private Vector2f position;
-    private Vector2f positionBuffer;
+    /**
+     * Rotation is stored in degree
+     *
+     * @see #getRotation()
+     * @see #getRotationRadians()
+     */
+
     private float rotation;
 
     /**
@@ -127,22 +132,8 @@ public class Transform {
         return t.position.equals(this.position) && t.rotation == this.rotation && t.scale.equals(this.scale);
     }
 
-    public void resetPositionBuffer() {
-        this.positionBuffer = new Vector2f();
-    }
-
-    public boolean applyPositionBuffer() {
-        if (!positionBuffer.isFinite() || positionBuffer.equals(ZERO)) return false;
-        this.position.add(positionBuffer);
-        return true;
-    }
-
-    public Vector2f positionBuffer() {
-        return positionBuffer;
-    }
-
     /*
-     * I don't think that these need any explanation...
+     * Modification methods - I don't think that these need any explanation...
      */
     public float getX() {
         return this.position.x;
@@ -152,8 +143,12 @@ public class Transform {
         return this.position.y;
     }
 
+    public void addX(float x) {
+        this.position.add(x, 0);
+    }
+
     public void addY(float y) {
-        positionBuffer.add(0, y);
+        this.position.add(0, y);
     }
 
     public float getWidth() {
@@ -172,19 +167,26 @@ public class Transform {
         this.rotation = r;
     }
 
+    public void setRotationRadians(float r) {
+        this.rotation = (float) Math.toDegrees(r);
+    }
+
     public float getRotationRadians() {
         return (float) Math.toRadians(this.rotation);
     }
 
-    public void addRotation(float r) {
+    public void addRotationDegree(float r) {
         this.rotation += r;
+    }
+
+    public void addRotationRadians(float r) {
+        this.rotation += Math.toDegrees(r);
     }
 
     public Vector2f getPosition() {
         return position;
     }
 
-    //this method is dangerous, use it with caution. it can break physics when called at the wrong time
     public void setPosition(Vector2f position) {
         this.position = position;
     }
