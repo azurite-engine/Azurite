@@ -93,4 +93,8 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
 
         Collections.sort(batches);
     }
+
+    public static int getMaxBatchSize () {
+        return MAX_BATCH_SIZE;
+    }
 }

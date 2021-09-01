@@ -25,6 +25,8 @@ public class TextRendererBatch extends RenderBatch {
     private ArrayList<GlyphRenderer> glyphRenderers; // even though this is an arrayList, maxBatchSize still applies
     private int numberOfGlyphRenderers;
 
+    private float[] resetData;
+
     /**
      * Create a default type render batch
      *
@@ -36,6 +38,7 @@ public class TextRendererBatch extends RenderBatch {
 
         this.glyphRenderers = new ArrayList<>();
         this.numberOfGlyphRenderers = 0;
+        resetData = new float[maxBatchSize * primitive.vertexCount * vertexCount];
     }
 
     /**
@@ -119,7 +122,7 @@ public class TextRendererBatch extends RenderBatch {
     public void removeGlyphRenderers () {
         glyphRenderers.clear();
         this.numberOfGlyphRenderers = 0;
-        data = new float[maxBatchSize * primitive.vertexCount * vertexCount];
+        data = resetData;
     }
 
     @Override
@@ -172,6 +175,8 @@ public class TextRendererBatch extends RenderBatch {
                 }
                 return true;
             }
+        }  else if (!hasRoomLeft()) {
+//            Logger.logInfo("Text length has reached the maximum string length of " + (maxBatchSize - 1) + "; this is an artificial cap set for performance reasons.");
         }
         return false;
     }

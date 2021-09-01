@@ -4,6 +4,7 @@ import fonts.Font;
 import fonts.Glyph;
 import fonts.GlyphRenderer;
 import graphics.Color;
+import graphics.renderer.TextRenderer;
 import graphics.renderer.TextRendererBatch;
 import org.joml.Vector2f;
 import physics.Transform;
@@ -35,6 +36,10 @@ public class Text {
 
     public Text (String string, Font font, float x, float y, int zIndex, boolean isSticky) {
         this.text = string;
+        if (string.length() >= TextRenderer.getMaxBatchSize()) {
+            Logger.logInfo("The String \"" + string.substring(0, 7) + "...\" passed is longer than the allowed string size for text: " + TextRenderer.getMaxBatchSize());
+            this.text = string.substring(0, TextRenderer.getMaxBatchSize() - 4) + "...";
+        }
         this.font = font;
         this.transform.setX(x);
         this.transform.setY(y);
@@ -42,6 +47,8 @@ public class Text {
         this.isSticky = isSticky;
 
         glyphRenderers = new ArrayList<>();
+
+
 
         generateGlyphs();
         Engine.scenes().currentScene().textRenderer.add(this);
@@ -52,6 +59,10 @@ public class Text {
 
     public Text (String string, float x, float y) {
         this.text = string;
+        if (string.length() >= TextRenderer.getMaxBatchSize()) {
+            Logger.logInfo("The String \"" + string.substring(0, 7) + "...\" passed is longer than the allowed string size for text: " + TextRenderer.getMaxBatchSize());
+            this.text = string.substring(0, TextRenderer.getMaxBatchSize() - 4) + "...";
+        }
         this.font = new Font();
         this.transform.setX(x);
         this.transform.setY(y);
@@ -85,11 +96,16 @@ public class Text {
         glyphRenderers.clear();
 
         this.text = string;
+//        if (string.length() >= TextRenderer.getMaxBatchSize()) {
+//            Logger.logInfo("The String passed is longer than the allowed string size for text: " + TextRenderer.getMaxBatchSize());
+//            this.text = string.substring(0, TextRenderer.getMaxBatchSize() - 4) + "...";
+//        }
 
         generateGlyphs();
         Engine.scenes().currentScene().textRenderer.changeText(this, currentBatch);
     }
 
+    char ch;
     private void generateGlyphs () {
         int textHeight = font.getHeight(text);
         int lineIncreases = 0;
@@ -98,7 +114,12 @@ public class Text {
         float drawY = transform.getY();
 
         for (int i = 0; i < text.length(); i++) {
-            char ch = text.charAt(i);
+            if (i >= TextRenderer.getMaxBatchSize() - 3) {
+                if (i < TextRenderer.getMaxBatchSize()) {
+                    ch = '.';
+                } else break;
+            } else ch = text.charAt(i);
+
             if (ch == '\n') {
                 lineIncreases ++;
                 /* Line feed, set x and y to draw at the next line */
