@@ -26,7 +26,7 @@ public class Collisions {
     /**
      * Standard collision, just prevents intersection and moves object according to EPA to seperate them.
      */
-    public static CollisionHandler gjksmBlocking() {
+    public static CollisionHandler gjksmEpaBlocking() {
         return new CollisionHandler() {
             @Override
             public void accept(RigidBody collider, CollisionInformation info) {

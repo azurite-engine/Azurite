@@ -83,9 +83,9 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     private float mass;
     /**
      * Used to feed with objects this body is colliding with.
-     * Decides how to react to a collision. default: {@link Collisions#gjksmBlocking()}.
+     * Decides how to react to a collision. default: {@link Collisions#gjksmEpaBlocking()}.
      */
-    private CollisionHandler collisionHandler = Collisions.gjksmBlocking();
+    private CollisionHandler collisionHandler = Collisions.gjksmEpaBlocking();
     /**
      * Used to determine the way collision detection works and is calculated. default: ({@link Collisions#gjksmCollisionDetection()}
      */

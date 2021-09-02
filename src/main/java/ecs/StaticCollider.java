@@ -42,9 +42,9 @@ public class StaticCollider extends Component implements Collider {
     private short collisionMask;
     /**
      * Used to feed with objects this body is colliding with.
-     * Decides how to react to a collision. default is {@link Collisions#gjksmBlocking()}.
+     * Decides how to react to a collision. default is {@link Collisions#gjksmEpaBlocking()}.
      */
-    private CollisionHandler collisionHandler = Collisions.gjksmBlocking();
+    private CollisionHandler collisionHandler = Collisions.gjksmEpaBlocking();
 
     /**
      * Full creation of a {@link StaticCollider}.
