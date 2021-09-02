@@ -37,7 +37,7 @@ public interface Collider {
      * Determines whether a collider intersects with another collider IGNORING the collision layers.
      *
      * @param collider the other collider
-     * @return a tupel containing the result of gjk, or an empty optional if there is no collision
+     * @return an object containing the result of collision detection
      */
     CollisionInformation doesCollideWith(Collider collider);
 

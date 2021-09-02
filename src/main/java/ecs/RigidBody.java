@@ -5,7 +5,10 @@ import org.joml.Vector2f;
 import physics.PhysicalEntity;
 import physics.Transform;
 import physics.TransformSensitive;
-import physics.collision.*;
+import physics.collision.Collider;
+import physics.collision.CollisionHandler;
+import physics.collision.CollisionInformation;
+import physics.collision.Collisions;
 import physics.collision.shape.PrimitiveShape;
 import physics.collision.shape.Quadrilateral;
 import physics.force.CombinedForce;
@@ -15,6 +18,8 @@ import physics.force.VectorFilter;
 import util.Utils;
 import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
+
+import java.util.function.BiFunction;
 
 /**
  * <h1>Azurite</h1>
@@ -78,9 +83,13 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     private float mass;
     /**
      * Used to feed with objects this body is colliding with.
-     * Decides how to react to a collision. default is {@link Collisions#gjksmSolid()}.
+     * Decides how to react to a collision. default: {@link Collisions#gjksmBlocking()}.
      */
-    private CollisionHandler collisionHandler = Collisions.gjksmSolid();
+    private CollisionHandler collisionHandler = Collisions.gjksmBlocking();
+    /**
+     * Used to determine the way collision detection works and is calculated. default: ({@link Collisions#gjksmCollisionDetection()}
+     */
+    private BiFunction<PrimitiveShape, PrimitiveShape, CollisionInformation> collisionDetection = Collisions.gjksmCollisionDetection();
 
     /**
      * Full creation of a rigidbody.
@@ -147,7 +156,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
 
     @Override
     public CollisionInformation doesCollideWith(Collider other) {
-        return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape());
+        return collisionDetection.apply(this.collisionShape, other.getCollisionShape());
     }
 
     @Override
