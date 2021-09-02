@@ -5,10 +5,7 @@ import org.joml.Vector2f;
 import physics.PhysicalEntity;
 import physics.Transform;
 import physics.TransformSensitive;
-import physics.collision.Collider;
-import physics.collision.CollisionHandler;
-import physics.collision.CollisionUtil;
-import physics.collision.Collisions;
+import physics.collision.*;
 import physics.collision.shape.PrimitiveShape;
 import physics.collision.shape.Quadrilateral;
 import physics.force.CombinedForce;
@@ -18,8 +15,6 @@ import physics.force.VectorFilter;
 import util.Utils;
 import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
-
-import java.util.Optional;
 
 /**
  * <h1>Azurite</h1>
@@ -83,9 +78,9 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     private float mass;
     /**
      * Used to feed with objects this body is colliding with.
-     * Decides how to react to a collision. default is {@link Collisions#solid()}.
+     * Decides how to react to a collision. default is {@link Collisions#gjksmSolid()}.
      */
-    private CollisionHandler collisionHandler = Collisions.solid();
+    private CollisionHandler collisionHandler = Collisions.gjksmSolid();
 
     /**
      * Full creation of a rigidbody.
@@ -151,7 +146,7 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     }
 
     @Override
-    public Optional<Vector2f[]> doesCollideWith(Collider other) {
+    public CollisionInformation doesCollideWith(Collider other) {
         return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape());
     }
 
@@ -212,12 +207,12 @@ public class RigidBody extends Component implements Collider, PhysicalEntity, Tr
     }
 
     @Override
-    public void handleCollision(Collider otherCollider, Vector2f[] gjkSimplex) {
+    public void handleCollision(Collider otherCollider, CollisionInformation info) {
         //static collisions should be handled by the static object
         if (otherCollider instanceof StaticCollider)
-            otherCollider.handleCollision(this, gjkSimplex);
+            otherCollider.handleCollision(this, info);
             //collisions with other rigidbodys will be handled here
-        else collisionHandler.accept((RigidBody) otherCollider, gjkSimplex);
+        else collisionHandler.accept((RigidBody) otherCollider, info);
     }
 
     @Override

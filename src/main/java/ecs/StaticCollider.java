@@ -2,17 +2,12 @@ package ecs;
 
 import graphics.Color;
 import org.joml.Vector2f;
-import physics.collision.Collider;
-import physics.collision.CollisionHandler;
-import physics.collision.CollisionUtil;
-import physics.collision.Collisions;
+import physics.collision.*;
 import physics.collision.shape.PrimitiveShape;
 import physics.collision.shape.Quadrilateral;
 import util.Utils;
 import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
-
-import java.util.Optional;
 
 /**
  * <h1>Azurite</h1>
@@ -47,9 +42,9 @@ public class StaticCollider extends Component implements Collider {
     private short collisionMask;
     /**
      * Used to feed with objects this body is colliding with.
-     * Decides how to react to a collision. default is {@link Collisions#solid()}.
+     * Decides how to react to a collision. default is {@link Collisions#gjksmSolid()}.
      */
-    private CollisionHandler collisionHandler = Collisions.solid();
+    private CollisionHandler collisionHandler = Collisions.gjksmSolid();
 
     /**
      * Full creation of a {@link StaticCollider}.
@@ -97,7 +92,7 @@ public class StaticCollider extends Component implements Collider {
     }
 
     @Override
-    public Optional<Vector2f[]> doesCollideWith(Collider other) {
+    public CollisionInformation doesCollideWith(Collider other) {
         return CollisionUtil.gjksmCollision(this.collisionShape, other.getCollisionShape());
     }
 
@@ -148,9 +143,9 @@ public class StaticCollider extends Component implements Collider {
     }
 
     @Override
-    public void handleCollision(Collider otherCollider, Vector2f[] gjkSimplex) {
+    public void handleCollision(Collider otherCollider, CollisionInformation info) {
         if (otherCollider instanceof RigidBody)
-            collisionHandler.accept((RigidBody) otherCollider, gjkSimplex);
+            collisionHandler.accept((RigidBody) otherCollider, info);
     }
 
     @Override

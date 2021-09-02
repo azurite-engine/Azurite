@@ -29,15 +29,16 @@ public class Collisions {
      *                       factor of 1 means no change of the reflection.
      *                       negative factors may result in undefined behaviour.
      */
-    public static CollisionHandler solidBouncy(float velocityFactor) {
+    public static CollisionHandler gjksmSolidBouncy(float velocityFactor) {
         return new CollisionHandler() {
             @Override
-            public void accept(RigidBody collider, Vector2f[] simplex) {
+            public void accept(RigidBody collider, CollisionInformation info) {
+                if (!info.collision()) return;
                 //find penetration vector with EPA
-                Optional<Vector2f> epa = CollisionUtil.expandingPolytopeAlgorithm(collider.getCollisionShape(), parentComponent.getCollisionShape(), simplex);
+                Optional<Vector2f> epa = CollisionUtil.expandingPolytopeAlgorithm(collider.getCollisionShape(), parentComponent.getCollisionShape(), (Vector2f[]) info.get());
 
                 //if two rigitbodies collide, the first one will handle the collision
-                if(!epa.isPresent()) return;
+                if (!epa.isPresent()) return;
 
                 Vector2f reflection = epa.get();
                 //solid intersection prevention
@@ -53,15 +54,16 @@ public class Collisions {
     /**
      * Standard collision, just prevents intersection and moves object according to EPA to seperate them.
      */
-    public static CollisionHandler solid() {
+    public static CollisionHandler gjksmSolid() {
         return new CollisionHandler() {
             @Override
-            public void accept(RigidBody collider, Vector2f[] simplex) {
+            public void accept(RigidBody collider, CollisionInformation info) {
+                if (!info.collision()) return;
                 //find penetration vector with EPA
-                Optional<Vector2f> epa = CollisionUtil.expandingPolytopeAlgorithm(collider.getCollisionShape(), parentComponent.getCollisionShape(), simplex);
+                Optional<Vector2f> epa = CollisionUtil.expandingPolytopeAlgorithm(collider.getCollisionShape(), parentComponent.getCollisionShape(), (Vector2f[]) info.get());
 
                 //if two rigitbodies collide, the first one will handle the collision
-                if(!epa.isPresent()) return;
+                if (!epa.isPresent()) return;
 
                 Vector2f reflection = epa.get();
                 //solid intersection prevention

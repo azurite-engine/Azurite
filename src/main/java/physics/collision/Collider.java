@@ -1,9 +1,6 @@
 package physics.collision;
 
-import org.joml.Vector2f;
 import physics.collision.shape.PrimitiveShape;
-
-import java.util.Optional;
 
 /**
  * <h1>Azurite</h1>
@@ -26,9 +23,9 @@ public interface Collider {
      * Is called if there is a collision with this object.
      *
      * @param otherCollider the object that this object collided with
-     * @param gjkSimplex    the result of the gjk collision detection
+     * @param info          the result of the collision detection
      */
-    void handleCollision(Collider otherCollider, Vector2f[] gjkSimplex);
+    void handleCollision(Collider otherCollider, CollisionInformation info);
 
     /**
      * Called after collision is handled each update cycle.
@@ -42,7 +39,7 @@ public interface Collider {
      * @param collider the other collider
      * @return a tupel containing the result of gjk, or an empty optional if there is no collision
      */
-    Optional<Vector2f[]> doesCollideWith(Collider collider);
+    CollisionInformation doesCollideWith(Collider collider);
 
     /**
      * Determines whether a collider could potentially intersect with another collider ONLY by their collision layers.
