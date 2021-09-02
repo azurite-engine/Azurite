@@ -1,10 +1,9 @@
-package physics;
+package util;
 
 import org.joml.Vector2f;
 
 /**
- * Represents the position in X and Y coordinates,rotation and the scale (width and height) of a gameObject
- * TODO: change to a component? - no don't do that
+ * Represents the position in X and Y coordinates, rotation and the scale (width and height)
  */
 public class Transform {
 
@@ -24,6 +23,15 @@ public class Transform {
      */
     public Transform() {
         init(new Vector2f(), 0, new Vector2f());
+    }
+
+    /**
+     * Create a copy of a transform instance
+     *
+     * @param transform the transform instance
+     */
+    public Transform(Transform transform) {
+        init(new Vector2f(transform.position), transform.rotation, new Vector2f(transform.scale));
     }
 
     /**
@@ -97,27 +105,9 @@ public class Transform {
     }
 
     /**
-     * @return Returns a new transform which is identical to this object, can be used to copy into a new physics.Transform object.
-     */
-    public Transform copy() {
-        return new Transform(new Vector2f(this.position), new Vector2f(this.scale));
-    }
-
-    /**
-     * Takes a reference to an external transform, and copies this physics.Transform to it.
-     *
-     * @param to The physics.Transform to be changed.
-     */
-    public void copy(Transform to) {
-        to.position.set(this.position);
-        to.rotation = this.rotation;
-        to.scale.set(this.scale);
-    }
-
-    /**
      * Checks to see if to Transforms are equal.
      *
-     * @param o physics.Transform to be checked for equality against this instance of physics.Transform.
+     * @param o Transform to be checked for equality against this instance of util.Transform.
      * @return Returns true if instances are the same, otherwise returns false.
      */
     @Override
