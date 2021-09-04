@@ -43,7 +43,7 @@ public class CharacterController extends Component {
                     direction.add(cc.speedModifier, 0);
                 }
                 if (cc.isKeyUsed(UP)) {
-                    body.velocity().add(0, cc.speedModifier * -3);
+                    body.velocity().add(0, cc.speedModifier * -2);
                 }
                 lastDirection = direction;
                 body.velocity().add(direction);

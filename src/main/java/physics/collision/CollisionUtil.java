@@ -49,7 +49,7 @@ public class CollisionUtil {
      * @param shapeB shape b
      * @return whether shape a and shape b intersect
      */
-    public static Optional<Vector2f[]> gjksmCollision(PrimitiveShape shapeA, PrimitiveShape shapeB) {
+    public static CollisionInformation gjksmCollision(PrimitiveShape shapeA, PrimitiveShape shapeB) {
         Vector2f startPoint = maxDotPointMinkDiff(shapeA, shapeB, shapeA.centroid().mul(-1, new Vector2f()));
         Vector2f direction = new Vector2f(-startPoint.x, -startPoint.y);
 
@@ -69,14 +69,14 @@ public class CollisionUtil {
             loop++;
             //loop at max 20 times plus the amount of both shapes faces, so that there is enough room to find collision.
             //this is obviously not a good solution, but it should do fine for now.
-            if (loop > maxLoop) return Optional.empty();
+            if (loop > maxLoop) return new CollisionInformation(null, false);
 
             //the point furthest in the direction
             //Shape combinedShape = minkDiff(shapeA, shapeB); combinedShape.supportPoint(direction);
             Vector2f pointA = maxDotPointMinkDiff(shapeA, shapeB, direction);
 
             if (pointA.dot(direction) < 0)
-                return Optional.empty(); //no intersection
+                return new CollisionInformation(null, false); //no intersection
 
             //do Simplex -> two points needed for that
             {
@@ -123,7 +123,8 @@ public class CollisionUtil {
         }
 
         //3 points are confirmed, there is intersection
-        return Optional.of(Arrays.asList(simplex.getLeft(), simplex.getMiddle(), simplex.getRight()).toArray(new Vector2f[0]));
+        Vector2f[] vector2fs = Arrays.asList(simplex.getLeft(), simplex.getMiddle(), simplex.getRight()).toArray(new Vector2f[0]);
+        return new CollisionInformation(vector2fs, true);
 
     }
 

@@ -57,10 +57,10 @@ public class DemoPlatformer extends Scene {
         booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
         //TODO not done yet
 
-        RigidBody rigidBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 1);
+        RigidBody rigidBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 2);
         rigidBody.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.005f)));
         rigidBody.setMask(2, true);
-        //booper.addComponent(rigidBody);
+        booper.addComponent(rigidBody);
 
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
