@@ -46,10 +46,10 @@ public class DemoPlatformer extends Scene {
         //player.addComponent(new AABB());
         RigidBody playerBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 1);
         playerBody.setMask(2, true);
-        playerBody.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.010f)));
+        playerBody.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.020f)));
         player.addComponent(playerBody);
         player.addComponent(new SpriteRenderer(a.getSprite(132)));
-        player.addComponent(new CharacterController(CharacterController.standardPlatformer(playerBody), 1));
+        player.addComponent(new CharacterController(CharacterController.standardPlatformer(playerBody), 1.5f));
         player.getRawTransform().setRotation(90);
 
         booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
@@ -57,10 +57,10 @@ public class DemoPlatformer extends Scene {
         booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
         //TODO not done yet
 
-        RigidBody rigidBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 1);
+        RigidBody rigidBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 2);
         rigidBody.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.005f)));
         rigidBody.setMask(2, true);
-        //booper.addComponent(rigidBody);
+        booper.addComponent(rigidBody);
 
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
