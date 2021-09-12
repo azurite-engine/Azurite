@@ -29,7 +29,6 @@ public class DemoPlatformer extends Scene {
     GameObject booper;
 
     Text text;
-    Text text2;
     Font f;
 
     public static void main(String[] args) {
@@ -42,7 +41,6 @@ public class DemoPlatformer extends Scene {
 
         f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 18, true);
         text = new Text("Azurite Engine demo", f, 15, 5, 100, true);
-        text2 = new Text("Azurite Engine demo", f, 15, 50, 100, true);
 
         camera = new Camera();
         setDefaultBackground(new Color(41, 30, 49));
@@ -75,7 +73,6 @@ public class DemoPlatformer extends Scene {
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         bloom.init();
-
     }
 
     public void update() {
@@ -83,16 +80,7 @@ public class DemoPlatformer extends Scene {
         player.getComponent(PointLight.class).intensity = Utils.map((float) Math.sin(Engine.millisRunning() / 600), -1, 1, 80, 120);
         booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 
-//        text.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS() + "\n\n");
-        String s = "";
-        for (int i = 0; i < 9999; i ++) {
-            s += ("" + Utils.randomInt(0, 5));
-            if (i % 300 == 1) {
-                s += "\n";
-            }
-//            text.change("Len: " + (i + 1));
-        }
-        text2.change(s);
+        text.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS());
 
         camera.smoothFollow(player.getRawTransform());
 

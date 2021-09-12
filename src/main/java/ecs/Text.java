@@ -95,7 +95,7 @@ public class Text {
         currentBatch = glyphRenderers.get(0).getBatch();
         glyphRenderers.clear();
 
-        this.text = string;
+        this.text = string + " ";
 //        if (string.length() >= TextRenderer.getMaxBatchSize()) {
 //            Logger.logInfo("The String passed is longer than the allowed string size for text: " + TextRenderer.getMaxBatchSize());
 //            this.text = string.substring(0, TextRenderer.getMaxBatchSize() - 4) + "...";

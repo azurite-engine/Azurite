@@ -28,9 +28,3 @@ public abstract class CollisionHandler implements BiConsumer<RigidBody, Vector2f
     }
 
 }
-
-/***********************************************************************************************
- *
- *                  All rights reserved, SpaceParrots UG (c) copyright 2021
- *
- ***********************************************************************************************/
