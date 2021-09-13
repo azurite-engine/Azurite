@@ -27,6 +27,7 @@ public class GlyphRenderer {
 
     private Transform localTransform;
     private Transform lastTransform = new Transform();
+    private Vector2f positionOffset;
     private boolean isDirty = false; // Dirty flag, tells renderer to redraw if object has changed
 
     private TextRendererBatch batch;
@@ -48,6 +49,8 @@ public class GlyphRenderer {
         this.character = c;
         this.isSticky = isSticky;
         this.color = color.toNormalizedVec4f();
+//        this.positionOffset = parentText.getTransform().getPosition().sub(transform.getPosition());
+//        this.positionOffset = new Vector2f(parentText.getTransform().getX() - localTransform.getX(), parentText.getTransform().getY() - localTransform.getY());
     }
 
     /**
@@ -64,6 +67,11 @@ public class GlyphRenderer {
     public void setRendererBatch (TextRendererBatch batch, int index) {
         this.batch = batch;
         batchIndex = index;
+    }
+
+    public void updatePosition (Vector2f delta) {
+        localTransform.addX(delta.x());
+        localTransform.addY(delta.y());
     }
 
     public TextRendererBatch getBatch () {

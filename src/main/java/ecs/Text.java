@@ -22,7 +22,6 @@ public class Text {
     private Sprite sprite;
 
     private Transform lastTransform = new Transform();
-    private boolean isDirty = false; // Dirty flag, tells renderer to redraw if object components have changed
     private boolean isSticky = false;
     int zIndex;
 
@@ -41,20 +40,20 @@ public class Text {
             this.text = string.substring(0, TextRenderer.getMaxBatchSize() - 4) + "...";
         }
         this.font = font;
-        this.transform.setX(x);
-        this.transform.setY(y);
+        this.transform.setPosition(new Vector2f(x, y));
         this.zIndex = zIndex;
         this.isSticky = isSticky;
 
         glyphRenderers = new ArrayList<>();
 
-
-
+        System.out.println(transform.getX() + " before genGlyphs\n");
         generateGlyphs();
+        System.out.println("\n" + transform.getX() + " after genGlyphs");
         Engine.scenes().currentScene().textRenderer.add(this);
         Engine.scenes().currentScene().addUiObject(this);
 
         currentBatch = glyphRenderers.get(0).getBatch();
+
     }
 
     public Text (String string, float x, float y) {
@@ -79,15 +78,16 @@ public class Text {
 
     public void update () {
         if (!lastTransform.equals(this.transform)) {
-            Vector2f movementDelta = transform.getPosition().sub(lastTransform.getPosition());
-            transform.copy(lastTransform);
+            Vector2f movementDelta = new Vector2f(transform.getX() - lastTransform.getX(), transform.getY() - lastTransform.getY());
+
             for (GlyphRenderer i : glyphRenderers) {
-                i.addX(movementDelta.x);
-                i.addY(movementDelta.y);
+                i.updatePosition(movementDelta);
             }
             for (GlyphRenderer i : glyphRenderers) {
                 i.update(Engine.deltaTime());
             }
+            lastTransform.setX(transform.getX());
+            lastTransform.setY(transform.getY());
         }
     }
 
@@ -96,10 +96,6 @@ public class Text {
         glyphRenderers.clear();
 
         this.text = string + " ";
-//        if (string.length() >= TextRenderer.getMaxBatchSize()) {
-//            Logger.logInfo("The String passed is longer than the allowed string size for text: " + TextRenderer.getMaxBatchSize());
-//            this.text = string.substring(0, TextRenderer.getMaxBatchSize() - 4) + "...";
-//        }
 
         generateGlyphs();
         Engine.scenes().currentScene().textRenderer.changeText(this, currentBatch);
@@ -110,8 +106,10 @@ public class Text {
         int textHeight = font.getHeight(text);
         int lineIncreases = 0;
 
-        float drawX = transform.getX();
-        float drawY = transform.getY();
+        Transform t = transform.copy();
+
+        float drawX = t.getX();
+        float drawY = t.getY();
 
         for (int i = 0; i < text.length(); i++) {
             if (i >= TextRenderer.getMaxBatchSize() - 3) {
@@ -123,8 +121,8 @@ public class Text {
             if (ch == '\n') {
                 lineIncreases ++;
                 /* Line feed, set x and y to draw at the next line */
-                drawY = transform.getY() + (font.getFontHeight() * lineIncreases);
-                drawX = transform.getX();
+                drawY = t.getY() + (font.getFontHeight() * lineIncreases);
+                drawX = t.getX();
                 continue;
             }
             if (ch == '\r') {
@@ -183,12 +181,12 @@ public class Text {
         return transform.getX();
     }
 
-    public void setX (float x) {
-        transform.setX(x);
-    }
-
     public float getY () {
         return transform.getY();
+    }
+
+    public void setX (float x) {
+        transform.setX(x);
     }
 
     public void setY (float y) {

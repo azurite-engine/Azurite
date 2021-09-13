@@ -95,7 +95,7 @@ public class Transform {
      * @return Returns a new transform which is identical to this object, can be used to copy into a new physics.Transform object.
      */
     public Transform copy() {
-        return new Transform(new Vector2f(this.position), new Vector2f(this.scale));
+        return new Transform(new Vector2f(this.position.x(), this.position.y()), new Vector2f(this.scale.x(), this.scale.y()));
     }
 
     /**
@@ -149,9 +149,9 @@ public class Transform {
         return this.position.y;
     }
 
-    public void setY (float y) { this.position.y = y; }
+    public void setY (float y) { this.position.set(this.position.x(), y); }
 
-    public void setX (float x) { this.position.x = x; }
+    public void setX (float x) { this.position.set(x, this.position.y()); }
 
     public void addY (float y) {
         this.position.add(0, y);
