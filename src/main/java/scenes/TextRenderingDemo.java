@@ -30,25 +30,25 @@ public class TextRenderingDemo extends Scene {
     public void awake () {
 
         camera = new Camera();
-        setDefaultBackground(Color.BLACK);
+        setDefaultBackground(Color.WHITE);
 
         maghrib = new Font("src/assets/fonts/Maghrib-MVZpx.ttf", 50, true);
         openSans = new Font("src/assets/fonts/OpenSans-Regular.ttf", 20, true);
 
-        titleText = new Text("Azurite text rendering demo", maghrib, 10, 5, 100, true);
-        movingText = new Text("HAHA", openSans, 200, 200, 100, true);
-        changingText = new Text("Begin typing to change this text: ", openSans, 10, 50, 100, true);
+        titleText = new Text("Azurite text rendering demo", maghrib, Color.BLACK,10, 5, 100, true);
+        movingText = new Text("HAHA", openSans, Color.RED, 200, 200);
+        changingText = new Text("Begin typing to change this text: ", openSans, Color.BLUE, 10, 50);
     }
 
     public void update () {
 
-        changingText.change(movingText.getX() + " | " + movingText.getY() + "\nMouse " + Mouse.mouse.x() + " | " + Mouse.mouse.y());
+        changingText.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS() + "\nMouse " + Mouse.mouse.x() + " | " + Mouse.mouse.y());
 
         movingText.setX(Mouse.mouseX);
-
-//        movingText.setX(Mouse.mouseX);
         movingText.setY(Mouse.mouseY);
-//        movingText.addX(Engine.deltaTime() * 100 * (Mouse.mouse.x() <  movingText.getX() ? -1 : 1));
+
+        changingText.rainbowify();
+
     }
 
 }

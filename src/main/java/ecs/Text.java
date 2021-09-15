@@ -4,12 +4,14 @@ import fonts.Font;
 import fonts.Glyph;
 import fonts.GlyphRenderer;
 import graphics.Color;
+import graphics.HSLColor;
 import graphics.renderer.TextRenderer;
 import graphics.renderer.TextRendererBatch;
 import org.joml.Vector2f;
 import physics.Transform;
 import util.Engine;
 import util.Logger;
+import util.Utils;
 
 import java.util.ArrayList;
 
@@ -33,13 +35,14 @@ public class Text {
 
     TextRendererBatch currentBatch;
 
-    public Text (String string, Font font, float x, float y, int zIndex, boolean isSticky) {
+    public Text (String string, Font font, Color color, float x, float y, int zIndex, boolean isSticky) {
         this.text = string;
         if (string.length() >= TextRenderer.getMaxBatchSize()) {
             Logger.logInfo("The String \"" + string.substring(0, 7) + "...\" passed is longer than the allowed string size for text: " + TextRenderer.getMaxBatchSize());
             this.text = string.substring(0, TextRenderer.getMaxBatchSize() - 4) + "...";
         }
         this.font = font;
+        this.color = color;
         this.transform.setPosition(new Vector2f(x, y));
         this.lastTransform.setPosition(new Vector2f(x, y));
         this.zIndex = zIndex;
@@ -55,24 +58,16 @@ public class Text {
 
     }
 
+    public Text (String string, Font font, Color color, float x, float y) {
+        this(string, font, color, x, y, 1, true);
+    }
+
+    public Text (String string, Color color, float x, float y) {
+        this(string, new Font(), color, x, y, 1, true);
+    }
+
     public Text (String string, float x, float y) {
-        this.text = string;
-        if (string.length() >= TextRenderer.getMaxBatchSize()) {
-            Logger.logInfo("The String \"" + string.substring(0, 7) + "...\" passed is longer than the allowed string size for text: " + TextRenderer.getMaxBatchSize());
-            this.text = string.substring(0, TextRenderer.getMaxBatchSize() - 4) + "...";
-        }
-        this.font = new Font();
-        this.transform.setPosition(new Vector2f(x, y));
-        this.lastTransform.setPosition(new Vector2f(x, y));
-        this.zIndex = 1;
-
-        glyphRenderers = new ArrayList<>();
-
-        generateGlyphs();
-        Engine.scenes().currentScene().textRenderer.add(this);
-        Engine.scenes().currentScene().addUiObject(this);
-
-        currentBatch = glyphRenderers.get(0).getBatch();
+        this(string, new Font(), Color.WHITE, x, y, 1, true);
     }
 
     public void update () {
@@ -146,6 +141,25 @@ public class Text {
 
     public ArrayList<GlyphRenderer> getGlyphRenderers () {
         return glyphRenderers;
+    }
+
+    public void setColor (Color color) {
+        this.color = color;
+        for (GlyphRenderer g : this.glyphRenderers) {
+            g.setColor(this.color);
+        }
+    }
+
+    public Color getColor () {
+        return this.color;
+    }
+
+    public void rainbowify () {
+        for (int i = 0; i < this.glyphRenderers.size(); i ++) {
+            GlyphRenderer g = this.glyphRenderers.get(i);
+
+            g.setColor(new HSLColor(Utils.map(i, 0, this.glyphRenderers.size(), 0, 360), 100, 50, 1).toRGBColor());
+        }
     }
 
     public boolean isSticky () {
