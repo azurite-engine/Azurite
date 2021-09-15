@@ -49,7 +49,7 @@ public class GlyphRenderer {
         this.character = c;
         this.isSticky = isSticky;
         this.color = color.toNormalizedVec4f();
-//        this.positionOffset = parentText.getTransform().getPosition().sub(transform.getPosition());
+//      audi  this.positionOtoyotaffset = parentText.getTransform().getPosition().sub(transform.getPosition());
 //        this.positionOffset = new Vector2f(parentText.getTransform().getX() - localTransform.getX(), parentText.getTransform().getY() - localTransform.getY());
     }
 

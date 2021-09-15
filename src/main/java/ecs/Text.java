@@ -41,14 +41,13 @@ public class Text {
         }
         this.font = font;
         this.transform.setPosition(new Vector2f(x, y));
+        this.lastTransform.setPosition(new Vector2f(x, y));
         this.zIndex = zIndex;
         this.isSticky = isSticky;
 
         glyphRenderers = new ArrayList<>();
 
-        System.out.println(transform.getX() + " before genGlyphs\n");
         generateGlyphs();
-        System.out.println("\n" + transform.getX() + " after genGlyphs");
         Engine.scenes().currentScene().textRenderer.add(this);
         Engine.scenes().currentScene().addUiObject(this);
 
@@ -63,8 +62,8 @@ public class Text {
             this.text = string.substring(0, TextRenderer.getMaxBatchSize() - 4) + "...";
         }
         this.font = new Font();
-        this.transform.setX(x);
-        this.transform.setY(y);
+        this.transform.setPosition(new Vector2f(x, y));
+        this.lastTransform.setPosition(new Vector2f(x, y));
         this.zIndex = 1;
 
         glyphRenderers = new ArrayList<>();
@@ -86,9 +85,9 @@ public class Text {
             for (GlyphRenderer i : glyphRenderers) {
                 i.update(Engine.deltaTime());
             }
-            lastTransform.setX(transform.getX());
-            lastTransform.setY(transform.getY());
         }
+        lastTransform.setX(transform.getX());
+        lastTransform.setY(transform.getY());
     }
 
     public void change (String string) {
