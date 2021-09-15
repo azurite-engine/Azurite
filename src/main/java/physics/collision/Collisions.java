@@ -2,9 +2,11 @@ package physics.collision;
 
 import ecs.RigidBody;
 import org.joml.Vector2f;
+import physics.collision.shape.PrimitiveShape;
 import physics.force.DirectionalVectorFilter;
 
 import java.util.Optional;
+import java.util.function.BiFunction;
 
 /**
  * <h1>Azurite</h1>
@@ -22,51 +24,30 @@ public class Collisions {
     public static final int COLLISION_FILTER = 601112109;
 
     /**
-     * One type of bouncy collision, does solid collision as well, but adds a portion of the reflection vector to the velocity,
-     * which maybe feels like its bouncing off.
-     *
-     * @param velocityFactor the factor multiplied by the reflection before added to the velocity.
-     *                       factor of 1 means no change of the reflection.
-     *                       negative factors may result in undefined behaviour.
-     */
-    public static CollisionHandler solidBouncy(float velocityFactor) {
-        return new CollisionHandler() {
-            @Override
-            public void accept(RigidBody collider, Vector2f[] simplex) {
-                //find penetration vector with EPA
-                Optional<Vector2f> epa = CollisionUtil.expandingPolytopeAlgorithm(collider.getCollisionShape(), parentComponent.getCollisionShape(), simplex);
-                Vector2f reflection = epa.get();
-                //solid intersection prevention
-                collider.positionBuffer().add(reflection);
-                //bouncy factor applied
-                collider.velocity().add(reflection.mul(velocityFactor, new Vector2f()));
-                //prevents movement in the direction of the collision, therefore negative factors "should" have no impact
-                addFilter(collider, reflection);
-            }
-        };
-    }
-
-    /**
      * Standard collision, just prevents intersection and moves object according to EPA to seperate them.
      */
-    public static CollisionHandler solid() {
+    public static CollisionHandler gjksmEpaBlocking() {
         return new CollisionHandler() {
             @Override
-            public void accept(RigidBody collider, Vector2f[] simplex) {
+            public void accept(RigidBody collider, CollisionInformation info) {
+                if (!info.collision()) return;
                 //find penetration vector with EPA
-                Optional<Vector2f> epa = CollisionUtil.expandingPolytopeAlgorithm(collider.getCollisionShape(), parentComponent.getCollisionShape(), simplex);
+                Optional<Vector2f> epa = CollisionUtil.expandingPolytopeAlgorithm(collider.getCollisionShape(), parentComponent.getCollisionShape(), (Vector2f[]) info.get());
+
+                //if two rigitbodies collide, the first one will handle the collision
+                if (!epa.isPresent()) return;
+
                 Vector2f reflection = epa.get();
                 //solid intersection prevention
                 collider.positionBuffer().add(reflection);
                 //prevents movement in the direction of the collision
-                addFilter(collider, reflection);
+                collider.addFilter(new DirectionalVectorFilter(reflection.mul(-1, new Vector2f()), COLLISION_FILTER));
             }
         };
     }
 
-    //helper method to create an anti-intersection vector filter
-    private static void addFilter(RigidBody body, Vector2f reflection) {
-        body.addFilter(new DirectionalVectorFilter(reflection.mul(-1, new Vector2f()), COLLISION_FILTER));
+    public static BiFunction<PrimitiveShape, PrimitiveShape, CollisionInformation> gjksmCollisionDetection() {
+        return CollisionUtil::gjksmCollision;
     }
 
 }

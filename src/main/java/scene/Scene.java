@@ -8,9 +8,9 @@ import graphics.Camera;
 import graphics.Texture;
 import graphics.renderer.*;
 import input.Keyboard;
-import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 import physics.collision.Collider;
+import physics.collision.CollisionInformation;
 import postprocess.ForwardToTexture;
 import postprocess.PostProcessStep;
 import util.Engine;
@@ -18,7 +18,6 @@ import util.Engine;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Asher Haun
@@ -83,7 +82,7 @@ public abstract class Scene {
 
     /**
      * Do a collision check for the specific collider with all known rigidBodies and staticColliders.
-     * If there is a collision, the given object will receive calls to {@link Collider#handleCollision(Collider, Vector2f[])}.
+     * If there is a collision, the given object will receive calls to {@link Collider#handleCollision(Collider, CollisionInformation)}.
      *
      * @param collider the object to check whether is collides with anything
      */
@@ -99,9 +98,9 @@ public abstract class Scene {
             if (!body.canCollideWith(other)) continue;
             if (!body.getCollisionShape().boundingSphere().intersection(other.getCollisionShape().boundingSphere()))
                 continue;
-            Optional<Vector2f[]> collision = body.doesCollideWith(other);
-            if (collision.isPresent()) {
-                body.handleCollision(other, collision.get());
+            CollisionInformation info = body.doesCollideWith(other);
+            if (info.collision()) {
+                body.handleCollision(other, info);
                 body.resetCollision();
             }
         }
