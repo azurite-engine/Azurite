@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Deprecated
-public class JSONObjectOld {
+public class JSONObject {
     private StringBuilder stringBuilder = new StringBuilder();
 
     public String getJSON() {
