@@ -1,6 +1,8 @@
 package scene;
 
 import ecs.GameObject;
+import ecs.RigidBody;
+import ecs.StaticCollider;
 import graphics.Camera;
 import graphics.Texture;
 import graphics.renderer.DebugRenderer;
@@ -9,33 +11,30 @@ import graphics.renderer.LightmapRenderer;
 import graphics.renderer.Renderer;
 import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
+import physics.collision.Collider;
+import physics.collision.CollisionInformation;
 import postprocess.ForwardToTexture;
 import postprocess.PostProcessStep;
-import util.Assets;
 import util.Engine;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Scene {
 
     private static int sceneCounter = 0;
-
+    private final int sceneId = sceneCounter++;
+    private final List<GameObject> gameObjects = new LinkedList<>();
+    private final List<Collider> staticColliders = new LinkedList<>();
+    private final List<Collider> bodyColliders = new LinkedList<>();
     public DefaultRenderer renderer = new DefaultRenderer();
     public LightmapRenderer lightmapRenderer = new LightmapRenderer();
     public DebugRenderer debugRenderer = new DebugRenderer();
-
-    private List<Renderer<?>> rendererRegistry = new LinkedList<>();
-
     protected Camera camera;
-    private boolean debugMode = true;
-    private boolean active = false;
-    private List<GameObject> gameObjects = new LinkedList<>();
-
     protected ForwardToTexture forwardToScreen;
-
-    private int sceneId = sceneCounter++;
+    private List<Renderer<?>> rendererRegistry = new LinkedList<>();
+    private boolean debugMode = false;
+    private boolean active = false;
 
     public boolean isActive() {
         return active;
@@ -75,6 +74,37 @@ public abstract class Scene {
         }
     }
 
+    /**
+     * Do a collision check for the specific collider with all known rigidBodies and staticColliders.
+     * If there is a collision, the given object will receive calls to {@link Collider#handleCollision(Collider, CollisionInformation)}.
+     *
+     * @param collider the object to check whether is collides with anything
+     */
+    public void checkCollision(Collider collider) {
+        if (collider == null) return; //ensure that the given collider is not null
+        checkCollision(collider, bodyColliders);
+        checkCollision(collider, staticColliders);
+    }
+
+    private void checkCollision(Collider body, List<Collider> colliders) {
+        for (Collider other : colliders) {
+            if (other == body) continue;
+            if (!body.canCollideWith(other)) continue;
+            if (!body.getCollisionShape().boundingSphere().intersection(other.getCollisionShape().boundingSphere()))
+                continue;
+            CollisionInformation info = body.doesCollideWith(other);
+            if (info.collision()) {
+                body.handleCollision(other, info);
+                body.resetCollision();
+            }
+        }
+    }
+
+    /**
+     * Apply post processing to a texture
+     *
+     * @param texture input texture
+     */
     public void postProcess(Texture texture) {
         forwardToScreen.setTexture(texture);
         forwardToScreen.apply();
@@ -102,6 +132,23 @@ public abstract class Scene {
             this.lightmapRenderer.add(gameObject);
             this.debugRenderer.add(gameObject);
             rendererRegistry.forEach(r -> r.add(gameObject));
+            updateGameObject(gameObject, true);
+        }
+    }
+
+    public final void updateGameObject(GameObject gameObject, boolean insertion) {
+        StaticCollider staticCollider = gameObject.getComponent(StaticCollider.class);
+        if (staticCollider != null && !staticColliders.contains(staticCollider)) {
+            if (insertion)
+                staticColliders.add(staticCollider);
+            else staticColliders.remove(staticCollider);
+        } else {
+            RigidBody rigidBody = gameObject.getComponent(RigidBody.class);
+            if (rigidBody != null && !bodyColliders.contains(rigidBody)) {
+                if (insertion)
+                    bodyColliders.add(rigidBody);
+                else bodyColliders.remove(rigidBody);
+            }
         }
     }
 
@@ -115,10 +162,10 @@ public abstract class Scene {
     }
 
     /**
-     * @return Returns the List of gameObjects contained in the scene.
+     * @return the List of gameObjects contained in the scene.
      */
     public List<GameObject> getGameObjects() {
-        return Collections.unmodifiableList(gameObjects);
+        return gameObjects;
     }
 
     /**
@@ -127,7 +174,18 @@ public abstract class Scene {
      */
     public void addGameObjectToScene(GameObject gameObject) {
         gameObjects.add(gameObject);
-        gameObject.start();
+        if (active) {
+            gameObject.start();
+            addToRenderers(gameObject);
+        }
+    }
+
+    /**
+     * @param gameObject GameObject to be added.
+     */
+    public void removeGameObjectFromScene(GameObject gameObject) {
+        gameObjects.remove(gameObject);
+        removeFromRenderers(gameObject);
     }
 
     /**
@@ -160,18 +218,10 @@ public abstract class Scene {
         lightmapRenderer.render();
         lightmapRenderer.bindLightmap();
         renderer.render();
-        //lightmapRenderer.framebuffer.blitColorBuffersToScreen(); TODO: remove later
     }
 
     public void debugRender() {
         if (debugMode) this.debugRenderer.render();
-    }
-
-    /**
-     * Loads the shader.
-     */
-    public void loadSceneResources() {
-        Assets.getShader("src/assets/shaders/default.glsl");
     }
 
     /**
@@ -185,4 +235,27 @@ public abstract class Scene {
         forwardToScreen.init();
     }
 
+    /**
+     * Add a gameObject to all renderers
+     *
+     * @param gameObject the gameObject to be added
+     */
+    public void addToRenderers(GameObject gameObject) {
+        this.renderer.add(gameObject);
+        this.lightmapRenderer.add(gameObject);
+        this.debugRenderer.add(gameObject);
+        rendererRegistry.forEach(r -> r.add(gameObject));
+    }
+
+    /**
+     * Remove a gameObject from all renderers
+     *
+     * @param gameObject the gameObject to be removed
+     */
+    private void removeFromRenderers(GameObject gameObject) {
+        this.renderer.remove(gameObject);
+        this.lightmapRenderer.remove(gameObject);
+        this.debugRenderer.remove(gameObject);
+        rendererRegistry.forEach(r -> r.remove(gameObject));
+    }
 }

@@ -36,16 +36,12 @@ public class SceneManager {
      * This method is used to enable the sceneManager and call all initialization methods on a possible currentScene.
      * After this method finished, all newly added scenes will call this methods directly.
      */
-    public void enable()
-    {
+    public void enable() {
         this.enabled = true;
         //init the currentScene if there is one
-        if(currentScene != null)
-        {
-            currentScene.loadSceneResources();
+        if (currentScene != null) {
             currentScene.initRenderers();
             currentScene.awake();
-            currentScene.startGameObjects();
         }
     }
 
@@ -66,11 +62,9 @@ public class SceneManager {
     public boolean addScene(Scene scene) {
         boolean add = scenePool.add(scene);
         if (add && enabled) {
-            //a newly added scene is probably raw and uninitialized
-            scene.loadSceneResources();
+            // a newly added scene is probably raw and uninitialized
             scene.initRenderers();
             scene.awake();
-            scene.startGameObjects();
         }
         return add;
     }
