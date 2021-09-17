@@ -2,65 +2,107 @@ package ecs;
 
 import input.Keyboard;
 import org.joml.Vector2f;
-import physics.AABB;
-import util.Engine;
 
+import java.util.function.Consumer;
+
+//TODO this class is just made to support topDown and platformer demo scenes - its not good at all
 public class CharacterController extends Component {
 
-	Vector2f position = new Vector2f(0, 0);
-	Vector2f speed = new Vector2f(300, 300);
+    public static final byte LEFT = 0;
+    public static final byte RIGHT = 1;
+    public static final byte UP = 2;
+    public static final byte DOWN = 3;
 
-	float gravity = 9;
-	private final boolean grounded = false;
-	protected Vector2f lastPosition;
+    private final boolean[] keys = new boolean[4];
+    private float speedModifier;
 
-	float sprintSpeed = 0;
+    private Consumer<CharacterController> changeInputEvent;
 
-	protected AABB collision;
-	public boolean AABB_enabled = false;
 
-	@Override
-	public void start() {
-		lastPosition = new Vector2f();
-		position = gameObject.getTransform().getPosition();
-		super.start();
-	}
+    public CharacterController(Consumer<CharacterController> handler, float speedModifier) {
+        this.speedModifier = speedModifier;
+        this.changeInputEvent = handler;
+        this.order = SpriteRenderer.ORDER - 5;
+    }
 
-	@Override
-	public void update(float dt) {
-		moveX();
-		if (collision != null) collision.collideX();
+    public static Consumer<CharacterController> standardPlatformer(RigidBody body) {
+        return new Consumer<CharacterController>() {
+            Vector2f lastDirection = new Vector2f(0, 0);
 
-		moveY();
-		if (collision != null) collision.collideY();
-	}
+            @Override
+            public void accept(CharacterController cc) {
+                if (body.velocity().x != 0)
+                    body.velocity().sub(lastDirection.x, 0);
+                if (body.velocity().y != 0)
+                    body.velocity().sub(0, lastDirection.y);
+                Vector2f direction = new Vector2f();
+                if (cc.isKeyUsed(LEFT)) {
+                    direction.add(-cc.speedModifier, 0);
+                }
+                if (cc.isKeyUsed(RIGHT)) {
+                    direction.add(cc.speedModifier, 0);
+                }
+                if (cc.isKeyUsed(UP)) {
+                    body.velocity().add(0, cc.speedModifier * -2);
+                }
+                lastDirection = direction;
+                body.velocity().add(direction);
+            }
+        };
+    }
 
-	public void enableAABB() {
-		AABB_enabled = true;
-		collision = gameObject.getComponent(AABB.class);
-	}
+    public static Consumer<CharacterController> standardTopDown(RigidBody body) {
+        return new Consumer<CharacterController>() {
+            Vector2f lastDirection = new Vector2f(0, 0);
 
-	protected void moveX() {
-		// X
-		gameObject.setTransformX(position.x);
-		if (Keyboard.getKey(Keyboard.A_KEY) || Keyboard.getKey(Keyboard.LEFT_ARROW)) {
-			position.x += (-speed.x + sprintSpeed) * Engine.deltaTime();
-		}
-		if (Keyboard.getKey(Keyboard.D_KEY) || Keyboard.getKey(Keyboard.RIGHT_ARROW)) {
-			position.x += (speed.x + sprintSpeed) * Engine.deltaTime();
-		}
-	}
+            @Override
+            public void accept(CharacterController cc) {
+                if (body.velocity().x != 0)
+                    body.velocity().sub(lastDirection.x, 0);
+                if (body.velocity().y != 0)
+                    body.velocity().sub(0, lastDirection.y);
+                Vector2f direction = new Vector2f(0, 0);
+                if (cc.isKeyUsed(LEFT)) {
+                    direction.add(-cc.speedModifier, 0);
+                }
+                if (cc.isKeyUsed(RIGHT)) {
+                    direction.add(cc.speedModifier, 0);
+                }
+                if (cc.isKeyUsed(UP)) {
+                    direction.add(0, -cc.speedModifier);
+                }
+                if (cc.isKeyUsed(DOWN)) {
+                    direction.add(0, cc.speedModifier);
+                }
+                lastDirection = direction;
+                body.velocity().add(direction);
+            }
+        };
+    }
 
-	protected void moveY() {
-		// Y
-		gameObject.setTransformY(position.y);
+    public void setSpeedModifier(float speedModifier) {
+        this.speedModifier = speedModifier;
+    }
 
-		if (Keyboard.getKey(Keyboard.W_KEY) || Keyboard.getKey(Keyboard.UP_ARROW)) {
-			position.y += (-speed.y + sprintSpeed) * Engine.deltaTime();
-		}
-		if (Keyboard.getKey(Keyboard.S_KEY) || Keyboard.getKey(Keyboard.DOWN_ARROW)) {
-			position.y += (speed.y + sprintSpeed) * Engine.deltaTime();
-		}
-	}
+    @Override
+    public void update(float dt) {
+
+        boolean change;
+
+        change = keys[0] != (keys[0] = Keyboard.getKeyDown(Keyboard.A_KEY) || Keyboard.getKeyHeld(Keyboard.A_KEY));
+        change = change || keys[1] != (keys[1] = Keyboard.getKeyDown(Keyboard.D_KEY) || Keyboard.getKeyHeld(Keyboard.D_KEY));
+        change = change || keys[2] != (keys[2] = Keyboard.getKeyDown(Keyboard.W_KEY) || Keyboard.getKeyHeld(Keyboard.W_KEY));
+        change = change || keys[3] != (keys[3] = Keyboard.getKeyDown(Keyboard.S_KEY) || Keyboard.getKeyHeld(Keyboard.S_KEY));
+
+        //if something changed, update input
+        if (change)
+            changeInputEvent.accept(this);
+
+    }
+
+    public boolean isKeyUsed(int key) {
+        if (key < 0 || key > 3) return false;
+        return keys[key];
+    }
 
 }

@@ -25,8 +25,8 @@ public class JSONObject {
     private String lineEnding(boolean newLine, boolean comma) {
         String s = "";
 
-        if(comma) s += ",";
-        if(newLine) s += "\n";
+        if (comma) s += ",";
+        if (newLine) s += "\n";
 
         return s;
     }
@@ -54,59 +54,45 @@ public class JSONObject {
                     field.setAccessible(true);
                 }
 
-                if(!field.getName().equals("$assertionsDisabled") && (Modifier.isTransient(field.getModifiers()) || Modifier.isFinal(field.getModifiers()) || field.get(obj) == null)) {
+                if (!field.getName().equals("$assertionsDisabled") && (Modifier.isTransient(field.getModifiers()) || Modifier.isFinal(field.getModifiers()) || field.get(obj) == null)) {
                     continue;
                 }
 
-                if(i == fields.size() - 1) {
+                if (i == fields.size() - 1) {
                     isNotLastField = false;
                 }
 
                 if (field.getType() == int.class) {
                     addVar(field.getName(), field.getInt(obj), numTabs + 1, true, isNotLastField);
-                }
-                else if (field.getType() == float.class) {
+                } else if (field.getType() == float.class) {
                     addVar(field.getName(), field.getFloat(obj), numTabs + 1, true, isNotLastField);
-                }
-                else if (field.getType() == double.class) {
+                } else if (field.getType() == double.class) {
                     addVar(field.getName(), field.getDouble(obj), numTabs + 1, true, isNotLastField);
-                }
-                else if (field.getType() == char.class) {
+                } else if (field.getType() == char.class) {
                     addVar(field.getName(), field.getChar(obj), numTabs + 1, true, isNotLastField);
-                }
-                else if(field.getType() == String.class) {
+                } else if (field.getType() == String.class) {
                     addVar(field.getName(), (String) field.get(obj), numTabs + 1, true, isNotLastField);
-                }
-                else if (field.getType() == boolean.class) {
+                } else if (field.getType() == boolean.class) {
                     addVar(field.getName(), field.getBoolean(obj), numTabs + 1, true, isNotLastField);
-                }
-                else if(field.getType().isArray()) {
-                    if(field.getType().getComponentType() == int.class) {
+                } else if (field.getType().isArray()) {
+                    if (field.getType().getComponentType() == int.class) {
                         addArray(field.getName(), (int[]) field.get(obj), numTabs + 1, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == float.class) {
+                    } else if (field.getType().getComponentType() == float.class) {
                         addArray(field.getName(), (float[]) field.get(obj), numTabs + 1, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == double.class) {
+                    } else if (field.getType().getComponentType() == double.class) {
                         addArray(field.getName(), (double[]) field.get(obj), numTabs + 1, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == char.class) {
+                    } else if (field.getType().getComponentType() == char.class) {
                         addArray(field.getName(), (char[]) field.get(obj), numTabs + 1, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == String.class) {
+                    } else if (field.getType().getComponentType() == String.class) {
                         addArray(field.getName(), (String[]) field.get(obj), numTabs + 1, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == boolean.class) {
+                    } else if (field.getType().getComponentType() == boolean.class) {
                         addArray(field.getName(), (boolean[]) field.get(obj), numTabs + 1, true, isNotLastField);
-                    }
-                    else if(!field.getType().isPrimitive()) {
+                    } else if (!field.getType().isPrimitive()) {
                         addArray(field.getName(), (Object[]) field.get(obj), numTabs + 1, true, isNotLastField);
                     }
-                }
-                else if(field.getType().isAssignableFrom(List.class)) {
+                } else if (field.getType().isAssignableFrom(List.class)) {
                     addList(field.getName(), (List<?>) field.get(obj), numTabs + 1, true, isNotLastField);
-                }
-                else if (!field.getType().isPrimitive()) {
+                } else if (!field.getType().isPrimitive()) {
                     addObject(field.getName(), field.get(obj), numTabs + 1, true, isNotLastField);
                 }
 
@@ -114,8 +100,7 @@ public class JSONObject {
                     field.setAccessible(false);
                 }
             }
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -139,59 +124,45 @@ public class JSONObject {
                     field.setAccessible(true);
                 }
 
-                if(!field.getName().equals("$assertionsDisabled") && (Modifier.isTransient(field.getModifiers()) || Modifier.isFinal(field.getModifiers()) || field.get(obj) == null)) {
+                if (!field.getName().equals("$assertionsDisabled") && (Modifier.isTransient(field.getModifiers()) || Modifier.isFinal(field.getModifiers()) || field.get(obj) == null)) {
                     continue;
                 }
 
-                if(i == fields.size() - 1) {
+                if (i == fields.size() - 1) {
                     isNotLastField = false;
                 }
 
                 if (field.getType() == int.class) {
                     addVar(field.getName(), field.getInt(obj), numTabs + 1, true, isNotLastField);
-                }
-                else if (field.getType() == float.class) {
+                } else if (field.getType() == float.class) {
                     addVar(field.getName(), field.getFloat(obj), numTabs + 1, true, isNotLastField);
-                }
-                else if (field.getType() == double.class) {
+                } else if (field.getType() == double.class) {
                     addVar(field.getName(), field.getDouble(obj), numTabs + 1, true, isNotLastField);
-                }
-                else if (field.getType() == char.class) {
+                } else if (field.getType() == char.class) {
                     addVar(field.getName(), field.getChar(obj), numTabs + 1, true, isNotLastField);
-                }
-                else if(field.getType() == String.class) {
+                } else if (field.getType() == String.class) {
                     addVar(field.getName(), (String) field.get(obj), numTabs + 1, true, isNotLastField);
-                }
-                else if (field.getType() == boolean.class) {
+                } else if (field.getType() == boolean.class) {
                     addVar(field.getName(), field.getBoolean(obj), numTabs + 1, true, isNotLastField);
-                }
-                else if(field.getType().isArray()) {
-                    if(field.getType().getComponentType() == int.class) {
+                } else if (field.getType().isArray()) {
+                    if (field.getType().getComponentType() == int.class) {
                         addArray(field.getName(), (int[]) field.get(obj), numTabs + 1, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == float.class) {
+                    } else if (field.getType().getComponentType() == float.class) {
                         addArray(field.getName(), (float[]) field.get(obj), numTabs + 1, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == double.class) {
+                    } else if (field.getType().getComponentType() == double.class) {
                         addArray(field.getName(), (double[]) field.get(obj), numTabs + 1, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == char.class) {
+                    } else if (field.getType().getComponentType() == char.class) {
                         addArray(field.getName(), (char[]) field.get(obj), numTabs + 1, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == String.class) {
+                    } else if (field.getType().getComponentType() == String.class) {
                         addArray(field.getName(), (String[]) field.get(obj), numTabs + 1, true, isNotLastField);
-                    }
-                    else if(field.getType().getComponentType() == boolean.class) {
+                    } else if (field.getType().getComponentType() == boolean.class) {
                         addArray(field.getName(), (boolean[]) field.get(obj), numTabs + 1, true, isNotLastField);
-                    }
-                    else if(!field.getType().isPrimitive()) {
+                    } else if (!field.getType().isPrimitive()) {
                         addArray(field.getName(), (Object[]) field.get(obj), numTabs + 1, true, isNotLastField);
                     }
-                }
-                else if(field.getType().isAssignableFrom(List.class)) {
+                } else if (field.getType().isAssignableFrom(List.class)) {
                     addList(field.getName(), (List<?>) field.get(obj), numTabs + 1, true, isNotLastField);
-                }
-                else if (!field.getType().isPrimitive()) {
+                } else if (!field.getType().isPrimitive()) {
                     addObject(field.getName(), field.get(obj), numTabs + 1, true, isNotLastField);
                 }
 
@@ -199,8 +170,7 @@ public class JSONObject {
                     field.setAccessible(false);
                 }
             }
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -234,7 +204,7 @@ public class JSONObject {
     public void addArray(String propertyName, String[] array, int numTabs, boolean newLine, boolean comma) {
         stringBuilder.append(tabs(numTabs)).append("\"").append(propertyName).append("\"").append(": [").append(lineEnding(true, false));
         for (int i = 0; i < array.length; i++) {
-            if(i < array.length - 1) {
+            if (i < array.length - 1) {
                 stringBuilder.append(tabs(numTabs + 1)).append("\"").append(array[i]).append("\"").append(lineEnding(true, true));
                 continue;
             }
@@ -247,7 +217,7 @@ public class JSONObject {
     public void addArray(String propertyName, float[] array, int numTabs, boolean newLine, boolean comma) {
         stringBuilder.append(tabs(numTabs)).append("\"").append(propertyName).append("\"").append(": [").append(lineEnding(true, false));
         for (int i = 0; i < array.length; i++) {
-            if(i < array.length - 1) {
+            if (i < array.length - 1) {
                 stringBuilder.append(tabs(numTabs + 1)).append(array[i]).append("f").append(lineEnding(true, true));
                 continue;
             }
@@ -260,7 +230,7 @@ public class JSONObject {
     public void addArray(String propertyName, int[] array, int numTabs, boolean newLine, boolean comma) {
         stringBuilder.append(tabs(numTabs)).append("\"").append(propertyName).append("\"").append(": [").append(lineEnding(true, false));
         for (int i = 0; i < array.length; i++) {
-            if(i < array.length - 1) {
+            if (i < array.length - 1) {
                 stringBuilder.append(tabs(numTabs + 1)).append(array[i]).append(lineEnding(true, true));
                 continue;
             }
@@ -273,7 +243,7 @@ public class JSONObject {
     public void addArray(String propertyName, double[] array, int numTabs, boolean newLine, boolean comma) {
         stringBuilder.append(tabs(numTabs)).append("\"").append(propertyName).append("\"").append(": [").append(lineEnding(true, false));
         for (int i = 0; i < array.length; i++) {
-            if(i < array.length - 1) {
+            if (i < array.length - 1) {
                 stringBuilder.append(tabs(numTabs + 1)).append(array[i]).append(lineEnding(true, true));
                 continue;
             }
@@ -286,7 +256,7 @@ public class JSONObject {
     public void addArray(String propertyName, char[] array, int numTabs, boolean newLine, boolean comma) {
         stringBuilder.append(tabs(numTabs)).append("\"").append(propertyName).append("\"").append(": [").append(lineEnding(true, false));
         for (int i = 0; i < array.length; i++) {
-            if(i < array.length - 1) {
+            if (i < array.length - 1) {
                 stringBuilder.append(tabs(numTabs + 1)).append(array[i]).append(lineEnding(true, true));
                 continue;
             }
@@ -299,7 +269,7 @@ public class JSONObject {
     public void addArray(String propertyName, boolean[] array, int numTabs, boolean newLine, boolean comma) {
         stringBuilder.append(tabs(numTabs)).append("\"").append(propertyName).append("\"").append(": [").append(lineEnding(true, false));
         for (int i = 0; i < array.length; i++) {
-            if(i < array.length - 1) {
+            if (i < array.length - 1) {
                 stringBuilder.append(tabs(numTabs + 1)).append(array[i]).append(lineEnding(true, true));
                 continue;
             }
@@ -312,7 +282,7 @@ public class JSONObject {
     public void addArray(String propertyName, Object[] array, int numTabs, boolean newLine, boolean comma) {
         stringBuilder.append(tabs(numTabs)).append("\"").append(propertyName).append("\"").append(": [").append(lineEnding(true, false));
         for (int i = 0; i < array.length; i++) {
-            if(i < array.length - 1) {
+            if (i < array.length - 1) {
                 addObject(array[i], numTabs + 1, true, true);
                 continue;
             }

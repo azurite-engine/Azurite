@@ -4,9 +4,11 @@ import ecs.*;
 import graphics.Camera;
 import graphics.Color;
 import graphics.Texture;
+import input.Keyboard;
+import input.Keys;
 import org.joml.Vector2f;
-import physics.AABB;
 import physics.Transform;
+import physics.collision.Shapes;
 import postprocess.BloomEffect;
 import postprocess.PostProcessStep;
 import scene.Scene;
@@ -16,24 +18,28 @@ import util.Assets;
 import util.Engine;
 import util.Utils;
 
+import java.util.Arrays;
+
 import static graphics.Graphics.setDefaultBackground;
 
 public class DemoTopDown extends Scene {
+
+    Spritesheet a;
+    Spritesheet b;
+    Tilesystem t;
+    PointLight booperLight;
+    GameObject player;
+    GameObject booper;
+    GameObject greenLight;
+    GameObject trRes;
+    BloomEffect bloom;
+    boolean flip = true;
+
     public static void main(String[] args) {
         Engine.init(1080, 720, "Azurite Engine Demo 1", 0.01f);
         Engine.scenes().switchScene(new DemoTopDown(), true);
         Engine.showWindow();
     }
-
-    Spritesheet a;
-    Spritesheet b;
-    Tilesystem t;
-    GameObject player;
-    GameObject booper;
-    GameObject greenLight;
-    GameObject trRes;
-
-    BloomEffect bloom;
 
     public void awake() {
         camera = new Camera();
@@ -45,35 +51,74 @@ public class DemoTopDown extends Scene {
 
         trRes = new GameObject(this, "", new Transform(new Vector2f(0, 0), new Vector2f(100)), -20);
 
+        //BOOPER
         booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
-        booper.addComponent(new Animation(1, a.getSprite(132), a.getSprite(150)));
-        booper.addComponent(new CollisionTrigger(data -> System.out.println("Boop")));
-        booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
+        booperLight = new PointLight(new Color(255, 153, 102), 30);
+        booper.addComponent(booperLight);
+        SpriteRenderer booperRenderer = new SpriteRenderer(a.getSprite(132));
+        SpriteAnimation booperAnimation = new SpriteAnimation(booperRenderer, a.getSprite(132), 1);
+        booperAnimation.setAnimation("idle", Arrays.asList(a.getSprite(132), a.getSprite(150)));
+        booperAnimation.nextAnimation("idle", -1);
+        this.booper.addComponent(booperRenderer);
+        this.booper.addComponent(booperAnimation);
 
+        //PLAYER
         player = new GameObject(this, "Player", new Transform(600, 600, 100, 100), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
-        player.addComponent(new AABB());
+        RigidBody playerBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 1);
+        playerBody.setMask(2, true);
+        player.addComponent(playerBody);
         player.addComponent(new SpriteRenderer(a.getSprite(132)));
-        player.addComponent(new CharacterController());
+        player.addComponent(new CharacterController(CharacterController.standardTopDown(playerBody), 3));
 
         greenLight = new GameObject(this, "Green light", new Transform(3315, 300, 1, 1), 3);
         greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
-        bloom.init();
     }
 
     public void update() {
         super.update();
         player.getComponent(PointLight.class).intensity = Utils.map((float) Math.sin(Engine.millisRunning() / 600), -1, 1, 100, 140);
-        booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
+        if (booper.getComponent(PointLight.class) != null)
+            booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
         greenLight.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 
-        camera.smoothFollow(player.getTransform());
-    }
+        //TODO this is not clean
+        player.getRawTransform().addRotation(1);
 
-    @Override
-    public void postProcess(Texture texture) {
-        bloom.apply(texture);
+        camera.smoothFollow(player.getRawTransform());
+        if (Keyboard.getKeyDown(Keys.AZ_KEY_SPACE)) {
+//            if (added) {
+//                booper.removeComponent(PointLight.class);
+//                added = false;
+//            } else {
+//                booper.addComponent(booperLight);
+//                added = true;
+//            }
+
+//            if (flip) {
+//				removeGameObjectFromScene(booper);
+//				flip = false;
+//			} else {
+//				addGameObjectToScene(booper);
+//				flip = true;
+//			}
+
+//			if (flip) {
+//				booper.setZindex(1);
+//				flip = false;
+//			} else {
+//				booper.setZindex(2);
+//				flip = true;
+//			}
+
+            }
+
+        }
+
+        @Override
+        public void postProcess (Texture texture){
+            bloom.apply(texture);
+        }
     }
-}
