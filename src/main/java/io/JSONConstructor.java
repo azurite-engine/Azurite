@@ -9,19 +9,19 @@ import java.util.List;
 
 @Deprecated
 public class JSONConstructor {
-    private JSONObject serializedObject;
+    private JSONObjectOld serializedObject;
 
     public JSONConstructor() {
     }
 
-    public JSONConstructor(JSONObject jsonObject) {
-        this.serializedObject = jsonObject;
+    public JSONConstructor(JSONObjectOld jsonObjectOld) {
+        this.serializedObject = jsonObjectOld;
     }
 
     public void toJSON(Object obj) {
         List<Field> fields = Arrays.asList(obj.getClass().getDeclaredFields());
         Field field;
-        serializedObject = new JSONObject();
+        serializedObject = new JSONObjectOld();
         serializedObject.startJSON();
 
         try {
