@@ -3,7 +3,6 @@ package graphics;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import physics.Transform;
 import util.Utils;
 
 /**
@@ -78,11 +77,10 @@ public class Camera {
     /**
      * Smoothly center the camera on to a transform
      */
-    public void smoothFollow(Transform centerOn) {
-        Transform c = centerOn;
+    public void smoothFollow(Vector3f c) {
 
         float smoothing = 0.045f;
-        Vector2f desiredPosition = new Vector2f(c.getX() - Window.getWidth() / 2f, c.getY() - Window.getHeight() / 2f);
+        Vector2f desiredPosition = new Vector2f(c.x - Window.getWidth() / 2f, c.y - Window.getHeight() / 2f);
         Vector2f smoothedPosition = new Vector2f(Utils.lerp(position.x, desiredPosition.x, smoothing), Utils.lerp(position.y, desiredPosition.y, smoothing));
         // If you notice black bars while the camera is panning, it is because floating point positions can cause discrepencies, unfortunately casing the lerp to an int makes the motion a little  bit choppy
         if (Utils.dist(desiredPosition, position) < 10) {

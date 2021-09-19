@@ -39,7 +39,7 @@ public class Collisions {
 
                 Vector2f reflection = epa.get();
                 //solid intersection prevention
-                collider.positionBuffer().add(reflection);
+                collider.locationBuffer().add(reflection.x, reflection.y, 0);
                 //prevents movement in the direction of the collision
                 collider.addFilter(new DirectionalVectorFilter(reflection.mul(-1, new Vector2f()), COLLISION_FILTER));
             }

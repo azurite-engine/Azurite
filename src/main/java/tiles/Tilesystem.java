@@ -3,7 +3,8 @@ package tiles;
 import ecs.GameObject;
 import ecs.SpriteRenderer;
 import ecs.StaticCollider;
-import physics.Transform;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import physics.collision.Shapes;
 import scene.Scene;
 import util.Utils;
@@ -45,19 +46,19 @@ public class Tilesystem {
         for (int y = 0; y < yTiles; y++) {
             for (int x = 0; x < xTiles; x++) {
 
-                gameObjects[x][y] = new GameObject(scene, "Tile " + i, new Transform(x * width, y * height, width, height), 0);
+                gameObjects[x][y] = new GameObject(scene, "Tile " + i, new Vector3f(x * width, y * height, 0), 0);
 
                 if (getAt(x, y, 31) <= 255 && getAt(x, y, 31) >= 0) {
                     gameObjects[x][y].addComponent(new SpriteRenderer(a.getSprite(
                             getAt(x, y, 31)
-                    )));
+                    ), new Vector2f(width, height)));
                     if (getAt(x, y, 31) == 1) {
                         gameObjects[x][y].addComponent(new StaticCollider(Shapes.axisAlignedRectangle(0, 0, width, height), 2));
                     }
                 } else if (getAt(x, y, 31) >= 256) {
                     gameObjects[x][y].addComponent(new SpriteRenderer(b.getSprite(
                             (int) Utils.map(getAt(x, y, 31), 256, 256 * 2 - 1, 0, 255)
-                    )));
+                    ), new Vector2f(width, height)));
                 }
                 i++;
             }
@@ -73,13 +74,6 @@ public class Tilesystem {
         int y = (int) worldY / h;
 
         return new int[]{x, y};
-    }
-
-    public Transform getTransform(int worldX, int worldY) {
-        int x = (int) worldX / w;
-        int y = (int) worldY / h;
-
-        return gameObjects[x][y].getReadOnlyTransform();
     }
 
 }

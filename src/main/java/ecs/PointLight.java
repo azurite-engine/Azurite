@@ -4,15 +4,14 @@ import graphics.Color;
 import graphics.RenderableComponent;
 import graphics.renderer.QuadRenderBatch;
 import org.joml.Vector3f;
-import physics.Transform;
-import physics.TransformSensitive;
+import physics.LocationSensitive;
 
 /**
  * A Point Light Component.
  *
  * @author VoxelRifts
  */
-public class PointLight extends RenderableComponent<QuadRenderBatch> implements TransformSensitive {
+public class PointLight extends RenderableComponent<QuadRenderBatch> implements LocationSensitive {
     /**
      * Colour of the light
      */
@@ -27,7 +26,7 @@ public class PointLight extends RenderableComponent<QuadRenderBatch> implements 
     /**
      * Transform of the parent GameObject to get the position
      */
-    public Transform lastTransform;
+    public Vector3f lastLocation;
 
     /**
      * Constructor which sets color of the light by default to white.
@@ -50,7 +49,7 @@ public class PointLight extends RenderableComponent<QuadRenderBatch> implements 
 
     @Override
     public void start() {
-        this.lastTransform = gameObject.getReadOnlyTransform();
+        this.lastLocation = gameObject.getReadOnlyLocation();
     }
 
     @Override
@@ -64,9 +63,8 @@ public class PointLight extends RenderableComponent<QuadRenderBatch> implements 
     }
 
     @Override
-    public void update(Transform changedTransform) {
-        //update the lastTransform
-        this.gameObject.getReadOnlyTransform().copy(this.lastTransform);
+    public void update(Vector3f changedLocationData) {
+        this.lastLocation = changedLocationData;
     }
 
     @Override

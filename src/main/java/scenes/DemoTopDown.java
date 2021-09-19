@@ -7,7 +7,7 @@ import graphics.Texture;
 import input.Keyboard;
 import input.Keys;
 import org.joml.Vector2f;
-import physics.Transform;
+import org.joml.Vector3f;
 import physics.collision.Shapes;
 import postprocess.BloomEffect;
 import postprocess.PostProcessStep;
@@ -49,13 +49,13 @@ public class DemoTopDown extends Scene {
         b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0);
         t = new Tilesystem(this, a, b, 31, 15, 200, 200);
 
-        trRes = new GameObject(this, "", new Transform(new Vector2f(0, 0), new Vector2f(100)), -20);
+        trRes = new GameObject(this, "", new Vector3f(0, 0, 0), -20); //scale 100 for no image remove
 
         //BOOPER
-        booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
+        booper = new GameObject(this, "Booper", new Vector3f(800, 800, 0), 2);
         booperLight = new PointLight(new Color(255, 153, 102), 30);
         booper.addComponent(booperLight);
-        SpriteRenderer booperRenderer = new SpriteRenderer(a.getSprite(132));
+        SpriteRenderer booperRenderer = new SpriteRenderer(a.getSprite(132), new Vector2f(100));
         SpriteAnimation booperAnimation = new SpriteAnimation(booperRenderer, a.getSprite(132), 1);
         booperAnimation.setAnimation("idle", Arrays.asList(a.getSprite(132), a.getSprite(150)));
         booperAnimation.nextAnimation("idle", -1);
@@ -63,15 +63,15 @@ public class DemoTopDown extends Scene {
         this.booper.addComponent(booperAnimation);
 
         //PLAYER
-        player = new GameObject(this, "Player", new Transform(600, 600, 100, 100), 2);
+        player = new GameObject(this, "Player", new Vector3f(600, 600, 0), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
         RigidBody playerBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 1);
         playerBody.setMask(2, true);
         player.addComponent(playerBody);
-        player.addComponent(new SpriteRenderer(a.getSprite(132)));
+        player.addComponent(new SpriteRenderer(a.getSprite(132), new Vector2f(100)));
         player.addComponent(new CharacterController(CharacterController.standardTopDown(playerBody), 3));
 
-        greenLight = new GameObject(this, "Green light", new Transform(3315, 300, 1, 1), 3);
+        greenLight = new GameObject(this, "Green light", new Vector3f(3315, 300, 0), 3);
         greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
@@ -84,10 +84,10 @@ public class DemoTopDown extends Scene {
             booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
         greenLight.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 
-        //TODO this is not clean
-        player.getRawTransform().addRotation(1);
+        //this is not clean:
+        //player.getRawTransform().addRotation(1);
 
-        camera.smoothFollow(player.getRawTransform());
+        camera.smoothFollow(player.getReadOnlyLocation());
         if (Keyboard.getKeyDown(Keys.AZ_KEY_SPACE)) {
 //            if (added) {
 //                booper.removeComponent(PointLight.class);
@@ -113,12 +113,12 @@ public class DemoTopDown extends Scene {
 //				flip = true;
 //			}
 
-            }
-
         }
 
-        @Override
-        public void postProcess (Texture texture){
-            bloom.apply(texture);
-        }
     }
+
+    @Override
+    public void postProcess(Texture texture) {
+        bloom.apply(texture);
+    }
+}

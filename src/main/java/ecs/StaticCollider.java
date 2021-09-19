@@ -133,7 +133,7 @@ public class StaticCollider extends Component implements Collider {
 
     @Override
     public void start() {
-        this.collisionShape.setPosition(gameObject.getReadOnlyTransform().getPosition());
+        this.collisionShape.setPosition(gameObject.getReadOnlyPosition());
         this.collisionHandler.setParentComponent(this);
     }
 
