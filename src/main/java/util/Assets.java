@@ -79,5 +79,4 @@ public class Assets {
         addSpritesheet(path, new Spritesheet(getTexture(path), spriteWidth, spriteHeight, numSprites, spacing));
         return getSpritesheet(path);
     }
-
 }
