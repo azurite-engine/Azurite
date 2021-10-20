@@ -39,14 +39,6 @@ public class Color {
     public static Color BROWN = new Color(165, 42, 42, 255);
     public static Color FIREBRICK = new Color(178, 34, 34, 255);
     public static Color CRIMSON = new Color(220, 20, 60, 255);
-
-    /**
-     * @return random Color
-     */
-    public static Color randomColor() {
-        return new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 255);
-    }
-
     /**
      * Red component for this color. Range: 0-255
      */
@@ -97,6 +89,45 @@ public class Color {
      */
     public Color(float c) {
         this(c, c, c, 255);
+    }
+
+    /**
+     * @return random Color
+     */
+    public static Color randomColor() {
+        return new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 255);
+    }
+
+    /**
+     * Create a new color.
+     *
+     * @param x         the first component
+     * @param y         the second component
+     * @param z         the third component
+     * @param a         the alpha value
+     * @param inputType whether the input values are RGBA or HSLA
+     * @return a RGBA {@link Color} representing the input
+     */
+    public static Color getColor(float x, float y, float z, float a, int inputType) {
+        switch (inputType) {
+            case TYPE_HSLA:
+                return new HSLColor(x, y, z, a).toRGBColor();
+            case TYPE_RGBA:
+            default:
+                return new Color(x, y, z, a);
+        }
+    }
+
+    /**
+     * Decode a rgb color code into a {@link Color}
+     *
+     * @param colorCode the color code
+     * @return a valid rgb color
+     * @see Integer#decode(String)
+     */
+    public static Color decode(String colorCode) {
+        int i = Integer.decode(colorCode);
+        return new Color((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
     }
 
     /**
@@ -188,38 +219,6 @@ public class Color {
                 a = value;
                 break;
         }
-    }
-
-    /**
-     * Create a new color.
-     *
-     * @param x         the first component
-     * @param y         the second component
-     * @param z         the third component
-     * @param a         the alpha value
-     * @param inputType whether the input values are RGBA or HSLA
-     * @return a RGBA {@link Color} representing the input
-     */
-    public static Color getColor(float x, float y, float z, float a, int inputType) {
-        switch (inputType) {
-            case TYPE_HSLA:
-                return new HSLColor(x, y, z, a).toRGBColor();
-            case TYPE_RGBA:
-            default:
-                return new Color(x, y, z, a);
-        }
-    }
-
-    /**
-     * Decode a rgb color code into a {@link Color}
-     *
-     * @param colorCode the color code
-     * @return a valid rgb color
-     * @see Integer#decode(String)
-     */
-    public static Color decode(String colorCode) {
-        int i = Integer.decode(colorCode);
-        return new Color((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
     }
 
 }

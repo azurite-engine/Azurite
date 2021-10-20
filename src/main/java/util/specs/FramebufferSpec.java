@@ -6,12 +6,12 @@ package util.specs;
  * @author VoxelRifts
  */
 public class FramebufferSpec {
-	public TextureSpec[] attachments;
+    public TextureSpec[] attachments;
 
-	/**
-	 * @param textureSpecs FramebufferTextureSpec...: what kind of attachments do you want?
-	 */
-	public FramebufferSpec(TextureSpec... textureSpecs) {
-		this.attachments = textureSpecs;
-	}
+    /**
+     * @param textureSpecs FramebufferTextureSpec...: what kind of attachments do you want?
+     */
+    public FramebufferSpec(TextureSpec... textureSpecs) {
+        this.attachments = textureSpecs;
+    }
 }

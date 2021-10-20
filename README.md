@@ -11,7 +11,7 @@
   <h2 align="center">Azurite</h2>
 
   <p align="center">
-    Azurite it is a 2D Java game engine built by the Games with Gabe <a href="https://discord.gg/dhyV3BXkRZ">Discord</a>/<a href="https://www.youtube.com/channel/UCQP4qSCj1eHMHisDDR4iPzw">YouTube</a> community.
+    Azurite is a 2D Java game engine built by the Games with Gabe <a href="https://discord.gg/dhyV3BXkRZ">Discord</a>/<a href="https://www.youtube.com/channel/UCQP4qSCj1eHMHisDDR4iPzw">YouTube</a> community.
     <br />
     <a href="https://azurite-engine.github.io/Azurite-Docs/"><strong>Explore the docs »</strong></a><br><br>
     <a href="https://www.youtube.com/watch?v=FABUP0q9tHY">Watch the introduction video »</a>
@@ -21,7 +21,7 @@
     ·
     <a href="https://github.com/azurite-engine/Azurite/issues">Report Bug</a>
     ·
-    <a href="https://trello.com/b/hfoYA8Gn/gwg-community-project">Check the Trello</a>
+    <a href="https://github.com/azurite-engine/Azurite/projects/2">Check the Project Board</a>
   </p>
 </p>
 
