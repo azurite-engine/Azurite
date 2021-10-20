@@ -6,8 +6,13 @@ import util.debug.DebugPrimitive;
 import java.util.Arrays;
 
 /**
+ * <h1>Azurite</h1>
  * Abstract structure for ECS Components.
  * It is highly recommended to use this when implementing any system that can/should be applied to a GameObject.
+ *
+ * @author Unattributed
+ * @version Unknown
+ * @since Unknown
  */
 
 public abstract class Component implements Comparable<Component> {
