@@ -4,6 +4,7 @@ import graphics.Texture;
 
 /**
  * This class should be used if you want to chain multiple steps
+ * //TODO: we should describe what post-processing does and why we have it.
  */
 public abstract class PostProcessPipeline {
     /**
