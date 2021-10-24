@@ -18,10 +18,6 @@ import util.Utils;
  * seen horizontally and vertically on your monitor. The view matrix defines the direction and
  * orientation of the camera; it's usually the matrix defined in terms of camera position, pitch,
  * and yaw.
- * <br><br>
- * @author Unattributed
- * @version Unknown
- * @since Who knows, it's been around for a long time
  */
 public class Camera {
     /**

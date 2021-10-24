@@ -14,11 +14,8 @@ import java.util.function.BiConsumer;
  *     <li>Line</li>
  * </ul>
  *
- * @author Unattributed
  * @see graphics.renderer.Renderer
  * @see graphics.renderer.DefaultRenderer
- * @version Unknown
- * @since Unknown
  */
 public enum Primitive {
     QUAD(4, 6, GL11.GL_TRIANGLES, (elements, i) -> {

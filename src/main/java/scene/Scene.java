@@ -72,10 +72,7 @@ import java.util.List;
  *     }
  * </pre>
  * </p>
- * @author Unattributed
- * @version Unknown
  * @see SceneManager
- * @since The beginnings of this engine, most likely
  */
 public abstract class Scene {
 

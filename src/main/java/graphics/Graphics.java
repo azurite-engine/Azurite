@@ -7,10 +7,6 @@ import static util.Utils.map;
  * <h1>Azurite</h1>
  * A utility class for changing background colors. More functionality will probably added to this
  * class as the engine starts to grow.
- *
- * @author Unattributed
- * @version Unknown
- * @since Unknown
  */
 public class Graphics {
     public static Color defaultBackground;

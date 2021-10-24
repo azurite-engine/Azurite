@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL44.GL_MIRROR_CLAMP_TO_EDGE;
 
 /**
+ * <h1>Azurite</h1>
  * Specification for the framebuffer's attachment textures
  *
  * @author VoxelRifts

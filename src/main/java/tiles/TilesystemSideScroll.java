@@ -17,10 +17,7 @@ import util.Utils;
  * a future plan; I, the mortal JavaDocumentator, don't have insight into the minds of
  * the owners of this game engine (go ask Asher, idk).
  *
- * @author Unattributed
- * @version Unknown
  * @see Scene
- * @since Unknown
  */
 public class TilesystemSideScroll {
     Spritesheet sheet;

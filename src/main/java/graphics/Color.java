@@ -12,10 +12,7 @@ import java.util.Random;
  * to convert an RGBA to HSLA, or vice versa. This Class also contains some predefined
  * colors, a random color generator, and some OpenGL-related helper functions.
  *
- * @author Unattributed
  * @see HSLColor
- * @version Unknown
- * @since Unknown
  */
 public class Color {
 

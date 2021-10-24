@@ -9,6 +9,7 @@ import graphics.renderer.RenderBatch;
  * This is used to store the exact location of the component in the data buffer for safe removal.
  *
  * @param <T> The RenderBatch that renders the component
+ * @see RenderBatch
  */
 public abstract class RenderableComponent<T extends RenderBatch> extends Component {
     /**
