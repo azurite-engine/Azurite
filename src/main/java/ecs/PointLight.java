@@ -7,7 +7,9 @@ import org.joml.Vector3f;
 import physics.LocationSensitive;
 
 /**
- * A Point Light Component.
+ * <h1>Azurite</h1>
+ * A Point Light Component is essentially a location in the world that emits light in
+ * all directions. One can also specify both it's color and it's intensity.
  *
  * @author VoxelRifts
  */

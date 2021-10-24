@@ -3,6 +3,7 @@ package util;
 import org.joml.Vector2f;
 
 /**
+ * <h1>Azurite</h1>
  * Represents the position in X and Y coordinates, rotation and the scale (width and height)
  */
 public class Transform {

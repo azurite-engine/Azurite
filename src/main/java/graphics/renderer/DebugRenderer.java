@@ -11,6 +11,13 @@ import util.debug.DebugPrimitive;
 
 import static org.lwjgl.opengl.GL11.glLineWidth;
 
+/**
+ * <h1>Azurite</h1>
+ * Used to render debug materials, like collision hitboxes, raycasts, or test
+ * data in general. Only supports rendering lines.
+ *
+ * @see DebugRenderBatch
+ */
 public class DebugRenderer extends Renderer<DebugRenderBatch> {
     /**
      * Create a shader

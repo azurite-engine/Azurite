@@ -15,6 +15,7 @@ import util.Utils;
 import static graphics.Color.WHITE;
 
 /**
+ * <h1>Azurite</h1>
  * SpriteRenderer is a component that can be added to a GameObject.
  * it can contain a solid color, a semi-transparent color, or a texture.
  * Sprites can be tinted by the color value.

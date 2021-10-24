@@ -6,7 +6,16 @@ import java.nio.IntBuffer;
 import java.util.function.BiConsumer;
 
 /**
- * The basic primitive that a batch draws.
+ * <h1>Azurite</h1>
+ * A primitive is a simple shape that contains all the information necessary to prepare
+ * an element buffer of that primitive's type. The primitives available are:
+ * <ul>
+ *     <li>Quadrilateral</li>
+ *     <li>Line</li>
+ * </ul>
+ *
+ * @see graphics.renderer.Renderer
+ * @see graphics.renderer.DefaultRenderer
  */
 public enum Primitive {
     QUAD(4, 6, GL11.GL_TRIANGLES, (elements, i) -> {
