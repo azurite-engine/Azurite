@@ -18,6 +18,45 @@ import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
 import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
 
+/**
+ * <h1>Azurite</h1>
+ * <p>
+ *     A render batch is a collection of elements that are "batched" together into
+ *     a single object. This objects conglomerates the vertex data associated with
+ *     a specified primitive and prepares it to be rendered by it's associated
+ *     renderer. The pipeline of a {@code RenderBatch} object is as follows:
+ *     <ol>
+ *         <li>
+ *             The {@code RenderBatch} class is extended by another class intended
+ *             to be a batch of a certain primitive; for this example let's say it's
+ *             a quadrilateral.
+ *         </li>
+ *         <li>
+ *             The {@code Renderer} class is extended by a class intended to render
+ *             the aforementioned quadrilateral render batch, where the type parameter
+ *             is specified as our {@code RenderBatch}.
+ *         </li>
+ *         <li>
+ *             Now that all classes are set up, a quadrilateral render batch is created,
+ *             and several quadrilateral vertices are loaded into its {@code data} field
+ *             via an overloaded {@code loadVertexProperties} function (which specifies
+ *             if the quads will have color, what texture they would use, etc.) This is
+ *             also when element indices are created, which specify in what order the
+ *             GPU should process/render vertices.
+ *         </li>
+ *         <li>
+ *             This data is then submitted to the GPU, any associated metadata about the
+ *             vertices and the quads are rendered.
+ *         </li>
+ *     </ol>
+ *     Of course, one doesn't necessarily have to use quads for rendering; one could
+ *     get as inventive as they'd like. The {@code graphics.renderer} API pre-specifies
+ *     some useful renderers (hopefully so that most developers don't have to make their
+ *     own renderers.)
+ * </p>
+ *
+ * @see Renderer
+ */
 public abstract class RenderBatch implements Comparable<RenderBatch> {
     /**
      * The primitive that this batch draws
@@ -112,7 +151,7 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
 
     /**
      * Create the GPU resources.
-     * Generates a vao, a dynamic vbo, a static buffer of indices and adds all buffers to the vao
+     * Generates a vao, a dynamic vbo, and a static buffer of indices.
      */
     public void start() {
         vao = glGenVertexArrays();
