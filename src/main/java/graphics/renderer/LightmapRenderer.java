@@ -14,6 +14,15 @@ import util.Engine;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <h1>Azurite</h1>
+ * Used to render point-light data. Point-lights are regions of color
+ * that have a gradually diminishing alpha value as a position gets
+ * farther from the point-light's origin.
+ *
+ * @see Renderer
+ * @see QuadRenderBatch
+ */
 public class LightmapRenderer extends Renderer<QuadRenderBatch> {
     private static final int MAX_BATCH_SIZE = 1000;
 

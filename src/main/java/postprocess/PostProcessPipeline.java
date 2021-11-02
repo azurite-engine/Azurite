@@ -3,6 +3,7 @@ package postprocess;
 import graphics.Texture;
 
 /**
+ * <h1>Azurite</h1>
  * This class should be used if you want to chain multiple steps
  */
 public abstract class PostProcessPipeline {

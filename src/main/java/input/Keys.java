@@ -1,9 +1,10 @@
 package input;
 
+/**
+ * <h1>Azurite</h1>
+ * Printable keys.
+ */
 public class Keys {
-    /**
-     * Printable keys.
-     */
     public static final int
             AZ_KEY_SPACE = 32,
             AZ_KEY_APOSTROPHE = 39,

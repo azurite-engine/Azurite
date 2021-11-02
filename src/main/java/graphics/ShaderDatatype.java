@@ -4,7 +4,8 @@ import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL11.GL_INT;
 
 /**
- * Represents a datatype in GLSL
+ * <h1>Azurite</h1>
+ * Represents a datatype in GLSL sent to a shader via {@code glUploadUniform()}.
  */
 public enum ShaderDatatype {
     INT(1, Integer.BYTES, GL_INT),

@@ -48,7 +48,7 @@ import java.util.List;
  * <pre>
  *     public class Main extends Scene {
  *         GameObject player;
- *         Sprite s;
+ *         Spritesheet s;
  *
  *         public static void main(String[] args) {
  *             Engine.init(1920, 1080, "Azurite Engine Demo In Comment", 1.0f);
@@ -59,9 +59,22 @@ import java.util.List;
  *         public void awake() {
  *             camera = new Camera();
  *
+ *             // this is the player //
  *             player = new GameObject();
- *             s = new Sprite
- *             player.addComponent(new SpriteRenderer(s, new Vector2f(100)));
+ *
+ *             // this is the collection of all sprite     //
+ *             // textures; we'll be choosing one of these //
+ *             String filepath = "src/assets/images/tileset.png";
+ *             s = new Spritesheet(Assets.getTexture(filepath),
+ *                                 16,
+ *                                 16,
+ *                                 256,
+ *                                 0);
+ *
+ *             // give the player a renderer, rendering it     //
+ *             // with texture #150 from the spritesheet above //
+ *             player.addComponent(new SpriteRenderer(s.getSprite(150),
+ *                                                    new Vector2f(100)));
  *         }
  *
  *         public void update() {

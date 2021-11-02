@@ -11,6 +11,7 @@ import java.util.List;
 import static org.lwjgl.opengl.GL45.*;
 
 /**
+ * <h1>Azurite</h1>
  * This class is heavily inspired from TheCherno's Hazel Engine's Framebuffer API
  * <p>
  * An encapsulation of an OpenGL Framebuffer

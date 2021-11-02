@@ -1,7 +1,10 @@
 package event;
 
 /**
- * A base class to be extended by classes that are going to function as Data for the Event System
+ * <h1>Azurite</h1>
+ * A base class to be extended by classes that are going to function as Data for the Event System.
+ * This class has no methods or fields and serves only to identify the semantics of containing event
+ * data.
  */
 public class EventData {
     /**

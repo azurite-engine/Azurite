@@ -4,6 +4,10 @@ import static org.lwjgl.glfw.GLFW.*;
 
 // https://github.com/LWJGL/lwjgl3-wiki/wiki/2.6.3-Input-handling-with-GLFW#joystick-input
 
+/**
+ * <h1>Azurite</h1>
+ * Abstraction over LWJGL specification of gamepad buttons.
+ */
 public class Gamepad {
 
     public static int LEFT_STICK_HORIZONTAL = 0;

@@ -6,6 +6,7 @@ import graphics.Texture;
 import util.Assets;
 
 /**
+ * <h1>Azurite</h1>
  * A Post Processing Step that only renders bright parts of the scene
  */
 public class BrightFilter extends PostProcessStep {

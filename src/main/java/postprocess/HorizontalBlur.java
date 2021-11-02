@@ -7,6 +7,7 @@ import graphics.Window;
 import util.Assets;
 
 /**
+ * <h1>Azurite</h1>
  * A Post Processing Step that renders the texture with a Horizontal Blur.
  * <p>
  * NOTE: If you want a more blurry texture, consider using Target.ONE_COLOR_HALF_SIZE_TEXTURE_FRAMEBUFFER

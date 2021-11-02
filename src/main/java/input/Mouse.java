@@ -10,6 +10,11 @@ import java.nio.DoubleBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * <h1>Azurite</h1>
+ * Abstraction over LWJGL specification of mouse scroll,
+ * position, and buttons.
+ */
 public class Mouse {
     /**
      * Position of the mouse

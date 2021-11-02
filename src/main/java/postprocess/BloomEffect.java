@@ -3,6 +3,7 @@ package postprocess;
 import graphics.Texture;
 
 /**
+ * <h1>Azurite</h1>
  * Post Processing Pipeline to apply a bloom effect to a Texture.
  */
 public class BloomEffect extends PostProcessPipeline {

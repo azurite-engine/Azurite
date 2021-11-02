@@ -6,6 +6,7 @@ import graphics.Texture;
 import util.Assets;
 
 /**
+ * <h1>Azurite</h1>
  * A Post Processing Step that combines two textures multiplying them
  * with corresponding weights and then adding them
  */

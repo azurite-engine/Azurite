@@ -6,6 +6,7 @@ import graphics.Texture;
 import util.Assets;
 
 /**
+ * <h1>Azurite</h1>
  * A Post Processing Step that renders the texture as-is to another framebuffer.
  * Perfect for debugging steps.
  * <p>

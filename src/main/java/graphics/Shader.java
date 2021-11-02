@@ -12,6 +12,24 @@ import java.util.HashMap;
 import static org.lwjgl.opengl.GL11.GL_FALSE;
 import static org.lwjgl.opengl.GL20.*;
 
+/**
+ * <h1>Azurite</h1>
+ * A shader is a critical component in the OpenGL rendering process.
+ * The GPU uses a shader as a "program" which tells the GPU how to
+ * shade pixels, fragments, and vertices. A shader comes in two parts:
+ * <ol>
+ *     <li>
+ *         Vertex Shader: The vertex shader is where vertex data is
+ *         processed and stored in the GPU. "Preprocessed" data is
+ *         then sent to the next step.
+ *     </li>
+ *     <li>
+ *         Fragment Shader: The fragment shader is where is where
+ *         rasterized pixels in between vertices are colored based
+ *         on programmer specification.
+ *     </li>
+ * </ol>
+ */
 public class Shader {
     /**
      * Vertex Shader ID

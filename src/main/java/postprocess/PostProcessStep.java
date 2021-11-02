@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.function.Supplier;
 
 /**
+ * <h1>Azurite</h1>
  * Denotes A Step in Post Processing
  */
 public abstract class PostProcessStep {

@@ -15,6 +15,16 @@ import util.Engine;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * <h1>Azurite</h1>
+ * The Window class is an abstraction over the GLFWwindow API.
+ * It is also where callbacks are initialized, scenes are queued,
+ * OpenGL is initialized, and memory is freed. The stack trace
+ * starts and ends here.
+ *
+ * @see SceneManager
+ * @see Scene
+ */
 public class Window {
 
     private static long glfwWindow;

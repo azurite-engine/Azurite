@@ -3,7 +3,8 @@ package graphics;
 import org.joml.Vector2f;
 
 /**
- * Contains the texture and UV coordinates used by openGL to render an image
+ * <h1>Azurite</h1>
+ * Contains the texture and UV coordinates used by OpenGL to render an image.
  */
 public class Sprite {
     /**
