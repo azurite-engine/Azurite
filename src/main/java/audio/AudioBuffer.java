@@ -15,13 +15,13 @@ import java.nio.IntBuffer;
 import static org.lwjgl.openal.AL10.*;
 
 /**
+ * <h1>Azurite</h1>
  * Instantiations of this class hold all information about how a sound should be replayed
  * and the sound data itself (if you know OpenGL, think of this as a massive vbo containing a
  * single noise or piece of music). <br><br>
  *
  * Personally I don't really like how it works right now; it allocates a lot of memory for every
- * sound file that needs to be played; maybe we can have a destructor or some kind of cleanup daemon
- * to do this for us? <br><br>
+ * sound file that needs to be played; maybe we can have a destructor or some kind of cleanup daemon? <br><br>
  *
  * I based the design off of an article by Michael Eric Oberlin found <a href="https://michaelericoberlin.wordpress.com/2016/07/04/effective-openal-with-lwjgl-3/">here</a>.
  *

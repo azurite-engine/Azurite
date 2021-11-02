@@ -12,7 +12,10 @@ import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.openal.EXTEfx.ALC_MAX_AUXILIARY_SENDS;
 
 /**
- * Main audio center: equivocal to graphics.Window but for initializing audio stuff.
+ * <h1>Azurite</h1>
+ * Main audio center: equivocal to graphics.Window but for initializing audio stuff,
+ * like toggling and changing some parameters in the OpenAL API
+ *
  * @author HilbertCurve
  */
 public class AudioMaster {
@@ -67,7 +70,7 @@ public class AudioMaster {
         // create the context with the provided attributes
         long newContext = ALC10.alcCreateContext(device, contextAttribList);
 
-        if(!ALC10.alcMakeContextCurrent(newContext)) {
+        if (!ALC10.alcMakeContextCurrent(newContext)) {
             throw new Exception("Failed to make context current");
         }
 

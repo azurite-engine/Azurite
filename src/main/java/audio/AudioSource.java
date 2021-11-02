@@ -12,7 +12,10 @@ import static org.lwjgl.openal.AL10.*;
 import static util.Utils.worldToScreenCoords;
 
 /**
+ * <h1>Azurite</h1>
  * Object representing a sound's source as well as it's velocity (for applying the doppler effect).
+ *
+ * @author HilbertCurve
  */
 public class AudioSource extends Component {
 
