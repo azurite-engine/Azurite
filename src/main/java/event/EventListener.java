@@ -5,7 +5,7 @@ package event;
  * A Simple listener interface.
  * Any class that implements this "subscribes" to the {@code EventData}
  * class put in the type parameter. Whenever such an event is triggered,
- * {@code this.onEvent(triggeredEvent)} is ran.
+ * {@code this.onEvent(triggeredEvent)} is run.
  *
  * @param <T> Type of Data for this listener
  */

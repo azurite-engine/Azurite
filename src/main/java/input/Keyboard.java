@@ -6,6 +6,9 @@ import graphics.Window;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * Abstraction over GLFW specification of keyboard keycodes.
+ */
 public class Keyboard {
 
     public static int SPACE = 32; // Space Bar

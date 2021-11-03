@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL20.*;
  * <h1>Azurite</h1>
  * A shader is a critical component in the OpenGL rendering process.
  * The GPU uses a shader as a "program" which tells the GPU how to
- * shade pixels, fragments, and vertices. A shader comes in two parts:
+ * color pixels, fragments, and vertices. A shader comes in two parts:
  * <ol>
  *     <li>
  *         Vertex Shader: The vertex shader is where vertex data is

@@ -1,7 +1,6 @@
 package input;
 
 /**
- * <h1>Azurite</h1>
  * Mouse buttons. See <a target="_blank" href="http://www.glfw.org/docs/latest/input.html#input_mouse_button">mouse button input</a> for how these are used.
  */
 public class Buttons {

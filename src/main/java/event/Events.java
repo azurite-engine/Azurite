@@ -1,7 +1,6 @@
 package event;
 
 /**
- * <h1>Azurite</h1>
  * Collection of Event Nodes for various Events
  *
  * @author VoxelRifts

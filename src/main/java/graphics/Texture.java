@@ -17,8 +17,7 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.stb.STBImage.*;
 
 /**
- * <h1>Azurite</h1>
- * This is a class for an OpenGL texture
+ * This is a class for an OpenGL texture.
  */
 public class Texture {
     /**

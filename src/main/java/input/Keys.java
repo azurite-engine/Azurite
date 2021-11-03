@@ -1,7 +1,6 @@
 package input;
 
 /**
- * <h1>Azurite</h1>
  * Printable keys.
  */
 public class Keys {

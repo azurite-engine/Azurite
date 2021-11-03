@@ -59,11 +59,9 @@ import java.util.List;
  *         public void awake() {
  *             camera = new Camera();
  *
- *             // this is the player //
  *             player = new GameObject();
  *
- *             // this is the collection of all sprite     //
- *             // textures; we'll be choosing one of these //
+ *             // the collection of all sprite textures //
  *             String filepath = "src/assets/images/tileset.png";
  *             s = new Spritesheet(Assets.getTexture(filepath),
  *                                 16,

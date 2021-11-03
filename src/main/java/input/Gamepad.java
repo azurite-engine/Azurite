@@ -2,11 +2,11 @@ package input;
 
 import static org.lwjgl.glfw.GLFW.*;
 
-// https://github.com/LWJGL/lwjgl3-wiki/wiki/2.6.3-Input-handling-with-GLFW#joystick-input
 
 /**
- * <h1>Azurite</h1>
- * Abstraction over LWJGL specification of gamepad buttons.
+ * Abstraction over GLFW specification of gamepad buttons.
+ * For more information see
+ * <a href="https://github.com/LWJGL/lwjgl3-wiki/wiki/2.6.3-Input-handling-with-GLFW#joystick-input">this</a>.
  */
 public class Gamepad {
 

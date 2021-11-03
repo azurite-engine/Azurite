@@ -6,7 +6,6 @@ import graphics.ShaderDatatype;
 import graphics.Window;
 
 /**
- * <h1>Azurite</h1>
  * Used to render one large rectangle that stretches to all corners
  * of the window. This can be used in shaders to apply effects based
  * on the position inside this rectangle, such as point-light effects.
