@@ -1,14 +1,17 @@
 package scenes;
 
+import ecs.GameObject;
+import ecs.SpriteRenderer;
 import ecs.Text;
 import fonts.Font;
 import graphics.Camera;
 import graphics.Color;
-import input.Keyboard;
 import input.Mouse;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 import scene.Scene;
 import util.Engine;
-import util.Utils;
+import util.Transform;
 
 import static graphics.Graphics.setDefaultBackground;
 
@@ -19,7 +22,9 @@ public class TextRenderingDemo extends Scene {
 
     Text titleText;
     Text movingText;
-    Text changingText;
+    Text rainbowText;
+
+    GameObject centerLine;
 
     public static void main(String[] args) {
         Engine.init(1920, 1080, "Azurite Engine Demo 3");
@@ -35,19 +40,20 @@ public class TextRenderingDemo extends Scene {
         maghrib = new Font("src/assets/fonts/Maghrib-MVZpx.ttf", 50, true);
         openSans = new Font("src/assets/fonts/OpenSans-Regular.ttf", 20, true);
 
-        titleText = new Text("Azurite text rendering demo", maghrib, Color.BLACK,10, 5, 100, true);
-        movingText = new Text("HAHA", openSans, Color.RED, 200, 200);
-        changingText = new Text("Begin typing to change this text: ", openSans, Color.BLUE, 10, 50);
+        titleText = new Text("Azurite text\nrendering demo", maghrib, Color.BLACK,300, 5, 1, true, true);
+//        movingText = new Text("HAHA", openSans, Color.RED, 200, 200);
+//        rainbowText = new Text("Begin typing to change this text: ", openSans, Color.BLUE, 10, 50);
+
+        centerLine = new GameObject("", new Vector3f(300, 0, 0), 1).addComponent(new SpriteRenderer(Color.RED, new Vector2f(3, 30)));
     }
 
     public void update () {
 
-        changingText.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS() + "\nMouse " + Mouse.mouse.x() + " | " + Mouse.mouse.y());
-
-        movingText.setX(Mouse.mouseX);
-        movingText.setY(Mouse.mouseY);
-
-        changingText.rainbowify();
+//        rainbowText.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS() + "\nMouse " + Mouse.mouse.x() + " | " + Mouse.mouse.y());
+//
+//        movingText.setPosition(Mouse.mouse);
+//
+//        rainbowText.rainbowify();
 
     }
 

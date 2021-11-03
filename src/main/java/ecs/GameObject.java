@@ -1,10 +1,12 @@
 package ecs;
-//{This comment is intentionally added to create a git merge conflict}
+ 
 import graphics.RenderableComponent;
+import graphics.Window;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import physics.LocationSensitive;
 import scene.Scene;
+import util.Engine;
 import util.OrderPreservingList;
 
 import java.awt.*;
@@ -40,68 +42,53 @@ public class GameObject {
     /**
      * Creates a new GameObject.
      *
-     * @param scene         the scene to object will be added to
      * @param name
      * @param componentList
      * @param locationData
      * @param zIndex
      */
-    public GameObject(Scene scene, String name, List<Component> componentList, Vector3f locationData, int zIndex) {
+    public GameObject(String name, List<Component> componentList, Vector3f locationData, int zIndex) {
         this.name = name;
         this.components = new OrderPreservingList<>(componentList);
         this.locationData = locationData;
         this.locationBuffer = new Vector3f();
         this.zIndex = zIndex;
-        this.parentScene = scene;
-        scene.addGameObjectToScene(this);
+        this.parentScene = Engine.window().currentScene();
+        Engine.window().currentScene().addGameObjectToScene(this);
         this.transformSensitives = new LinkedList<>();
     }
 
     /**
-     * @param scene        the scene to object will be added to
      * @param name
      * @param locationData
      * @param zIndex
      */
-    public GameObject(Scene scene, String name, Vector3f locationData, int zIndex) {
-        this(scene, name, new LinkedList<>(), locationData, zIndex);
+    public GameObject(String name, Vector3f locationData, int zIndex) {
+        this(name, new LinkedList<>(), locationData, zIndex);
     }
 
     /**
-     * @param scene  the scene to object will be added to
      * @param name
      * @param zIndex
      */
-    public GameObject(Scene scene, String name, int zIndex) {
-        this(scene, name, new LinkedList<>(), new Vector3f(), zIndex);
+    public GameObject(String name, int zIndex) {
+        this(name, new LinkedList<>(), new Vector3f(), zIndex);
     }
 
     /**
-     * @param scene        the scene to object will be added to
      * @param locationData
      * @param zIndex
      */
-    public GameObject(Scene scene, Vector3f locationData, int zIndex) {
-        this(scene, DEFAULT_GAMEOBJECT_NAME, new LinkedList<>(), locationData, zIndex);
+    public GameObject(Vector3f locationData, int zIndex) {
+        this(DEFAULT_GAMEOBJECT_NAME, new LinkedList<>(), locationData, zIndex);
 
     }
 
     /**
-     * @param scene        the scene to object will be added to
      * @param locationData
      */
-    public GameObject(Scene scene, Vector3f locationData) {
-        this(scene, DEFAULT_GAMEOBJECT_NAME, new LinkedList<>(), locationData, DEFAULT_Z_INDEX);
-    }
-
-    /**
-     * Creates an empty gameObject with an empty Transform and no Components.
-     * Its name will be GameObject.EMPTY_GAMEOBJECT_NAME
-     *
-     * @param scene the scene to object will be added to
-     */
-    public GameObject(Scene scene) {
-        this(scene, EMPTY_GAMEOBJECT_NAME, new LinkedList<>(), new Vector3f(), DEFAULT_Z_INDEX);
+    public GameObject(Vector3f locationData) {
+        this(DEFAULT_GAMEOBJECT_NAME, new LinkedList<>(), locationData, DEFAULT_Z_INDEX);
     }
 
     /**

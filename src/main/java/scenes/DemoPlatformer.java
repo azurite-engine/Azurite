@@ -1,4 +1,4 @@
-package scenes;//{This comment is intentionally added to create a git merge conflict}
+package scenes;
 
 import ecs.*;
 import fonts.Font;
@@ -41,16 +41,16 @@ public class DemoPlatformer extends Scene {
     public void awake() {
 
         f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 18, true);
-        text = new Text("Azurite Engine demo", f, Color.RED, 15, 5, 100, true);
+        text = new Text("Azurite Engine demo", f, Color.RED, 15, 5, 100, true, false);
 
         camera = new Camera();
         setDefaultBackground(new Color(41, 30, 49));
 
         a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0);
         c = new Spritesheet(Assets.getTexture("src/assets/images/platformer.png"), 8, 8, 26, 0);
-        t = new TilesystemSideScroll(this, c, 31, 15, 100, 100, player);
+        t = new TilesystemSideScroll(c, 31, 15, 100, 100, player);
 
-        player = new GameObject(this, "Player", new Vector3f(600, 600, 0), 2);
+        player = new GameObject( "Player", new Vector3f(600, 600, 0), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
         //player.addComponent(new AABB());
         RigidBody playerBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 1);
@@ -61,7 +61,7 @@ public class DemoPlatformer extends Scene {
         player.addComponent(new CharacterController(CharacterController.standardPlatformer(playerBody), 1));
         player.getRawLocation().z = 90;
 
-        booper = new GameObject(this, "Booper", new Vector3f(800, 800, 0), 2);
+        booper = new GameObject( "Booper", new Vector3f(800, 800, 0), 2);
         booper.addComponent(new SpriteRenderer(a.getSprite(150), new Vector2f(100)));
         booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
         //TODO not done yet
