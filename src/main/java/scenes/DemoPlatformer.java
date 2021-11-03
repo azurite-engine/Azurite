@@ -52,7 +52,7 @@ public class DemoPlatformer extends Scene {
 
         player = new GameObject( "Player", new Vector3f(600, 600, 0), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
-        //player.addComponent(new AABB());
+
         RigidBody playerBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 1);
         playerBody.setMask(2, true);
         playerBody.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.010f)));
