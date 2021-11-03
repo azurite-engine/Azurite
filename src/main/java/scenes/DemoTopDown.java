@@ -49,10 +49,10 @@ public class DemoTopDown extends Scene {
         b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0);
         t = new Tilesystem(this, a, b, 31, 15, 200, 200);
 
-        trRes = new GameObject(this, "", new Vector3f(0, 0, 0), -20); //scale 100 for no image remove
+        trRes = new GameObject("", new Vector3f(0, 0, 0), -20); //scale 100 for no image remove
 
         //BOOPER
-        booper = new GameObject(this, "Booper", new Vector3f(800, 800, 0), 2);
+        booper = new GameObject("Booper", new Vector3f(800, 800, 0), 2);
         booperLight = new PointLight(new Color(255, 153, 102), 30);
         booper.addComponent(booperLight);
         SpriteRenderer booperRenderer = new SpriteRenderer(a.getSprite(132), new Vector2f(100));
@@ -63,7 +63,7 @@ public class DemoTopDown extends Scene {
         this.booper.addComponent(booperAnimation);
 
         //PLAYER
-        player = new GameObject(this, "Player", new Vector3f(600, 600, 0), 2);
+        player = new GameObject("Player", new Vector3f(600, 600, 0), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
         RigidBody playerBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 1);
         playerBody.setMask(2, true);
@@ -71,7 +71,7 @@ public class DemoTopDown extends Scene {
         player.addComponent(new SpriteRenderer(a.getSprite(132), new Vector2f(100)));
         player.addComponent(new CharacterController(CharacterController.standardTopDown(playerBody), 3));
 
-        greenLight = new GameObject(this, "Green light", new Vector3f(3315, 300, 0), 3);
+        greenLight = new GameObject("Green light", new Vector3f(3315, 300, 0), 3);
         greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);

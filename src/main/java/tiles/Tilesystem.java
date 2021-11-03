@@ -46,7 +46,7 @@ public class Tilesystem {
         for (int y = 0; y < yTiles; y++) {
             for (int x = 0; x < xTiles; x++) {
 
-                gameObjects[x][y] = new GameObject(scene, "Tile " + i, new Vector3f(x * width, y * height, 0), 0);
+                gameObjects[x][y] = new GameObject("Tile " + i, new Vector3f(x * width, y * height, 0), 0);
 
                 if (getAt(x, y, 31) <= 255 && getAt(x, y, 31) >= 0) {
                     gameObjects[x][y].addComponent(new SpriteRenderer(a.getSprite(
