@@ -1,4 +1,4 @@
-package graphics.renderer;//{This comment is intentionally added to create a git merge conflict}
+package graphics.renderer; 
 
 import graphics.Primitive;
 import graphics.ShaderDatatype;

@@ -3,7 +3,7 @@
  * Heiko Brumme
  * Copyright © 2015-2017, MIT License (MIT)
  */
-package fonts;//{This comment is intentionally added to create a git merge conflict}
+package fonts;
 
 import graphics.Texture;
 import org.lwjgl.BufferUtils;

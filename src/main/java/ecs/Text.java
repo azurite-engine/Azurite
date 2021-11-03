@@ -1,5 +1,4 @@
 package ecs;
-//{This comment is intentionally added to create a git merge conflict}
 import fonts.Font;
 import fonts.Glyph;
 import fonts.GlyphRenderer;
@@ -14,6 +13,7 @@ import util.Logger;
 import util.Utils;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 /**
  * @author Asher Haun
@@ -26,6 +26,7 @@ public class Text {
     private Transform lastTransform = new Transform();
     private boolean isSticky = false;
     int zIndex;
+    private boolean isCentered = false;
 
     ArrayList<GlyphRenderer> glyphRenderers;
 
@@ -35,7 +36,7 @@ public class Text {
 
     TextRendererBatch currentBatch;
 
-    public Text (String string, Font font, Color color, float x, float y, int zIndex, boolean isSticky) {
+    public Text (String string, Font font, Color color, float x, float y, int zIndex, boolean isSticky, boolean isCentered) {
         this.text = string;
         if (string.length() >= TextRenderer.getMaxBatchSize()) {
             Logger.logInfo("The String \"" + string.substring(0, 7) + "...\" passed is longer than the allowed string size for text: " + TextRenderer.getMaxBatchSize());
@@ -47,6 +48,7 @@ public class Text {
         this.lastTransform.setPosition(new Vector2f(x, y));
         this.zIndex = zIndex;
         this.isSticky = isSticky;
+        this.isCentered = isCentered;
 
         glyphRenderers = new ArrayList<>();
 
@@ -55,19 +57,18 @@ public class Text {
         Engine.scenes().currentScene().addUiObject(this);
 
         currentBatch = glyphRenderers.get(0).getBatch();
-
     }
 
     public Text (String string, Font font, Color color, float x, float y) {
-        this(string, font, color, x, y, 1, true);
+        this(string, font, color, x, y, 1, true, false);
     }
 
     public Text (String string, Color color, float x, float y) {
-        this(string, new Font(), color, x, y, 1, true);
+        this(string, new Font(), color, x, y, 1, true, false);
     }
 
     public Text (String string, float x, float y) {
-        this(string, new Font(), Color.WHITE, x, y, 1, true);
+        this(string, new Font(), Color.WHITE, x, y, 1, true, false);
     }
 
     public void update () {
@@ -96,7 +97,50 @@ public class Text {
     }
 
     char ch;
+    float stringWidth = 0;
+    private float calculateLineWidth (CharSequence line) {
+        Transform t = transform.copy();
+
+        float drawX = t.getX();
+
+        for (int i = 0; i < line.length(); i++) {
+            if (i >= TextRenderer.getMaxBatchSize() - 3) {
+                if (i < TextRenderer.getMaxBatchSize()) {
+                    ch = '.';
+                } else break;
+            } else ch = line.charAt(i);
+
+            if (ch == '\n') {
+                drawX = t.getX();
+
+                continue;
+            }
+            if (ch == '\r') {
+                /* Carriage return, just skip it */
+                continue;
+            }
+            Glyph g = font.getGlyphs().get(ch);
+
+            drawX += g.width;
+            stringWidth = drawX;
+        }
+
+        return stringWidth;
+    }
+
     private void generateGlyphs () {
+
+        float[] lineLengths = new float[1];
+        if (isCentered) {
+            Pattern pattern = Pattern.compile("\n");
+            CharSequence[] lines = pattern.split(text);
+            lineLengths = new float[lines.length];
+            // print array
+            for (int i = 0; i < lines.length; i++) {
+                lineLengths[i] = calculateLineWidth(lines[i]) - transform.getX()/2;
+            }
+        }
+
         int textHeight = font.getHeight(text);
         int lineIncreases = 0;
 
@@ -117,6 +161,7 @@ public class Text {
                 /* Line feed, set x and y to draw at the next line */
                 drawY = t.getY() + (font.getFontHeight() * lineIncreases);
                 drawX = t.getX();
+
                 continue;
             }
             if (ch == '\r') {
@@ -125,9 +170,14 @@ public class Text {
             }
             Glyph g = font.getGlyphs().get(ch);
 
-            glyphRenderers.add(new GlyphRenderer(new Transform(drawX, drawY, g.width, g.height), g, this, ch, isSticky, this.color));
+            if (!isCentered) {
+                glyphRenderers.add(new GlyphRenderer(new Transform(drawX, drawY, g.width, g.height), g, this, ch, isSticky, this.color));
+            } else {
+                glyphRenderers.add(new GlyphRenderer(new Transform(drawX - lineLengths[lineIncreases]/2, drawY, g.width, g.height), g, this, ch, isSticky, this.color));
+            }
 
             drawX += g.width;
+            stringWidth = 0;
         }
         if (textHeight > font.getFontHeight()) {
             drawY += textHeight - font.getFontHeight();
@@ -186,9 +236,10 @@ public class Text {
         return zIndex;
     }
 
-    public void setZindex(int z) {
-        zIndex = z;
-    }
+//    This method doesn't work yet
+//    public void setZindex(int z) {
+//        zIndex = z;
+//    }
 
     public float getX () {
         return transform.getX();
@@ -204,6 +255,11 @@ public class Text {
 
     public void setY (float y) {
         transform.setY(y);
+    }
+
+    public void setPosition (Vector2f position) {
+        setX(position.x());
+        setY(position.y());
     }
 
     public void addY (float y) {

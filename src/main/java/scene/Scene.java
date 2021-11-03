@@ -1,4 +1,4 @@
-package scene;//{This comment is intentionally added to create a git merge conflict}
+package scene; 
 
 import ecs.GameObject;
 import ecs.RigidBody;

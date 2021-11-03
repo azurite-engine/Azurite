@@ -1,4 +1,4 @@
-package util;//{This comment is intentionally added to create a git merge conflict}
+package util; 
 
 import graphics.Window;
 import org.lwjgl.glfw.GLFWErrorCallback;

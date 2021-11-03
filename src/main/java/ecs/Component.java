@@ -1,5 +1,5 @@
 package ecs;
-//{This comment is intentionally added to create a git merge conflict}
+ 
 import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
 import org.joml.Vector2f;

@@ -1,4 +1,4 @@
-package graphics;//{This comment is intentionally added to create a git merge conflict}
+package graphics; 
 
 import static org.lwjgl.opengl.GL11.*;
 import static util.Utils.map;

@@ -1,4 +1,4 @@
-package fonts;//{This comment is intentionally added to create a git merge conflict}
+package fonts;
 
 import ecs.Text;
 import graphics.Color;
@@ -8,8 +8,6 @@ import org.joml.Vector2f;
 import org.joml.Vector4f;
 import util.Transform;
 import util.Utils;
-
-import java.util.ArrayList;
 
 import static graphics.Color.BLUE;
 import static graphics.Color.WHITE;
