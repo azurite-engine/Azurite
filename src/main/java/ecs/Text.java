@@ -205,6 +205,16 @@ public class Text {
         return isSticky;
     }
 
+    public boolean isCentered() {
+        return isCentered;
+    }
+
+    public void setCentered (boolean centered) {
+        if (centered == isCentered) return;
+        isCentered = centered;
+        change((String) text);
+    }
+
     /**
      * @return Transform of the gameObject
      */
