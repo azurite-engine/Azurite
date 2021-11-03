@@ -6,7 +6,7 @@ import graphics.Camera;
 import graphics.Color;
 import graphics.Texture;
 import org.joml.Vector2f;
-import physics.Transform;
+import org.joml.Vector3f;
 import physics.collision.Shapes;
 import physics.force.ConstantForce;
 import postprocess.BloomEffect;
@@ -49,19 +49,19 @@ public class DemoPlatformer extends Scene {
         c = new Spritesheet(Assets.getTexture("src/assets/images/platformer.png"), 8, 8, 26, 0);
         t = new TilesystemSideScroll(this, c, 31, 15, 100, 100, player);
 
-        player = new GameObject(this, "Player", new Transform(600, 600, 100, 100), 2);
+        player = new GameObject(this, "Player", new Vector3f(600, 600, 0), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
         //player.addComponent(new AABB());
         RigidBody playerBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 1);
         playerBody.setMask(2, true);
-        playerBody.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.020f)));
+        playerBody.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.010f)));
         player.addComponent(playerBody);
-        player.addComponent(new SpriteRenderer(a.getSprite(132)));
-        player.addComponent(new CharacterController(CharacterController.standardPlatformer(playerBody), 1.5f));
-        player.getRawTransform().setRotation(90);
+        player.addComponent(new SpriteRenderer(a.getSprite(132), new Vector2f(100)));
+        player.addComponent(new CharacterController(CharacterController.standardPlatformer(playerBody), 1));
+        player.getRawLocation().z = 90;
 
-        booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
-        booper.addComponent(new SpriteRenderer(a.getSprite(150)));
+        booper = new GameObject(this, "Booper", new Vector3f(800, 800, 0), 2);
+        booper.addComponent(new SpriteRenderer(a.getSprite(150), new Vector2f(100)));
         booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
         //TODO not done yet
 
@@ -82,7 +82,8 @@ public class DemoPlatformer extends Scene {
 
         text.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS());
 
-        camera.smoothFollow(player.getRawTransform());
+        // camera.smoothFollow(player.getRawTransform());
+        camera.smoothFollow(player.getReadOnlyLocation());
 
     }
 

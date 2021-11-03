@@ -11,6 +11,42 @@ import java.util.List;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 
+/**
+ * <h1>Azurite</h1>
+ * <p>
+ *     A renderer is responsible for taking collected data of a specified type,
+ *     formatting it for a selected shader, and rendering it. Every renderer has
+ *     an associated {@code RenderBatch} to render. The pipeline for processing
+ *     the metadata of a render batch and drawing batched data is as follows:
+ *     <ol>
+ *         <li>
+ *             The {@code Renderer} class is extended by another class specified
+ *             to render a certain type of data batch; for the sake of example,
+ *             let's use a quadrilateral render batch. A shader is also created
+ *             with the same vertex properties specified in the render batch.
+ *         </li>
+ *         <li>
+ *             A {@code Shader} object is then created, encapsulating the {@code uniform}s
+ *             and {@code layout}s of the shader's source code. It is then attached to
+ *             this renderer.
+ *         </li>
+ *         <li>
+ *             Based on the {@code uniform}s of the shader, various bits of data is
+ *             submitted to the GPU, like camera position, pointlight position, etc.
+ *         </li>
+ *         <li>
+ *             After shader parsing and handling, the data is rendered.
+ *         </li>
+ *     </ol>
+ *     A renderer also specifies a {@code framebuffer}, which acts as, well, a
+ *     buffer which GPU pixel data is stored in to be drawn all at once on the monitor.
+ * </p>
+ *
+ * @param <T> type of batch to render
+ * @see RenderBatch
+ * @see Shader
+ * @see Framebuffer
+ */
 public abstract class Renderer<T extends RenderBatch> {
     /**
      * Texture slots to be uploaded to the shader. You don't have to upload them in your custom renderer.

@@ -7,6 +7,7 @@ import org.joml.Vector2f;
 import java.util.Arrays;
 
 /**
+ * <h1>Azurite</h1>
  * Abstract structure for ECS Components.
  * It is highly recommended to use this when implementing any system that can/should be applied to a GameObject.
  */
@@ -78,7 +79,7 @@ public abstract class Component implements Comparable<Component> {
      * @return the current position of the parent gameobject
      */
     protected Vector2f position() {
-        return gameObject.getReadOnlyTransform().getPosition();
+        return gameObject.getReadOnlyPosition();
     }
 
     //this method is primarily used to keep all components in order to update them properly
@@ -97,7 +98,7 @@ public abstract class Component implements Comparable<Component> {
      * Should be true, if this components will change the position of the gameobject somehow.
      *
      * @return false, if and only if the component will never modify the position of the gameobject in any way
-     * @see GameObject#positionBuffer()
+     * @see GameObject#locationBuffer()
      */
     public boolean transformingObject() {
         return true;

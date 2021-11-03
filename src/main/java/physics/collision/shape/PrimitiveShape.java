@@ -179,7 +179,7 @@ public abstract class PrimitiveShape {
     }
 
     /**
-     * Will be called by {@link this#setPosition(Vector2f)} after the new position was set.
+     * Will be called by {@link PrimitiveShape#setPosition(Vector2f)} after the new position was set.
      * Used to recalculate the absolute coordinates.
      */
     public void adjust() {

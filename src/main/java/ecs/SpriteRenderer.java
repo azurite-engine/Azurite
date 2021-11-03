@@ -6,15 +6,16 @@ import graphics.Sprite;
 import graphics.Texture;
 import graphics.renderer.DefaultRenderBatch;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
-import physics.Transform;
-import physics.TransformSensitive;
+import physics.LocationSensitive;
 import util.Assets;
 import util.Utils;
 
 import static graphics.Color.WHITE;
 
 /**
+ * <h1>Azurite</h1>
  * SpriteRenderer is a component that can be added to a GameObject.
  * it can contain a solid color, a semi-transparent color, or a texture.
  * Sprites can be tinted by the color value.
@@ -23,7 +24,7 @@ import static graphics.Color.WHITE;
  * @author Gabe
  */
 
-public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> implements TransformSensitive {
+public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> implements LocationSensitive {
 
     public static final int ORDER = 100;
 
@@ -31,7 +32,8 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
 
     private Sprite sprite;
 
-    private Transform lastTransform;
+    private Vector3f lastLocation;
+    private Vector2f size;
     private boolean isDirty; // Dirty flag, tells renderer to redraw if object components have changed
 
     /**
@@ -39,10 +41,11 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
      *
      * @param color of type JOML Vector4f, range from 0-1
      */
-    public SpriteRenderer(Vector4f color) {
+    public SpriteRenderer(Vector4f color, Vector2f size) {
         this.setColor(color);
         this.sprite = new Sprite(null);
         this.isDirty = true;
+        this.size = size;
         this.order = ORDER;
     }
 
@@ -51,11 +54,12 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
      *
      * @param color of type Color, range from 0-255
      */
-    public SpriteRenderer(Color color) {
+    public SpriteRenderer(Color color, Vector2f size) {
         // Note that type Color is normalized below in setColor()
         this.setColor(color.toNormalizedVec4f());
         this.sprite = new Sprite(null);
         this.isDirty = true;
+        this.size = size;
         this.order = ORDER;
     }
 
@@ -65,10 +69,11 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
      *
      * @param sprite
      */
-    public SpriteRenderer(Sprite sprite) {
+    public SpriteRenderer(Sprite sprite, Vector2f size) {
         this.sprite = sprite;
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;
+        this.size = size;
         this.order = ORDER;
     }
 
@@ -77,10 +82,11 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
      *
      * @param path to the image (ie. "src/assets/images/pepper.png")
      */
-    public SpriteRenderer(String path) {
+    public SpriteRenderer(String path, Vector2f size) {
         this.sprite = new Sprite(Assets.getTexture(path));
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;
+        this.size = size;
         this.order = ORDER;
     }
 
@@ -89,7 +95,7 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
      */
     @Override
     public void start() {
-        this.lastTransform = gameObject.getReadOnlyTransform();
+        this.lastLocation = gameObject.getReadOnlyLocation();
     }
 
     /**
@@ -103,8 +109,8 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
     }
 
     @Override
-    public void update(Transform changedTransform) {
-        this.gameObject.getReadOnlyTransform().copy(this.lastTransform);
+    public void update(Vector3f changedLocationData) {
+        this.lastLocation = changedLocationData;
         isDirty = true;
     }
 
@@ -123,6 +129,14 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
      */
     public Texture getTexture() {
         return sprite.getTexture();
+    }
+
+    public Vector2f getSize() {
+        return size;
+    }
+
+    public void setSize(Vector2f size) {
+        this.size = size;
     }
 
     /**

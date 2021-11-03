@@ -10,6 +10,13 @@ import util.Engine;
 
 import java.util.Collections;
 
+/**
+ * <h1>Azurite</h1>
+ * Used to render sprites, which are rendered as {@code Primitive.QUAD}s
+ * with textures. This should be used to render any renderable {@code gameObject}.
+ *
+ * @see DefaultRenderBatch
+ */
 public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
     private static final int MAX_BATCH_SIZE = 1000;
 
