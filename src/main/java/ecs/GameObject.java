@@ -2,8 +2,8 @@ package ecs;
 //{This comment is intentionally added to create a git merge conflict}
 import graphics.RenderableComponent;
 import org.joml.Vector2f;
-import physics.Transform;
-import physics.TransformSensitive;
+import org.joml.Vector3f;
+import physics.LocationSensitive;
 import scene.Scene;
 import util.OrderPreservingList;
 
@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * <h1>Azurite</h1>
  * A GameObject is the root of the Entity Component system used to store all entities in Azurite games.
  * Each GameObject can contain any of a number of available components including spriteRenderers and lights.
  * By default, each GameObject contains a Transform, which holds the X and Y position, and width and height of the object in pixels.
@@ -30,9 +31,10 @@ public class GameObject {
     private final long objId = internalCounter++;
     private final OrderPreservingList<Component> components;
     private final Scene parentScene;
-    private final Collection<TransformSensitive> transformSensitives;
-    private String name;
-    private Transform transform;
+    private final Collection<LocationSensitive> transformSensitives;
+    private final String name;
+    private final Vector3f locationData;
+    private final Vector3f locationBuffer;
     private int zIndex;
 
     /**
@@ -41,13 +43,14 @@ public class GameObject {
      * @param scene         the scene to object will be added to
      * @param name
      * @param componentList
-     * @param transform
+     * @param locationData
      * @param zIndex
      */
-    public GameObject(Scene scene, String name, List<Component> componentList, Transform transform, int zIndex) {
+    public GameObject(Scene scene, String name, List<Component> componentList, Vector3f locationData, int zIndex) {
         this.name = name;
         this.components = new OrderPreservingList<>(componentList);
-        this.transform = transform;
+        this.locationData = locationData;
+        this.locationBuffer = new Vector3f();
         this.zIndex = zIndex;
         this.parentScene = scene;
         scene.addGameObjectToScene(this);
@@ -55,13 +58,13 @@ public class GameObject {
     }
 
     /**
-     * @param scene     the scene to object will be added to
+     * @param scene        the scene to object will be added to
      * @param name
-     * @param transform
+     * @param locationData
      * @param zIndex
      */
-    public GameObject(Scene scene, String name, Transform transform, int zIndex) {
-        this(scene, name, new LinkedList<>(), transform, zIndex);
+    public GameObject(Scene scene, String name, Vector3f locationData, int zIndex) {
+        this(scene, name, new LinkedList<>(), locationData, zIndex);
     }
 
     /**
@@ -70,25 +73,25 @@ public class GameObject {
      * @param zIndex
      */
     public GameObject(Scene scene, String name, int zIndex) {
-        this(scene, name, new LinkedList<>(), new Transform(), zIndex);
+        this(scene, name, new LinkedList<>(), new Vector3f(), zIndex);
     }
 
     /**
-     * @param scene     the scene to object will be added to
-     * @param transform
+     * @param scene        the scene to object will be added to
+     * @param locationData
      * @param zIndex
      */
-    public GameObject(Scene scene, Transform transform, int zIndex) {
-        this(scene, DEFAULT_GAMEOBJECT_NAME, new LinkedList<>(), transform, zIndex);
+    public GameObject(Scene scene, Vector3f locationData, int zIndex) {
+        this(scene, DEFAULT_GAMEOBJECT_NAME, new LinkedList<>(), locationData, zIndex);
 
     }
 
     /**
-     * @param scene     the scene to object will be added to
-     * @param transform
+     * @param scene        the scene to object will be added to
+     * @param locationData
      */
-    public GameObject(Scene scene, Transform transform) {
-        this(scene, DEFAULT_GAMEOBJECT_NAME, new LinkedList<>(), transform, DEFAULT_Z_INDEX);
+    public GameObject(Scene scene, Vector3f locationData) {
+        this(scene, DEFAULT_GAMEOBJECT_NAME, new LinkedList<>(), locationData, DEFAULT_Z_INDEX);
     }
 
     /**
@@ -98,7 +101,7 @@ public class GameObject {
      * @param scene the scene to object will be added to
      */
     public GameObject(Scene scene) {
-        this(scene, EMPTY_GAMEOBJECT_NAME, new LinkedList<>(), new Transform(), DEFAULT_Z_INDEX);
+        this(scene, EMPTY_GAMEOBJECT_NAME, new LinkedList<>(), new Vector3f(), DEFAULT_Z_INDEX);
     }
 
     /**
@@ -116,7 +119,8 @@ public class GameObject {
     public void update(float dt) {
 
         //clear position buffer at the start to only record freshly made changes
-        transform.resetPositionBuffer();
+        //transform.resetPositionBuffer();
+        locationBuffer.set(0, 0, 0);
 
         //update components, that do impact the position of the object
         components.stream().filter(Component::transformingObject).forEach(component -> component.update(dt));
@@ -125,11 +129,11 @@ public class GameObject {
         getParentScene().checkCollision(getComponent(RigidBody.class));
 
         //apply all changes made to the position buffer
-        if (transform.applyPositionBuffer()) {
-            //reset the buffer to deny changes in transform sensitive methods
-            transform.resetPositionBuffer();
+        if (!locationBuffer.equals(0, 0, 0)) {
+            //apply changes of the buffer
+            locationData.add(locationBuffer);
             //update all components that are interested in a change of the transform
-            transformSensitives.forEach(transformSensitive -> transformSensitive.update(transform));
+            transformSensitives.forEach(transformSensitive -> transformSensitive.update(locationData));
         }
 
         //update components, that update the screen visually only
@@ -152,23 +156,30 @@ public class GameObject {
     }
 
     /**
-     * @return a new copy of the current transform of the gameObject
+     * @return a new copy of the current location of the gameObject
      */
-    public Transform getReadOnlyTransform() {
-        return this.transform.copy();
+    public Vector3f getReadOnlyLocation() {
+        return new Vector3f(locationData);
     }
 
     /**
-     * Do NOT change this transform here. Use positionBuffer for that.
+     * @return a new copy of the current position of the gameObject
+     */
+    public Vector2f getReadOnlyPosition() {
+        return new Vector2f(locationData.x, locationData.y);
+    }
+
+    /**
+     * Do NOT change this transform here. Use locationBuffer for that.
      *
      * @return the raw transform object of the gameObject
      */
-    public Transform getRawTransform() {
-        return this.transform;
+    public Vector3f getRawLocation() {
+        return this.locationData;
     }
 
-    public Vector2f positionBuffer() {
-        return transform.positionBuffer();
+    public Vector3f locationBuffer() {
+        return this.locationBuffer;
     }
 
     public int zIndex() {
@@ -218,7 +229,7 @@ public class GameObject {
                 c.remove();
                 c.gameObject = null;
                 components.remove(i);
-                if (c instanceof TransformSensitive)
+                if (c instanceof LocationSensitive)
                     transformSensitives.remove(c);
                 parentScene.updateGameObject(this, false);
                 return;
@@ -239,8 +250,8 @@ public class GameObject {
         if (this.components.stream().anyMatch(component -> c.isConflictingWith(component.getClass()) || component.isConflictingWith(c.getClass())))
             throw new IllegalComponentStateException("Component " + c.getClass() + " is conflicting with existing one");
         this.components.add(c);
-        if (c instanceof TransformSensitive)
-            this.transformSensitives.add((TransformSensitive) c);
+        if (c instanceof LocationSensitive)
+            this.transformSensitives.add((LocationSensitive) c);
         c.gameObject = this;
         //TODO check if this is necessary
         if (getParentScene() != null) {

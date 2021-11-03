@@ -8,6 +8,13 @@ import util.debug.DebugLine;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <h1>Azurite</h1>
+ * Used to render debug materials, like collision hitboxes, raycasts, or test
+ * data in general. Only supports rendering lines.
+ *
+ * @see DebugRenderer
+ */
 public class DebugRenderBatch extends RenderBatch {
     private final List<DebugLine> lines;
 

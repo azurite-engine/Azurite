@@ -45,35 +45,35 @@ public class RayCastResult {
     }
 
     /**
-     * @see this#strikeLength
+     * @see RayCastResult#strikeLength
      */
     public float getStrikeLength() {
         return strikeLength;
     }
 
     /**
-     * @see this#normal
+     * @see RayCastResult#normal
      */
     public Vector2f getNormal() {
         return normal;
     }
 
     /**
-     * @see this#point
+     * @see RayCastResult#point
      */
     public Vector2f getPoint() {
         return point;
     }
 
     /**
-     * @see this#strike
+     * @see RayCastResult#strike
      */
     public Vector2f getStrike() {
         return strike;
     }
 
     /**
-     * @see this#hit
+     * @see RayCastResult#hit
      */
     public boolean didHit() {
         return hit;

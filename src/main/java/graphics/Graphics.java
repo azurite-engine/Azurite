@@ -3,6 +3,11 @@ package graphics;//{This comment is intentionally added to create a git merge co
 import static org.lwjgl.opengl.GL11.*;
 import static util.Utils.map;
 
+/**
+ * <h1>Azurite</h1>
+ * A utility class for changing background colors. More functionality will probably added to this
+ * class as the engine starts to grow.
+ */
 public class Graphics {
     public static Color defaultBackground;
 
@@ -24,7 +29,7 @@ public class Graphics {
     }
 
     /**
-     * Set the GL clear color on a grayscale
+     * Set the GL clear color on a grayscale.
      *
      * @param rgb Single value affecting red, green, and blue (0-255)
      */
@@ -42,7 +47,7 @@ public class Graphics {
     }
 
     /**
-     * Set the GL clear color for the DefaultRenderer
+     * Set the GL clear color for the DefaultRenderer on a greyscale.
      *
      * @param rgb Single value affecting red, green, and blue (0-255)
      */

@@ -74,7 +74,7 @@ public class LightmapRenderer extends Renderer<QuadRenderBatch> {
 
         for (int i = 0; i < lights.size(); i++) {
             PointLight light = lights.get(i);
-            lightPositions[i] = light.lastTransform.getPosition();
+            lightPositions[i] = new Vector2f(light.lastLocation.x, light.lastLocation.y);
             lightColors[i] = light.color;
             lightIntensities[i] = light.intensity;
         }

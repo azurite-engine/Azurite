@@ -5,12 +5,20 @@ import graphics.Primitive;
 import graphics.ShaderDatatype;
 import graphics.Texture;
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 import org.joml.Vector4f;
-import physics.Transform;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * <h1>Azurite</h1>
+ * Used to render sprites, which are rendered as {@code Primitive.QUAD}s
+ * with textures. This should be used to render any renderable {@code gameObject}.
+ *
+ * @see RenderBatch
+ * @see DefaultRenderer
+ */
 public class DefaultRenderBatch extends RenderBatch {
     private final List<SpriteRenderer> sprites;
 
@@ -63,16 +71,19 @@ public class DefaultRenderBatch extends RenderBatch {
             }
 
             // Load position
-            Transform spr = sprite.gameObject.getReadOnlyTransform();
+            Vector3f loc = sprite.gameObject.getReadOnlyLocation();
+            Vector2f pos = new Vector2f(loc.x, loc.y);
+            Vector2f scale = sprite.getSize();
 
-            Vector2f shifted = spr.getPosition().add(spr.getScale().div(2, new Vector2f()), new Vector2f());
-            float scaledX = (xAdd * spr.scale.x);
-            float scaledY = (yAdd * spr.scale.y);
+            Vector2f shifted = pos.add(scale.div(2, new Vector2f()), new Vector2f());
+            float scaledX = (xAdd * scale.x);
+            float scaledY = (yAdd * scale.y);
 
-            data[offset] = shifted.x + (float) ((Math.cos(spr.getRotationRadians()) * scaledX)
-                    - (Math.sin(spr.getRotationRadians()) * scaledY));
-            data[offset + 1] = shifted.y + (float) ((Math.sin(spr.getRotationRadians()) * scaledX)
-                    + (Math.cos(spr.getRotationRadians()) * scaledY));
+            double radianRotation = Math.toRadians(loc.z);
+            data[offset] = shifted.x + (float) ((Math.cos(radianRotation) * scaledX)
+                    - (Math.sin(radianRotation) * scaledY));
+            data[offset + 1] = shifted.y + (float) ((Math.sin(radianRotation) * scaledX)
+                    + (Math.cos(radianRotation) * scaledY));
 
             primitiveVertices[primitiveVerticesOffset] = data[offset];
             primitiveVertices[primitiveVerticesOffset + 1] = data[offset + 1];
