@@ -20,6 +20,7 @@ import util.Utils;
 
 import static graphics.Graphics.setDefaultBackground;
 
+@Deprecated
 public class DemoPlatformer extends Scene {
     BloomEffect bloom;
     Spritesheet a;
