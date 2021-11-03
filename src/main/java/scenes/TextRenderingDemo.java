@@ -40,11 +40,11 @@ public class TextRenderingDemo extends Scene {
         maghrib = new Font("src/assets/fonts/Maghrib-MVZpx.ttf", 50, true);
         openSans = new Font("src/assets/fonts/OpenSans-Regular.ttf", 20, true);
 
-        titleText = new Text("Azurite text\nrendering demo", maghrib, Color.BLACK,300, 5, 1, true, true);
+        titleText = new Text("Azurite text\nrendering demo", openSans, Color.BLACK,300, 5, 1, true, true);
 //        movingText = new Text("HAHA", openSans, Color.RED, 200, 200);
 //        rainbowText = new Text("Begin typing to change this text: ", openSans, Color.BLUE, 10, 50);
 
-        centerLine = new GameObject("", new Vector3f(300, 0, 0), 1).addComponent(new SpriteRenderer(Color.RED, new Vector2f(3, 30)));
+        centerLine = new GameObject("", new Vector3f(300, 0, 0), 1).addComponent(new SpriteRenderer(Color.BLUE, new Vector2f(3, 200)));
     }
 
     public void update () {

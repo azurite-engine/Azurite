@@ -97,35 +97,24 @@ public class Text {
     }
 
     char ch;
-    float stringWidth = 0;
+    float lineWidth = 0;
     private float calculateLineWidth (CharSequence line) {
-        Transform t = transform.copy();
-
-        float drawX = t.getX();
+        float drawX = 0;
 
         for (int i = 0; i < line.length(); i++) {
-            if (i >= TextRenderer.getMaxBatchSize() - 3) {
-                if (i < TextRenderer.getMaxBatchSize()) {
-                    ch = '.';
-                } else break;
-            } else ch = line.charAt(i);
+            ch = line.charAt(i);
 
             if (ch == '\n') {
-                drawX = t.getX();
-
+                drawX = 0;
                 continue;
             }
-            if (ch == '\r') {
-                /* Carriage return, just skip it */
-                continue;
-            }
-            Glyph g = font.getGlyphs().get(ch);
+            if (ch == '\r') continue;
 
-            drawX += g.width;
-            stringWidth = drawX;
+            drawX += font.getGlyphs().get(ch).width;
+            lineWidth = drawX;
         }
 
-        return stringWidth;
+        return lineWidth;
     }
 
     private void generateGlyphs () {
@@ -137,7 +126,7 @@ public class Text {
             lineLengths = new float[lines.length];
             // print array
             for (int i = 0; i < lines.length; i++) {
-                lineLengths[i] = calculateLineWidth(lines[i]) - transform.getX()/2;
+                lineLengths[i] = calculateLineWidth(lines[i]);
             }
         }
 
@@ -173,11 +162,11 @@ public class Text {
             if (!isCentered) {
                 glyphRenderers.add(new GlyphRenderer(new Transform(drawX, drawY, g.width, g.height), g, this, ch, isSticky, this.color));
             } else {
-                glyphRenderers.add(new GlyphRenderer(new Transform(drawX - lineLengths[lineIncreases]/2, drawY, g.width, g.height), g, this, ch, isSticky, this.color));
+                glyphRenderers.add(new GlyphRenderer(new Transform(Utils.round(drawX - lineLengths[lineIncreases]/2), drawY, g.width, g.height), g, this, ch, isSticky, this.color));
             }
 
             drawX += g.width;
-            stringWidth = 0;
+            lineWidth = 0;
         }
         if (textHeight > font.getFontHeight()) {
             drawY += textHeight - font.getFontHeight();
