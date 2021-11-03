@@ -1,27 +1,24 @@
 package ecs;
- 
-import graphics.RenderableComponent;
-import graphics.Window;
+
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import physics.LocationSensitive;
 import scene.Scene;
 import util.Engine;
 import util.OrderPreservingList;
-
 import java.awt.*;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * <h1>Azurite</h1>
  * A GameObject is the root of the Entity Component system used to store all entities in Azurite games.
  * Each GameObject can contain any of a number of available components including spriteRenderers and lights.
  * By default, each GameObject contains a Transform, which holds the X and Y position, and width and height of the object in pixels.
  *
  * @author Asher Haun
  * @author Gabe
+ * @author Juyas
  */
 
 public class GameObject {
