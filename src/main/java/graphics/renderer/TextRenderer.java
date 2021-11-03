@@ -20,7 +20,6 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
 
     /**
      * Create a shader
-     *
      * @return the created shader
      */
     @Override
@@ -30,7 +29,6 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
 
     /**
      * Create a framebuffer
-     *
      * @return the created Framebuffer
      */
     @Override
@@ -40,7 +38,6 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
 
     /**
      * Upload uniforms to the shader
-     *
      * @param shader the shader
      */
     @Override
@@ -54,8 +51,10 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
     protected void prepare() {}
 
     /**
-     *
-     *
+     * This method is called when the user wants to modify the string in the Text object.
+     * This method is called by the Text.change(String) method.
+     * @param textObject the Text object that is being modified
+     * @param textBatch the batch that the previously mentioned Text object belongs to.
      */
     public void changeText (Text textObject, TextRendererBatch textBatch) {
         textBatch.removeGlyphRenderers();
@@ -68,7 +67,6 @@ public class TextRenderer extends Renderer<TextRendererBatch> {
 
     /**
      * Add a Text object to this renderer
-     *
      * @param textObject the Text with renderable glyphs
      */
     public void add(Text textObject) {

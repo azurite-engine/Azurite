@@ -45,7 +45,7 @@ public class TextRenderingDemo extends Scene {
         titleText = new Text("Azurite text rendering demo", maghrib, Color.BLACK, Window.getWidth()/2, 5, 1, true, true);
         movingText = new Text("HAHA", openSans, Color.RED, 200, 200);
         rainbowText = new Text("Rainbow text", openSans, Color.BLUE, 10, 50);
-        centeredText = new Text("(Centered Text)", openSans, Color.BLACK, Window.getWidth()/2, 80, 1, true, true);
+        centeredText = new Text("(Centered Text)\n(Centered Text line 2)", openSans, Color.BLACK, Window.getWidth()/2, 80, 1, true, true);
 
         centerLine = new GameObject("", new Vector3f(Window.getWidth()/2, 50, 0), 1).addComponent(new SpriteRenderer(Color.GRAY, new Vector2f(1, 100)));
     }

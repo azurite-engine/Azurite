@@ -29,9 +29,8 @@ public class TextRendererBatch extends RenderBatch {
 
     /**
      * Create a default type render batch
-     *
      * @param maxBatchSize maximum number of sprites in the batch
-     * @param zIndex       zIndex of the batch. Used for sorting.
+     * @param zIndex zIndex of the batch. Used for sorting.
      */
     TextRendererBatch(int maxBatchSize, int zIndex) {
         super(maxBatchSize, zIndex, Primitive.QUAD, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT, ShaderDatatype.FLOAT);
@@ -101,6 +100,9 @@ public class TextRendererBatch extends RenderBatch {
         }
     }
 
+    /**
+     * @return the size of the glyphRenders ArrayList in this batch.
+     */
     public int getSize () {
         return numberOfGlyphRenderers;
     }
@@ -119,12 +121,19 @@ public class TextRendererBatch extends RenderBatch {
         }
     }
 
+    /**
+     * Removes all glyph renderers from this batch and cleans up after them.
+     */
     public void removeGlyphRenderers () {
         glyphRenderers.clear();
         this.numberOfGlyphRenderers = 0;
+        // References an existing empty array to avoid stack allocations over and over again.
         data = resetData;
     }
 
+    /**
+     * Load any GlyphRenderers that have been changed.
+     */
     @Override
     public void updateBuffer () {
         for (int i = 0; i < glyphRenderers.size(); i ++) {
@@ -146,14 +155,13 @@ public class TextRendererBatch extends RenderBatch {
     @Override
     protected void load(int index) {
         if (index >= spriteCount) spriteCount++;
-//        primitiveVerticesOffset = 0;
         loadVertexProperties(index, getOffset(index));
     }
 
     /**
      * Adds a Text object to this batch
      *
-     * @param
+     * @param glyphR the GlyphRenderer to be added to the render batch.
      * @return if the sprite was successfully added to the batch
      */
     public boolean addGlyphRenderer (GlyphRenderer glyphR) {
@@ -161,9 +169,8 @@ public class TextRendererBatch extends RenderBatch {
         if (hasRoomLeft() && zIndex() == glyphR.getParentText().zIndex()) {
             Texture tex = glyphR.getTexture();
             if (tex == null || (hasTexture(tex) || hasTextureRoom())) {
-                // Get the index and add the renderObject
+                // Get the index and add the renderObject to the list
                 int index = this.numberOfGlyphRenderers;
-//                glyphR.setRendererBatch(this, index);
                 this.glyphRenderers.add(glyphR); // = glyphR;
                 this.numberOfGlyphRenderers++;
 
@@ -175,8 +182,6 @@ public class TextRendererBatch extends RenderBatch {
                 }
                 return true;
             }
-        }  else if (!hasRoomLeft()) {
-//            Logger.logInfo("Text length has reached the maximum string length of " + (maxBatchSize - 1) + "; this is an artificial cap set for performance reasons.");
         }
         return false;
     }

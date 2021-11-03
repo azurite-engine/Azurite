@@ -17,36 +17,49 @@ import java.util.regex.Pattern;
 
 /**
  * @author Asher Haun
+ * Represents a renderable string containing a TTF font reference, color data, and font size.
  */
 public class Text {
-    private Color color = Color.WHITE;
-
-    private Sprite sprite;
 
     private Transform lastTransform = new Transform();
+    private Transform transform = new Transform();
+    private int zIndex;
+
     private boolean isSticky = false;
-    int zIndex;
     private boolean isCentered = false;
 
-    ArrayList<GlyphRenderer> glyphRenderers;
+    private ArrayList<GlyphRenderer> glyphRenderers;
+    private TextRendererBatch currentBatch;
+    private Color color = Color.WHITE;
 
-    Transform transform = new Transform();
-    Font font;
-    CharSequence text;
+    private Font font;
+    private CharSequence text;
 
-    TextRendererBatch currentBatch;
-
+    /**
+     * @param string the text to be rendered.
+     * @param font the {@link fonts.Font} object that contains your preferred .ttf font file.
+     * @param color the {@link graphics.Color} object that contains your prefered RGBA color.
+     * @param x the X position of the Text object.
+     * @param y the Y position of the Text object.
+     * @param zIndex the Z-Index of the Text Object (currently can only be set on creation, this will change in the future).
+     * @param isSticky boolean determining whether the text sticks in one position regardless of the camera position (isSticky = true) or if it will move in world space.
+     * @param isCentered boolean determining whether the text is left aligned or center aligned. This can be changed after creation using .setCentered().
+     */
     public Text (String string, Font font, Color color, float x, float y, int zIndex, boolean isSticky, boolean isCentered) {
         this.text = string;
+        // String sizes are automatically chopped off at a certain length due to rendering speed and memory limitations.
         if (string.length() >= TextRenderer.getMaxBatchSize()) {
             Logger.logInfo("The String \"" + string.substring(0, 7) + "...\" passed is longer than the allowed string size for text: " + TextRenderer.getMaxBatchSize());
             this.text = string.substring(0, TextRenderer.getMaxBatchSize() - 4) + "...";
         }
+
         this.font = font;
         this.color = color;
+
         this.transform.setPosition(new Vector2f(x, y));
         this.lastTransform.setPosition(new Vector2f(x, y));
         this.zIndex = zIndex;
+
         this.isSticky = isSticky;
         this.isCentered = isCentered;
 
@@ -59,18 +72,40 @@ public class Text {
         currentBatch = glyphRenderers.get(0).getBatch();
     }
 
+    /**
+     * @param string the text to be rendered.
+     * @param font the {@link fonts.Font} object that contains your preferred .ttf font file.
+     * @param color the {@link graphics.Color} object that contains your prefered RGBA color.
+     * @param x the X position of the Text object.
+     * @param y the Y position of the Text object.
+     */
     public Text (String string, Font font, Color color, float x, float y) {
         this(string, font, color, x, y, 1, true, false);
     }
 
+    /**
+     * @param string the text to be rendered.
+     * @param color the {@link graphics.Color} object that contains your prefered RGBA color.
+     * @param x the X position of the Text object.
+     * @param y the Y position of the Text object.
+     */
     public Text (String string, Color color, float x, float y) {
         this(string, new Font(), color, x, y, 1, true, false);
     }
 
+    /**
+     * @param string the text to be rendered.
+     * @param x the X position of the Text object.
+     * @param y the Y position of the Text object.
+     */
     public Text (String string, float x, float y) {
         this(string, new Font(), Color.WHITE, x, y, 1, true, false);
     }
 
+    /**
+     * Update method called for every text object by the {@link scene.Scene.updateUI()} method.
+     * This should not be called by general users.
+     */
     public void update () {
         if (!lastTransform.equals(this.transform)) {
             Vector2f movementDelta = new Vector2f(transform.getX() - lastTransform.getX(), transform.getY() - lastTransform.getY());
@@ -86,6 +121,11 @@ public class Text {
         lastTransform.setY(transform.getY());
     }
 
+    /**
+     * This method is called when the user wants to modify the string in the Text object.
+     * This can be called anytime after object creation.
+     * @param string the text to change the current string to.
+     */
     public void change (String string) {
         currentBatch = glyphRenderers.get(0).getBatch();
         glyphRenderers.clear();
@@ -96,18 +136,18 @@ public class Text {
         Engine.scenes().currentScene().textRenderer.changeText(this, currentBatch);
     }
 
-    char ch;
-    float lineWidth = 0;
+    private char ch;
+    private float lineWidth = 0;
+    /**
+     * Calculates the width of a single line of text based on the Glyph size for each character contained in the CharSequence (a lower level representation of String).
+     * @return the width in pixels of the line.
+     */
     private float calculateLineWidth (CharSequence line) {
         float drawX = 0;
 
         for (int i = 0; i < line.length(); i++) {
             ch = line.charAt(i);
 
-            if (ch == '\n') {
-                drawX = 0;
-                continue;
-            }
             if (ch == '\r') continue;
 
             drawX += font.getGlyphs().get(ch).width;
@@ -117,14 +157,19 @@ public class Text {
         return lineWidth;
     }
 
+    /**
+     * Creates the glyphs (essentially sprites) for each character in the string at the appropriate position relative to the anchor point and text alignment.
+     */
     private void generateGlyphs () {
 
         float[] lineLengths = new float[1];
         if (isCentered) {
+            // Split the CharSequence/string at each line break "\n"
             Pattern pattern = Pattern.compile("\n");
             CharSequence[] lines = pattern.split(text);
+
+            // Create and fill and array of line lengths, in pixels for each line of text.
             lineLengths = new float[lines.length];
-            // print array
             for (int i = 0; i < lines.length; i++) {
                 lineLengths[i] = calculateLineWidth(lines[i]);
             }
@@ -133,30 +178,34 @@ public class Text {
         int textHeight = font.getHeight(text);
         int lineIncreases = 0;
 
+        // Get the anchor point of the Text object
         Transform t = transform.copy();
-
         float drawX = t.getX();
         float drawY = t.getY();
 
         for (int i = 0; i < text.length(); i++) {
+            // String sizes are automatically chopped off at a certain length due to rendering speed and memory limitations.
             if (i >= TextRenderer.getMaxBatchSize() - 3) {
+                // Replace the last three characters of the string with "..."
                 if (i < TextRenderer.getMaxBatchSize()) {
                     ch = '.';
                 } else break;
             } else ch = text.charAt(i);
 
             if (ch == '\n') {
+                // Line break, set x and y to draw at the next line and continue since there is nothing to draw.
                 lineIncreases ++;
-                /* Line feed, set x and y to draw at the next line */
+
                 drawY = t.getY() + (font.getFontHeight() * lineIncreases);
                 drawX = t.getX();
 
                 continue;
             }
-            if (ch == '\r') {
-                /* Carriage return, just skip it */
-                continue;
-            }
+
+            // Carriage return - cannot be drawn.
+            if (ch == '\r') continue;
+
+            // Add the Glyph that corresponds to the current character to the arrayList of glyphRenders.
             Glyph g = font.getGlyphs().get(ch);
 
             if (!isCentered) {
@@ -173,6 +222,9 @@ public class Text {
         }
     }
 
+    /**
+     * @return the {@link graphics.renderer.TextRendererBatch} that this Text object belongs to.
+     */
     public int getBatchIndex () {
         if (glyphRenderers.size() == 0) return -1;
         return glyphRenderers.get(0).getBatchIndex();
@@ -182,6 +234,10 @@ public class Text {
         return glyphRenderers;
     }
 
+    /**
+     * Set the color of the entire Text object.
+     * @param color RGBA Color object.
+     */
     public void setColor (Color color) {
         this.color = color;
         for (GlyphRenderer g : this.glyphRenderers) {
@@ -189,10 +245,9 @@ public class Text {
         }
     }
 
-    public Color getColor () {
-        return this.color;
-    }
-
+    /**
+     * Applies a rainbow effect to the Text, gradually changing the color of each Glyph in a rainbow.
+     */
     public void rainbowify () {
         for (int i = 0; i < this.glyphRenderers.size(); i ++) {
             GlyphRenderer g = this.glyphRenderers.get(i);
@@ -201,34 +256,26 @@ public class Text {
         }
     }
 
-    public boolean isSticky () {
-        return isSticky;
-    }
+// TODO, add support to change this after creation. (this should be quite easy, I am just tired rn)
+//    public boolean isSticky () {
+//        return isSticky;
+//    }
 
+    /**
+     * @return boolean value of isCentered.
+     */
     public boolean isCentered() {
         return isCentered;
     }
 
+    /**
+     * Allows the user to change the text alignment after creation.
+     * @param centered boolean isCentered.
+     */
     public void setCentered (boolean centered) {
         if (centered == isCentered) return;
         isCentered = centered;
         change((String) text);
-    }
-
-    /**
-     * @return Transform of the gameObject
-     */
-    public Transform getTransform() {
-        return this.transform;
-    }
-
-    /**
-     * Takes a Transform as a parameter and sets this instance to a copy of that transform
-     *
-     * @param t
-     */
-    public void setTransform(Transform t) {
-        this.transform = t.copy();
     }
 
     public int zIndex () {
@@ -256,15 +303,27 @@ public class Text {
         transform.setY(y);
     }
 
+    /**
+     * Allows the user to change the position of the Text object.
+     * @param position Vector2f containing new position data.
+     */
     public void setPosition (Vector2f position) {
         setX(position.x());
         setY(position.y());
     }
 
+    /**
+     * Add to the existing Y position incrementally each time this method is called.
+     * @param y amount to increment Y position by.
+     */
     public void addY (float y) {
         transform.addY(y);
     }
 
+    /**
+     * Add to the existing X position incrementally each time this method is called.
+     * @param x amount to increment X position by.
+     */
     public void addX (float x) {
         transform.addX(x);
     }

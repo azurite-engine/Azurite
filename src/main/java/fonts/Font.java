@@ -24,8 +24,8 @@ import static java.awt.Font.*;
 
 /**
  * This class contains a font texture for drawing text.
- *
- * @author Heiko Brumme
+ * A lot of credit for the base of this file goes to @SilverTiger on GitHub, his base has been heavily modified to work in Azurite.
+ * @author Heiko Brumme (SilverTiger) {@link https://github.com/SilverTiger/lwjgl3-tutorial}
  * @author Asher Haun
  */
 public class Font {
@@ -160,20 +160,20 @@ public class Font {
      * @return Font texture
      */
     private Texture createFontTexture(java.awt.Font font, boolean antiAlias) {
-        /* Loop through the characters to get charWidth and charHeight */
+        // Loop through the characters to get charWidth and charHeight
         int imageWidth = 0;
         int imageHeight = 0;
 
-        /* Start at char #32, because ASCII 0 to 31 are just control codes */
+        // Start at char #32, because ASCII 0 to 31 are just control codes
         for (int i = 32; i < 256; i++) {
             if (i == 127) {
-                /* ASCII 127 is the DEL control code, so we can skip it */
+                // ASCII 127 is the DEL control code, so we can skip it
                 continue;
             }
             char c = (char) i;
             BufferedImage ch = createCharImage(font, c, antiAlias);
             if (ch == null) {
-                /* If char image is null that font does not contain the char */
+                // If char image is null that font does not contain the char
                 continue;
             }
 
@@ -183,86 +183,79 @@ public class Font {
 
         fontHeight = imageHeight;
 
-        /* Image for the texture */
+        // Image for the texture
         BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
 
         int x = 0;
         int y = 0;
 
-        /* Create image for the standard chars, again we omit ASCII 0 to 31
-         * because they are just control codes */
+        // Create image for the standard chars, omitting ASCII 0 to 31 because they are just control codes.
         for (int i = 32; i < 256; i++) {
-            if (i == 127) {
-                /* ASCII 127 is the DEL control code, so we can skip it */
-                continue;
-            }
+
+            // ASCII 127 is the DEL control code, so we can skip it
+            if (i == 127) continue;
+
             char c = (char) i;
+
             BufferedImage charImage = createCharImage(font, c, antiAlias);
-            if (charImage == null) {
-                /* If char image is null that font does not contain the char */
-                continue;
-            }
+
+            // If char image is null that font does not contain the char
+            if (charImage == null) continue;
 
             int charWidth = charImage.getWidth();
             int charHeight = charImage.getHeight();
 
-            /* Create glyph and draw char on image */
+            // Create glyph and draw char on image
             Glyph ch = new Glyph(charWidth, charHeight, x, image.getHeight() - charHeight);
             g.drawImage(charImage, x, 0, null);
             x += ch.width;
             glyphs.put(c, ch);
-
         }
 
         Texture finalTexture = bufferedImageToTexture(image);
 
-        /* Finally, calculate the UV coordinates on the generated texture and store it in each Glyph */
+        // Finally, calculate the UV coordinates on the generated texture and store it in each Glyph
         for (int i = 32; i < 256; i++) {
-            if (i == 127) {
-                /* ASCII 127 is the DEL control code, so we can skip it */
-                continue;
-            }
+
+
 
             if (glyphs.get((char) i) != null) {
-                // Skip extended ASCII (I think it is extended atleast, range is approximately 128-159) it causes null pointer exceptions.
                 glyphs.get((char) i).calculateUVs(finalTexture);
             }
-
         }
 
         return finalTexture;
     }
 
     private Texture bufferedImageToTexture (BufferedImage image) {
-        /* Flip image Horizontally */
+        // Flip image Horizontally
         AffineTransform transform = AffineTransform.getScaleInstance(1f, -1f);
         transform.translate(0, -image.getHeight());
         AffineTransformOp operation = new AffineTransformOp(transform, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
         image = operation.filter(image, null);
 
-        /* Get charWidth and charHeight of image */
+        // Get charWidth and charHeight of image
         int width = image.getWidth();
         int height = image.getHeight();
 
-        /* Get pixel data of image */
+        // Get pixel data of image
         int[] pixels = new int[width * height];
         image.getRGB(0, 0, width, height, pixels, 0, width);
 
-        /* Put pixel data into a ByteBuffer */
+        // Load the pixel data into a ByteBuffer
         ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
         for (int i = 0; i < height; i ++) {
-//            for (int j = width - 1; j >= 0; j --) {
             for (int j = 0; j < width; j ++) {
-                /* Pixel as RGBA: 0xAARRGGBB */
+                // Pixel as RGBA: 0xAARRGGBB
                 int pixel = pixels[i * width + j];
-                /* Red component 0xAARRGGBB >> 16 = 0x0000AARR */
+                // Red component 0xAARRGGBB >> 16 = 0x0000AARR
                 buffer.put((byte) ((pixel >> 16) & 0xFF));
-                /* Green component 0xAARRGGBB >> 8 = 0x00AARRGG */
+                // Green component 0xAARRGGBB >> 8 = 0x00AARRGG
                 buffer.put((byte) ((pixel >> 8) & 0xFF));
-                /* Blue component 0xAARRGGBB >> 0 = 0xAARRGGBB */
+                // Blue component 0xAARRGGBB >> 0 = 0xAARRGGBB
                 buffer.put((byte) (pixel & 0xFF));
-                /* Alpha component 0xAARRGGBB >> 24 = 0x000000AA */
+                // Alpha component 0xAARRGGBB >> 24 = 0x000000AA
                 buffer.put((byte) ((pixel >> 24) & 0xFF));
             }
         }
@@ -270,7 +263,7 @@ public class Font {
         buffer.flip();
 
         Texture t = new Texture().createTexture(width, height, buffer);
-//        MemoryUtil.memFree(buffer);
+        MemoryUtil.memFree(buffer);
 
         return t;
     }
@@ -285,7 +278,7 @@ public class Font {
      * @return Char image
      */
     private BufferedImage createCharImage(java.awt.Font font, char c, boolean antiAlias) {
-        /* Creating temporary image to extract character size */
+        // Creating temporary image to extract character size
         BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
         if (antiAlias) {
@@ -295,16 +288,16 @@ public class Font {
         FontMetrics metrics = g.getFontMetrics();
         g.dispose();
 
-        /* Get char charWidth and charHeight */
+        // Get char charWidth and charHeight
         int charWidth = metrics.charWidth(c);
         int charHeight = metrics.getHeight();
 
-        /* Check if charWidth is 0 */
+        // Check if charWidth is 0
         if (charWidth == 0) {
             return null;
         }
 
-        /* Create image for holding the char */
+        // Create image for holding the char
         image = new BufferedImage(charWidth, charHeight, BufferedImage.TYPE_INT_ARGB);
         g = image.createGraphics();
         if (antiAlias) {
@@ -318,57 +311,26 @@ public class Font {
     }
 
     /**
-     * Gets the width of the specified text.
-     *
-     * @param text The text
-     *
-     * @return Width of text
-     */
-    public int getWidth(CharSequence text) {
-        int width = 0;
-        int lineWidth = 0;
-        for (int i = 0; i < text.length(); i++) {
-            char c = text.charAt(i);
-            if (c == '\n') {
-                /* Line end, set width to maximum from line width and stored
-                 * width */
-                width = Math.max(width, lineWidth);
-                lineWidth = 0;
-                continue;
-            }
-            if (c == '\r') {
-                /* Carriage return, just skip it */
-                continue;
-            }
-            Glyph g = glyphs.get(c);
-            lineWidth += g.width;
-        }
-        width = Math.max(width, lineWidth);
-        return width;
-    }
-
-    /**
      * Gets the height of the specified text.
      *
      * @param text The text
-     *
-     * @return Height of text
+     * @return Height in pixels of the text.
      */
     public int getHeight(CharSequence text) {
         int height = 0;
         int lineHeight = 0;
+
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
             if (c == '\n') {
-                /* Line end, add line height to stored height */
+                // Line end, add line height to stored height
                 height += lineHeight;
                 lineHeight = 0;
                 continue;
             }
-            if (c == '\r') {
-                /* Carriage return, just skip it */
-                continue;
-            }
+
+            if (c == '\r') continue;
+
             Glyph g = glyphs.get(c);
             lineHeight = Math.max(lineHeight, g.height);
         }
@@ -387,12 +349,4 @@ public class Font {
     public Texture getTexture () {
         return texture;
     }
-
-    /**
-     * Disposes the font.
-     */
-//    public void dispose() {
-//        texture.delete();
-//    }
-
 }

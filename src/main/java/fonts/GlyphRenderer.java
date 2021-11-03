@@ -17,7 +17,7 @@ import static graphics.Color.WHITE;
  */
 public class GlyphRenderer {
 
-    private Vector4f color = WHITE.toNormalizedVec4f();
+    private Vector4f color;
 
     private Glyph glyph;
     private char character;
@@ -25,7 +25,6 @@ public class GlyphRenderer {
 
     private Transform localTransform;
     private Transform lastTransform = new Transform();
-    private Vector2f positionOffset;
     private boolean isDirty = false; // Dirty flag, tells renderer to redraw if object has changed
 
     private TextRendererBatch batch;
@@ -43,12 +42,10 @@ public class GlyphRenderer {
         this.glyph = glyph;
         this.color = BLUE.toNormalizedVec4f();
         this.parentText = parentText;
-        this.isDirty = true;
         this.character = c;
         this.isSticky = isSticky;
         this.color = color.toNormalizedVec4f();
-//      audi  this.positionOtoyotaffset = parentText.getTransform().getPosition().sub(transform.getPosition());
-//        this.positionOffset = new Vector2f(parentText.getTransform().getX() - localTransform.getX(), parentText.getTransform().getY() - localTransform.getY());
+        this.isDirty = true;
     }
 
     /**
