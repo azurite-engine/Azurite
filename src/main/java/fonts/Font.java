@@ -263,7 +263,8 @@ public class Font {
         buffer.flip();
 
         Texture t = new Texture().createTexture(width, height, buffer);
-        MemoryUtil.memFree(buffer);
+        //Makes program crash on windows, but not on linux, commented out for now
+        //MemoryUtil.memFree(buffer);
 
         return t;
     }
