@@ -56,6 +56,25 @@ public class GameObject {
     }
 
     /**
+     * Creates a new GameObject.
+     *
+     * @param scene the scene to add the GameObject to. By default, GameObjects are added to the currentScene.
+     * @param name name of the GameObject
+     * @param locationData
+     * @param zIndex
+     */
+    public GameObject(Scene scene, String name, Vector3f locationData, int zIndex) {
+        this.name = name;
+        this.components = new LinkedList<>();
+        this.locationData = locationData;
+        this.locationBuffer = new Vector3f();
+        this.zIndex = zIndex;
+        this.parentScene = scene;
+        scene.addGameObjectToScene(this);
+        this.transformSensitives = new LinkedList<>();
+    }
+
+    /**
      * @param name
      * @param locationData
      * @param zIndex
