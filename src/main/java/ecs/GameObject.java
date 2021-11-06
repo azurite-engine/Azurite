@@ -65,7 +65,7 @@ public class GameObject {
      */
     public GameObject(Scene scene, String name, Vector3f locationData, int zIndex) {
         this.name = name;
-        this.components = new LinkedList<>();
+        this.components = new OrderPreservingList<Component>(new LinkedList<>());
         this.locationData = locationData;
         this.locationBuffer = new Vector3f();
         this.zIndex = zIndex;
