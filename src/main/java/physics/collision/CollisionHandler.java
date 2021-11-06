@@ -27,9 +27,3 @@ public abstract class CollisionHandler implements BiConsumer<RigidBody, Collisio
     }
 
 }
-
-/***********************************************************************************************
- *
- *                  All rights reserved, SpaceParrots UG (c) copyright 2021
- *
- ***********************************************************************************************/

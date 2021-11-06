@@ -1,5 +1,5 @@
 package ecs;
-
+ 
 import graphics.Color;
 import graphics.RenderableComponent;
 import graphics.Sprite;

@@ -4,21 +4,21 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import physics.LocationSensitive;
 import scene.Scene;
+import util.Engine;
 import util.OrderPreservingList;
-
 import java.awt.*;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * <h1>Azurite</h1>
  * A GameObject is the root of the Entity Component system used to store all entities in Azurite games.
  * Each GameObject can contain any of a number of available components including spriteRenderers and lights.
  * By default, each GameObject contains a Transform, which holds the X and Y position, and width and height of the object in pixels.
  *
  * @author Asher Haun
  * @author Gabe
+ * @author Juyas
  */
 
 public class GameObject {
@@ -39,15 +39,33 @@ public class GameObject {
     /**
      * Creates a new GameObject.
      *
-     * @param scene         the scene to object will be added to
      * @param name
      * @param componentList
      * @param locationData
      * @param zIndex
      */
-    public GameObject(Scene scene, String name, List<Component> componentList, Vector3f locationData, int zIndex) {
+    public GameObject(String name, List<Component> componentList, Vector3f locationData, int zIndex) {
         this.name = name;
         this.components = new OrderPreservingList<>(componentList);
+        this.locationData = locationData;
+        this.locationBuffer = new Vector3f();
+        this.zIndex = zIndex;
+        this.parentScene = Engine.window().currentScene();
+        Engine.window().currentScene().addGameObjectToScene(this);
+        this.transformSensitives = new LinkedList<>();
+    }
+
+    /**
+     * Creates a new GameObject.
+     *
+     * @param scene the scene to add the GameObject to. By default, GameObjects are added to the currentScene.
+     * @param name name of the GameObject
+     * @param locationData
+     * @param zIndex
+     */
+    public GameObject(Scene scene, String name, Vector3f locationData, int zIndex) {
+        this.name = name;
+        this.components = new OrderPreservingList<Component>(new LinkedList<>());
         this.locationData = locationData;
         this.locationBuffer = new Vector3f();
         this.zIndex = zIndex;
@@ -57,50 +75,36 @@ public class GameObject {
     }
 
     /**
-     * @param scene        the scene to object will be added to
      * @param name
      * @param locationData
      * @param zIndex
      */
-    public GameObject(Scene scene, String name, Vector3f locationData, int zIndex) {
-        this(scene, name, new LinkedList<>(), locationData, zIndex);
+    public GameObject(String name, Vector3f locationData, int zIndex) {
+        this(name, new LinkedList<>(), locationData, zIndex);
     }
 
     /**
-     * @param scene  the scene to object will be added to
      * @param name
      * @param zIndex
      */
-    public GameObject(Scene scene, String name, int zIndex) {
-        this(scene, name, new LinkedList<>(), new Vector3f(), zIndex);
+    public GameObject(String name, int zIndex) {
+        this(name, new LinkedList<>(), new Vector3f(), zIndex);
     }
 
     /**
-     * @param scene        the scene to object will be added to
      * @param locationData
      * @param zIndex
      */
-    public GameObject(Scene scene, Vector3f locationData, int zIndex) {
-        this(scene, DEFAULT_GAMEOBJECT_NAME, new LinkedList<>(), locationData, zIndex);
+    public GameObject(Vector3f locationData, int zIndex) {
+        this(DEFAULT_GAMEOBJECT_NAME, new LinkedList<>(), locationData, zIndex);
 
     }
 
     /**
-     * @param scene        the scene to object will be added to
      * @param locationData
      */
-    public GameObject(Scene scene, Vector3f locationData) {
-        this(scene, DEFAULT_GAMEOBJECT_NAME, new LinkedList<>(), locationData, DEFAULT_Z_INDEX);
-    }
-
-    /**
-     * Creates an empty gameObject with an empty Transform and no Components.
-     * Its name will be GameObject.EMPTY_GAMEOBJECT_NAME
-     *
-     * @param scene the scene to object will be added to
-     */
-    public GameObject(Scene scene) {
-        this(scene, EMPTY_GAMEOBJECT_NAME, new LinkedList<>(), new Vector3f(), DEFAULT_Z_INDEX);
+    public GameObject(Vector3f locationData) {
+        this(DEFAULT_GAMEOBJECT_NAME, new LinkedList<>(), locationData, DEFAULT_Z_INDEX);
     }
 
     /**

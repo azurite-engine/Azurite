@@ -1,4 +1,4 @@
-package util;
+package util; 
 
 import graphics.Window;
 import org.lwjgl.glfw.GLFWErrorCallback;

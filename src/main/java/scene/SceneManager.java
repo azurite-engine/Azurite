@@ -1,4 +1,4 @@
-package scene;
+package scene; 
 
 import graphics.Texture;
 
@@ -41,6 +41,7 @@ public class SceneManager {
         //init the currentScene if there is one
         if (currentScene != null) {
             currentScene.initRenderers();
+            currentScene.startUi();
             currentScene.awake();
         }
     }
@@ -64,9 +65,17 @@ public class SceneManager {
         if (add && enabled) {
             // a newly added scene is probably raw and uninitialized
             scene.initRenderers();
+            scene.startUi();
             scene.awake();
         }
         return add;
+    }
+
+    public void updateUI() {
+        if (currentScene != null) {
+            currentScene.updateUI();
+            currentScene.textRender();
+        }
     }
 
     /**

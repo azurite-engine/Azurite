@@ -72,18 +72,20 @@ public class DefaultRenderBatch extends RenderBatch {
 
             // Load position
             Vector3f loc = sprite.gameObject.getReadOnlyLocation();
-            Vector2f pos = new Vector2f(loc.x, loc.y);
+//            Vector2f pos = new Vector2f(loc.x, loc.y);
             Vector2f scale = sprite.getSize();
 
-            Vector2f shifted = pos.add(scale.div(2, new Vector2f()), new Vector2f());
+//            Vector2f shifted = pos.add(scale.div(10, new Vector2f()), new Vector2f());
             float scaledX = (xAdd * scale.x);
             float scaledY = (yAdd * scale.y);
-
-            double radianRotation = Math.toRadians(loc.z);
-            data[offset] = shifted.x + (float) ((Math.cos(radianRotation) * scaledX)
-                    - (Math.sin(radianRotation) * scaledY));
-            data[offset + 1] = shifted.y + (float) ((Math.sin(radianRotation) * scaledX)
-                    + (Math.cos(radianRotation) * scaledY));
+            // TODO fix rotation to work with juyas's collision system and to be anchored at gameObject's top left
+//            double radianRotation = Math.toRadians(loc.z);
+//            data[offset] = shifted.x + (float) ((Math.cos(radianRotation) * scaledX)
+//                    - (Math.sin(radianRotation) * scaledY));
+//            data[offset + 1] = shifted.y + (float) ((Math.sin(radianRotation) * scaledX)
+//                    + (Math.cos(radianRotation) * scaledY));
+            data[offset] = loc.x + scaledX;
+            data[offset + 1] = loc.y + scaledY;
 
             primitiveVertices[primitiveVerticesOffset] = data[offset];
             primitiveVertices[primitiveVerticesOffset + 1] = data[offset + 1];

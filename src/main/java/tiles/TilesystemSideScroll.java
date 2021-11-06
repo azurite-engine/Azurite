@@ -28,7 +28,7 @@ public class TilesystemSideScroll {
 
     int w, h;
 
-    public TilesystemSideScroll(Scene scene, Spritesheet s, int xTiles, int yTiles, int width, int height, GameObject c) {
+    public TilesystemSideScroll(Spritesheet s, int xTiles, int yTiles, int width, int height, GameObject c) {
         sheet = s;
         gameObjects = new GameObject[xTiles][yTiles];
         m = new MapHandler(xTiles, yTiles, 30);
@@ -39,7 +39,7 @@ public class TilesystemSideScroll {
 
         for (int x = 0; x < xTiles; x++) {
             for (int y = 0; y < yTiles; y++) {
-                gameObjects[x][y] = new GameObject(scene, "Tile " + i, new Vector3f(x * width, y * height, 0), 0);
+                gameObjects[x][y] = new GameObject("Tile " + i, new Vector3f(x * width, y * height, 0), 0);
 
                 if (m.getMap()[x][y] == 1) {
                     //gameObjects[x][y].addComponent(new AABB());

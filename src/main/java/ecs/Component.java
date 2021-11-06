@@ -1,7 +1,8 @@
 package ecs;
-
-import org.joml.Vector2f;
+ 
+import util.debug.DebugLine;
 import util.debug.DebugPrimitive;
+import org.joml.Vector2f;
 
 import java.util.Arrays;
 
