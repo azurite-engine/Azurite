@@ -42,6 +42,7 @@ public class UIContainer extends UIComponent {
 
     @Override
     public void update() {
+        layout.updateComponents(this);
         components.forEach(UIComponent::update);
     }
 

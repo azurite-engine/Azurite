@@ -11,13 +11,21 @@ public abstract class UIComponent {
 
     private UIContainer parent;
 
-    private float x, y;
-    private float width, height;
+    private final UIFrame frame;
 
     private Color foregroundColor, backgroundColor;
 
     private boolean focussed;
     private boolean enabled;
+
+    public UIComponent() {
+        this.frame = new UIFrame();
+        this.focussed = false;
+        this.enabled = false;
+        this.foregroundColor = Color.WHITE;
+        this.backgroundColor = Color.WHITE;
+        this.parent = null;
+    }
 
     public boolean isFocussed() {
         return focussed;
@@ -63,20 +71,18 @@ public abstract class UIComponent {
         this.backgroundColor = backgroundColor;
     }
 
-    public float getX() {
-        return x;
+    public UIFrame getFrame() {
+        return frame;
     }
 
-    public float getY() {
-        return y;
+    public float getAbsoluteX() {
+        if (getParent() == null) return getFrame().getX();
+        return getParent().getAbsoluteX() + getFrame().getX();
     }
 
-    public float getWidth() {
-        return width;
-    }
-
-    public float getHeight() {
-        return height;
+    public float getAbsoluteY() {
+        if (getParent() == null) return getFrame().getY();
+        return getParent().getAbsoluteY() + getFrame().getY();
     }
 
     public void update() {

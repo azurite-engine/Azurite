@@ -11,10 +11,12 @@ public class Label extends UIComponent implements TextHolder {
 
     private String text;
 
+    @Override
     public void setText(String text) {
         this.text = text;
     }
 
+    @Override
     public String getText() {
         return text;
     }

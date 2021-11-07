@@ -15,10 +15,12 @@ public class Button extends UIComponent implements TextHolder {
         this.text = getText();
     }
 
+    @Override
     public String getText() {
         return text;
     }
 
+    @Override
     public void setText(String text) {
         this.text = text;
     }
