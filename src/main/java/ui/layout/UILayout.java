@@ -1,4 +1,6 @@
-package ui;
+package ui.layout;
+
+import ui.UIContainer;
 
 /**
  * @author Juyas

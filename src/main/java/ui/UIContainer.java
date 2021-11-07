@@ -1,5 +1,7 @@
 package ui;
 
+import ui.layout.UILayout;
+
 import java.util.ArrayList;
 import java.util.List;
 

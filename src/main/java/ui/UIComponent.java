@@ -18,6 +18,8 @@ public abstract class UIComponent {
     private boolean focussed;
     private boolean enabled;
 
+    private Object layoutInfo;
+
     public UIComponent() {
         this.frame = new UIFrame();
         this.focussed = false;
@@ -25,6 +27,7 @@ public abstract class UIComponent {
         this.foregroundColor = Color.WHITE;
         this.backgroundColor = Color.WHITE;
         this.parent = null;
+        this.layoutInfo = null;
     }
 
     public boolean isFocussed() {
@@ -73,6 +76,14 @@ public abstract class UIComponent {
 
     public UIFrame getFrame() {
         return frame;
+    }
+
+    public void setLayoutInfo(Object layoutInfo) {
+        this.layoutInfo = layoutInfo;
+    }
+
+    public Object getLayoutInfo() {
+        return layoutInfo;
     }
 
     public float getAbsoluteX() {
