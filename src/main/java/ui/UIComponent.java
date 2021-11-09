@@ -1,5 +1,6 @@
 package ui;
 
+import fonts.Font;
 import graphics.Color;
 
 /**
@@ -19,16 +20,28 @@ public abstract class UIComponent {
     private boolean enabled;
     private boolean visible;
 
+    private Font font;
+
     private Object layoutInfo;
 
     public UIComponent() {
         this.frame = new UIFrame();
         this.focussed = false;
-        this.enabled = false;
+        this.enabled = true;
+        this.visible = true;
         this.foregroundColor = Color.WHITE;
         this.backgroundColor = Color.WHITE;
         this.parent = null;
+        this.font = new Font();
         this.layoutInfo = null;
+    }
+
+    public Font getFont() {
+        return font;
+    }
+
+    public void setFont(Font font) {
+        this.font = font;
     }
 
     public boolean isFocussed() {
