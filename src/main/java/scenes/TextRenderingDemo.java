@@ -1,8 +1,8 @@
 package scenes;
 
-import ecs.GameObject;
-import ecs.SpriteRenderer;
-import ecs.Text;
+import components.GameObject;
+import components.SpriteRenderer;
+import ui.Text;
 import fonts.Font;
 import graphics.Camera;
 import graphics.Color;
@@ -12,7 +12,6 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import scene.Scene;
 import util.Engine;
-import util.Transform;
 
 import static graphics.Graphics.setDefaultBackground;
 

@@ -4,12 +4,12 @@ import org.joml.Vector3f;
 
 /**
  * <h1>Azurite</h1>
- * An interface used to show interest as a {@link ecs.Component} in a changing location value of a {@link ecs.GameObject} that it belongs to.
+ * An interface used to show interest as a {@link components.Component} in a changing location value of a {@link components.GameObject} that it belongs to.
  * Is used for ordering and improving the update loop inside a gameObject and its components.
  *
  * @author Juyas
  * @version 12.07.2021
- * @see ecs.GameObject#update(float)
+ * @see components.GameObject#update(float)
  * @since 22.06.2021
  */
 public interface LocationSensitive {

@@ -1,6 +1,6 @@
 package physics.collision;
 
-import ecs.RigidBody;
+import components.RigidBody;
 import org.joml.Vector2f;
 import physics.collision.shape.PrimitiveShape;
 import physics.force.DirectionalVectorFilter;

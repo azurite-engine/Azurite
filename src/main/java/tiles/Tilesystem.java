@@ -1,8 +1,8 @@
 package tiles;
 
-import ecs.GameObject;
-import ecs.SpriteRenderer;
-import ecs.StaticCollider;
+import components.GameObject;
+import components.SpriteRenderer;
+import components.StaticCollider;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import physics.collision.Shapes;

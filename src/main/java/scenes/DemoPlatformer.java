@@ -1,6 +1,6 @@
 package scenes;
 
-import ecs.*;
+import components.*;
 import fonts.Font;
 import graphics.Camera;
 import graphics.Color;
@@ -14,6 +14,7 @@ import postprocess.PostProcessStep;
 import scene.Scene;
 import tiles.Spritesheet;
 import tiles.TilesystemSideScroll;
+import ui.Text;
 import util.Assets;
 import util.Engine;
 import util.Utils;

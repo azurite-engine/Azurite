@@ -1,9 +1,9 @@
 package scene; 
 
-import ecs.GameObject;
-import ecs.RigidBody;
-import ecs.StaticCollider;
-import ecs.Text;
+import components.GameObject;
+import components.RigidBody;
+import components.StaticCollider;
+import ui.Text;
 import graphics.Camera;
 import graphics.Texture;
 import graphics.renderer.*;

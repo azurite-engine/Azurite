@@ -1,6 +1,6 @@
 package physics.collision;
 
-import ecs.RigidBody;
+import components.RigidBody;
 
 import java.util.function.BiConsumer;
 

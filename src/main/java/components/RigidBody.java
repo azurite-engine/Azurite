@@ -1,4 +1,4 @@
-package ecs;
+package components;
 
 import graphics.Color;
 import org.joml.Vector2f;

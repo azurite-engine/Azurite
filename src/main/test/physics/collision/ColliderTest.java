@@ -1,7 +1,7 @@
 package physics.collision;
 
-import ecs.RigidBody;
-import ecs.StaticCollider;
+import components.RigidBody;
+import components.StaticCollider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

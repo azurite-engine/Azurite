@@ -1,7 +1,7 @@
 package graphics.renderer;
 
-import ecs.GameObject;
-import ecs.PointLight;
+import components.GameObject;
+import components.PointLight;
 import graphics.Color;
 import graphics.Framebuffer;
 import graphics.Graphics;

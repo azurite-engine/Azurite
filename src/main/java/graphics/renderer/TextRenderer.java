@@ -1,14 +1,12 @@
 package graphics.renderer;
 
-import ecs.Text;
+import ui.Text;
 import fonts.GlyphRenderer;
 import graphics.Framebuffer;
 import graphics.Shader;
 import util.Assets;
 import util.Engine;
-import util.Logger;
 
-import java.util.ArrayList;
 import java.util.Collections;
 
 /**

@@ -1,6 +1,6 @@
 package graphics;
 
-import ecs.Component;
+import components.Component;
 import graphics.renderer.RenderBatch;
 
 /**

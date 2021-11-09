@@ -1,4 +1,4 @@
-package ecs;
+package components;
 
 import input.Keyboard;
 import org.joml.Vector2f;

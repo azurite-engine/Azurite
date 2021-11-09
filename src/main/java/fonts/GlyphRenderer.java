@@ -1,6 +1,6 @@
 package fonts;
 
-import ecs.Text;
+import ui.Text;
 import graphics.Color;
 import graphics.Texture;
 import graphics.renderer.TextRendererBatch;
@@ -10,7 +10,6 @@ import util.Transform;
 import util.Utils;
 
 import static graphics.Color.BLUE;
-import static graphics.Color.WHITE;
 
 /**
  * @author Asher Haun

@@ -1,4 +1,4 @@
-package ecs;
+package components;
 
 import graphics.Sprite;
 

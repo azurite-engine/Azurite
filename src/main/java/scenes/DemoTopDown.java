@@ -1,6 +1,6 @@
 package scenes;
 
-import ecs.*;
+import components.*;
 import graphics.Camera;
 import graphics.Color;
 import graphics.Texture;

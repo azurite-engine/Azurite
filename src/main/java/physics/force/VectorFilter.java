@@ -18,7 +18,7 @@ public interface VectorFilter {
      *
      * @return the unique id of this filter
      * @see CombinedVectorFilter#removeFilters(int)
-     * @see ecs.RigidBody#removeFilters(int)
+     * @see components.RigidBody#removeFilters(int)
      */
     int id();
 
