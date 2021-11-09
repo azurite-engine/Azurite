@@ -8,7 +8,7 @@ import util.Utils;
  * @version 09.11.2021
  * @since 09.11.2021
  */
-public class SingleSlider extends UIComponent {
+public class SingleSlider extends UIComponent implements ValueHolder {
 
     /**
      * the maximum and minimum of the slider
@@ -77,4 +77,13 @@ public class SingleSlider extends UIComponent {
 
     }
 
+    @Override
+    public float getValue() {
+        return getCurrentScale();
+    }
+
+    @Override
+    public void setValue(float newValue) {
+        setCurrentScale(Utils.map(newValue, minScale, maxScale, 0, 1));
+    }
 }
