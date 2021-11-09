@@ -29,6 +29,7 @@ public class SingleSlider extends UIComponent implements ValueHolder {
         this.minScale = minScale;
         this.maxScale = maxScale;
         this.currentScale = 0;
+        this.showNumbers = true;
     }
 
     public void setNumbersShown(boolean showNumbers) {

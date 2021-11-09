@@ -26,6 +26,15 @@ public class CheckBox extends UIComponent {
      */
     private UIAlignment textAlignment = UIAlignment.RIGHT;
 
+    public CheckBox(String text, boolean preChecked) {
+        this.text = text;
+        this.checked = preChecked;
+    }
+
+    public CheckBox(String text) {
+        this(text, false);
+    }
+
     public void setChecked(boolean checked) {
         this.checked = checked;
     }
