@@ -17,6 +17,7 @@ public abstract class UIComponent {
 
     private boolean focussed;
     private boolean enabled;
+    private boolean visible;
 
     private Object layoutInfo;
 
@@ -40,6 +41,14 @@ public abstract class UIComponent {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public boolean isVisible() {
+        return visible;
     }
 
     protected void setFocussed(boolean focussed) {

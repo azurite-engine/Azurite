@@ -50,7 +50,7 @@ public class UIContainer extends UIComponent {
 
     @Override
     public void draw() {
-        components.forEach(UIComponent::draw);
+        components.stream().filter(UIComponent::isVisible).forEach(UIComponent::draw);
     }
 
 }

@@ -25,7 +25,7 @@ public class UILayer {
 
     public void draw() {
         if (!active) return;
-        components.forEach(UIComponent::draw);
+        components.stream().filter(UIComponent::isVisible).forEach(UIComponent::draw);
     }
 
     public void setActive(boolean active) {
