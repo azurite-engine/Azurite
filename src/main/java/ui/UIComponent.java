@@ -16,7 +16,7 @@ public abstract class UIComponent {
 
     private Color foregroundColor, backgroundColor;
 
-    private boolean focussed;
+    private boolean focused;
     private boolean enabled;
     private boolean visible;
 
@@ -26,7 +26,7 @@ public abstract class UIComponent {
 
     public UIComponent() {
         this.frame = new UIFrame();
-        this.focussed = false;
+        this.focused = false;
         this.enabled = true;
         this.visible = true;
         this.foregroundColor = Color.WHITE;
@@ -44,8 +44,8 @@ public abstract class UIComponent {
         this.font = font;
     }
 
-    public boolean isFocussed() {
-        return focussed;
+    public boolean isfocused() {
+        return focused;
     }
 
     public boolean isEnabled() {
@@ -64,8 +64,8 @@ public abstract class UIComponent {
         return visible;
     }
 
-    protected void setFocussed(boolean focussed) {
-        this.focussed = focussed;
+    protected void setfocused(boolean focused) {
+        this.focused = focused;
     }
 
     public void requestFocus() {
