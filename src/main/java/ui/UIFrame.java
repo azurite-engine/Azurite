@@ -62,6 +62,28 @@ public class UIFrame {
         return new Vector4f(x, y, w, h);
     }
 
+    public void ensureEnclosure(UIFrame parent) {
+        //by default, it will move components away from the edges and only shrink them, if they rly dont fit into it.
+        if (this.w > parent.w) {
+            //shrink width to parent width
+            this.w = parent.w;
+            this.x = 0;
+        }
+        if (this.h > parent.h) {
+            //shrink height to parent height
+            this.h = parent.h;
+            this.y = 0;
+        }
+        if (this.w + x > parent.w) {
+            //move x to the left until it fits into it
+            this.x = parent.w - this.w;
+        }
+        if (this.h + y > parent.h) {
+            //move y to the top until it fits into it
+            this.y = parent.h - this.h;
+        }
+    }
+
     public UIFrame getSubFrame(UIAlignment alignment) {
         switch (alignment) {
             case TOP:

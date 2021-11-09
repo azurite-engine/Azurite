@@ -46,6 +46,7 @@ public class UIContainer extends UIComponent {
     public void update() {
         layout.updateComponents(this);
         components.forEach(UIComponent::update);
+        components.forEach(comp -> comp.getFrame().ensureEnclosure(getFrame()));
     }
 
     @Override

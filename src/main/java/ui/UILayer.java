@@ -12,20 +12,34 @@ public class UILayer {
 
     private boolean active;
     private final List<UIComponent> components;
+    private final UIFrame layerFrame;
 
     public UILayer() {
         this.components = new ArrayList<>();
         this.active = true;
+        this.layerFrame = new UIFrame();
+    }
+
+    public UILayer(float x, float y, float width, float height) {
+        this.components = new ArrayList<>();
+        this.active = true;
+        this.layerFrame = new UIFrame(x, y, width, height);
     }
 
     public void update() {
         if (!active) return;
+        //first make sure all top level components are enclosed before updating
+        components.forEach(comp -> comp.getFrame().ensureEnclosure(layerFrame));
         components.forEach(UIComponent::update);
     }
 
     public void draw() {
         if (!active) return;
         components.stream().filter(UIComponent::isVisible).forEach(UIComponent::draw);
+    }
+
+    public UIFrame getLayerFrame() {
+        return layerFrame;
     }
 
     public void setActive(boolean active) {
