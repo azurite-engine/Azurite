@@ -1,6 +1,5 @@
 package ui.component;
 
-import ui.UIAlignment;
 import ui.UIComponent;
 
 /**
@@ -20,12 +19,6 @@ public class CheckBox extends UIComponent {
      */
     private boolean checked;
 
-    /**
-     * The orientation of the text in the CheckBox.
-     * default is RIGHT - meaning the box to check is left and the text is right.
-     */
-    private UIAlignment textAlignment = UIAlignment.RIGHT;
-
     public CheckBox(String text, boolean preChecked) {
         this.text = text;
         this.checked = preChecked;
@@ -41,14 +34,6 @@ public class CheckBox extends UIComponent {
 
     public boolean isChecked() {
         return checked;
-    }
-
-    public UIAlignment getTextAlignment() {
-        return textAlignment;
-    }
-
-    public void setTextAlignment(UIAlignment textAlignment) {
-        this.textAlignment = textAlignment;
     }
 
     public void setText(String text) {

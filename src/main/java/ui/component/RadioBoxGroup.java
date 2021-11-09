@@ -1,6 +1,5 @@
 package ui.component;
 
-import ui.UIAlignment;
 import ui.UIComponent;
 
 import java.util.List;
@@ -23,12 +22,6 @@ public class RadioBoxGroup extends UIComponent implements ValueHolder {
      */
     private int selected;
 
-    /**
-     * The orientation of the text in each radio box.
-     * default is RIGHT - meaning the box to check is left and the text is right.
-     */
-    private UIAlignment textAlignment = UIAlignment.RIGHT;
-
     public RadioBoxGroup(List<String> options, int preselected) {
         this.options = options;
         this.selected = preselected;
@@ -44,14 +37,6 @@ public class RadioBoxGroup extends UIComponent implements ValueHolder {
 
     public void removeOption(String option) {
         this.options.remove(option);
-    }
-
-    public void setTextAlignment(UIAlignment textAlignment) {
-        this.textAlignment = textAlignment;
-    }
-
-    public UIAlignment getTextAlignment() {
-        return textAlignment;
     }
 
     public int getSelected() {
