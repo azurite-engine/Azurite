@@ -10,7 +10,7 @@ import java.util.List;
  * @version 09.11.2021
  * @since 09.11.2021
  */
-public class RadioBoxGroup extends UIComponent {
+public class RadioBoxGroup extends UIComponent implements ValueHolder {
 
     /**
      * The list of options.
@@ -80,4 +80,13 @@ public class RadioBoxGroup extends UIComponent {
 
     }
 
+    @Override
+    public float getValue() {
+        return getSelected();
+    }
+
+    @Override
+    public void setValue(float newValue) {
+        setSelected((int) newValue);
+    }
 }
