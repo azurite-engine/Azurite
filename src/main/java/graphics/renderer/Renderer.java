@@ -113,7 +113,7 @@ public abstract class Renderer<T extends RenderBatch> {
      *
      * @param r UIComponentRenderer to remove
      */
-    public abstract void remove(UIComponentRenderer r);
+    public void remove(UIComponentRenderer r){}; //FIXME
 
     /**
      * Creates the renderer's shader and framebuffer
