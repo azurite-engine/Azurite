@@ -58,11 +58,10 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
     }
 
     /**
-     * Add a gameObject to this renderer
      *
-     * @param gameObject the GameObject with renderable components
+     * @param UIComponentRenderer
      */
-    @Override
+
     public void add(UIComponentRenderer r) {
         if (r != null) {
             addSpriteRenderer(r);
@@ -70,17 +69,15 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
     }
 
     /**
-     * Remove a gameObject from this renderer
+     * Remove a UIComponentRenderer from this renderer
      *
-     * @param gameObject the GameObject with renderable components
+     * @param UIComponentRenderer
      */
-    @Override
-    public void remove(GameObject gameObject) {
-        SpriteRenderer spr = gameObject.getComponent(SpriteRenderer.class);
-        if (spr != null) {
-            spr.markDirty();
-            spr.remove();
-            spr.getBatch().removeSprite(spr);
+    public void remove(UIComponentRenderer r) {
+        if (r != null) {
+            r.markDirty();
+            r.remove();
+            r.getBatch().removeSprite(r);
         }
     }
 
@@ -95,20 +92,20 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
     /**
      * Adds the SpriteRenderer to a single batch, and creates a new batch if their is no space.
      *
-     * @param sprite SpriteRenderer: The SpriteRenderer component to be added
+     * @param componentRenderer SpriteRenderer: The SpriteRenderer component to be added
      */
-    protected void addSpriteRenderer(SpriteRenderer sprite) {
+    protected void addSpriteRenderer(UIComponentRenderer componentRenderer) {
         for (UIRenderBatch batch : batches) {
-            if (batch.addSprite(sprite)) {
+            if (batch.addSprite(componentRenderer)) {
                 return;
             }
         }
         // If unable to add to previous batch, create a new one
-        UIRenderBatch newBatch = new UIRenderBatch(MAX_BATCH_SIZE, sprite.gameObject.zIndex());
+        UIRenderBatch newBatch = new UIRenderBatch(MAX_BATCH_SIZE, componentRenderer.zIndex());
         newBatch.setRenderer(this);
         newBatch.start();
         batches.add(newBatch);
-        newBatch.addSprite(sprite);
+        newBatch.addSprite(componentRenderer);
         Collections.sort(batches);
     }
 }

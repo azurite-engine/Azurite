@@ -165,7 +165,7 @@ public class UIRenderBatch extends RenderBatch {
      *
      * @param componentRenderer componentRenderer to be removed
      */
-    public void removeSprite(SpriteRenderer componentRenderer) {
+    public void removeSprite(UIComponentRenderer componentRenderer) {
         // Confirm this componentRenderer has been added to this batch
         if (componentRenderer.getBatch() == this) {
             // Remove the componentRenderer from the list
@@ -174,9 +174,9 @@ public class UIRenderBatch extends RenderBatch {
 
             // Set Indices of the componentRenderers to the new indices
             for (int i = index; i < componentRenderers.size(); i++) {
-                SpriteRenderer spr = componentRenderers.get(i);
-                spr.setLocation(this, i);
-                spr.markDirty();
+                UIComponentRenderer r = componentRenderers.get(i);
+                r.setLocation(this, i);
+                r.markDirty();
             }
 
             // Call Remove with the componentRenderers index to remove it from the data buffer
