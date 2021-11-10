@@ -25,6 +25,12 @@ public class UIContainer extends UIComponent {
         this.components = new ArrayList<>();
     }
 
+    public UIContainer(float x, float y, float w, float h, UILayout layout) {
+        getFrame().set(x, y, w, h);
+        this.layout = layout == null ? new AbsoluteLayout() : layout;
+        this.components = new ArrayList<>();
+    }
+
     public UILayout getLayout() {
         return layout;
     }
