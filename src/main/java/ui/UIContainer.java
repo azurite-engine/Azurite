@@ -1,5 +1,6 @@
 package ui;
 
+import ui.layout.AbsoluteLayout;
 import ui.layout.UILayout;
 
 import java.util.ArrayList;
@@ -15,8 +16,12 @@ public class UIContainer extends UIComponent {
     private final UILayout layout;
     private final List<UIComponent> components;
 
+    public UIContainer() {
+        this(null);
+    }
+
     public UIContainer(UILayout layout) {
-        this.layout = layout;
+        this.layout = layout == null ? new AbsoluteLayout() : layout;
         this.components = new ArrayList<>();
     }
 
@@ -44,6 +49,7 @@ public class UIContainer extends UIComponent {
 
     @Override
     public void update() {
+        if (!isEnabled()) return;
         layout.updateComponents(this);
         components.forEach(UIComponent::update);
         components.forEach(comp -> comp.getFrame().ensureEnclosure(getFrame()));
@@ -51,6 +57,7 @@ public class UIContainer extends UIComponent {
 
     @Override
     public void draw() {
+        if (!isVisible()) return;
         components.stream().filter(UIComponent::isVisible).forEach(UIComponent::draw);
     }
 

@@ -108,14 +108,22 @@ public abstract class UIComponent {
         return layoutInfo;
     }
 
-    public float getAbsoluteX() {
+    public float getX() {
         if (getParent() == null) return getFrame().getX();
-        return getParent().getAbsoluteX() + getFrame().getX();
+        return getParent().getX() + getFrame().getX();
     }
 
-    public float getAbsoluteY() {
+    public float getY() {
         if (getParent() == null) return getFrame().getY();
-        return getParent().getAbsoluteY() + getFrame().getY();
+        return getParent().getY() + getFrame().getY();
+    }
+
+    public float getWidth() {
+        return getFrame().getWidth();
+    }
+
+    public float getHeight() {
+        return getFrame().getHeight();
     }
 
     public void update() {
