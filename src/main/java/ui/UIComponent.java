@@ -28,6 +28,8 @@ public abstract class UIComponent {
     private boolean enabled;
     private boolean visible;
 
+    private boolean mouseOverThis;
+
     private int zIndex;
 
     private Object layoutInfo;
@@ -44,6 +46,7 @@ public abstract class UIComponent {
         this.font = new Font();
         this.layoutInfo = null;
         this.zIndex = 1;
+        this.mouseOverThis = false;
         this.cursor = GLFW.GLFW_ARROW_CURSOR;
     }
 
@@ -160,14 +163,16 @@ public abstract class UIComponent {
     }
 
     public boolean isMouseOnThis() {
-        return CollisionUtil.inRect(Mouse.mouse, getX(), getY(), getWidth(), getHeight());
+        return this.mouseOverThis;
     }
 
     public void update() {
-        if (eventHandler != null)
-            eventHandler.update();
+        //to reduce redundant calculation, it gets calculated each update once
+        this.mouseOverThis = CollisionUtil.inRect(Mouse.mouse, getX(), getY(), getWidth(), getHeight());
         if (isMouseOnThis())
             CursorManager.requestCursor(cursor);
+        if (eventHandler != null)
+            eventHandler.update();
     }
 
     public void draw() {
