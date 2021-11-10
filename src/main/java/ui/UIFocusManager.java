@@ -21,12 +21,12 @@ public class UIFocusManager {
 
     private void unfocus() {
         if (focused != null)
-            focused.setfocused(false);
+            focused.setFocused(false);
     }
 
     private void focus(UIComponent component) {
         this.focused = component;
-        component.setfocused(true);
+        component.setFocused(true);
     }
 
     public static void requestFocus(UIComponent component) {

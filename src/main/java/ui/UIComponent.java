@@ -46,7 +46,7 @@ public abstract class UIComponent {
         this.font = font;
     }
 
-    public boolean isfocused() {
+    public boolean isFocused() {
         return focused;
     }
 
@@ -66,7 +66,7 @@ public abstract class UIComponent {
         return visible;
     }
 
-    protected void setfocused(boolean focused) {
+    protected void setFocused(boolean focused) {
         this.focused = focused;
     }
 
