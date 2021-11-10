@@ -1,16 +1,9 @@
 package scenes;
 
-import components.GameObject;
-import components.SpriteRenderer;
 import fonts.Font;
 import graphics.Camera;
 import graphics.Color;
-import graphics.Window;
-import input.Mouse;
-import org.joml.Vector2f;
-import org.joml.Vector3f;
 import scene.Scene;
-import ui.Text;
 import util.Engine;
 
 import static graphics.Graphics.setDefaultBackground;
