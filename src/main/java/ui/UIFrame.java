@@ -106,4 +106,13 @@ public class UIFrame {
         return new UIFrame(x, y, w, h);
     }
 
+    @Override
+    public String toString() {
+        return "UIFrame{" +
+                "x=" + x +
+                ", y=" + y +
+                ", w=" + w +
+                ", h=" + h +
+                '}';
+    }
 }
