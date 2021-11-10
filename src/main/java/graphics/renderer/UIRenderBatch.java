@@ -145,7 +145,7 @@ public class UIRenderBatch extends RenderBatch {
             if (tex == null || (hasTexture(tex) || hasTextureRoom())) {
                 // Get the index and add the renderObject
                 sprites.add(sprite);
-                sprite.setLocation(this, sprites.size() - 1);
+//                sprite.setLocation(this, sprites.size() - 1);
 
                 // Add properties to local vertices array
                 load(sprites.size() - 1);
