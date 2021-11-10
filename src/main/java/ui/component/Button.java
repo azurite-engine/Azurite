@@ -14,7 +14,7 @@ public class Button extends UIComponent implements TextHolder {
     private String text;
 
     public Button(String label) {
-        this.text = getText();
+        this.text = label;
     }
 
     @Override
@@ -30,8 +30,8 @@ public class Button extends UIComponent implements TextHolder {
     @Override
     public void update() {
         if (isMouseOnThis()) {
-            if (Mouse.mouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_1)) {
-                System.out.println("WORKS GREAT");
+            if (Mouse.mouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
+                System.out.println("WORKS GREAT: " + text);
             }
         }
     }

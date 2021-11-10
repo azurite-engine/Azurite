@@ -26,6 +26,13 @@ public class UIFrame {
         this.h = h;
     }
 
+    public void set(float x, float y, float w, float h) {
+        setX(x);
+        setY(y);
+        setWidth(w);
+        setHeight(h);
+    }
+
     public float getX() {
         return x;
     }
@@ -73,6 +80,7 @@ public class UIFrame {
             //shrink height to parent height
             this.h = parent.h;
             this.y = 0;
+            System.out.println("correct height");
         }
         if (this.w + x > parent.w) {
             //move x to the left until it fits into it
