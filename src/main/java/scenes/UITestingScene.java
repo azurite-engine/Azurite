@@ -19,8 +19,6 @@ public class UITestingScene extends Scene {
 
     Font openSans;
 
-    GameObject centerLine;
-
     public static void main(String[] args) {
         Engine.init(1600, 900, "UI Testing");
         Engine.scenes().switchScene(new UITestingScene(), true);

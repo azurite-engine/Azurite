@@ -7,7 +7,7 @@ import input.Keyboard;
 import input.Mouse;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import postprocess.PostProcessing;
+import graphics.postprocess.PostProcessing;
 import scene.Scene;
 import scene.SceneManager;
 import util.Engine;

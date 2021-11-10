@@ -11,8 +11,8 @@ import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
 import physics.collision.Collider;
 import physics.collision.CollisionInformation;
-import postprocess.ForwardToTexture;
-import postprocess.PostProcessStep;
+import graphics.postprocess.ForwardToTexture;
+import graphics.postprocess.PostProcessStep;
 import util.Engine;
 
 import java.util.ArrayList;
