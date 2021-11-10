@@ -166,20 +166,20 @@ public class UIRenderBatch extends RenderBatch {
      */
     public void removeSprite(SpriteRenderer sprite) {
         // Confirm this sprite has been added to this batch
-        if (sprite.getBatch() == this) {
-            // Remove the sprite from the list
-            int index = sprites.indexOf(sprite);
-            sprites.remove(index);
-
-            // Set Indices of the sprites to the new indices
-            for (int i = index; i < sprites.size(); i++) {
-                SpriteRenderer spr = sprites.get(i);
-                spr.setLocation(this, i);
-                spr.markDirty();
-            }
-
-            // Call Remove with the sprites index to remove it from the data buffer
-            remove(sprite.getIndex());
-        }
+//        if (sprite.getBatch() == this) {
+//            // Remove the sprite from the list
+//            int index = sprites.indexOf(sprite);
+//            sprites.remove(index);
+//
+//            // Set Indices of the sprites to the new indices
+//            for (int i = index; i < sprites.size(); i++) {
+//                SpriteRenderer spr = sprites.get(i);
+//                spr.setLocation(this, i);
+//                spr.markDirty();
+//            }
+//
+//            // Call Remove with the sprites index to remove it from the data buffer
+//            remove(sprite.getIndex());
+//        }
     }
 }
