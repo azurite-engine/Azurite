@@ -12,7 +12,6 @@ import util.Engine;
 import java.util.Collections;
 
 /**
- * <h1>Azurite</h1>
  * Used to render sprites, which are rendered as {@code Primitive.QUAD}s
  * with textures. This should be used to render any renderable {@code gameObject}.
  *
@@ -59,19 +58,19 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
 
     /**
      *
-     * @param UIComponentRenderer
+     * @param r UIComponentRenderer
      */
 
     public void add(UIComponentRenderer r) {
         if (r != null) {
-            addSpriteRenderer(r);
+            addComponentRenderer(r);
         }
     }
 
     /**
      * Remove a UIComponentRenderer from this renderer
      *
-     * @param UIComponentRenderer
+     * @param r UIComponentRenderer
      */
     public void remove(UIComponentRenderer r) {
         if (r != null) {
@@ -94,9 +93,9 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
      *
      * @param componentRenderer SpriteRenderer: The SpriteRenderer component to be added
      */
-    protected void addSpriteRenderer(UIComponentRenderer componentRenderer) {
+    protected void addComponentRenderer (UIComponentRenderer componentRenderer) {
         for (UIRenderBatch batch : batches) {
-            if (batch.addSprite(componentRenderer)) {
+            if (batch.addComponentRenderer(componentRenderer)) {
                 return;
             }
         }
@@ -105,7 +104,7 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
         newBatch.setRenderer(this);
         newBatch.start();
         batches.add(newBatch);
-        newBatch.addSprite(componentRenderer);
+        newBatch.addComponentRenderer(componentRenderer);
         Collections.sort(batches);
     }
 }

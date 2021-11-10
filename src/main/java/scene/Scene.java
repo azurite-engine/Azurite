@@ -87,6 +87,7 @@ public abstract class Scene {
     public LightmapRenderer lightmapRenderer = new LightmapRenderer();
     public DebugRenderer debugRenderer = new DebugRenderer();
     public TextRenderer textRenderer = new TextRenderer();
+    public UIRenderer uiRenderer = new UIRenderer();
     protected Camera camera;
     protected ForwardToTexture forwardToScreen;
     private List<Renderer<?>> rendererRegistry = new LinkedList<>();
@@ -175,6 +176,7 @@ public abstract class Scene {
         this.renderer.clean();
         this.lightmapRenderer.clean();
         this.debugRenderer.clean();
+        this.uiRenderer.clean();
         this.textRenderer.clean();
         rendererRegistry.forEach(Renderer::clean);
     }
@@ -182,6 +184,7 @@ public abstract class Scene {
     // The following methods shouldn't be overridden. For this, added final keyword
 
     public final void startUi () {
+        uiRenderer.init();
         textRenderer.init();
     }
 

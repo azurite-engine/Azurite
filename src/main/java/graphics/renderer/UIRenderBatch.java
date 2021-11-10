@@ -136,7 +136,7 @@ public class UIRenderBatch extends RenderBatch {
      * @param componentRenderer componentRenderer to be added
      * @return if the componentRenderer was successfully added to the batch
      */
-    public boolean addSprite(UIComponentRenderer componentRenderer) {
+    public boolean addComponentRenderer(UIComponentRenderer componentRenderer) {
         // If the batch already contains the componentRenderer don't add it to any other batch
         if (componentRenderers.contains(componentRenderer)) return true;
 

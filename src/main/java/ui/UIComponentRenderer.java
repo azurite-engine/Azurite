@@ -22,7 +22,7 @@ import static graphics.Color.WHITE;
  * @since 11.9.2021
  */
 
-public class UIComponentRenderer {
+public class UIComponentRenderer extends UIComponent {
 
     /**
      * The batch in which this component has been added
@@ -255,7 +255,7 @@ public class UIComponentRenderer {
      *
      * @return The batch in which this component has been added
      */
-    public T getBatch() {
+    public UIRenderBatch getBatch() {
         return batch;
     }
 
