@@ -8,6 +8,7 @@ import graphics.Color;
 import input.Mouse;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.glfw.GLFW;
 import scene.Scene;
 import ui.UIContainer;
 import ui.UILayer;
@@ -39,27 +40,41 @@ public class UITestingScene extends Scene {
 
         //full size layer
         menu = new UILayer(0, 0, 1600, 900);
-        //add container
-        UIContainer container = new UIContainer(new BoxLayout(BoxLayout.Orientation.VERTICAL));
         //set size of the container to the left half of the layer
-        container.getFrame().set(0, 0, 800, 900);
+        UIContainer container = new UIContainer(0, 0, 800, 900, new BoxLayout(BoxLayout.Orientation.VERTICAL));
+        //put the container onto the layer
         menu.registerComponent(container);
-        button = new Button("topButton");
-        button2 = new Button("bottomButton");
-        container.addComponent(button);
-        container.addComponent(button2);
 
-        //just to show them:
+        // --------------------  just to show them:  --------------------
         GameObject top = new GameObject(new Vector3f(0, 0, 0));
         GameObject bot = new GameObject(new Vector3f(0, 450, 0));
         top.addComponent(new SpriteRenderer(Color.GREEN, new Vector2f(800, 450)));
         bot.addComponent(new SpriteRenderer(Color.RED, new Vector2f(800, 450)));
+        // -------------------- -------------------- --------------------
+
+        //create two buttons
+        button = new Button("topButton");
+        button2 = new Button("bottomButton");
+        //add them to the container
+        container.addComponent(button);
+        container.addComponent(button2);
+        //add onClick functions
+        button.addActionOnClick(button -> {
+            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT)
+                System.out.println("Left click on upper button");
+        });
+        button2.addActionOnClick(button -> {
+            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+                bot.getComponent(SpriteRenderer.class).setColor(Color.randomColor());
+            }
+        });
 
     }
 
     int i = 0;
 
     public void update() {
+        super.update();
         menu.update();
         i = (i + 1) % 60;
         if (i == 0) {
