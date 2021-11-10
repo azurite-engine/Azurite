@@ -1,5 +1,7 @@
 package ui.component;
 
+import input.Mouse;
+import org.lwjgl.glfw.GLFW;
 import ui.UIComponent;
 
 /**
@@ -27,7 +29,11 @@ public class Button extends UIComponent implements TextHolder {
 
     @Override
     public void update() {
-
+        if (isMouseOnThis()) {
+            if (Mouse.mouseButtonDown(GLFW.GLFW_MOUSE_BUTTON_1)) {
+                System.out.println("WORKS GREAT");
+            }
+        }
     }
 
     @Override
