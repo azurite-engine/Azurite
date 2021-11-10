@@ -141,22 +141,22 @@ public class UIRenderBatch extends RenderBatch {
         if (componentRenderers.contains(componentRenderer)) return true;
 
         // If the batch still has room, and is at the same z index as the componentRenderer, then add it to the batch
-//        if (hasRoomLeft() && zIndex() == componentRenderer.gameObject.zIndex()) {
-//            Texture tex = componentRenderer.getTexture();
-//            if (tex == null || (hasTexture(tex) || hasTextureRoom())) {
-//                // Get the index and add the renderObject
-//                componentRenderers.add(componentRenderer);
-////                componentRenderer.setLocation(this, componentRenderers.size() - 1);
-//
-//                // Add properties to local vertices array
-//                load(componentRenderers.size() - 1);
-//
-//                if (componentRenderers.size() >= this.maxBatchSize) {
-//                    this.hasRoom = false;
-//                }
-//                return true;
-//            }
-//        }
+        if (hasRoomLeft() && zIndex() == componentRenderer.zIndex()) {
+            Texture tex = componentRenderer.getTexture();
+            if (tex == null || (hasTexture(tex) || hasTextureRoom())) {
+                // Get the index and add the renderObject
+                componentRenderers.add(componentRenderer);
+//                componentRenderer.setLocation(this, componentRenderers.size() - 1);
+
+                // Add properties to local vertices array
+                load(componentRenderers.size() - 1);
+
+                if (componentRenderers.size() >= this.maxBatchSize) {
+                    this.hasRoom = false;
+                }
+                return true;
+            }
+        }
         return false;
     }
 

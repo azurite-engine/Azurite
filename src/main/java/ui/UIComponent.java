@@ -26,6 +26,8 @@ public abstract class UIComponent {
 
     private Object layoutInfo;
 
+    private int zIndex;
+
     public UIComponent() {
         this.frame = new UIFrame();
         this.focused = false;
@@ -36,6 +38,7 @@ public abstract class UIComponent {
         this.parent = null;
         this.font = new Font();
         this.layoutInfo = null;
+        this.zIndex = 1;
     }
 
     public Font getFont() {
@@ -108,6 +111,10 @@ public abstract class UIComponent {
 
     public Object getLayoutInfo() {
         return layoutInfo;
+    }
+
+    public float zIndex () {
+        return zIndex;
     }
 
     public float getX() {

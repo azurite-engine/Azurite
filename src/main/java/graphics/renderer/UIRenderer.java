@@ -72,6 +72,7 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
      *
      * @param r UIComponentRenderer
      */
+    @Override
     public void remove(UIComponentRenderer r) {
         if (r != null) {
             r.markDirty();
@@ -100,6 +101,7 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
             }
         }
         // If unable to add to previous batch, create a new one
+        //TODO this
 //        UIRenderBatch newBatch = new UIRenderBatch(MAX_BATCH_SIZE, componentRenderer.zIndex());
 //        newBatch.setRenderer(this);
 //        newBatch.start();

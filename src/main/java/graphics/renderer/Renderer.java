@@ -4,6 +4,7 @@ import components.GameObject;
 import graphics.Framebuffer;
 import graphics.Shader;
 import graphics.Texture;
+import ui.UIComponentRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +109,13 @@ public abstract class Renderer<T extends RenderBatch> {
     }
 
     /**
+     * Remove a UIComponentRenderer from the renderer.
+     *
+     * @param r UIComponentRenderer to remove
+     */
+    public abstract void remove(UIComponentRenderer r);
+
+    /**
      * Creates the renderer's shader and framebuffer
      */
     public void init() {
@@ -142,6 +150,8 @@ public abstract class Renderer<T extends RenderBatch> {
         shader.detach();
         Framebuffer.unbind();
     }
+
+
 
     /**
      * Prepare for rendering. Do anything like setting background here.

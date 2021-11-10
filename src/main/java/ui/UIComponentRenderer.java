@@ -37,7 +37,7 @@ public class UIComponentRenderer extends UIComponent {
 
     private Sprite sprite;
 
-    private Vector3f lastLocation;
+    private Vector2f lastLocation = new Vector2f();
     private Vector2f size;
     private boolean isDirty; // Dirty flag, tells renderer to redraw if object components have changed
 
@@ -94,36 +94,27 @@ public class UIComponentRenderer extends UIComponent {
     /**
      * Initialize the Component, called once after creation by the parent GameObject.
      */
-//    @Override
-//    public void start() {
-//        this.lastLocation = gameObject.getReadOnlyLocation();
-//    }
+    public void start() {
+        this.lastLocation.x = getX();
+        this.lastLocation.y = getY();
+    }
 
     /**
-     * Update method called every frame by parent GameObject
+     * Update method called every frame by parent
      *
      * @param dt Engine.deltaTime
      */
-//    @Override
     public void update(float dt) {
 
     }
 
-//    @Override
-    public void update(Vector3f changedLocationData) {
+    public void update(Vector2f changedLocationData) {
         this.lastLocation = changedLocationData;
         isDirty = true;
     }
 
-//    @Override
-    public boolean transformingObject() {
-        return false;
-    }
-
-//    @Override
     public void remove() {
-        // TODO
-//        getBatch().getRenderer().remove(this);
+        getBatch().getRenderer().remove(this);
     }
 
     /**
