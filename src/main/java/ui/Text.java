@@ -162,7 +162,7 @@ public class Text {
     private float width;
     private float height;
 
-    public float findMaxValue  (float[] numbers) {
+    private float findMaxValue  (float[] numbers) {
         float highest = numbers[0];
         for (int i = 1; i < numbers.length; i ++) {
             if (numbers[i] > highest) {
