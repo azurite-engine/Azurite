@@ -95,9 +95,9 @@ public class UIComponentRenderer extends UIComponent {
      * Initialize the Component, called once after creation by the parent GameObject.
      */
 //    @Override
-    public void start() {
-        this.lastLocation = gameObject.getReadOnlyLocation();
-    }
+//    public void start() {
+//        this.lastLocation = gameObject.getReadOnlyLocation();
+//    }
 
     /**
      * Update method called every frame by parent GameObject
@@ -122,7 +122,8 @@ public class UIComponentRenderer extends UIComponent {
 
 //    @Override
     public void remove() {
-        getBatch().getRenderer().remove(this);
+        // TODO
+//        getBatch().getRenderer().remove(this);
     }
 
     /**
