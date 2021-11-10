@@ -1,6 +1,8 @@
 package ui;
 
+import org.joml.Vector2f;
 import org.joml.Vector4f;
+import physics.collision.CollisionUtil;
 
 /**
  * @author Juyas
@@ -104,6 +106,10 @@ public class UIFrame {
                 return new UIFrame(x, y + (h / 2), w, h / 2);
         }
         return new UIFrame(x, y, w, h);
+    }
+
+    public boolean isInFrame(Vector2f coords) {
+        return CollisionUtil.inRect(coords, this.x, this.y, this.w, this.h);
     }
 
     @Override

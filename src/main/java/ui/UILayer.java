@@ -1,5 +1,7 @@
 package ui;
 
+import input.Mouse;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,8 @@ public class UILayer {
         //first make sure all top level components are enclosed before updating
         components.forEach(comp -> comp.getFrame().ensureEnclosure(layerFrame));
         components.forEach(UIComponent::update);
+        if (!layerFrame.isInFrame(Mouse.mouse) || components.stream().noneMatch(UIComponent::isMouseOnThis))
+            CursorManager.resetCursor();
     }
 
     public void draw() {
@@ -44,6 +48,7 @@ public class UILayer {
 
     public void setActive(boolean active) {
         this.active = active;
+        if (!active) CursorManager.resetCursor();
     }
 
     public boolean isActive() {

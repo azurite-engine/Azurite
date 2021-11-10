@@ -3,6 +3,7 @@ package ui;
 import fonts.Font;
 import graphics.Color;
 import input.Mouse;
+import org.lwjgl.glfw.GLFW;
 import physics.collision.CollisionUtil;
 
 /**
@@ -17,16 +18,17 @@ public abstract class UIComponent {
     private final UIFrame frame;
 
     private Color foregroundColor, backgroundColor;
+    private Font font;
+
+    private int cursor;
 
     private boolean focused;
     private boolean enabled;
     private boolean visible;
 
-    private Font font;
+    private int zIndex;
 
     private Object layoutInfo;
-
-    private int zIndex;
 
     public UIComponent() {
         this.frame = new UIFrame();
@@ -39,6 +41,7 @@ public abstract class UIComponent {
         this.font = new Font();
         this.layoutInfo = null;
         this.zIndex = 1;
+        this.cursor = GLFW.GLFW_ARROW_CURSOR;
     }
 
     public Font getFont() {
@@ -55,6 +58,14 @@ public abstract class UIComponent {
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public void setCursor(int id) {
+        this.cursor = id;
+    }
+
+    public int getCursor() {
+        return cursor;
     }
 
     public void setEnabled(boolean enabled) {
@@ -113,7 +124,7 @@ public abstract class UIComponent {
         return layoutInfo;
     }
 
-    public float zIndex () {
+    public float zIndex() {
         return zIndex;
     }
 
@@ -140,7 +151,8 @@ public abstract class UIComponent {
     }
 
     public void update() {
-
+        if (isMouseOnThis())
+            CursorManager.requestCursor(cursor);
     }
 
     public void draw() {

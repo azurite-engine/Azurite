@@ -38,6 +38,7 @@ public class Button extends UIComponent implements TextHolder {
 
     @Override
     public void update() {
+        super.update();
         if (isMouseOnThis()) {
             for (int i = 0; i < Mouse.mouseButton.length; i++) {
                 if (Mouse.mouseButton[i]) {

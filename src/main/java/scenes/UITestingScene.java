@@ -10,6 +10,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import scene.Scene;
+import ui.CursorManager;
 import ui.UIContainer;
 import ui.UILayer;
 import ui.component.Button;
@@ -38,6 +39,9 @@ public class UITestingScene extends Scene {
         camera = new Camera();
         setDefaultBackground(Color.WHITE);
 
+        CursorManager.getInstance().loadCursor(GLFW.GLFW_HAND_CURSOR);
+        CursorManager.getInstance().loadCursor(GLFW.GLFW_ARROW_CURSOR);
+
         //full size layer
         menu = new UILayer(0, 0, 1600, 900);
         //set size of the container to the left half of the layer
@@ -55,6 +59,8 @@ public class UITestingScene extends Scene {
         //create two buttons
         button = new Button("topButton");
         button2 = new Button("bottomButton");
+        //set cursor for testing on bottom button
+        button2.setCursor(GLFW.GLFW_HAND_CURSOR);
         //add them to the container
         container.addComponent(button);
         container.addComponent(button2);
