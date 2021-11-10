@@ -2,6 +2,8 @@ package ui;
 
 import fonts.Font;
 import graphics.Color;
+import input.Mouse;
+import physics.collision.CollisionUtil;
 
 /**
  * @author Juyas
@@ -124,6 +126,10 @@ public abstract class UIComponent {
 
     public float getHeight() {
         return getFrame().getHeight();
+    }
+
+    public boolean isMouseOnThis() {
+        return CollisionUtil.inRect(Mouse.mouse, getX(), getY(), getWidth(), getHeight());
     }
 
     public void update() {
