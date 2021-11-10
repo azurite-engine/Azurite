@@ -17,6 +17,8 @@ public abstract class UIComponent {
 
     private final UIFrame frame;
 
+    private EventHandler eventHandler;
+
     private Color foregroundColor, backgroundColor;
     private Font font;
 
@@ -32,6 +34,7 @@ public abstract class UIComponent {
 
     public UIComponent() {
         this.frame = new UIFrame();
+        this.eventHandler = null;
         this.focused = false;
         this.enabled = true;
         this.visible = true;
@@ -96,6 +99,16 @@ public abstract class UIComponent {
         return parent;
     }
 
+    public boolean hasEventHandler() {
+        return eventHandler != null;
+    }
+
+    public EventHandler getEventHandler() {
+        if (eventHandler == null)
+            eventHandler = new EventHandler(this);
+        return eventHandler;
+    }
+
     public Color getBackgroundColor() {
         return backgroundColor;
     }
@@ -151,6 +164,8 @@ public abstract class UIComponent {
     }
 
     public void update() {
+        if (eventHandler != null)
+            eventHandler.update();
         if (isMouseOnThis())
             CursorManager.requestCursor(cursor);
     }

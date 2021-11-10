@@ -20,13 +20,18 @@ public class UIFocusManager {
     }
 
     private void unfocus() {
-        if (focused != null)
+        if (focused != null) {
             focused.setFocused(false);
+            if (focused.hasEventHandler())
+                focused.getEventHandler().callEvent(EventHandler.Event.LOOSE_FOCUS);
+        }
     }
 
     private void focus(UIComponent component) {
         this.focused = component;
         component.setFocused(true);
+        if (focused.hasEventHandler())
+            focused.getEventHandler().callEvent(EventHandler.Event.GAIN_FOCUS);
     }
 
     public static void requestFocus(UIComponent component) {
