@@ -13,6 +13,8 @@ import util.Logger;
 import util.Utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.regex.Pattern;
 
 /**
@@ -157,23 +159,45 @@ public class Text {
         return lineWidth;
     }
 
+    private float width;
+    private float height;
+
+    public float findMaxValue  (float[] numbers) {
+        float highest = numbers[0];
+        for (int i = 1; i < numbers.length; i ++) {
+            if (numbers[i] > highest) {
+                highest = numbers[i];
+            }
+        }
+        return highest;
+    }
+
+    public float getWidth () {
+        return width;
+    }
+
+    public float getHeight () {
+        return height;
+    }
+
     /**
      * Creates the glyphs (essentially sprites) for each character in the string at the appropriate position relative to the anchor point and text alignment.
      */
     private void generateGlyphs () {
 
         float[] lineLengths = new float[1];
-        if (isCentered) {
-            // Split the CharSequence/string at each line break "\n"
-            Pattern pattern = Pattern.compile("\n");
-            CharSequence[] lines = pattern.split(text);
 
-            // Create and fill and array of line lengths, in pixels for each line of text.
-            lineLengths = new float[lines.length];
-            for (int i = 0; i < lines.length; i++) {
-                lineLengths[i] = calculateLineWidth(lines[i]);
-            }
+        // Split the CharSequence/string at each line break "\n"
+        Pattern pattern = Pattern.compile("\n");
+        CharSequence[] lines = pattern.split(text);
+
+        // Create and fill and array of line lengths, in pixels for each line of text.
+        lineLengths = new float[lines.length];
+        for (int i = 0; i < lines.length; i++) {
+            lineLengths[i] = calculateLineWidth(lines[i]);
         }
+
+        width = findMaxValue(lineLengths);
 
         int textHeight = font.getHeight(text);
         int lineIncreases = 0;
@@ -220,7 +244,10 @@ public class Text {
         if (textHeight > font.getFontHeight()) {
             drawY += textHeight - font.getFontHeight();
         }
+        height = textHeight;
     }
+
+
 
     /**
      * @return the {@link graphics.renderer.TextRendererBatch} that this Text object belongs to.
