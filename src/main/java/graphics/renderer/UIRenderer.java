@@ -5,6 +5,7 @@ import components.SpriteRenderer;
 import graphics.Framebuffer;
 import graphics.Graphics;
 import graphics.Shader;
+import ui.UIComponentRenderer;
 import util.Assets;
 import util.Engine;
 
@@ -62,10 +63,9 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
      * @param gameObject the GameObject with renderable components
      */
     @Override
-    public void add(GameObject gameObject) {
-        SpriteRenderer spr = gameObject.getComponent(SpriteRenderer.class);
-        if (spr != null) {
-            addSpriteRenderer(spr);
+    public void add(UIComponentRenderer r) {
+        if (r != null) {
+            addSpriteRenderer(r);
         }
     }
 
