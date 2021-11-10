@@ -5,6 +5,7 @@ import components.SpriteRenderer;
 import fonts.Font;
 import graphics.Camera;
 import graphics.Color;
+import input.Mouse;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import scene.Scene;
@@ -13,6 +14,8 @@ import ui.UILayer;
 import ui.component.Button;
 import ui.layout.BoxLayout;
 import util.Engine;
+
+import java.text.NumberFormat;
 
 import static graphics.Graphics.setDefaultBackground;
 
@@ -60,7 +63,9 @@ public class UITestingScene extends Scene {
         menu.update();
         i = (i + 1) % 60;
         if (i == 0) {
-
+            System.out.println(button.getFrame());
+            System.out.println(button2.getFrame());
+            System.out.println(Mouse.mouse.toString(NumberFormat.getInstance()));
         }
     }
 
