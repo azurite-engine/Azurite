@@ -1,15 +1,12 @@
 package ui;
  
 import graphics.Color;
-import graphics.RenderableComponent;
 import graphics.Sprite;
 import graphics.Texture;
-import graphics.renderer.DefaultRenderBatch;
 import graphics.renderer.UIRenderBatch;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import physics.LocationSensitive;
 import util.Assets;
 import util.Utils;
 
@@ -25,7 +22,16 @@ import static graphics.Color.WHITE;
  * @since 11.9.2021
  */
 
-public class UIComponentRenderer extends RenderableUIComponent<UIRenderBatch> {
+public class UIComponentRenderer {
+
+    /**
+     * The batch in which this component has been added
+     */
+    private UIRenderBatch batch;
+    /**
+     * The index at which this component is placed in the batch
+     */
+    private int index;
 
     private Vector4f color = new Color(255, 100, 100, 255).toNormalizedVec4f();
 
@@ -231,5 +237,34 @@ public class UIComponentRenderer extends RenderableUIComponent<UIRenderBatch> {
      */
     public void setClean() {
         isDirty = false;
+    }
+
+    /**
+     * Sets this component's batch and index to where it has currently been added
+     *
+     * @param batch the batch that this component has been added to
+     * @param index the index at which this component is placed in the batch
+     */
+    public void setLocation(UIRenderBatch batch, int index) {
+        this.batch = batch;
+        this.index = index;
+    }
+
+    /**
+     * Get the batch in which this component has been added
+     *
+     * @return The batch in which this component has been added
+     */
+    public T getBatch() {
+        return batch;
+    }
+
+    /**
+     * Get the index at which this component is placed in the batch
+     *
+     * @return The index at which this component is placed in the batch
+     */
+    public int getIndex() {
+        return index;
     }
 }
