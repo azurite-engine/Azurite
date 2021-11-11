@@ -3,6 +3,7 @@ package ui.component;
 import org.lwjgl.glfw.GLFW;
 import ui.EventHandler;
 import ui.UIComponent;
+import util.Observable;
 
 /**
  * @author Juyas
@@ -19,14 +20,14 @@ public class CheckBox extends UIComponent {
     /**
      * Whether the CheckBox is currently checked
      */
-    private boolean checked;
+    private Observable<Boolean> checked;
 
     public CheckBox(String text, boolean preChecked) {
         this.text = text;
-        this.checked = preChecked;
+        this.checked = new Observable<>(preChecked);
         this.getEventHandler().registerListener(EventHandler.Event.MOUSE_CLICK, eventHandler -> {
             if (eventHandler.isMouseButtonClicked(GLFW.GLFW_MOUSE_BUTTON_LEFT))
-                this.checked = !this.checked;
+                this.checked.setValue(!this.checked.getValue());
         });
     }
 
@@ -35,11 +36,15 @@ public class CheckBox extends UIComponent {
     }
 
     public void setChecked(boolean checked) {
-        this.checked = checked;
+        this.checked.setValue(checked);
+    }
+
+    public Observable<Boolean> getChecked() {
+        return checked;
     }
 
     public boolean isChecked() {
-        return checked;
+        return checked.getValue();
     }
 
     public void setText(String text) {
