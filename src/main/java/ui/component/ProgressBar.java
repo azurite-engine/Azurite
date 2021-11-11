@@ -22,8 +22,12 @@ public class ProgressBar extends UIComponent implements ValueHolder {
     private UIAlignment orientation;
 
     public ProgressBar() {
-        this.value = 0;
-        this.orientation = UIAlignment.RIGHT;
+        this(0, UIAlignment.RIGHT);
+    }
+
+    public ProgressBar(float value, UIAlignment orientation) {
+        this.value = value;
+        this.orientation = orientation;
     }
 
     public UIAlignment getOrientation() {

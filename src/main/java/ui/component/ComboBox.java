@@ -22,6 +22,11 @@ public class ComboBox extends UIComponent implements TextHolder, ValueHolder {
     private int selected;
 
     /**
+     * Whether the comboBox is currently expanded
+     */
+    private boolean expanded;
+
+    /**
      * The currently displayed text.
      */
     private String currentText;
@@ -30,6 +35,7 @@ public class ComboBox extends UIComponent implements TextHolder, ValueHolder {
         this.options = options;
         this.selected = selected;
         this.currentText = shownText;
+        this.expanded = false;
     }
 
     public ComboBox(List<String> options) {
@@ -49,6 +55,14 @@ public class ComboBox extends UIComponent implements TextHolder, ValueHolder {
     public void setSelected(int selected) {
         this.selected = Math.abs(selected) % options.size();
         this.currentText = options.get(this.selected);
+    }
+
+    public boolean isExpanded() {
+        return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        this.expanded = expanded;
     }
 
     public int getSelected() {

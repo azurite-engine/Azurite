@@ -166,13 +166,18 @@ public abstract class UIComponent {
         return this.mouseOverThis;
     }
 
-    public void update() {
+    public final void update() {
         //to reduce redundant calculation, it gets calculated each update once
         this.mouseOverThis = CollisionUtil.inRect(Mouse.mouse, getX(), getY(), getWidth(), getHeight());
         if (isMouseOnThis())
             CursorManager.requestCursor(cursor);
         if (eventHandler != null)
             eventHandler.update();
+        postUpdate();
+    }
+
+    public void postUpdate() {
+
     }
 
     public void draw() {

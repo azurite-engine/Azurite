@@ -1,5 +1,7 @@
 package ui.component;
 
+import org.lwjgl.glfw.GLFW;
+import ui.EventHandler;
 import ui.UIComponent;
 
 /**
@@ -22,6 +24,10 @@ public class CheckBox extends UIComponent {
     public CheckBox(String text, boolean preChecked) {
         this.text = text;
         this.checked = preChecked;
+        this.getEventHandler().registerListener(EventHandler.Event.MOUSE_CLICK, eventHandler -> {
+            if (eventHandler.isMouseButtonClicked(GLFW.GLFW_MOUSE_BUTTON_LEFT))
+                this.checked = !this.checked;
+        });
     }
 
     public CheckBox(String text) {
