@@ -1,5 +1,7 @@
 package ui.component;
 
+import org.lwjgl.glfw.GLFW;
+import ui.EventHandler;
 import ui.UIComponent;
 
 /**
@@ -11,6 +13,20 @@ public class TextField extends UIComponent implements TextHolder {
 
     private String text;
 
+    public TextField() {
+        this("");
+    }
+
+    public TextField(String text) {
+        this.text = text;
+        this.setCursor(GLFW.GLFW_IBEAM_CURSOR);
+        //this component requests focus when clicked on it for receiving input
+        this.getEventHandler().registerListener(EventHandler.Event.MOUSE_CLICK, eventHandler -> {
+            if (eventHandler.isMouseButtonClicked(GLFW.GLFW_MOUSE_BUTTON_LEFT))
+                requestFocus();
+        });
+    }
+
     @Override
     public void setText(String text) {
         this.text = text;
@@ -19,16 +35,6 @@ public class TextField extends UIComponent implements TextHolder {
     @Override
     public String getText() {
         return text;
-    }
-
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void draw() {
-
     }
 
 }

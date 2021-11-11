@@ -44,14 +44,4 @@ public class CheckBox extends UIComponent {
         return text;
     }
 
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void draw() {
-
-    }
-
 }

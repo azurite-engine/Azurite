@@ -21,14 +21,4 @@ public class Label extends UIComponent implements TextHolder {
         return text;
     }
 
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void draw() {
-
-    }
-
 }

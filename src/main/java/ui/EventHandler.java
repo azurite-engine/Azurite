@@ -28,6 +28,7 @@ public class EventHandler {
     }
 
     public void update() {
+        //read events and call them
         if (parent.isMouseOnThis()) {
             if (mouseIsOnComponent) {
                 callEvent(Event.MOUSE_HOVER);
@@ -46,14 +47,35 @@ public class EventHandler {
         }
     }
 
+    /**
+     * Register a new event listener for this event handler and this component.
+     *
+     * @param event    the event to listen for
+     * @param listener the listener containing logic to be executed if the specified event happens
+     */
+    public void registerListener(Event event, Consumer<EventHandler> listener) {
+        this.listener.put(event, this.listener.get(event).andThen(listener));
+    }
+
     public UIComponent getComponent() {
         return parent;
     }
 
+    /**
+     * Check, whether a mouse button has been clicked (pressed and released again) in this update loop.
+     * Should be used inside the {@link Event#MOUSE_CLICK}, will probably lead to false in any other case.
+     *
+     * @param button the mouse button to check, e.g. {@link org.lwjgl.glfw.GLFW#GLFW_MOUSE_BUTTON_LEFT}
+     * @return true if and only if the button has been clicked
+     */
     public boolean isMouseButtonClicked(int button) {
         return mouseClick[button] && !Mouse.mouseButton[button];
     }
 
+    /**
+     * Call a specific event. Note: This might lead to unexpected and unwanted behaviour, when used wrongly.
+     * @param event the event to call
+     */
     public void callEvent(Event event) {
         listener.get(event).accept(this);
     }

@@ -69,16 +69,6 @@ public class SingleSlider extends UIComponent implements ValueHolder {
     }
 
     @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void draw() {
-
-    }
-
-    @Override
     public float getValue() {
         return getCurrentScale();
     }
