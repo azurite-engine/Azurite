@@ -5,6 +5,7 @@ import graphics.Color;
 import input.Mouse;
 import org.lwjgl.glfw.GLFW;
 import physics.collision.CollisionUtil;
+import util.Observable;
 
 /**
  * @author Juyas
@@ -15,33 +16,51 @@ public abstract class UIComponent {
 
     private UIContainer parent;
 
+    /**
+     * The position and dimension of this component.
+     */
     private final UIFrame frame;
 
+    /**
+     * The event handler for mouse events on this component.
+     * Is null until {@link this#getEventHandler()} is called for the first time to reduce workload.
+     */
     private EventHandler eventHandler;
 
-    private Color foregroundColor, backgroundColor;
+    /**
+     * The font used for text in this component.
+     * If the font is null - the parent font is used instead
+     */
     private Font font;
 
+    /**
+     * The cursor id according to {@link CursorManager}
+     */
     private int cursor;
 
-    private boolean focused;
-    private boolean enabled;
-    private boolean visible;
+    //observable values
+    private final Observable<Color> foregroundColor;
+    private final Observable<Color> backgroundColor;
+    private final Observable<Boolean> focused;
+    private final Observable<Boolean> enabled;
+    private final Observable<Boolean> visible;
 
+    //for keeping track, if the mouse was/is over this component in the last/current update
     private boolean mouseOverThis;
 
-    private int zIndex;
-
+    //optional information for the layout - e.g. positioning or orientation
     private Object layoutInfo;
+
+    private int zIndex;
 
     public UIComponent() {
         this.frame = new UIFrame();
         this.eventHandler = null;
-        this.focused = false;
-        this.enabled = true;
-        this.visible = true;
-        this.foregroundColor = Color.WHITE;
-        this.backgroundColor = Color.WHITE;
+        this.focused = new Observable<>(false);
+        this.enabled = new Observable<>(true);
+        this.visible = new Observable<>(true);
+        this.foregroundColor = new Observable<>(Color.BLACK);
+        this.backgroundColor = new Observable<>(Color.WHITE);
         this.parent = null;
         this.font = new Font();
         this.layoutInfo = null;
@@ -50,7 +69,28 @@ public abstract class UIComponent {
         this.cursor = GLFW.GLFW_ARROW_CURSOR;
     }
 
+    //------------ ------------ update function ------------ ------------
+
+    public final void update() {
+        //to reduce redundant calculation, it gets calculated each update once
+        this.mouseOverThis = CollisionUtil.inRect(Mouse.mouse, getX(), getY(), getWidth(), getHeight());
+        if (isMouseOnThis())
+            CursorManager.requestCursor(cursor);
+        if (eventHandler != null)
+            eventHandler.update();
+        postUpdate();
+    }
+
+    //------------ ------------ getter and setter ------------ ------------
+
+    //intern method for setting the parent container
+    protected void setParent(UIContainer parent) {
+        this.parent = parent;
+    }
+
     public Font getFont() {
+        if (this.font == null && getParent() != null)
+            return getParent().getFont();
         return font;
     }
 
@@ -58,12 +98,24 @@ public abstract class UIComponent {
         this.font = font;
     }
 
-    public boolean isFocused() {
+    public Observable<Boolean> getEnabled() {
+        return enabled;
+    }
+
+    public Observable<Boolean> getFocused() {
         return focused;
     }
 
+    public Observable<Boolean> getVisible() {
+        return visible;
+    }
+
+    public boolean isFocused() {
+        return focused.getValue();
+    }
+
     public boolean isEnabled() {
-        return enabled;
+        return enabled.getValue();
     }
 
     public void setCursor(int id) {
@@ -75,27 +127,23 @@ public abstract class UIComponent {
     }
 
     public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+        this.enabled.setValue(enabled);
     }
 
     public void setVisible(boolean visible) {
-        this.visible = visible;
+        this.visible.setValue(visible);
     }
 
     public boolean isVisible() {
-        return visible;
+        return visible.getValue();
     }
 
     protected void setFocused(boolean focused) {
-        this.focused = focused;
+        this.focused.setValue(focused);
     }
 
     public void requestFocus() {
         UIFocusManager.requestFocus(this);
-    }
-
-    protected void setParent(UIContainer parent) {
-        this.parent = parent;
     }
 
     public UIContainer getParent() {
@@ -113,19 +161,27 @@ public abstract class UIComponent {
     }
 
     public Color getBackgroundColor() {
-        return backgroundColor;
+        return backgroundColor.getValue();
     }
 
     public Color getForegroundColor() {
+        return foregroundColor.getValue();
+    }
+
+    public Observable<Color> getBackgroundColorObs() {
+        return backgroundColor;
+    }
+
+    public Observable<Color> getForegroundColorObs() {
         return foregroundColor;
     }
 
     public void setForegroundColor(Color foregroundColor) {
-        this.foregroundColor = foregroundColor;
+        this.foregroundColor.setValue(foregroundColor);
     }
 
     public void setBackgroundColor(Color backgroundColor) {
-        this.backgroundColor = backgroundColor;
+        this.backgroundColor.setValue(backgroundColor);
     }
 
     public UIFrame getFrame() {
@@ -166,15 +222,7 @@ public abstract class UIComponent {
         return this.mouseOverThis;
     }
 
-    public final void update() {
-        //to reduce redundant calculation, it gets calculated each update once
-        this.mouseOverThis = CollisionUtil.inRect(Mouse.mouse, getX(), getY(), getWidth(), getHeight());
-        if (isMouseOnThis())
-            CursorManager.requestCursor(cursor);
-        if (eventHandler != null)
-            eventHandler.update();
-        postUpdate();
-    }
+    //------------ ------------ methods to override ------------ ------------
 
     public void postUpdate() {
 

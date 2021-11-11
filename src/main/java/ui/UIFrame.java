@@ -3,29 +3,32 @@ package ui;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import physics.collision.CollisionUtil;
+import util.Observable;
 
 /**
  * @author Juyas
  * @version 07.11.2021
  * @since 07.11.2021
  */
-public class UIFrame {
+public class UIFrame extends Observable<Void> {
 
-    private float x, y;
-    private float w, h;
+    private final Observable<Float> x, y;
+    private final Observable<Float> w, h;
 
     public UIFrame() {
-        this.x = 0;
-        this.y = 0;
-        this.h = 0;
-        this.w = 0;
+        super();
+        this.x = new Observable<>(0.0f);
+        this.y = new Observable<>(0.0f);
+        this.h = new Observable<>(0.0f);
+        this.w = new Observable<>(0.0f);
     }
 
     public UIFrame(float x, float y, float w, float h) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
+        super();
+        this.x = new Observable<>(x);
+        this.y = new Observable<>(y);
+        this.w = new Observable<>(w);
+        this.h = new Observable<>(h);
     }
 
     public void set(float x, float y, float w, float h) {
@@ -36,89 +39,88 @@ public class UIFrame {
     }
 
     public float getX() {
-        return x;
+        return x.getValue();
     }
 
     public void setX(float x) {
-        this.x = x;
+        this.x.setValue(x);
     }
 
     public float getY() {
-        return y;
+        return y.getValue();
     }
 
     public void setY(float y) {
-        this.y = y;
+        this.y.setValue(y);
     }
 
     public float getWidth() {
-        return w;
+        return w.getValue();
     }
 
     public void setWidth(float w) {
-        this.w = w;
+        this.w.setValue(w);
     }
 
     public float getHeight() {
-        return h;
+        return h.getValue();
     }
 
     public void setHeight(float h) {
-        this.h = h;
+        this.h.setValue(h);
     }
 
     public Vector4f getAsVector() {
-        return new Vector4f(x, y, w, h);
+        return new Vector4f(x.getValue(), y.getValue(), w.getValue(), h.getValue());
     }
 
     public void ensureEnclosure(UIFrame parent) {
         //by default, it will move components away from the edges and only shrink them, if they rly dont fit into it.
-        if (this.w > parent.w) {
+        if (this.w.getValue() > parent.w.getValue()) {
             //shrink width to parent width
-            this.w = parent.w;
-            this.x = 0;
+            this.w.setValue(parent.w.getValue());
+            this.x.setValue(0.0f);
         }
-        if (this.h > parent.h) {
+        if (this.h.getValue() > parent.h.getValue()) {
             //shrink height to parent height
-            this.h = parent.h;
-            this.y = 0;
-            System.out.println("correct height");
+            this.h.setValue(parent.h.getValue());
+            this.y.setValue(0.0f);
         }
-        if (this.w + x > parent.w) {
+        if (this.w.getValue() + x.getValue() > parent.w.getValue()) {
             //move x to the left until it fits into it
-            this.x = parent.w - this.w;
+            this.x.setValue(parent.w.getValue() - this.w.getValue());
         }
-        if (this.h + y > parent.h) {
+        if (this.h.getValue() + y.getValue() > parent.h.getValue()) {
             //move y to the top until it fits into it
-            this.y = parent.h - this.h;
+            this.y.setValue(parent.h.getValue() - this.h.getValue());
         }
     }
 
     public UIFrame getSubFrame(UIAlignment alignment) {
         switch (alignment) {
             case TOP:
-                return new UIFrame(x, y, w, h / 2);
+                return new UIFrame(x.getValue(), y.getValue(), w.getValue(), h.getValue() / 2);
             case LEFT:
-                return new UIFrame(x, y, w / 2, h);
+                return new UIFrame(x.getValue(), y.getValue(), w.getValue() / 2, h.getValue());
             case RIGHT:
-                return new UIFrame(x + (w / 2), y, w / 2, h);
+                return new UIFrame(x.getValue() + (w.getValue() / 2), y.getValue(), w.getValue() / 2, h.getValue());
             case BOTTOM:
-                return new UIFrame(x, y + (h / 2), w, h / 2);
+                return new UIFrame(x.getValue(), y.getValue() + (h.getValue() / 2), w.getValue(), h.getValue() / 2);
         }
-        return new UIFrame(x, y, w, h);
+        return new UIFrame(x.getValue(), y.getValue(), w.getValue(), h.getValue());
     }
 
     public boolean isInFrame(Vector2f coords) {
-        return CollisionUtil.inRect(coords, this.x, this.y, this.w, this.h);
+        return CollisionUtil.inRect(coords, this.x.getValue(), this.y.getValue(), this.w.getValue(), this.h.getValue());
     }
 
     @Override
     public String toString() {
         return "UIFrame{" +
-                "x=" + x +
-                ", y=" + y +
-                ", w=" + w +
-                ", h=" + h +
+                "x=" + x.getValue() +
+                ", y=" + y.getValue() +
+                ", w=" + w.getValue() +
+                ", h=" + h.getValue() +
                 '}';
     }
 }

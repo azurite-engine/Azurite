@@ -87,9 +87,7 @@ public class EventHandler {
         MOUSE_ENTER,
         MOUSE_LEAVE,
         MOUSE_HOVER,
-        MOUSE_CLICK,
-        GAIN_FOCUS,
-        LOOSE_FOCUS
+        MOUSE_CLICK
     }
 
 }
