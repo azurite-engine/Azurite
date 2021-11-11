@@ -54,7 +54,7 @@ public class UIContainer extends UIComponent {
     }
 
     @Override
-    public void update() {
+    public void postUpdate() {
         if (!isEnabled()) return;
         layout.updateComponents(this);
         components.forEach(UIComponent::update);
@@ -64,6 +64,7 @@ public class UIContainer extends UIComponent {
     @Override
     public void draw() {
         if (!isVisible()) return;
+        super.draw();
         components.stream().filter(UIComponent::isVisible).forEach(UIComponent::draw);
     }
 

@@ -2,6 +2,7 @@ package ui;
 
 import input.Mouse;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
@@ -41,9 +42,10 @@ public class EventHandler {
                     callEvent(Event.MOUSE_CLICK);
                 }
             }
-            this.mouseClick = Mouse.mouseButton;
+            this.mouseClick = Arrays.copyOf(Mouse.mouseButton, Mouse.mouseButton.length);
         } else if (mouseIsOnComponent) {
             callEvent(Event.MOUSE_LEAVE);
+            mouseIsOnComponent = false;
         }
     }
 
@@ -74,6 +76,7 @@ public class EventHandler {
 
     /**
      * Call a specific event. Note: This might lead to unexpected and unwanted behaviour, when used wrongly.
+     *
      * @param event the event to call
      */
     public void callEvent(Event event) {

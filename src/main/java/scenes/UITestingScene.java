@@ -11,6 +11,7 @@ import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import scene.Scene;
 import ui.CursorManager;
+import ui.EventHandler;
 import ui.UIContainer;
 import ui.UILayer;
 import ui.component.Button;
@@ -65,12 +66,12 @@ public class UITestingScene extends Scene {
         container.addComponent(button);
         container.addComponent(button2);
         //add onClick functions
-        button.addActionOnClick(button -> {
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT)
+        button.getEventHandler().registerListener(EventHandler.Event.MOUSE_CLICK, eventHandler -> {
+            if (eventHandler.isMouseButtonClicked(GLFW.GLFW_MOUSE_BUTTON_LEFT))
                 System.out.println("Left click on upper button");
         });
-        button2.addActionOnClick(button -> {
-            if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        button2.getEventHandler().registerListener(EventHandler.Event.MOUSE_CLICK, eventHandler -> {
+            if (eventHandler.isMouseButtonClicked(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
                 bot.getComponent(SpriteRenderer.class).setColor(Color.randomColor());
             }
         });
