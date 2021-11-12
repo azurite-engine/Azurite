@@ -9,6 +9,9 @@ import ui.UIComponent;
  */
 public class Label extends UIComponent implements TextHolder {
 
+    /**
+     * The text displayed on the label.
+     */
     private String text;
 
     public Label(String text) {

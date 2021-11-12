@@ -11,6 +11,9 @@ import ui.UIComponent;
  */
 public class TextField extends UIComponent implements TextHolder {
 
+    /**
+     * The text displayed in the TextField, that can be edited.
+     */
     private String text;
 
     public TextField() {

@@ -1,6 +1,7 @@
 package ui.component;
 
 import ui.UIComponent;
+import util.Observable;
 
 import java.util.List;
 
@@ -20,11 +21,11 @@ public class RadioBoxGroup extends UIComponent implements ValueHolder {
      * The selected option in the list.
      * No option selected is -1.
      */
-    private int selected;
+    private final Observable<Integer> selected;
 
     public RadioBoxGroup(List<String> options, int preselected) {
         this.options = options;
-        this.selected = preselected;
+        this.selected = new Observable<>(preselected);
     }
 
     public RadioBoxGroup(List<String> options) {
@@ -40,6 +41,10 @@ public class RadioBoxGroup extends UIComponent implements ValueHolder {
     }
 
     public int getSelected() {
+        return selected.getValue();
+    }
+
+    public Observable<Integer> getSelectedObservable() {
         return selected;
     }
 
@@ -52,7 +57,7 @@ public class RadioBoxGroup extends UIComponent implements ValueHolder {
     }
 
     public void setSelected(int selected) {
-        this.selected = Math.abs(selected) % options.size();
+        this.selected.setValue(Math.abs(selected) % options.size());
     }
 
     @Override
