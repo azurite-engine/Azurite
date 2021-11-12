@@ -1,15 +1,15 @@
 package ui.layout;
 
 import org.joml.Vector2i;
-import ui.UIComponent;
-import ui.UIContainer;
+import ui.Component;
+import ui.Container;
 
 /**
  * @author Juyas
  * @version 11.11.2021
  * @since 11.11.2021
  */
-public class GridLayout implements UILayout {
+public class GridLayout implements ContainerLayout {
 
     private FillingOrder fillingOrder = FillingOrder.NATURAL_ORDER;
     private int rows, columns;
@@ -44,12 +44,12 @@ public class GridLayout implements UILayout {
     }
 
     @Override
-    public void updateComponents(UIContainer container) {
+    public void updateComponents(Container container) {
         //this method isnt even near efficiency yet - but lets just leave it like this for now
-        UIComponent[][] grid = new UIComponent[rows][columns];
+        Component[][] grid = new Component[rows][columns];
         int curr = 0;
         for (int i = 0; i < rows * columns; i++) {
-            UIComponent component;
+            Component component;
             int row, col;
             do {
                 //select component
@@ -64,7 +64,7 @@ public class GridLayout implements UILayout {
                             //if in the targeted cell is already a component,
                             //exchange that and find a new slot for the other one
                             if (grid[vector2i.x][vector2i.y] == null) {
-                                UIComponent tmp = grid[vector2i.x][vector2i.y];
+                                Component tmp = grid[vector2i.x][vector2i.y];
                                 grid[vector2i.x][vector2i.y] = component;
                                 component = tmp;
                                 break;
@@ -88,7 +88,7 @@ public class GridLayout implements UILayout {
         //update all components according to the grid
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                UIComponent comp = grid[i][j];
+                Component comp = grid[i][j];
                 comp.getFrame().setX(cw * j);
                 comp.getFrame().setY(ch * i);
                 comp.getFrame().setWidth(cw);

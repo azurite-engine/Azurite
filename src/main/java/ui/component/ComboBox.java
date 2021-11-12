@@ -1,6 +1,6 @@
 package ui.component;
 
-import ui.UIComponent;
+import ui.Component;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  * @version 09.11.2021
  * @since 09.11.2021
  */
-public class ComboBox extends UIComponent implements TextHolder, ValueHolder {
+public class ComboBox extends Component implements TextHolder, ValueHolder {
 
     /**
      * The list of options.

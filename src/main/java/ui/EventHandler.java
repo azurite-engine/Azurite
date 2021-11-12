@@ -13,12 +13,12 @@ import java.util.function.Consumer;
  */
 public class EventHandler {
 
-    private final UIComponent parent;
+    private final Component parent;
     private final HashMap<Event, Consumer<EventHandler>> listener;
     private boolean mouseIsOnComponent;
     private boolean[] mouseClick;
 
-    public EventHandler(UIComponent parent) {
+    public EventHandler(Component parent) {
         this.parent = parent;
         this.listener = new HashMap<>();
         for (Event e : Event.values())
@@ -59,7 +59,7 @@ public class EventHandler {
         this.listener.put(event, this.listener.get(event).andThen(listener));
     }
 
-    public UIComponent getComponent() {
+    public Component getComponent() {
         return parent;
     }
 

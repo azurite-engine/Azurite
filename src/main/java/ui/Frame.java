@@ -10,12 +10,12 @@ import util.Observable;
  * @version 07.11.2021
  * @since 07.11.2021
  */
-public class UIFrame extends Observable<Void> {
+public class Frame extends Observable<Void> {
 
     private final Observable<Float> x, y;
     private final Observable<Float> w, h;
 
-    public UIFrame() {
+    public Frame() {
         super();
         this.x = new Observable<>(0.0f);
         this.y = new Observable<>(0.0f);
@@ -23,7 +23,7 @@ public class UIFrame extends Observable<Void> {
         this.w = new Observable<>(0.0f);
     }
 
-    public UIFrame(float x, float y, float w, float h) {
+    public Frame(float x, float y, float w, float h) {
         super();
         this.x = new Observable<>(x);
         this.y = new Observable<>(y);
@@ -74,7 +74,7 @@ public class UIFrame extends Observable<Void> {
         return new Vector4f(x.getValue(), y.getValue(), w.getValue(), h.getValue());
     }
 
-    public void ensureEnclosure(UIFrame parent) {
+    public void ensureEnclosure(Frame parent) {
         //by default, it will move components away from the edges and only shrink them, if they rly dont fit into it.
         if (this.w.getValue() > parent.w.getValue()) {
             //shrink width to parent width
@@ -96,18 +96,18 @@ public class UIFrame extends Observable<Void> {
         }
     }
 
-    public UIFrame getSubFrame(UIAlignment alignment) {
+    public Frame getSubFrame(Alignment alignment) {
         switch (alignment) {
             case TOP:
-                return new UIFrame(x.getValue(), y.getValue(), w.getValue(), h.getValue() / 2);
+                return new Frame(x.getValue(), y.getValue(), w.getValue(), h.getValue() / 2);
             case LEFT:
-                return new UIFrame(x.getValue(), y.getValue(), w.getValue() / 2, h.getValue());
+                return new Frame(x.getValue(), y.getValue(), w.getValue() / 2, h.getValue());
             case RIGHT:
-                return new UIFrame(x.getValue() + (w.getValue() / 2), y.getValue(), w.getValue() / 2, h.getValue());
+                return new Frame(x.getValue() + (w.getValue() / 2), y.getValue(), w.getValue() / 2, h.getValue());
             case BOTTOM:
-                return new UIFrame(x.getValue(), y.getValue() + (h.getValue() / 2), w.getValue(), h.getValue() / 2);
+                return new Frame(x.getValue(), y.getValue() + (h.getValue() / 2), w.getValue(), h.getValue() / 2);
         }
-        return new UIFrame(x.getValue(), y.getValue(), w.getValue(), h.getValue());
+        return new Frame(x.getValue(), y.getValue(), w.getValue(), h.getValue());
     }
 
     public boolean isInFrame(Vector2f coords) {

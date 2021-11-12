@@ -10,39 +10,39 @@ import java.util.List;
  * @version 07.11.2021
  * @since 07.11.2021
  */
-public class UILayer {
+public class Layer {
 
     private boolean active;
-    private final List<UIComponent> components;
-    private final UIFrame layerFrame;
+    private final List<Component> components;
+    private final Frame layerFrame;
 
-    public UILayer() {
+    public Layer() {
         this.components = new ArrayList<>();
         this.active = true;
-        this.layerFrame = new UIFrame();
+        this.layerFrame = new Frame();
     }
 
-    public UILayer(float x, float y, float width, float height) {
+    public Layer(float x, float y, float width, float height) {
         this.components = new ArrayList<>();
         this.active = true;
-        this.layerFrame = new UIFrame(x, y, width, height);
+        this.layerFrame = new Frame(x, y, width, height);
     }
 
     public void update() {
         if (!active) return;
         //first make sure all top level components are enclosed before updating
         components.forEach(comp -> comp.getFrame().ensureEnclosure(layerFrame));
-        components.forEach(UIComponent::update);
-        if (!layerFrame.isInFrame(Mouse.mouse) || components.stream().noneMatch(UIComponent::isMouseOnThis))
+        components.forEach(Component::update);
+        if (!layerFrame.isInFrame(Mouse.mouse) || components.stream().noneMatch(Component::isMouseOnThis))
             CursorManager.resetCursor();
     }
 
     public void draw() {
         if (!active) return;
-        components.stream().filter(UIComponent::isVisible).forEach(UIComponent::draw);
+        components.stream().filter(Component::isVisible).forEach(Component::draw);
     }
 
-    public UIFrame getLayerFrame() {
+    public Frame getLayerFrame() {
         return layerFrame;
     }
 
@@ -55,11 +55,11 @@ public class UILayer {
         return active;
     }
 
-    public void registerComponent(UIComponent component) {
+    public void registerComponent(Component component) {
         this.components.add(component);
     }
 
-    public void unregisterComponent(UIComponent component) {
+    public void unregisterComponent(Component component) {
         this.components.remove(component);
     }
 

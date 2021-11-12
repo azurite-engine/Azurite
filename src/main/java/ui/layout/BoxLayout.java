@@ -1,8 +1,8 @@
 package ui.layout;
 
-import ui.UIComponent;
-import ui.UIContainer;
-import ui.UIFrame;
+import ui.Component;
+import ui.Container;
+import ui.Frame;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  * @version 07.11.2021
  * @since 07.11.2021
  */
-public class BoxLayout implements UILayout {
+public class BoxLayout implements ContainerLayout {
 
     public enum Orientation {
         VERTICAL,
@@ -25,13 +25,13 @@ public class BoxLayout implements UILayout {
     }
 
     @Override
-    public void updateComponents(UIContainer container) {
+    public void updateComponents(Container container) {
         float value = orientation == Orientation.VERTICAL ? container.getHeight() : container.getWidth();
-        List<UIComponent> components = container.getComponents();
+        List<Component> components = container.getComponents();
         int size = components.size();
         float compSize = value / size;
         for (int i = 0; i < size; i++) {
-            UIFrame frame = components.get(i).getFrame();
+            Frame frame = components.get(i).getFrame();
             if (orientation == Orientation.VERTICAL) {
                 frame.setWidth(container.getWidth());
                 frame.setHeight(compSize);

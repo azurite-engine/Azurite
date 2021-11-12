@@ -1,15 +1,15 @@
 package ui.component;
 
 import org.lwjgl.glfw.GLFW;
+import ui.Component;
 import ui.EventHandler;
-import ui.UIComponent;
 
 /**
  * @author Juyas
  * @version 07.11.2021
  * @since 07.11.2021
  */
-public class TextField extends UIComponent implements TextHolder {
+public class TextField extends Component implements TextHolder {
 
     /**
      * The text displayed in the TextField, that can be edited.

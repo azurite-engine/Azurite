@@ -1,8 +1,8 @@
 package ui.component;
 
 import org.lwjgl.glfw.GLFW;
+import ui.Component;
 import ui.EventHandler;
-import ui.UIComponent;
 import util.Observable;
 
 /**
@@ -10,7 +10,7 @@ import util.Observable;
  * @version 09.11.2021
  * @since 09.11.2021
  */
-public class CheckBox extends UIComponent {
+public class CheckBox extends Component {
 
     /**
      * The text displayed for the CheckBox

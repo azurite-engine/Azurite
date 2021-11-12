@@ -1,13 +1,11 @@
 package graphics.renderer;
 
-import components.SpriteRenderer;
 import graphics.Primitive;
 import graphics.ShaderDatatype;
 import graphics.Texture;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
-import ui.UIComponentRenderer;
+import ui.ComponentRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +19,7 @@ import java.util.List;
  * @see UIRenderer
  */
 public class UIRenderBatch extends RenderBatch {
-    private final List<UIComponentRenderer> componentRenderers;
+    private final List<ComponentRenderer> componentRenderers;
 
     /**
      * Create a default type render batch
@@ -43,7 +41,7 @@ public class UIRenderBatch extends RenderBatch {
      */
     @Override
     protected void loadVertexProperties(int index, int offset) {
-        UIComponentRenderer componentRenderer = this.componentRenderers.get(index);
+        ComponentRenderer componentRenderer = this.componentRenderers.get(index);
         Vector4f color = componentRenderer.getColorVector();
         Vector2f[] textureCoordinates = componentRenderer.getTexCoords();
 
@@ -136,7 +134,7 @@ public class UIRenderBatch extends RenderBatch {
      * @param componentRenderer componentRenderer to be added
      * @return if the componentRenderer was successfully added to the batch
      */
-    public boolean addComponentRenderer(UIComponentRenderer componentRenderer) {
+    public boolean addComponentRenderer(ComponentRenderer componentRenderer) {
         // If the batch already contains the componentRenderer don't add it to any other batch
         if (componentRenderers.contains(componentRenderer)) return true;
 
@@ -165,7 +163,7 @@ public class UIRenderBatch extends RenderBatch {
      *
      * @param componentRenderer componentRenderer to be removed
      */
-    public void removeSprite(UIComponentRenderer componentRenderer) {
+    public void removeSprite(ComponentRenderer componentRenderer) {
         // Confirm this componentRenderer has been added to this batch
         if (componentRenderer.getBatch() == this) {
             // Remove the componentRenderer from the list
@@ -174,7 +172,7 @@ public class UIRenderBatch extends RenderBatch {
 
             // Set Indices of the componentRenderers to the new indices
             for (int i = index; i < componentRenderers.size(); i++) {
-                UIComponentRenderer r = componentRenderers.get(i);
+                ComponentRenderer r = componentRenderers.get(i);
                 r.setLocation(this, i);
                 r.markDirty();
             }

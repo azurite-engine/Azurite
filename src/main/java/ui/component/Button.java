@@ -1,13 +1,13 @@
 package ui.component;
 
-import ui.UIComponent;
+import ui.Component;
 
 /**
  * @author Juyas
  * @version 07.11.2021
  * @since 07.11.2021
  */
-public class Button extends UIComponent implements TextHolder {
+public class Button extends Component implements TextHolder {
 
     private String text;
 

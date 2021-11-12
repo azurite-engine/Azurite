@@ -5,7 +5,6 @@ import graphics.Sprite;
 import graphics.Texture;
 import graphics.renderer.UIRenderBatch;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 import util.Assets;
 import util.Utils;
@@ -22,7 +21,7 @@ import static graphics.Color.WHITE;
  * @since 11.9.2021
  */
 
-public class UIComponentRenderer extends UIComponent {
+public class ComponentRenderer extends Component {
 
     /**
      * The batch in which this component has been added
@@ -46,7 +45,7 @@ public class UIComponentRenderer extends UIComponent {
      *
      * @param color of type JOML Vector4f, range from 0-1
      */
-    public UIComponentRenderer(Vector4f color, Vector2f size) {
+    public ComponentRenderer(Vector4f color, Vector2f size) {
         this.setColor(color);
         this.sprite = new Sprite(null);
         this.isDirty = true;
@@ -58,7 +57,7 @@ public class UIComponentRenderer extends UIComponent {
      *
      * @param color of type Color, range from 0-255
      */
-    public UIComponentRenderer(Color color, Vector2f size) {
+    public ComponentRenderer(Color color, Vector2f size) {
         // Note that type Color is normalized below in setColor()
         this.setColor(color.toNormalizedVec4f());
         this.sprite = new Sprite(null);
@@ -72,7 +71,7 @@ public class UIComponentRenderer extends UIComponent {
      *
      * @param sprite
      */
-    public UIComponentRenderer(Sprite sprite, Vector2f size) {
+    public ComponentRenderer(Sprite sprite, Vector2f size) {
         this.sprite = sprite;
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;
@@ -84,7 +83,7 @@ public class UIComponentRenderer extends UIComponent {
      *
      * @param path to the image (ie. "src/assets/images/pepper.png")
      */
-    public UIComponentRenderer(String path, Vector2f size) {
+    public ComponentRenderer(String path, Vector2f size) {
         this.sprite = new Sprite(Assets.getTexture(path));
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;

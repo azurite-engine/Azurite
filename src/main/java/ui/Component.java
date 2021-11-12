@@ -12,14 +12,14 @@ import util.Observable;
  * @version 07.11.2021
  * @since 07.11.2021
  */
-public abstract class UIComponent {
+public abstract class Component {
 
-    private UIContainer parent;
+    private Container parent;
 
     /**
      * The position and dimension of this component.
      */
-    private final UIFrame frame;
+    private final Frame frame;
 
     /**
      * The event handler for mouse events on this component.
@@ -53,8 +53,8 @@ public abstract class UIComponent {
 
     private int zIndex;
 
-    public UIComponent() {
-        this.frame = new UIFrame();
+    public Component() {
+        this.frame = new Frame();
         this.eventHandler = null;
         this.focused = new Observable<>(false);
         this.enabled = new Observable<>(true);
@@ -84,7 +84,7 @@ public abstract class UIComponent {
     //------------ ------------ getter and setter ------------ ------------
 
     //intern method for setting the parent container
-    protected void setParent(UIContainer parent) {
+    protected void setParent(Container parent) {
         this.parent = parent;
     }
 
@@ -209,23 +209,23 @@ public abstract class UIComponent {
      * Please use {@link #requestFocus()} instead for most use cases.
      *
      * @param focused the new state
-     * @see UIFocusManager
+     * @see FocusManager
      */
     protected void setFocused(boolean focused) {
         this.focused.setValue(focused);
     }
 
     /**
-     * This method requests the focus for this component from {@link UIFocusManager}.
+     * This method requests the focus for this component from {@link FocusManager}.
      * The currently focused component will lose its focus and this component will gain it.
      *
      * @see #isFocused()
      */
     public void requestFocus() {
-        UIFocusManager.requestFocus(this);
+        FocusManager.requestFocus(this);
     }
 
-    public UIContainer getParent() {
+    public Container getParent() {
         return parent;
     }
 
@@ -305,12 +305,12 @@ public abstract class UIComponent {
     }
 
     /**
-     * The {@link UIFrame} of this component.
+     * The {@link Frame} of this component.
      * Contains the position relative to its parent and its size.
      *
-     * @return the {@link UIFrame} of this component
+     * @return the {@link Frame} of this component
      */
-    public UIFrame getFrame() {
+    public Frame getFrame() {
         return frame;
     }
 

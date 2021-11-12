@@ -1,7 +1,7 @@
 package ui;
 
 import ui.layout.AbsoluteLayout;
-import ui.layout.UILayout;
+import ui.layout.ContainerLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,36 +11,36 @@ import java.util.List;
  * @version 07.11.2021
  * @since 07.11.2021
  */
-public class UIContainer extends UIComponent {
+public class Container extends Component {
 
     /**
      * The layout of the component.
-     * It will affect the {@link UIFrame} of all contained components and put them in some order.
+     * It will affect the {@link Frame} of all contained components and put them in some order.
      */
-    private UILayout layout;
+    private ContainerLayout layout;
 
     /**
-     * The list of all contained {@link UIComponent}'s
+     * The list of all contained {@link Component}'s
      */
-    private final List<UIComponent> components;
+    private final List<Component> components;
 
     /**
-     * Ensures on each update, that all contained components are inside this container by their {@link UIFrame}
+     * Ensures on each update, that all contained components are inside this container by their {@link Frame}
      *
-     * @see UIFrame#ensureEnclosure(UIFrame)
+     * @see Frame#ensureEnclosure(Frame)
      */
     private boolean enclosureInsurance = true;
 
-    public UIContainer() {
+    public Container() {
         this(null);
     }
 
-    public UIContainer(UILayout layout) {
+    public Container(ContainerLayout layout) {
         this.layout = layout == null ? new AbsoluteLayout() : layout;
         this.components = new ArrayList<>();
     }
 
-    public UIContainer(float x, float y, float w, float h, UILayout layout) {
+    public Container(float x, float y, float w, float h, ContainerLayout layout) {
         getFrame().set(x, y, w, h);
         this.layout = layout == null ? new AbsoluteLayout() : layout;
         this.components = new ArrayList<>();
@@ -51,7 +51,7 @@ public class UIContainer extends UIComponent {
      *
      * @return the layout of the container
      */
-    public UILayout getLayout() {
+    public ContainerLayout getLayout() {
         return layout;
     }
 
@@ -60,7 +60,7 @@ public class UIContainer extends UIComponent {
      *
      * @param layout the new layout
      */
-    public void setLayout(UILayout layout) {
+    public void setLayout(ContainerLayout layout) {
         this.layout = layout == null ? new AbsoluteLayout() : layout;
     }
 
@@ -69,7 +69,7 @@ public class UIContainer extends UIComponent {
      *
      * @return a list containing all components in this container
      */
-    public List<UIComponent> getComponents() {
+    public List<Component> getComponents() {
         return components;
     }
 
@@ -90,7 +90,7 @@ public class UIContainer extends UIComponent {
      * @param component the component to add
      * @return whether the component was successfully added; false if and only if the component already has a parent
      */
-    public boolean addComponent(UIComponent component) {
+    public boolean addComponent(Component component) {
         //only one parent allowed
         if (component.getParent() != null) return false;
         components.add(component);
@@ -104,7 +104,7 @@ public class UIContainer extends UIComponent {
      * @param component the component to remove
      * @return true, if the component was removed, false if the component was not contained in this container
      */
-    public boolean removeComponent(UIComponent component) {
+    public boolean removeComponent(Component component) {
         boolean remove = components.remove(component);
         if (remove) component.setParent(null);
         return remove;
@@ -114,7 +114,7 @@ public class UIContainer extends UIComponent {
     public void postUpdate() {
         if (!isEnabled()) return;
         layout.updateComponents(this);
-        components.forEach(UIComponent::update);
+        components.forEach(Component::update);
         if (enclosureInsurance)
             components.forEach(comp -> comp.getFrame().ensureEnclosure(getFrame()));
     }
@@ -123,7 +123,7 @@ public class UIContainer extends UIComponent {
     public void draw() {
         if (!isVisible()) return;
         super.draw();
-        components.stream().filter(UIComponent::isVisible).forEach(UIComponent::draw);
+        components.stream().filter(Component::isVisible).forEach(Component::draw);
     }
 
 }

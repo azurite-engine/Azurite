@@ -1,7 +1,7 @@
 package ui.component;
 
-import ui.UIAlignment;
-import ui.UIComponent;
+import ui.Alignment;
+import ui.Component;
 import util.Observable;
 import util.Utils;
 
@@ -13,7 +13,7 @@ import util.Utils;
  * @version 09.11.2021
  * @since 09.11.2021
  */
-public class Slider extends UIComponent implements ValueHolder {
+public class Slider extends Component implements ValueHolder {
 
     /**
      * the maximum and minimum of the slider
@@ -28,9 +28,9 @@ public class Slider extends UIComponent implements ValueHolder {
     /**
      * In which direction the slider is pointing/in which direction is maximum;
      */
-    private UIAlignment orientation;
+    private Alignment orientation;
 
-    public Slider(float minScale, float maxScale, float currentScale, UIAlignment orientation) {
+    public Slider(float minScale, float maxScale, float currentScale, Alignment orientation) {
         this.minScale = minScale;
         this.maxScale = maxScale;
         this.currentScale = new Observable<>(currentScale);
@@ -38,7 +38,7 @@ public class Slider extends UIComponent implements ValueHolder {
     }
 
     public Slider(float minScale, float maxScale) {
-        this(minScale, maxScale, 0, UIAlignment.RIGHT);
+        this(minScale, maxScale, 0, Alignment.RIGHT);
     }
 
     /**
@@ -119,7 +119,7 @@ public class Slider extends UIComponent implements ValueHolder {
      * @return the current orientation
      * @see this#orientation
      */
-    public UIAlignment getOrientation() {
+    public Alignment getOrientation() {
         return orientation;
     }
 
@@ -128,7 +128,7 @@ public class Slider extends UIComponent implements ValueHolder {
      *
      * @param orientation the new orientation
      */
-    public void setOrientation(UIAlignment orientation) {
+    public void setOrientation(Alignment orientation) {
         this.orientation = orientation;
     }
 

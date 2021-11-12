@@ -1,7 +1,7 @@
 package ui.component;
 
-import ui.UIAlignment;
-import ui.UIComponent;
+import ui.Alignment;
+import ui.Component;
 import util.Utils;
 
 /**
@@ -9,7 +9,7 @@ import util.Utils;
  * @version 09.11.2021
  * @since 09.11.2021
  */
-public class ProgressBar extends UIComponent implements ValueHolder {
+public class ProgressBar extends Component implements ValueHolder {
 
     /**
      * current state of the ProgressBar between 0 and 1
@@ -19,22 +19,22 @@ public class ProgressBar extends UIComponent implements ValueHolder {
     /**
      * In which direction the progressbar is filling up
      */
-    private UIAlignment orientation;
+    private Alignment orientation;
 
     public ProgressBar() {
-        this(0, UIAlignment.RIGHT);
+        this(0, Alignment.RIGHT);
     }
 
-    public ProgressBar(float value, UIAlignment orientation) {
+    public ProgressBar(float value, Alignment orientation) {
         this.value = value;
         this.orientation = orientation;
     }
 
-    public UIAlignment getOrientation() {
+    public Alignment getOrientation() {
         return orientation;
     }
 
-    public void setOrientation(UIAlignment orientation) {
+    public void setOrientation(Alignment orientation) {
         this.orientation = orientation;
     }
 

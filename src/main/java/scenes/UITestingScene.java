@@ -10,10 +10,10 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
 import scene.Scene;
+import ui.Container;
 import ui.CursorManager;
 import ui.EventHandler;
-import ui.UIContainer;
-import ui.UILayer;
+import ui.Layer;
 import ui.component.Button;
 import ui.layout.BoxLayout;
 import util.Engine;
@@ -32,7 +32,7 @@ public class UITestingScene extends Scene {
         Engine.showWindow();
     }
 
-    private UILayer menu;
+    private Layer menu;
     Button button, button2;
 
     public void awake() {
@@ -44,9 +44,9 @@ public class UITestingScene extends Scene {
         CursorManager.getInstance().loadCursor(GLFW.GLFW_ARROW_CURSOR);
 
         //full size layer
-        menu = new UILayer(0, 0, 1600, 900);
+        menu = new Layer(0, 0, 1600, 900);
         //set size of the container to the left half of the layer
-        UIContainer container = new UIContainer(0, 0, 800, 900, new BoxLayout(BoxLayout.Orientation.VERTICAL));
+        Container container = new Container(0, 0, 800, 900, new BoxLayout(BoxLayout.Orientation.VERTICAL));
         //put the container onto the layer
         menu.registerComponent(container);
 

@@ -5,7 +5,7 @@ package ui;
  * @version 07.11.2021
  * @since 07.11.2021
  */
-public enum UIAlignment {
+public enum Alignment {
 
     TOP,
     LEFT,

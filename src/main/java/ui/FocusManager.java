@@ -5,17 +5,17 @@ package ui;
  * @version 07.11.2021
  * @since 07.11.2021
  */
-public class UIFocusManager {
+public class FocusManager {
 
-    private static final UIFocusManager instance = new UIFocusManager();
+    private static final FocusManager instance = new FocusManager();
 
-    public static UIFocusManager getInstance() {
+    public static FocusManager getInstance() {
         return instance;
     }
 
-    private UIComponent focused = null;
+    private Component focused = null;
 
-    private UIFocusManager() {
+    private FocusManager() {
 
     }
 
@@ -25,16 +25,16 @@ public class UIFocusManager {
         }
     }
 
-    private void focus(UIComponent component) {
+    private void focus(Component component) {
         this.focused = component;
         component.setFocused(true);
     }
 
-    public UIComponent getFocusedComponent() {
+    public Component getFocusedComponent() {
         return focused;
     }
 
-    public static void requestFocus(UIComponent component) {
+    public static void requestFocus(Component component) {
         getInstance().unfocus();
         getInstance().focus(component);
     }

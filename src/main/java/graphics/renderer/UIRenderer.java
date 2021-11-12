@@ -1,11 +1,9 @@
 package graphics.renderer;
 
-import components.GameObject;
-import components.SpriteRenderer;
 import graphics.Framebuffer;
 import graphics.Graphics;
 import graphics.Shader;
-import ui.UIComponentRenderer;
+import ui.ComponentRenderer;
 import util.Assets;
 import util.Engine;
 
@@ -61,7 +59,7 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
      * @param r UIComponentRenderer
      */
 
-    public void add(UIComponentRenderer r) {
+    public void add(ComponentRenderer r) {
         if (r != null) {
             addComponentRenderer(r);
         }
@@ -73,7 +71,7 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
      * @param r UIComponentRenderer
      */
     @Override
-    public void remove(UIComponentRenderer r) {
+    public void remove(ComponentRenderer r) {
         if (r != null) {
             r.markDirty();
             r.remove();
@@ -94,7 +92,7 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
      *
      * @param componentRenderer SpriteRenderer: The SpriteRenderer component to be added
      */
-    protected void addComponentRenderer (UIComponentRenderer componentRenderer) {
+    protected void addComponentRenderer (ComponentRenderer componentRenderer) {
         for (UIRenderBatch batch : batches) {
             if (batch.addComponentRenderer(componentRenderer)) {
                 return;
