@@ -165,34 +165,12 @@ public abstract class Scene {
     }
 
     /**
-     * Apply post processing to a texture
+     * The sceneId is meant to represent the instance of a scene as an integer
      *
-     * @param texture input texture
+     * @see SceneManager
      */
-    public void postProcess(Texture texture) {
-        forwardToScreen.setTexture(texture);
-        forwardToScreen.apply();
-    }
-
-    /**
-     * This method is called at the end of the program
-     */
-    public void clean() {
-        this.renderer.clean();
-        this.lightmapRenderer.clean();
-        this.debugRenderer.clean();
-        this.uiRenderer.clean();
-        this.textRenderer.clean();
-        rendererRegistry.forEach(Renderer::clean);
-    }
-
-    public final void startUi () {
-        uiRenderer.init();
-        textRenderer.init();
-
-        for (ElementRenderer e : uiElements) {
-            e.start();
-        }
+    public final int sceneId() {
+        return sceneId;
     }
 
     /**
@@ -227,15 +205,6 @@ public abstract class Scene {
     }
 
     /**
-     * The sceneId is meant to represent the instance of a scene as an integer
-     *
-     * @see SceneManager
-     */
-    public final int sceneId() {
-        return sceneId;
-    }
-
-    /**
      * @return the List of gameObjects contained in the scene.
      */
     public List<GameObject> getGameObjects() {
@@ -263,15 +232,6 @@ public abstract class Scene {
     }
 
     /**
-     * Register a renderer to this scene
-     *
-     * @param renderer the renderer to be registered
-     */
-    public void registerRenderer(Renderer<?> renderer) {
-        rendererRegistry.add(renderer);
-    }
-
-    /**
      * @return Returns the scene's instance of Camera
      */
     public Camera camera() {
@@ -287,16 +247,34 @@ public abstract class Scene {
         }
     }
 
-    public void render () {
-        rendererRegistry.forEach(Renderer::render);
-        lightmapRenderer.render();
-        lightmapRenderer.bindLightmap();
-        renderer.render();
-
+    public void updateUI () {
+        for (ElementRenderer e : uiElements) {
+            e.update();
+        }
+        for (Text t : texts) {
+            t.update();
+        }
     }
 
-    public void debugRender () {
-        if (debugMode) this.debugRenderer.render();
+    // ----- Rendering -----
+
+    /**
+     * Apply post processing to a texture
+     *
+     * @param texture input texture
+     */
+    public void postProcess(Texture texture) {
+        forwardToScreen.setTexture(texture);
+        forwardToScreen.apply();
+    }
+
+    /**
+     * Register a renderer to this scene
+     *
+     * @param renderer the renderer to be registered
+     */
+    public void registerRenderer(Renderer<?> renderer) {
+        rendererRegistry.add(renderer);
     }
 
     /**
@@ -308,6 +286,43 @@ public abstract class Scene {
         renderer.init();
         forwardToScreen = new ForwardToTexture(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
         forwardToScreen.init();
+        uiRenderer.init();
+    }
+
+    public final void startUi () {
+        textRenderer.init();
+
+        for (ElementRenderer e : uiElements) {
+            e.start();
+        }
+    }
+
+    public void render () {
+        rendererRegistry.forEach(Renderer::render);
+        lightmapRenderer.render();
+        lightmapRenderer.bindLightmap();
+        renderer.render();
+        uiRenderer.render();
+    }
+
+    public void debugRender () {
+        if (debugMode) this.debugRenderer.render();
+    }
+
+    public final void textRender() {
+        textRenderer.render();
+    }
+
+    /**
+     * This method is called at the end of the program
+     */
+    public void clean() {
+        this.renderer.clean();
+        this.lightmapRenderer.clean();
+        this.debugRenderer.clean();
+        this.textRenderer.clean();
+        this.uiRenderer.clean();
+        rendererRegistry.forEach(Renderer::clean);
     }
 
     public void addText (Text t) {
@@ -316,20 +331,6 @@ public abstract class Scene {
 
     public void addUIElement (ElementRenderer e) {
         uiElements.add(e);
-    }
-
-    public final void textRender() {
-        textRenderer.render();
-        uiRenderer.render();
-    }
-
-    public void updateUI () {
-        for (ElementRenderer e : uiElements) {
-            e.update();
-        }
-        for (Text t : texts) {
-            t.update();
-        }
     }
 
     /**
