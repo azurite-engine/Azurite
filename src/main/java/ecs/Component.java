@@ -89,8 +89,9 @@ public abstract class Component implements Comparable<Component> {
         INPUT(5),
         TRANSFORM(10),
         POST_TRANSFORM(20),
-        DRAW(30),
-        POST_DRAW(40);
+        COLLISION(30),
+        DRAW(40),
+        POST_DRAW(50);
 
         private final int o;
 

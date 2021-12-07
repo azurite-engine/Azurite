@@ -3,8 +3,6 @@ package physics.force;
 import org.joml.Vector2f;
 
 /**
- * <h1>Azurite</h1>
- *
  * @author Juyas
  * @version 21.06.2021
  * @since 21.06.2021

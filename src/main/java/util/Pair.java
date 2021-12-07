@@ -1,7 +1,6 @@
 package util;
 
 /**
- * <h1>Azurite</h1>
  * A {@link Pair} is a tupel of two different values with potentially two different types.
  *
  * @author Juyas

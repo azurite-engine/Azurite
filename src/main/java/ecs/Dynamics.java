@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
+ * The {@link Dynamics} manage movement of a {@link GameObject}.
+ *
  * @author Juyas
  * @version 06.12.2021
  * @since 06.12.2021

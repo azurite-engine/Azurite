@@ -7,8 +7,6 @@ import org.junit.Test;
 import util.MathUtils;
 
 /**
- * <h1>Azurite</h1>
- *
  * @author Juyas
  * @version 16.07.2021
  * @since 16.07.2021

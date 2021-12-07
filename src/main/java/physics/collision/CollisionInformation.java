@@ -1,11 +1,11 @@
 package physics.collision;
 
 /**
- * <h1>Azurite</h1>
+ * A class to pass down information about a collision detection for further response.
  *
- * @author Julius Korweck
+ * @author Juyas
  * @version 02.09.2021
- * @since 02.09.2021
+ * @since 07.12.2021
  */
 public class CollisionInformation {
 

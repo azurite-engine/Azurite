@@ -3,7 +3,6 @@ package physics.force;
 import org.joml.Vector2f;
 
 /**
- * <h1>Azurite</h1>
  * Can be applied to a {@link ecs.Dynamics} and should be a unique instance for each object in most cases.
  * This class is independent from the mass of an object. Each object is
  *

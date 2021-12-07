@@ -6,6 +6,10 @@ import physics.collision.shape.PrimitiveShape;
 import util.MathUtils;
 
 /**
+ * A polygon collider for a {@link GameObject}.
+ * Collision detection uses GJK in {@link MathUtils#gjksmCollision(PrimitiveShape, PrimitiveShape)}.
+ * Must not be mixed with other colliders.
+ *
  * @author Juyas
  * @version 06.12.2021
  * @since 06.12.2021
@@ -50,18 +54,36 @@ public class PolygonCollider extends Component implements Collider {
         this(shape, false);
     }
 
+    /**
+     * Sets multiple layers at once for handy usage.
+     *
+     * @param layers all layers that should be set.
+     * @return the collider itself, to chain the call.
+     */
     public PolygonCollider layer(int... layers) {
         for (int layer : layers)
             setLayer(layer, true);
         return this;
     }
 
+    /**
+     * Sets multiple masks at once for handy usage.
+     *
+     * @param masks all layers that should be set.
+     * @return the collider itself, to chain the call.
+     */
     public PolygonCollider mask(int... masks) {
         for (int mask : masks)
             setMask(mask, true);
         return this;
     }
 
+    /**
+     * Overwrite the shape of the collider.
+     * Use with caution.
+     *
+     * @param shape the new shape.
+     */
     public void setShape(PrimitiveShape shape) {
         if (shape == null) throw new IllegalArgumentException("The shape of a collider shall not be null");
         this.shape = shape;

@@ -3,7 +3,6 @@ package physics.collision;
 import physics.collision.shape.PrimitiveShape;
 
 /**
- * <h1>Azurite</h1>
  * Describes an object that can collide with others.
  *
  * @author Juyas

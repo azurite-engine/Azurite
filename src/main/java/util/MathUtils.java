@@ -16,7 +16,7 @@ import java.util.Optional;
  *
  * @author Juyas
  * @version 19.06.2021
- * @since 19.06.2021
+ * @since 07.12.2021
  */
 public class MathUtils {
 
@@ -664,13 +664,13 @@ public class MathUtils {
     }
 
     /**
-     * Shifts a part of the array to overwrite the given region [fromIndex, toIndex)
+     * Shifts a part of the array to overwrite the given region (fromIndex, toIndex)
      * FromIndex is INCLUSIVE, ToIndex is EXCLUSIVE
      *
      * @param array     the array from which the region has to be removed
      * @param fromIndex start of the region
      * @param toIndex   end of the region
-     * @return
+     * @return the new effective length
      */
     public static int shiftOverwrite(float[] array, int fromIndex, int toIndex) {
         int length = array.length;

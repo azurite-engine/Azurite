@@ -4,7 +4,7 @@ import input.Keyboard;
 import org.joml.Vector2f;
 import physics.force.Force;
 
-//TODO this class is just made to support topDown and platformer demo scenes - its not good at all
+//this class is just made to support topDown and platformer demo scenes - its not good at all!!!!
 public class CharacterController extends Component {
 
     private final float speedModifier;
@@ -18,6 +18,10 @@ public class CharacterController extends Component {
 
     public float getSpeedModifier() {
         return speedModifier;
+    }
+
+    public Force getPlayerInputForce() {
+        return playerInputForce;
     }
 
     public static CharacterController standardPlatformer(Dynamics dynamics, float speedModifier) {

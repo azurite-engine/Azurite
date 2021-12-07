@@ -4,8 +4,6 @@ import org.joml.Vector2f;
 import util.MathUtils;
 
 /**
- * <h1>Azurite</h1>
- * <p>
  * The {@link PrimitiveShape} is implicitly described by all its support vectors.
  * A support vector is a point on the convex hull of a shape, that is furthest in the direction of a specified vector v.
  * This class may contain information about explicit points on the edge too.

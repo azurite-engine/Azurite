@@ -10,8 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <h1>Azurite</h1>
- *
  * @author Juyas
  * @version 16.07.2021
  * @since 16.07.2021
