@@ -47,29 +47,26 @@ public class DemoPlatformer extends Scene {
 
         a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0);
         c = new Spritesheet(Assets.getTexture("src/assets/images/platformer.png"), 8, 8, 26, 0);
-        t = new TilesystemSideScroll(c, 31, 15, 100, 100, player);
+        t = new TilesystemSideScroll(c, 31, 15, 100, 100, player, new int[]{2});
 
         player = new GameObject("Player", new Vector2f(600, 600), 2);
-        PolygonCollider playerBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100));
-        playerBody.setMask(2, true);
-        Dynamics dynamics = new Dynamics();
-        dynamics.applyForce(new ConstantForce("Gravity", new Vector2f(0, 1)));
-        player.addComponent(dynamics);
+        PolygonCollider playerBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100)).layer(2).mask(2);
+        Dynamics playerDynamics = new Dynamics();
+        playerDynamics.applyForce(new ConstantForce("Gravity", new Vector2f(0, 2)));
+        player.addComponent(playerDynamics);
         player.addComponent(playerBody);
+        player.addComponent(CollisionHandlers.unpassablePolygonCollider(playerBody));
         player.addComponent(new SpriteRenderer(a.getSprite(132), new Vector2f(100)));
-        player.addComponent(CharacterController.standardPlatformer(dynamics, 5));
+        player.addComponent(CharacterController.standardPlatformer(playerDynamics, 5));
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
 
         booper = new GameObject("Booper", new Vector2f(800, 800), 2);
         booper.addComponent(new SpriteRenderer(a.getSprite(150), new Vector2f(100)));
         booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
-        //TODO not done yet
-
-        PolygonCollider rigidBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100));
-        rigidBody.setMask(2, true);
+        PolygonCollider collider = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100)).mask(2);
         Dynamics dynamicsBooper = new Dynamics();
-        dynamicsBooper.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.005f)));
-        booper.addComponent(rigidBody);
+        dynamicsBooper.applyForce(new ConstantForce("Gravity", new Vector2f(0, 2)));
+        booper.addComponent(collider);
         booper.addComponent(dynamicsBooper);
 
 

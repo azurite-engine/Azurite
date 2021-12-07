@@ -51,9 +51,26 @@ public class PolygonCollider extends Component implements Collider {
         this(shape, false);
     }
 
+    public PolygonCollider layer(int... layers) {
+        for (int layer : layers)
+            setLayer(layer, true);
+        return this;
+    }
+
+    public PolygonCollider mask(int... masks) {
+        for (int mask : masks)
+            setMask(mask, true);
+        return this;
+    }
+
     public void setShape(PrimitiveShape shape) {
         if (shape == null) throw new IllegalArgumentException("The shape of a collider shall not be null");
         this.shape = shape;
+    }
+
+    @Override
+    public void start() {
+        shape.setPosition(position());
     }
 
     @Override

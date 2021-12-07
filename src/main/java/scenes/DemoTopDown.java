@@ -46,7 +46,7 @@ public class DemoTopDown extends Scene {
 
         a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0);
         b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0);
-        t = new Tilesystem(this, a, b, 31, 15, 200, 200);
+        t = new Tilesystem(a, b, 31, 15, 200, 200, new int[]{2});
 
         trRes = new GameObject("", new Vector2f(0, 0), -20); //scale 100 for no image remove
 
@@ -60,17 +60,14 @@ public class DemoTopDown extends Scene {
         booperAnimation.nextAnimation("idle", -1);
         booper.addComponent(booperRenderer);
         booper.addComponent(booperAnimation);
-        PolygonCollider booperBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100));
-        booperBody.setMask(2, true);
+        PolygonCollider booperBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100)).mask(2);
         booper.addComponent(booperBody);
 
 
-                //PLAYER
+        //PLAYER
         player = new GameObject("Player", new Vector2f(600, 600), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
-        PolygonCollider playerBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100));
-        playerBody.setLayer(2, true);
-        playerBody.setMask(2, true);
+        PolygonCollider playerBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100)).layer(2).mask(2);
         player.addComponent(playerBody);
         player.addComponent(CollisionHandlers.unpassablePolygonCollider(playerBody));
         player.addComponent(new SpriteRenderer(a.getSprite(132), new Vector2f(100)));

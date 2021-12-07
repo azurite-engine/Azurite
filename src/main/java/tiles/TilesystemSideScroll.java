@@ -27,7 +27,7 @@ public class TilesystemSideScroll {
 
     int w, h;
 
-    public TilesystemSideScroll(Spritesheet s, int xTiles, int yTiles, int width, int height, GameObject c) {
+    public TilesystemSideScroll(Spritesheet s, int xTiles, int yTiles, int width, int height, GameObject c, int[] layers) {
         sheet = s;
         gameObjects = new GameObject[xTiles][yTiles];
         m = new MapHandler(xTiles, yTiles, 30);
@@ -41,8 +41,7 @@ public class TilesystemSideScroll {
                 gameObjects[x][y] = new GameObject("Tile " + i, new Vector2f(x * width, y * height), 0);
 
                 if (m.getMap()[x][y] == 1) {
-                    //gameObjects[x][y].addComponent(new AABB());
-                    gameObjects[x][y].addComponent(new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, width, height)));
+                    gameObjects[x][y].addComponent(new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, width, height)).layer(layers));
                     gameObjects[x][y].addComponent(new SpriteRenderer(s.getSprite(
                             Utils.randomInt(0, 6) == 0 ? 11 : Utils.randomInt(1, 5)
 

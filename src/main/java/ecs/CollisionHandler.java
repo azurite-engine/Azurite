@@ -22,7 +22,11 @@ public abstract class CollisionHandler extends Component {
     }
 
     private void checkCollision(Collider other) {
+        //test layer/mask
         if (collider.canCollideWith(other)) {
+            //test boundingsphere for quickly detecting no collision
+            if(!collider.getShape().boundingSphere().intersection(other.getShape().boundingSphere())) return;
+            //do actual collision detection
             CollisionInformation ci = collider.detectCollision(other);
             if (ci.collision())
                 collision(other, ci);

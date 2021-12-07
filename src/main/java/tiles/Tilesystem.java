@@ -5,7 +5,6 @@ import ecs.PolygonCollider;
 import ecs.SpriteRenderer;
 import org.joml.Vector2f;
 import physics.collision.Shapes;
-import scene.Scene;
 import util.Utils;
 
 public class Tilesystem {
@@ -33,7 +32,7 @@ public class Tilesystem {
     // hilt of blade = 87
     // should be 48
 
-    public Tilesystem(Scene scene, Spritesheet a, Spritesheet b, int xTiles, int yTiles, int width, int height) {
+    public Tilesystem(Spritesheet a, Spritesheet b, int xTiles, int yTiles, int width, int height, int[] layers) {
 
 
         gameObjects = new GameObject[xTiles][yTiles];
@@ -51,8 +50,8 @@ public class Tilesystem {
                     gameObjects[x][y].addComponent(new SpriteRenderer(a.getSprite(
                             getAt(x, y, 31)
                     ), new Vector2f(width, height)));
-                    if (getAt(x, y, 31) == 1) {
-                        gameObjects[x][y].addComponent(new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, width, height)));
+                    if (y == 0 || x == 0 || y == yTiles-1 || x == xTiles-1) {
+                        gameObjects[x][y].addComponent(new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, width, height)).layer(layers));
                     }
                 } else if (getAt(x, y, 31) >= 256) {
                     gameObjects[x][y].addComponent(new SpriteRenderer(b.getSprite(
