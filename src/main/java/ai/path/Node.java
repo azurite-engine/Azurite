@@ -3,7 +3,6 @@ package ai.path;
 import java.util.List;
 
 /**
- * <h1>Azurite</h1>
  * A {@link Node} describes a single node of a finite graph and does knows all paths to its neighbors.
  * It is a container for any external position data for using in a {@link Map} for a pathfinding algorithm.
  *

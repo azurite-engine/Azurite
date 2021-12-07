@@ -3,7 +3,6 @@ package ai.statemachine;
 import java.util.function.Function;
 
 /**
- * <h1>Azurite</h1>
  * Represents a transition inside a {@link StateMachine}.
  *
  * @author Juyas

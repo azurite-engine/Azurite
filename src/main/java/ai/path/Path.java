@@ -1,7 +1,6 @@
 package ai.path;
 
 /**
- * <h1>Azurite</h1>
  * Describes a path from one node to another with a fixed path cost value.
  * This path is considered a direct path for the pathfinding algorithm.
  *
