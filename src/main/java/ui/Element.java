@@ -337,7 +337,7 @@ public abstract class Element {
      *
      * @return the z-index
      */
-    public float zIndex() {
+    public int zIndex() {
         return zIndex;
     }
 

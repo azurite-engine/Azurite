@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <h1>Azurite</h1>
  * Used to render sprites, which are rendered as {@code Primitive.QUAD}s
  * with textures. This should be used to render any renderable {@code gameObject}.
  *

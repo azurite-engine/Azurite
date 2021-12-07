@@ -25,7 +25,7 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
      */
     @Override
     protected Shader createShader() {
-        return Assets.getShader("src/assets/shaders/default.glsl");
+        return Assets.getShader("src/assets/shaders/ui.glsl");
     }
 
     /**
@@ -50,18 +50,15 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
         // This is here so that all renderers can have different cameras OR no cameras at all
         shader.uploadMat4f("uProjection", Engine.window().currentScene().camera().getProjectionMatrix());
         shader.uploadMat4f("uView", Engine.window().currentScene().camera().getViewMatrix());
-
-        shader.uploadInt("uLightmap", 8);
     }
 
     /**
      *
      * @param r UIComponentRenderer
      */
-
     public void add(ElementRenderer r) {
         if (r != null) {
-            addComponentRenderer(r);
+            addElementRenderer(r);
         }
     }
 
@@ -88,23 +85,21 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
     }
 
     /**
-     * Adds the SpriteRenderer to a single batch, and creates a new batch if their is no space.
+     * Adds the ElementRenderer to a single batch, and creates a new batch if their is no space.
      *
-     * @param elementRenderer SpriteRenderer: The SpriteRenderer component to be added
+     * @param elementRenderer elementRenderer: The ElementRenderer to be added
      */
-    protected void addComponentRenderer (ElementRenderer elementRenderer) {
+    protected void addElementRenderer(ElementRenderer elementRenderer) {
         for (UIRenderBatch batch : batches) {
-            if (batch.addComponentRenderer(elementRenderer)) {
-                return;
-            }
+            if (batch.addElementRenderer(elementRenderer)) return;
         }
-        // If unable to add to previous batch, create a new one
-        //TODO this
-//        UIRenderBatch newBatch = new UIRenderBatch(MAX_BATCH_SIZE, componentRenderer.zIndex());
-//        newBatch.setRenderer(this);
-//        newBatch.start();
-//        batches.add(newBatch);
-//        newBatch.addComponentRenderer(componentRenderer);
+
+        UIRenderBatch newBatch = new UIRenderBatch(MAX_BATCH_SIZE, elementRenderer.zIndex());
+        newBatch.setRenderer(this);
+        newBatch.start();
+        batches.add(newBatch);
+        newBatch.addElementRenderer(elementRenderer);
+
         Collections.sort(batches);
     }
 }

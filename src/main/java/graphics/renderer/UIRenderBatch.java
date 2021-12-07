@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * <h1>Azurite</h1>
  * Used to render UIComponentRenderers, which are rendered as {@code Primitive.QUAD}s
  * with textures.
  *
@@ -134,7 +133,7 @@ public class UIRenderBatch extends RenderBatch {
      * @param elementRenderer componentRenderer to be added
      * @return if the componentRenderer was successfully added to the batch
      */
-    public boolean addComponentRenderer(ElementRenderer elementRenderer) {
+    public boolean addElementRenderer(ElementRenderer elementRenderer) {
         // If the batch already contains the componentRenderer don't add it to any other batch
         if (elementRenderers.contains(elementRenderer)) return true;
 

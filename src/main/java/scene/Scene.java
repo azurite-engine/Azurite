@@ -3,6 +3,8 @@ package scene;
 import components.GameObject;
 import components.RigidBody;
 import components.StaticCollider;
+import ui.Element;
+import ui.ElementRenderer;
 import ui.Text;
 import graphics.Camera;
 import graphics.Texture;
@@ -83,17 +85,20 @@ public abstract class Scene {
     private final List<GameObject> gameObjects = new LinkedList<>();
     private final List<Collider> staticColliders = new LinkedList<>();
     private final List<Collider> bodyColliders = new LinkedList<>();
+    private final List<Text> texts = new ArrayList<>();
+    private final List<ElementRenderer> uiElements = new ArrayList<>();
+
     public DefaultRenderer renderer = new DefaultRenderer();
     public LightmapRenderer lightmapRenderer = new LightmapRenderer();
     public DebugRenderer debugRenderer = new DebugRenderer();
     public TextRenderer textRenderer = new TextRenderer();
     public UIRenderer uiRenderer = new UIRenderer();
+
     protected Camera camera;
     protected ForwardToTexture forwardToScreen;
     private List<Renderer<?>> rendererRegistry = new LinkedList<>();
     private boolean debugMode = false;
     private boolean active = false;
-    private ArrayList<Text> uiObjects = new ArrayList<>();
 
     public boolean isActive() {
         return active;
@@ -181,16 +186,19 @@ public abstract class Scene {
         rendererRegistry.forEach(Renderer::clean);
     }
 
-    // The following methods shouldn't be overridden. For this, added final keyword
-
     public final void startUi () {
         uiRenderer.init();
         textRenderer.init();
+
+        for (ElementRenderer e : uiElements) {
+            e.start();
+        }
     }
 
     /**
      * Loops through all gameobjects already in the scene and calls their start methods.
      */
+    // TODO not called? find out why
     public final void startGameObjects() {
         for (GameObject gameObject : gameObjects) {
             gameObject.start();
@@ -273,27 +281,28 @@ public abstract class Scene {
     /**
      * Loops through all the gameObjects in the scene and calls their update methods.
      */
-    public void updateGameObjects() {
+    public void updateGameObjects () {
         for (GameObject go : gameObjects) {
             go.update(Engine.deltaTime());
         }
     }
 
-    public void render() {
+    public void render () {
         rendererRegistry.forEach(Renderer::render);
         lightmapRenderer.render();
         lightmapRenderer.bindLightmap();
         renderer.render();
+
     }
 
-    public void debugRender() {
+    public void debugRender () {
         if (debugMode) this.debugRenderer.render();
     }
 
     /**
      * Initialize all renderers
      */
-    public void initRenderers() {
+    public void initRenderers () {
         debugRenderer.init();
         lightmapRenderer.init();
         renderer.init();
@@ -301,17 +310,25 @@ public abstract class Scene {
         forwardToScreen.init();
     }
 
-    public void addUiObject (Text t) {
-        uiObjects.add(t);
+    public void addText (Text t) {
+        texts.add(t);
+    }
+
+    public void addUIElement (ElementRenderer e) {
+        uiElements.add(e);
     }
 
     public final void textRender() {
         textRenderer.render();
+        uiRenderer.render();
     }
 
     public void updateUI () {
-        for (Text i : uiObjects) {
-            i.update();
+        for (ElementRenderer e : uiElements) {
+            e.update();
+        }
+        for (Text t : texts) {
+            t.update();
         }
     }
 

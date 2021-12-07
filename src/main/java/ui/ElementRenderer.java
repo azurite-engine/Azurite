@@ -98,6 +98,7 @@ public class ElementRenderer extends Element {
         this.lastLocation.y = getY();
     }
 
+
     /**
      * Update method called every frame by parent
      *
