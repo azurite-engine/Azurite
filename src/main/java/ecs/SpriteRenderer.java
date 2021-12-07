@@ -89,6 +89,7 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> {
     @Override
     public void start() {
         this.lastLocation = position();
+        isDirty = true;
     }
 
     /**
@@ -98,7 +99,7 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> {
      */
     @Override
     public void update(float dt) {
-        isDirty = position().equals(this.lastLocation);
+        if (!position().equals(this.lastLocation)) markDirty();
         this.lastLocation = position();
     }
 

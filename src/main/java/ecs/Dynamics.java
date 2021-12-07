@@ -30,11 +30,6 @@ public class Dynamics extends Component {
      * @return the current directional velocity
      */
     public final Vector2f velocity() {
-        //reset velocity
-        velocity.set(0, 0);
-        //recalculate velocity
-        for (Force f : forces)
-            velocity.add(f.direction());
         return velocity;
     }
 
@@ -61,9 +56,17 @@ public class Dynamics extends Component {
     @Override
     public void update(float dt) {
         super.update(dt);
+
+        //reset velocity
+        velocity.set(0, 0);
+        //update dynamics & recalculate velocity
         for (Force f : forces) {
             f.update(dt);
+            velocity.add(f.direction());
         }
+
+        //apply dynamics
+        setPosition(position().add(velocity()));
     }
 
 

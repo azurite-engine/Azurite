@@ -70,7 +70,7 @@ public class DemoTopDown extends Scene {
         player.addComponent(new SpriteRenderer(a.getSprite(132), new Vector2f(100)));
         Dynamics dynamics = new Dynamics();
         player.addComponent(dynamics);
-        player.addComponent(new CharacterController(CharacterController.standardTopDown(dynamics), 3));
+        player.addComponent(CharacterController.standardTopDown(dynamics, 5));
 
         greenLight = new GameObject("Green light", new Vector2f(3315, 300), 3);
         greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));

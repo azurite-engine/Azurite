@@ -62,6 +62,16 @@ public abstract class Component implements Comparable<Component> {
         return gameObject.getReadOnlyPosition();
     }
 
+    /**
+     * Shortcut to overwrite the current position of the parent gameobject.
+     *
+     * @return the current position of the parent gameobject
+     */
+    protected void setPosition(Vector2f position) {
+        gameObject.getPositionData()[0] = position.x;
+        gameObject.getPositionData()[1] = position.y;
+    }
+
     //this method is primarily used to keep all components in order to update them properly
     @Override
     public int compareTo(Component o) {
@@ -76,6 +86,7 @@ public abstract class Component implements Comparable<Component> {
 
     public enum ComponentOrder {
         PRE_CALC(0),
+        INPUT(5),
         TRANSFORM(10),
         POST_TRANSFORM(20),
         DRAW(30),

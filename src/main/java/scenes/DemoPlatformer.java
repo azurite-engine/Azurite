@@ -57,7 +57,7 @@ public class DemoPlatformer extends Scene {
         player.addComponent(dynamics);
         player.addComponent(playerBody);
         player.addComponent(new SpriteRenderer(a.getSprite(132), new Vector2f(100)));
-        player.addComponent(new CharacterController(CharacterController.standardPlatformer(dynamics), 1));
+        player.addComponent(CharacterController.standardPlatformer(dynamics, 5));
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
 
         booper = new GameObject("Booper", new Vector2f(800, 800), 2);
