@@ -1,10 +1,9 @@
 package tiles;
 
 import ecs.GameObject;
+import ecs.PolygonCollider;
 import ecs.SpriteRenderer;
-import ecs.StaticCollider;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import physics.collision.Shapes;
 import scene.Scene;
 import util.Utils;
@@ -46,14 +45,14 @@ public class Tilesystem {
         for (int y = 0; y < yTiles; y++) {
             for (int x = 0; x < xTiles; x++) {
 
-                gameObjects[x][y] = new GameObject("Tile " + i, new Vector3f(x * width, y * height, 0), 0);
+                gameObjects[x][y] = new GameObject("Tile " + i, new Vector2f(x * width, y * height), 0);
 
                 if (getAt(x, y, 31) <= 255 && getAt(x, y, 31) >= 0) {
                     gameObjects[x][y].addComponent(new SpriteRenderer(a.getSprite(
                             getAt(x, y, 31)
                     ), new Vector2f(width, height)));
                     if (getAt(x, y, 31) == 1) {
-                        gameObjects[x][y].addComponent(new StaticCollider(Shapes.axisAlignedRectangle(0, 0, width, height), 2));
+                        gameObjects[x][y].addComponent(new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, width, height)));
                     }
                 } else if (getAt(x, y, 31) >= 256) {
                     gameObjects[x][y].addComponent(new SpriteRenderer(b.getSprite(
@@ -70,8 +69,8 @@ public class Tilesystem {
     }
 
     public int[] getIndex(int worldX, int worldY) {
-        int x = (int) worldX / w;
-        int y = (int) worldY / h;
+        int x = worldX / w;
+        int y = worldY / h;
 
         return new int[]{x, y};
     }

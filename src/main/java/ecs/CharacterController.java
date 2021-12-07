@@ -20,12 +20,12 @@ public class CharacterController extends Component {
 
 
     public CharacterController(Consumer<CharacterController> handler, float speedModifier) {
+        super(ComponentOrder.TRANSFORM);
         this.speedModifier = speedModifier;
         this.changeInputEvent = handler;
-        this.order = SpriteRenderer.ORDER - 5;
     }
 
-    public static Consumer<CharacterController> standardPlatformer(RigidBody body) {
+    public static Consumer<CharacterController> standardPlatformer(Dynamics body) {
         return new Consumer<CharacterController>() {
             Vector2f lastDirection = new Vector2f(0, 0);
 
@@ -51,7 +51,7 @@ public class CharacterController extends Component {
         };
     }
 
-    public static Consumer<CharacterController> standardTopDown(RigidBody body) {
+    public static Consumer<CharacterController> standardTopDown(Dynamics body) {
         return new Consumer<CharacterController>() {
             Vector2f lastDirection = new Vector2f(0, 0);
 

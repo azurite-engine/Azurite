@@ -6,7 +6,6 @@ import graphics.Camera;
 import graphics.Color;
 import graphics.Texture;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import physics.collision.Shapes;
 import physics.force.ConstantForce;
 import postprocess.BloomEffect;
@@ -50,26 +49,28 @@ public class DemoPlatformer extends Scene {
         c = new Spritesheet(Assets.getTexture("src/assets/images/platformer.png"), 8, 8, 26, 0);
         t = new TilesystemSideScroll(c, 31, 15, 100, 100, player);
 
-        player = new GameObject( "Player", new Vector3f(600, 600, 0), 2);
-        player.addComponent(new PointLight(new Color(250, 255, 181), 30));
-
-        RigidBody playerBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 1);
+        player = new GameObject("Player", new Vector2f(600, 600), 2);
+        PolygonCollider playerBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100));
         playerBody.setMask(2, true);
-        playerBody.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.010f)));
+        Dynamics dynamics = new Dynamics();
+        dynamics.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.010f)));
+        player.addComponent(dynamics);
         player.addComponent(playerBody);
         player.addComponent(new SpriteRenderer(a.getSprite(132), new Vector2f(100)));
-        player.addComponent(new CharacterController(CharacterController.standardPlatformer(playerBody), 1));
-        player.getRawLocation().z = 90;
+        player.addComponent(new CharacterController(CharacterController.standardPlatformer(dynamics), 1));
+        player.addComponent(new PointLight(new Color(250, 255, 181), 30));
 
-        booper = new GameObject( "Booper", new Vector3f(800, 800, 0), 2);
+        booper = new GameObject("Booper", new Vector2f(800, 800), 2);
         booper.addComponent(new SpriteRenderer(a.getSprite(150), new Vector2f(100)));
         booper.addComponent(new PointLight(new Color(255, 153, 102), 30));
         //TODO not done yet
 
-        RigidBody rigidBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 2);
-        rigidBody.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.005f)));
+        PolygonCollider rigidBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100));
         rigidBody.setMask(2, true);
+        Dynamics dynamicsBooper = new Dynamics();
+        dynamicsBooper.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.005f)));
         booper.addComponent(rigidBody);
+        booper.addComponent(dynamicsBooper);
 
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
@@ -84,7 +85,7 @@ public class DemoPlatformer extends Scene {
         text.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS());
 
         // camera.smoothFollow(player.getRawTransform());
-        camera.smoothFollow(player.getReadOnlyLocation());
+        camera.smoothFollow(player.getReadOnlyPosition());
 
     }
 

@@ -1,7 +1,6 @@
 package physics.collision;
 
-import ecs.RigidBody;
-import ecs.StaticCollider;
+import ecs.PolygonCollider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,19 +15,22 @@ import physics.collision.shape.ShapeType;
  */
 public class ColliderTest {
 
-    RigidBody rigidBody;
-    StaticCollider staticCollider;
+    PolygonCollider rigidBody;
+    PolygonCollider staticCollider;
 
     @Before
     public void setUp() throws Exception {
-        rigidBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), new int[]{0}, new int[]{0, 1, 2, 3, 4, 5}, 10.0f);
-        staticCollider = new StaticCollider(Shapes.axisAlignedRectangle(0, 0, 10, 10), 5);
+        rigidBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100));
+        rigidBody.setLayer(0, true);
+        rigidBody.setMask(5, true);
+        staticCollider = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 10, 10));
+        staticCollider.setLayer(5, true);
     }
 
     @Test
     public void getCollisionShape() {
-        Assert.assertEquals(ShapeType.QUADRILATERAL, rigidBody.getCollisionShape().type());
-        Assert.assertEquals(ShapeType.QUADRILATERAL, staticCollider.getCollisionShape().type());
+        Assert.assertEquals(ShapeType.QUADRILATERAL, rigidBody.getShape().type());
+        Assert.assertEquals(ShapeType.QUADRILATERAL, staticCollider.getShape().type());
     }
 
     @Test
@@ -45,14 +47,14 @@ public class ColliderTest {
 
     @Test
     public void mask() {
-        Assert.assertEquals(0b111111000000000, rigidBody.mask());
+        Assert.assertEquals(0b000001000000000, rigidBody.mask());
         Assert.assertEquals(0b000000000000000, staticCollider.mask());
     }
 
     @Test
     public void hasMask() {
         for (int i = 0; i < 14; i++) {
-            Assert.assertEquals(i <= 5, rigidBody.hasMask(i));
+            Assert.assertEquals(i == 5, rigidBody.hasMask(i));
             Assert.assertFalse(staticCollider.hasMask(i));
         }
     }

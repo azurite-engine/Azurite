@@ -7,7 +7,6 @@ import graphics.Texture;
 import input.Keyboard;
 import input.Keys;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import physics.collision.Shapes;
 import postprocess.BloomEffect;
 import postprocess.PostProcessStep;
@@ -49,10 +48,10 @@ public class DemoTopDown extends Scene {
         b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0);
         t = new Tilesystem(this, a, b, 31, 15, 200, 200);
 
-        trRes = new GameObject("", new Vector3f(0, 0, 0), -20); //scale 100 for no image remove
+        trRes = new GameObject("", new Vector2f(0, 0), -20); //scale 100 for no image remove
 
         //BOOPER
-        booper = new GameObject("Booper", new Vector3f(800, 800, 0), 2);
+        booper = new GameObject("Booper", new Vector2f(800, 800), 2);
         booperLight = new PointLight(new Color(255, 153, 102), 30);
         booper.addComponent(booperLight);
         SpriteRenderer booperRenderer = new SpriteRenderer(a.getSprite(132), new Vector2f(100));
@@ -63,15 +62,17 @@ public class DemoTopDown extends Scene {
         this.booper.addComponent(booperAnimation);
 
         //PLAYER
-        player = new GameObject("Player", new Vector3f(600, 600, 0), 2);
+        player = new GameObject("Player", new Vector2f(600, 600), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
-        RigidBody playerBody = new RigidBody(Shapes.axisAlignedRectangle(0, 0, 100, 100), 1);
+        PolygonCollider playerBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100));
         playerBody.setMask(2, true);
         player.addComponent(playerBody);
         player.addComponent(new SpriteRenderer(a.getSprite(132), new Vector2f(100)));
-        player.addComponent(new CharacterController(CharacterController.standardTopDown(playerBody), 3));
+        Dynamics dynamics = new Dynamics();
+        player.addComponent(dynamics);
+        player.addComponent(new CharacterController(CharacterController.standardTopDown(dynamics), 3));
 
-        greenLight = new GameObject("Green light", new Vector3f(3315, 300, 0), 3);
+        greenLight = new GameObject("Green light", new Vector2f(3315, 300), 3);
         greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));
 
         bloom = new BloomEffect(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
@@ -87,7 +88,7 @@ public class DemoTopDown extends Scene {
         //this is not clean:
         //player.getRawTransform().addRotation(1);
 
-        camera.smoothFollow(player.getReadOnlyLocation());
+        camera.smoothFollow(player.getReadOnlyPosition());
         if (Keyboard.getKeyDown(Keys.AZ_KEY_SPACE)) {
 //            if (added) {
 //                booper.removeComponent(PointLight.class);

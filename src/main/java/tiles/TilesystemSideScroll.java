@@ -1,10 +1,9 @@
 package tiles;
 
 import ecs.GameObject;
+import ecs.PolygonCollider;
 import ecs.SpriteRenderer;
-import ecs.StaticCollider;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import physics.collision.Shapes;
 import scene.Scene;
 import util.Utils;
@@ -39,11 +38,11 @@ public class TilesystemSideScroll {
 
         for (int x = 0; x < xTiles; x++) {
             for (int y = 0; y < yTiles; y++) {
-                gameObjects[x][y] = new GameObject("Tile " + i, new Vector3f(x * width, y * height, 0), 0);
+                gameObjects[x][y] = new GameObject("Tile " + i, new Vector2f(x * width, y * height), 0);
 
                 if (m.getMap()[x][y] == 1) {
                     //gameObjects[x][y].addComponent(new AABB());
-                    gameObjects[x][y].addComponent(new StaticCollider(Shapes.axisAlignedRectangle(0, 0, width, height), 2));
+                    gameObjects[x][y].addComponent(new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, width, height)));
                     gameObjects[x][y].addComponent(new SpriteRenderer(s.getSprite(
                             Utils.randomInt(0, 6) == 0 ? 11 : Utils.randomInt(1, 5)
 

@@ -88,7 +88,7 @@ public class Camera {
     /**
      * Smoothly center the camera on to a transform
      */
-    public void smoothFollow(Vector3f c) {
+    public void smoothFollow(Vector2f c) {
 
         float smoothing = 0.045f;
         Vector2f desiredPosition = new Vector2f(c.x - Window.getWidth() / 2f, c.y - Window.getHeight() / 2f);

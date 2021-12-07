@@ -1,8 +1,6 @@
-package scene; 
+package scene;
 
 import ecs.GameObject;
-import ecs.RigidBody;
-import ecs.StaticCollider;
 import ecs.Text;
 import graphics.Camera;
 import graphics.Texture;
@@ -10,7 +8,6 @@ import graphics.renderer.*;
 import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
 import physics.collision.Collider;
-import physics.collision.CollisionInformation;
 import postprocess.ForwardToTexture;
 import postprocess.PostProcessStep;
 import util.Engine;
@@ -133,32 +130,6 @@ public abstract class Scene {
     }
 
     /**
-     * Do a collision check for the specific collider with all known rigidBodies and staticColliders.
-     * If there is a collision, the given object will receive calls to {@link Collider#handleCollision(Collider, CollisionInformation)}.
-     *
-     * @param collider the object to check whether is collides with anything
-     */
-    public void checkCollision(Collider collider) {
-        if (collider == null) return; //ensure that the given collider is not null
-        checkCollision(collider, bodyColliders);
-        checkCollision(collider, staticColliders);
-    }
-
-    private void checkCollision(Collider body, List<Collider> colliders) {
-        for (Collider other : colliders) {
-            if (other == body) continue;
-            if (!body.canCollideWith(other)) continue;
-            if (!body.getCollisionShape().boundingSphere().intersection(other.getCollisionShape().boundingSphere()))
-                continue;
-            CollisionInformation info = body.doesCollideWith(other);
-            if (info.collision()) {
-                body.handleCollision(other, info);
-                body.resetCollision();
-            }
-        }
-    }
-
-    /**
      * Apply post processing to a texture
      *
      * @param texture input texture
@@ -200,19 +171,7 @@ public abstract class Scene {
     }
 
     public final void updateGameObject(GameObject gameObject, boolean insertion) {
-        StaticCollider staticCollider = gameObject.getComponent(StaticCollider.class);
-        if (staticCollider != null && !staticColliders.contains(staticCollider)) {
-            if (insertion)
-                staticColliders.add(staticCollider);
-            else staticColliders.remove(staticCollider);
-        } else {
-            RigidBody rigidBody = gameObject.getComponent(RigidBody.class);
-            if (rigidBody != null && !bodyColliders.contains(rigidBody)) {
-                if (insertion)
-                    bodyColliders.add(rigidBody);
-                else bodyColliders.remove(rigidBody);
-            }
-        }
+        //TODO
     }
 
     /**

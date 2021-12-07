@@ -1,14 +1,12 @@
 package ecs;
- 
+
 import graphics.Color;
 import graphics.RenderableComponent;
 import graphics.Sprite;
 import graphics.Texture;
 import graphics.renderer.DefaultRenderBatch;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
-import physics.LocationSensitive;
 import util.Assets;
 import util.Utils;
 
@@ -24,16 +22,15 @@ import static graphics.Color.WHITE;
  * @author Gabe
  */
 
-public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> implements LocationSensitive {
-
-    public static final int ORDER = 100;
+public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> {
 
     private Vector4f color = new Color(255, 100, 100, 255).toNormalizedVec4f();
 
     private Sprite sprite;
 
-    private Vector3f lastLocation;
+    private Vector2f lastLocation;
     private Vector2f size;
+    private float rotation;
     private boolean isDirty; // Dirty flag, tells renderer to redraw if object components have changed
 
     /**
@@ -46,7 +43,6 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
         this.sprite = new Sprite(null);
         this.isDirty = true;
         this.size = size;
-        this.order = ORDER;
     }
 
     /**
@@ -60,7 +56,6 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
         this.sprite = new Sprite(null);
         this.isDirty = true;
         this.size = size;
-        this.order = ORDER;
     }
 
     /**
@@ -74,7 +69,6 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;
         this.size = size;
-        this.order = ORDER;
     }
 
     /**
@@ -87,7 +81,6 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;
         this.size = size;
-        this.order = ORDER;
     }
 
     /**
@@ -95,7 +88,7 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
      */
     @Override
     public void start() {
-        this.lastLocation = gameObject.getReadOnlyLocation();
+        this.lastLocation = position();
     }
 
     /**
@@ -105,18 +98,8 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> impl
      */
     @Override
     public void update(float dt) {
-
-    }
-
-    @Override
-    public void update(Vector3f changedLocationData) {
-        this.lastLocation = changedLocationData;
-        isDirty = true;
-    }
-
-    @Override
-    public boolean transformingObject() {
-        return false;
+        isDirty = position().equals(this.lastLocation);
+        this.lastLocation = position();
     }
 
     @Override
