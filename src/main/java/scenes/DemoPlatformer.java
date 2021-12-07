@@ -67,6 +67,7 @@ public class DemoPlatformer extends Scene {
         Dynamics dynamicsBooper = new Dynamics();
         dynamicsBooper.applyForce(new ConstantForce("Gravity", new Vector2f(0, 2)));
         booper.addComponent(collider);
+        booper.addComponent(CollisionHandlers.unpassablePolygonCollider(collider));
         booper.addComponent(dynamicsBooper);
 
 
