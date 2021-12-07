@@ -1,6 +1,6 @@
 package ui.component;
 
-import ui.Component;
+import ui.Element;
 import util.Observable;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
  * @version 09.11.2021
  * @since 09.11.2021
  */
-public class RadioBoxGroup extends Component implements ValueHolder {
+public class RadioBoxGroup extends Element implements ValueHolder {
 
     /**
      * The list of options.

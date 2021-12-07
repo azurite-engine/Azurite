@@ -13,7 +13,7 @@ public class FocusManager {
         return instance;
     }
 
-    private Component focused = null;
+    private Element focused = null;
 
     private FocusManager() {
 
@@ -25,18 +25,18 @@ public class FocusManager {
         }
     }
 
-    private void focus(Component component) {
-        this.focused = component;
-        component.setFocused(true);
+    private void focus(Element element) {
+        this.focused = element;
+        element.setFocused(true);
     }
 
-    public Component getFocusedComponent() {
+    public Element getFocusedComponent() {
         return focused;
     }
 
-    public static void requestFocus(Component component) {
+    public static void requestFocus(Element element) {
         getInstance().unfocus();
-        getInstance().focus(component);
+        getInstance().focus(element);
     }
 
 }

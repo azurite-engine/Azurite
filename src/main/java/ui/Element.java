@@ -12,7 +12,7 @@ import util.Observable;
  * @version 07.11.2021
  * @since 07.11.2021
  */
-public abstract class Component {
+public abstract class Element {
 
     private Container parent;
 
@@ -53,7 +53,7 @@ public abstract class Component {
 
     private int zIndex;
 
-    public Component() {
+    public Element() {
         this.frame = new Frame();
         this.eventHandler = null;
         this.focused = new Observable<>(false);

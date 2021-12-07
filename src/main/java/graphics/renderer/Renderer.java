@@ -4,7 +4,7 @@ import components.GameObject;
 import graphics.Framebuffer;
 import graphics.Shader;
 import graphics.Texture;
-import ui.ComponentRenderer;
+import ui.ElementRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,7 +113,7 @@ public abstract class Renderer<T extends RenderBatch> {
      *
      * @param r UIComponentRenderer to remove
      */
-    public void remove(ComponentRenderer r){}; //FIXME
+    public void remove(ElementRenderer r){}; //FIXME
 
     /**
      * Creates the renderer's shader and framebuffer

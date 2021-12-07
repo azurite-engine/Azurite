@@ -1,7 +1,7 @@
 package ui.component;
 
 import org.lwjgl.glfw.GLFW;
-import ui.Component;
+import ui.Element;
 import ui.EventHandler;
 
 /**
@@ -9,7 +9,7 @@ import ui.EventHandler;
  * @version 07.11.2021
  * @since 07.11.2021
  */
-public class TextField extends Component implements TextHolder {
+public class TextField extends Element implements TextHolder {
 
     /**
      * The text displayed in the TextField, that can be edited.

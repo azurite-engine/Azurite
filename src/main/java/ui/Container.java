@@ -11,7 +11,7 @@ import java.util.List;
  * @version 07.11.2021
  * @since 07.11.2021
  */
-public class Container extends Component {
+public class Container extends Element {
 
     /**
      * The layout of the component.
@@ -20,9 +20,9 @@ public class Container extends Component {
     private ContainerLayout layout;
 
     /**
-     * The list of all contained {@link Component}'s
+     * The list of all contained {@link Element}'s
      */
-    private final List<Component> components;
+    private final List<Element> elements;
 
     /**
      * Ensures on each update, that all contained components are inside this container by their {@link Frame}
@@ -37,13 +37,13 @@ public class Container extends Component {
 
     public Container(ContainerLayout layout) {
         this.layout = layout == null ? new AbsoluteLayout() : layout;
-        this.components = new ArrayList<>();
+        this.elements = new ArrayList<>();
     }
 
     public Container(float x, float y, float w, float h, ContainerLayout layout) {
         getFrame().set(x, y, w, h);
         this.layout = layout == null ? new AbsoluteLayout() : layout;
-        this.components = new ArrayList<>();
+        this.elements = new ArrayList<>();
     }
 
     /**
@@ -69,8 +69,8 @@ public class Container extends Component {
      *
      * @return a list containing all components in this container
      */
-    public List<Component> getComponents() {
-        return components;
+    public List<Element> getElements() {
+        return elements;
     }
 
     /**
@@ -87,26 +87,26 @@ public class Container extends Component {
      * Adds a new component to this container.
      * Note, that a component can only have one parent container and therefore cannot be added to more than one container.
      *
-     * @param component the component to add
+     * @param element the component to add
      * @return whether the component was successfully added; false if and only if the component already has a parent
      */
-    public boolean addComponent(Component component) {
+    public boolean addComponent(Element element) {
         //only one parent allowed
-        if (component.getParent() != null) return false;
-        components.add(component);
-        component.setParent(this);
+        if (element.getParent() != null) return false;
+        elements.add(element);
+        element.setParent(this);
         return true;
     }
 
     /**
      * Removes a component and resets its parent if it has been removed.
      *
-     * @param component the component to remove
+     * @param element the component to remove
      * @return true, if the component was removed, false if the component was not contained in this container
      */
-    public boolean removeComponent(Component component) {
-        boolean remove = components.remove(component);
-        if (remove) component.setParent(null);
+    public boolean removeComponent(Element element) {
+        boolean remove = elements.remove(element);
+        if (remove) element.setParent(null);
         return remove;
     }
 
@@ -114,16 +114,16 @@ public class Container extends Component {
     public void postUpdate() {
         if (!isEnabled()) return;
         layout.updateComponents(this);
-        components.forEach(Component::update);
+        elements.forEach(Element::update);
         if (enclosureInsurance)
-            components.forEach(comp -> comp.getFrame().ensureEnclosure(getFrame()));
+            elements.forEach(comp -> comp.getFrame().ensureEnclosure(getFrame()));
     }
 
     @Override
     public void draw() {
         if (!isVisible()) return;
         super.draw();
-        components.stream().filter(Component::isVisible).forEach(Component::draw);
+        elements.stream().filter(Element::isVisible).forEach(Element::draw);
     }
 
 }

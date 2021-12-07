@@ -1,7 +1,7 @@
 package ui.layout;
 
 import org.joml.Vector2i;
-import ui.Component;
+import ui.Element;
 import ui.Container;
 
 /**
@@ -46,39 +46,39 @@ public class GridLayout implements ContainerLayout {
     @Override
     public void updateComponents(Container container) {
         //this method isnt even near efficiency yet - but lets just leave it like this for now
-        Component[][] grid = new Component[rows][columns];
+        Element[][] grid = new Element[rows][columns];
         int curr = 0;
         for (int i = 0; i < rows * columns; i++) {
-            Component component;
+            Element element;
             int row, col;
             do {
                 //select component
-                component = container.getComponents().get(curr++);
+                element = container.getElements().get(curr++);
                 //if there is info specified in the component, use that
-                if (component.getLayoutInfo() != null) {
+                if (element.getLayoutInfo() != null) {
                     //info has to be vector2i
-                    if (component.getLayoutInfo() instanceof Vector2i) {
-                        Vector2i vector2i = (Vector2i) component.getLayoutInfo();
+                    if (element.getLayoutInfo() instanceof Vector2i) {
+                        Vector2i vector2i = (Vector2i) element.getLayoutInfo();
                         //if info meets gridlayout borders, it can be used
                         if (vector2i.x < rows && vector2i.y < columns) {
                             //if in the targeted cell is already a component,
                             //exchange that and find a new slot for the other one
                             if (grid[vector2i.x][vector2i.y] == null) {
-                                Component tmp = grid[vector2i.x][vector2i.y];
-                                grid[vector2i.x][vector2i.y] = component;
-                                component = tmp;
+                                Element tmp = grid[vector2i.x][vector2i.y];
+                                grid[vector2i.x][vector2i.y] = element;
+                                element = tmp;
                                 break;
-                            } else grid[vector2i.x][vector2i.y] = component;
+                            } else grid[vector2i.x][vector2i.y] = element;
                         } else break;
                     }
                 }
             }
-            while (component.getLayoutInfo() != null || curr >= container.getComponents().size());
+            while (element.getLayoutInfo() != null || curr >= container.getElements().size());
             //if there is no layout info, calculate the next cell based on the fillingOrder and assign component to that
             row = fillingOrder.getRow(i, columns, rows);
             col = fillingOrder.getColumn(i, columns, rows);
             if (grid[row][col] != null) continue;
-            grid[row][col] = component;
+            grid[row][col] = element;
         }
 
         //calculate the cell size based on rows and columns and the size of the parent container
@@ -88,7 +88,7 @@ public class GridLayout implements ContainerLayout {
         //update all components according to the grid
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                Component comp = grid[i][j];
+                Element comp = grid[i][j];
                 comp.getFrame().setX(cw * j);
                 comp.getFrame().setY(ch * i);
                 comp.getFrame().setWidth(cw);

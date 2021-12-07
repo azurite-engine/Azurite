@@ -21,7 +21,7 @@ import static graphics.Color.WHITE;
  * @since 11.9.2021
  */
 
-public class ComponentRenderer extends Component {
+public class ElementRenderer extends Element {
 
     /**
      * The batch in which this component has been added
@@ -45,7 +45,7 @@ public class ComponentRenderer extends Component {
      *
      * @param color of type JOML Vector4f, range from 0-1
      */
-    public ComponentRenderer(Vector4f color, Vector2f size) {
+    public ElementRenderer(Vector4f color, Vector2f size) {
         this.setColor(color);
         this.sprite = new Sprite(null);
         this.isDirty = true;
@@ -57,7 +57,7 @@ public class ComponentRenderer extends Component {
      *
      * @param color of type Color, range from 0-255
      */
-    public ComponentRenderer(Color color, Vector2f size) {
+    public ElementRenderer(Color color, Vector2f size) {
         // Note that type Color is normalized below in setColor()
         this.setColor(color.toNormalizedVec4f());
         this.sprite = new Sprite(null);
@@ -71,7 +71,7 @@ public class ComponentRenderer extends Component {
      *
      * @param sprite
      */
-    public ComponentRenderer(Sprite sprite, Vector2f size) {
+    public ElementRenderer(Sprite sprite, Vector2f size) {
         this.sprite = sprite;
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;
@@ -83,7 +83,7 @@ public class ComponentRenderer extends Component {
      *
      * @param path to the image (ie. "src/assets/images/pepper.png")
      */
-    public ComponentRenderer(String path, Vector2f size) {
+    public ElementRenderer(String path, Vector2f size) {
         this.sprite = new Sprite(Assets.getTexture(path));
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;

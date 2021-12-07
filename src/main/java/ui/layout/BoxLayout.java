@@ -1,6 +1,6 @@
 package ui.layout;
 
-import ui.Component;
+import ui.Element;
 import ui.Container;
 import ui.Frame;
 
@@ -27,11 +27,11 @@ public class BoxLayout implements ContainerLayout {
     @Override
     public void updateComponents(Container container) {
         float value = orientation == Orientation.VERTICAL ? container.getHeight() : container.getWidth();
-        List<Component> components = container.getComponents();
-        int size = components.size();
+        List<Element> elements = container.getElements();
+        int size = elements.size();
         float compSize = value / size;
         for (int i = 0; i < size; i++) {
-            Frame frame = components.get(i).getFrame();
+            Frame frame = elements.get(i).getFrame();
             if (orientation == Orientation.VERTICAL) {
                 frame.setWidth(container.getWidth());
                 frame.setHeight(compSize);

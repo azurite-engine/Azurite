@@ -1,7 +1,7 @@
 package ui.component;
 
 import ui.Alignment;
-import ui.Component;
+import ui.Element;
 import util.Utils;
 
 /**
@@ -9,7 +9,7 @@ import util.Utils;
  * @version 09.11.2021
  * @since 09.11.2021
  */
-public class ProgressBar extends Component implements ValueHolder {
+public class ProgressBar extends Element implements ValueHolder {
 
     /**
      * current state of the ProgressBar between 0 and 1

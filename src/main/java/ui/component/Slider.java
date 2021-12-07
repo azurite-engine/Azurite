@@ -1,7 +1,7 @@
 package ui.component;
 
 import ui.Alignment;
-import ui.Component;
+import ui.Element;
 import util.Observable;
 import util.Utils;
 
@@ -13,7 +13,7 @@ import util.Utils;
  * @version 09.11.2021
  * @since 09.11.2021
  */
-public class Slider extends Component implements ValueHolder {
+public class Slider extends Element implements ValueHolder {
 
     /**
      * the maximum and minimum of the slider

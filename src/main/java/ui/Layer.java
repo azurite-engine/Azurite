@@ -13,17 +13,17 @@ import java.util.List;
 public class Layer {
 
     private boolean active;
-    private final List<Component> components;
+    private final List<Element> elements;
     private final Frame layerFrame;
 
     public Layer() {
-        this.components = new ArrayList<>();
+        this.elements = new ArrayList<>();
         this.active = true;
         this.layerFrame = new Frame();
     }
 
     public Layer(float x, float y, float width, float height) {
-        this.components = new ArrayList<>();
+        this.elements = new ArrayList<>();
         this.active = true;
         this.layerFrame = new Frame(x, y, width, height);
     }
@@ -31,15 +31,15 @@ public class Layer {
     public void update() {
         if (!active) return;
         //first make sure all top level components are enclosed before updating
-        components.forEach(comp -> comp.getFrame().ensureEnclosure(layerFrame));
-        components.forEach(Component::update);
-        if (!layerFrame.isInFrame(Mouse.mouse) || components.stream().noneMatch(Component::isMouseOnThis))
+        elements.forEach(comp -> comp.getFrame().ensureEnclosure(layerFrame));
+        elements.forEach(Element::update);
+        if (!layerFrame.isInFrame(Mouse.mouse) || elements.stream().noneMatch(Element::isMouseOnThis))
             CursorManager.resetCursor();
     }
 
     public void draw() {
         if (!active) return;
-        components.stream().filter(Component::isVisible).forEach(Component::draw);
+        elements.stream().filter(Element::isVisible).forEach(Element::draw);
     }
 
     public Frame getLayerFrame() {
@@ -55,12 +55,12 @@ public class Layer {
         return active;
     }
 
-    public void registerComponent(Component component) {
-        this.components.add(component);
+    public void registerComponent(Element element) {
+        this.elements.add(element);
     }
 
-    public void unregisterComponent(Component component) {
-        this.components.remove(component);
+    public void unregisterComponent(Element element) {
+        this.elements.remove(element);
     }
 
 }

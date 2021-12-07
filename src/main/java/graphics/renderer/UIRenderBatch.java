@@ -5,7 +5,7 @@ import graphics.ShaderDatatype;
 import graphics.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import ui.ComponentRenderer;
+import ui.ElementRenderer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
  * @see UIRenderer
  */
 public class UIRenderBatch extends RenderBatch {
-    private final List<ComponentRenderer> componentRenderers;
+    private final List<ElementRenderer> elementRenderers;
 
     /**
      * Create a default type render batch
@@ -29,7 +29,7 @@ public class UIRenderBatch extends RenderBatch {
      */
     UIRenderBatch(int maxBatchSize, int zIndex) {
         super(maxBatchSize, zIndex, Primitive.QUAD, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT);
-        this.componentRenderers = new ArrayList<>();
+        this.elementRenderers = new ArrayList<>();
         this.primitiveVertices = new float[vertexCount * 4];
     }
 
@@ -41,13 +41,13 @@ public class UIRenderBatch extends RenderBatch {
      */
     @Override
     protected void loadVertexProperties(int index, int offset) {
-        ComponentRenderer componentRenderer = this.componentRenderers.get(index);
-        Vector4f color = componentRenderer.getColorVector();
-        Vector2f[] textureCoordinates = componentRenderer.getTexCoords();
+        ElementRenderer elementRenderer = this.elementRenderers.get(index);
+        Vector4f color = elementRenderer.getColorVector();
+        Vector2f[] textureCoordinates = elementRenderer.getTexCoords();
 
         int textureID;
-        if (componentRenderer.getTexture() != null)
-            textureID = addTexture(componentRenderer.getTexture());
+        if (elementRenderer.getTexture() != null)
+            textureID = addTexture(elementRenderer.getTexture());
         else
             textureID = 0;
 
@@ -70,8 +70,8 @@ public class UIRenderBatch extends RenderBatch {
             }
 
             // Load position
-            Vector2f loc = new Vector2f(componentRenderer.getX(), componentRenderer.getY());
-            Vector2f scale = componentRenderer.getSize();
+            Vector2f loc = new Vector2f(elementRenderer.getX(), elementRenderer.getY());
+            Vector2f scale = elementRenderer.getSize();
 
             float scaledX = (xAdd * scale.x);
             float scaledY = (yAdd * scale.y);
@@ -119,11 +119,11 @@ public class UIRenderBatch extends RenderBatch {
      */
     @Override
     public void updateBuffer() {
-        for (int i = 0; i < componentRenderers.size(); i++) {
-            if (componentRenderers.get(i).isDirty()) {
+        for (int i = 0; i < elementRenderers.size(); i++) {
+            if (elementRenderers.get(i).isDirty()) {
                 // Create map for the dirty quad starting at its offset and ending in its length
                 super.updateBuffer(i);
-                componentRenderers.get(i).setClean();
+                elementRenderers.get(i).setClean();
             }
         }
     }
@@ -131,25 +131,25 @@ public class UIRenderBatch extends RenderBatch {
     /**
      * Adds a componentRenderer to this batch
      *
-     * @param componentRenderer componentRenderer to be added
+     * @param elementRenderer componentRenderer to be added
      * @return if the componentRenderer was successfully added to the batch
      */
-    public boolean addComponentRenderer(ComponentRenderer componentRenderer) {
+    public boolean addComponentRenderer(ElementRenderer elementRenderer) {
         // If the batch already contains the componentRenderer don't add it to any other batch
-        if (componentRenderers.contains(componentRenderer)) return true;
+        if (elementRenderers.contains(elementRenderer)) return true;
 
         // If the batch still has room, and is at the same z index as the componentRenderer, then add it to the batch
-        if (hasRoomLeft() && zIndex() == componentRenderer.zIndex()) {
-            Texture tex = componentRenderer.getTexture();
+        if (hasRoomLeft() && zIndex() == elementRenderer.zIndex()) {
+            Texture tex = elementRenderer.getTexture();
             if (tex == null || (hasTexture(tex) || hasTextureRoom())) {
                 // Get the index and add the renderObject
-                componentRenderers.add(componentRenderer);
+                elementRenderers.add(elementRenderer);
 //                componentRenderer.setLocation(this, componentRenderers.size() - 1);
 
                 // Add properties to local vertices array
-                load(componentRenderers.size() - 1);
+                load(elementRenderers.size() - 1);
 
-                if (componentRenderers.size() >= this.maxBatchSize) {
+                if (elementRenderers.size() >= this.maxBatchSize) {
                     this.hasRoom = false;
                 }
                 return true;
@@ -161,24 +161,24 @@ public class UIRenderBatch extends RenderBatch {
     /**
      * Removes the given componentRenderer from the batch
      *
-     * @param componentRenderer componentRenderer to be removed
+     * @param elementRenderer componentRenderer to be removed
      */
-    public void removeSprite(ComponentRenderer componentRenderer) {
+    public void removeSprite(ElementRenderer elementRenderer) {
         // Confirm this componentRenderer has been added to this batch
-        if (componentRenderer.getBatch() == this) {
+        if (elementRenderer.getBatch() == this) {
             // Remove the componentRenderer from the list
-            int index = componentRenderers.indexOf(componentRenderer);
-            componentRenderers.remove(index);
+            int index = elementRenderers.indexOf(elementRenderer);
+            elementRenderers.remove(index);
 
             // Set Indices of the componentRenderers to the new indices
-            for (int i = index; i < componentRenderers.size(); i++) {
-                ComponentRenderer r = componentRenderers.get(i);
+            for (int i = index; i < elementRenderers.size(); i++) {
+                ElementRenderer r = elementRenderers.get(i);
                 r.setLocation(this, i);
                 r.markDirty();
             }
 
             // Call Remove with the componentRenderers index to remove it from the data buffer
-            remove(componentRenderer.getIndex());
+            remove(elementRenderer.getIndex());
         }
     }
 }

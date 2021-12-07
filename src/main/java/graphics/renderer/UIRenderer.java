@@ -3,7 +3,7 @@ package graphics.renderer;
 import graphics.Framebuffer;
 import graphics.Graphics;
 import graphics.Shader;
-import ui.ComponentRenderer;
+import ui.ElementRenderer;
 import util.Assets;
 import util.Engine;
 
@@ -59,7 +59,7 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
      * @param r UIComponentRenderer
      */
 
-    public void add(ComponentRenderer r) {
+    public void add(ElementRenderer r) {
         if (r != null) {
             addComponentRenderer(r);
         }
@@ -71,7 +71,7 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
      * @param r UIComponentRenderer
      */
     @Override
-    public void remove(ComponentRenderer r) {
+    public void remove(ElementRenderer r) {
         if (r != null) {
             r.markDirty();
             r.remove();
@@ -90,11 +90,11 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
     /**
      * Adds the SpriteRenderer to a single batch, and creates a new batch if their is no space.
      *
-     * @param componentRenderer SpriteRenderer: The SpriteRenderer component to be added
+     * @param elementRenderer SpriteRenderer: The SpriteRenderer component to be added
      */
-    protected void addComponentRenderer (ComponentRenderer componentRenderer) {
+    protected void addComponentRenderer (ElementRenderer elementRenderer) {
         for (UIRenderBatch batch : batches) {
-            if (batch.addComponentRenderer(componentRenderer)) {
+            if (batch.addComponentRenderer(elementRenderer)) {
                 return;
             }
         }

@@ -1,13 +1,13 @@
 package ui.component;
 
-import ui.Component;
+import ui.Element;
 
 /**
  * @author Juyas
  * @version 07.11.2021
  * @since 07.11.2021
  */
-public class Label extends Component implements TextHolder {
+public class Label extends Element implements TextHolder {
 
     /**
      * The text displayed on the label.
