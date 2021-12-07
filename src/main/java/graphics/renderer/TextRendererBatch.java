@@ -1,22 +1,12 @@
 package graphics.renderer; 
 
-import fonts.GlyphRenderer;
+import ui.fonts.GlyphRenderer;
 import graphics.*;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import util.Transform;
-import util.Logger;
-import util.Utils;
 
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
-import java.util.Objects;
-
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15.glBindBuffer;
-import static org.lwjgl.opengl.GL15.glUnmapBuffer;
-import static org.lwjgl.opengl.GL30.*;
 
 /**
  * @author Asher Haun

@@ -1,4 +1,4 @@
-package ui.component;
+package ui.element;
 
 import ui.Element;
 import util.Observable;

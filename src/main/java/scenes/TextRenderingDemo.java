@@ -3,7 +3,7 @@ package scenes;
 import components.GameObject;
 import components.SpriteRenderer;
 import ui.Text;
-import fonts.Font;
+import ui.fonts.Font;
 import graphics.Camera;
 import graphics.Color;
 import graphics.Window;

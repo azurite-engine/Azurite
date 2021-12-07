@@ -2,7 +2,7 @@ package scenes;
 
 import components.GameObject;
 import components.SpriteRenderer;
-import fonts.Font;
+import ui.fonts.Font;
 import graphics.Camera;
 import graphics.Color;
 import input.Mouse;
@@ -14,7 +14,7 @@ import ui.Container;
 import ui.CursorManager;
 import ui.EventHandler;
 import ui.Layer;
-import ui.component.Button;
+import ui.element.Button;
 import ui.layout.BoxLayout;
 import util.Engine;
 

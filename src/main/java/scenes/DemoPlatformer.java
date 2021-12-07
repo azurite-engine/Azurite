@@ -1,7 +1,7 @@
 package scenes;
 
 import components.*;
-import fonts.Font;
+import ui.fonts.Font;
 import graphics.Camera;
 import graphics.Color;
 import graphics.Texture;
@@ -41,7 +41,7 @@ public class DemoPlatformer extends Scene {
 
     public void awake() {
 
-        f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 18, true);
+        f = new Font("src/assets/ui.fonts/OpenSans-Regular.ttf", 18, true);
         text = new Text("Azurite Engine demo", f, Color.RED, 15, 5, 100, true, false);
 
         camera = new Camera();

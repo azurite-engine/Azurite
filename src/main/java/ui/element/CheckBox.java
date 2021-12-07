@@ -1,4 +1,4 @@
-package ui.component;
+package ui.element;
 
 import org.lwjgl.glfw.GLFW;
 import ui.Element;

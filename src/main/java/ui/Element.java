@@ -1,6 +1,6 @@
 package ui;
 
-import fonts.Font;
+import ui.fonts.Font;
 import graphics.Color;
 import input.Mouse;
 import org.lwjgl.glfw.GLFW;
@@ -28,7 +28,7 @@ public abstract class Element {
     private EventHandler eventHandler;
 
     /**
-     * The font used for text in this component.
+     * The font used for text in this element.
      * If the font is null - the parent font is used instead
      */
     private Font font;

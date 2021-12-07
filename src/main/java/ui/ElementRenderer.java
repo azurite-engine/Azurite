@@ -91,7 +91,7 @@ public class ElementRenderer extends Element {
     }
 
     /**
-     * Initialize the Component, called once after creation by the parent GameObject.
+     * Initialize the Component, called once after creation.
      */
     public void start() {
         this.lastLocation.x = getX();

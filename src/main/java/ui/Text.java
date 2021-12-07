@@ -1,7 +1,7 @@
 package ui;
-import fonts.Font;
-import fonts.Glyph;
-import fonts.GlyphRenderer;
+import ui.fonts.Font;
+import ui.fonts.Glyph;
+import ui.fonts.GlyphRenderer;
 import graphics.Color;
 import graphics.HSLColor;
 import graphics.renderer.TextRenderer;
@@ -13,8 +13,6 @@ import util.Logger;
 import util.Utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.regex.Pattern;
 
 /**
@@ -39,7 +37,7 @@ public class Text {
 
     /**
      * @param string the text to be rendered.
-     * @param font the {@link fonts.Font} object that contains your preferred .ttf font file.
+     * @param font the {@link ui.fonts.Font} object that contains your preferred .ttf font file.
      * @param color the {@link graphics.Color} object that contains your prefered RGBA color.
      * @param x the X position of the Text object.
      * @param y the Y position of the Text object.
@@ -69,14 +67,14 @@ public class Text {
 
         generateGlyphs();
         Engine.scenes().currentScene().textRenderer.add(this);
-        Engine.scenes().currentScene().addUiObject(this);
+        Engine.scenes().currentScene().addText(this);
 
         currentBatch = glyphRenderers.get(0).getBatch();
     }
 
     /**
      * @param string the text to be rendered.
-     * @param font the {@link fonts.Font} object that contains your preferred .ttf font file.
+     * @param font the {@link ui.fonts.Font} object that contains your preferred .ttf font file.
      * @param color the {@link graphics.Color} object that contains your prefered RGBA color.
      * @param x the X position of the Text object.
      * @param y the Y position of the Text object.
