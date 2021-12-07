@@ -72,7 +72,7 @@ public abstract class Element {
     //------------ ------------ update function ------------ ------------
 
     public final void update() {
-        //to reduce redundant calculation, it gets calculated each update once
+        //to reduce redundant calculation, it gets- calculated each update once
         this.mouseOverThis = CollisionUtil.inRect(Mouse.mouse, getX(), getY(), getWidth(), getHeight());
         if (isMouseOnThis())
             CursorManager.requestCursor(cursor);

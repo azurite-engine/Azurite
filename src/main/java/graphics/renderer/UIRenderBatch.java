@@ -143,7 +143,7 @@ public class UIRenderBatch extends RenderBatch {
             if (tex == null || (hasTexture(tex) || hasTextureRoom())) {
                 // Get the index and add the renderObject
                 elementRenderers.add(elementRenderer);
-//                componentRenderer.setLocation(this, componentRenderers.size() - 1);
+                elementRenderer.setLocation(this, elementRenderers.size() - 1);
 
                 // Add properties to local vertices array
                 load(elementRenderers.size() - 1);

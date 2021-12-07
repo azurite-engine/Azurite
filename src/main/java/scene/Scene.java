@@ -82,12 +82,14 @@ public abstract class Scene {
 
     private static int sceneCounter = 0;
     private final int sceneId = sceneCounter++;
+
     private final List<GameObject> gameObjects = new LinkedList<>();
     private final List<Collider> staticColliders = new LinkedList<>();
     private final List<Collider> bodyColliders = new LinkedList<>();
     private final List<Text> texts = new ArrayList<>();
     private final List<ElementRenderer> uiElements = new ArrayList<>();
 
+    private List<Renderer<?>> rendererRegistry = new LinkedList<>();
     public DefaultRenderer renderer = new DefaultRenderer();
     public LightmapRenderer lightmapRenderer = new LightmapRenderer();
     public DebugRenderer debugRenderer = new DebugRenderer();
@@ -96,7 +98,6 @@ public abstract class Scene {
 
     protected Camera camera;
     protected ForwardToTexture forwardToScreen;
-    private List<Renderer<?>> rendererRegistry = new LinkedList<>();
     private boolean debugMode = false;
     private boolean active = false;
 

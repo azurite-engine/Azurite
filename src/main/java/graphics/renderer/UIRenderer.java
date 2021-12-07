@@ -54,12 +54,11 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
 
     /**
      *
-     * @param r UIComponentRenderer
+     * @param e UI ElementRenderer
      */
-    public void add(ElementRenderer r) {
-        if (r != null) {
-            addElementRenderer(r);
-        }
+    public void add(ElementRenderer e) {
+        if (e == null) return;
+        addElementRenderer(e);
     }
 
     /**
