@@ -53,7 +53,7 @@ public class DemoPlatformer extends Scene {
         PolygonCollider playerBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100));
         playerBody.setMask(2, true);
         Dynamics dynamics = new Dynamics();
-        dynamics.applyForce(new ConstantForce("Gravity", new Vector2f(0, 0.010f)));
+        dynamics.applyForce(new ConstantForce("Gravity", new Vector2f(0, 1)));
         player.addComponent(dynamics);
         player.addComponent(playerBody);
         player.addComponent(new SpriteRenderer(a.getSprite(132), new Vector2f(100)));

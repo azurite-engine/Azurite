@@ -1,10 +1,12 @@
 package ecs;
 
 import org.joml.Vector2f;
+import physics.collision.Collider;
 import scene.Scene;
 import util.Engine;
 import util.OrderPreservingList;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -162,7 +164,7 @@ public class GameObject {
      * @param componentClass of component (ie. "SpriteRenderer.class")
      * @return Component of type passed as param is contained in GameObject
      */
-    public <T extends Component> T getComponent(Class<T> componentClass) {
+    public <T> T getComponent(Class<T> componentClass) {
         for (Component c : components) {
             if (componentClass.isAssignableFrom(c.getClass())) {
                 try {
@@ -177,18 +179,41 @@ public class GameObject {
     }
 
     /**
+     * Takes a parameter of a class that extends component and returns it if it is contained in the GameObject's list of components.
+     *
+     * @param componentClass of component (ie. "SpriteRenderer.class")
+     * @return all components of type passed as param is contained in GameObject
+     */
+    public <T> List<T> getComponents(Class<T> componentClass) {
+        List<T> comps = new ArrayList<>(components.size());
+        for (Component c : components) {
+            if (componentClass.isAssignableFrom(c.getClass())) {
+                try {
+                    T cast = componentClass.cast(c);
+                    comps.add(cast);
+                } catch (ClassCastException e) {
+                    System.err.println("[ERROR] Failed to cast component.");
+                    e.printStackTrace();
+                }
+            }
+        }
+        return comps;
+    }
+
+    /**
      * Takes a parameter of a class that extends component and removed it from the GameObject if it is contained in the list of components.
      *
      * @param componentClass of component (ie. "SpriteRenderer.class")
      */
-    public <T extends Component> void removeComponent(Class<T> componentClass) {
+    public <T> void removeComponent(Class<T> componentClass) {
         for (int i = 0; i < components.size(); i++) {
             Component c = components.get(i);
             if (componentClass.isAssignableFrom(c.getClass())) {
                 c.remove();
                 c.gameObject = null;
                 components.remove(i);
-                parentScene.updateGameObject(this, false);
+                if (c instanceof Collider)
+                    getParentScene().unregisterCollider(this);
                 return;
             }
         }
@@ -211,8 +236,8 @@ public class GameObject {
                 getParentScene().addToRenderers(this);
             }
         }
-        //update collision maps in scene
-        parentScene.updateGameObject(this, true);
+        if (c instanceof Collider)
+            getParentScene().registerCollider(this);
         return this;
     }
 

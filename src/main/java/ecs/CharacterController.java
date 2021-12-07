@@ -35,7 +35,7 @@ public class CharacterController extends Component {
                 if (up()) direction.add(0, -speedModifier);
                 //nothing on down input
                 if (left()) direction.add(-speedModifier, 0);
-                if (right()) direction.add(-speedModifier, 0);
+                if (right()) direction.add(speedModifier, 0);
                 System.out.println(direction);
                 return true;
             }

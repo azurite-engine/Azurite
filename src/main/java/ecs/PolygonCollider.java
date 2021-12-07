@@ -36,9 +36,19 @@ public class PolygonCollider extends Component implements Collider {
      */
     private short collisionMask;
 
-    public PolygonCollider(PrimitiveShape shape) {
-        super(ComponentOrder.TRANSFORM);
+    /**
+     * @see Collider#passive()
+     */
+    private final boolean passive;
+
+    public PolygonCollider(PrimitiveShape shape, boolean passive) {
+        super(ComponentOrder.POST_TRANSFORM);
         setShape(shape);
+        this.passive = passive;
+    }
+
+    public PolygonCollider(PrimitiveShape shape) {
+        this(shape, false);
     }
 
     public void setShape(PrimitiveShape shape) {
@@ -91,4 +101,13 @@ public class PolygonCollider extends Component implements Collider {
         this.collisionMask = (short) (active ? (this.collisionMask | Utils.encode(layer)) : this.collisionMask & ~Utils.encode(layer));
     }
 
+    @Override
+    public boolean passive() {
+        return passive;
+    }
+
+    @Override
+    public void update(float dt) {
+        shape.setPosition(position());
+    }
 }

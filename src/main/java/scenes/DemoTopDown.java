@@ -58,15 +58,21 @@ public class DemoTopDown extends Scene {
         SpriteAnimation booperAnimation = new SpriteAnimation(booperRenderer, a.getSprite(132), 1);
         booperAnimation.setAnimation("idle", Arrays.asList(a.getSprite(132), a.getSprite(150)));
         booperAnimation.nextAnimation("idle", -1);
-        this.booper.addComponent(booperRenderer);
-        this.booper.addComponent(booperAnimation);
+        booper.addComponent(booperRenderer);
+        booper.addComponent(booperAnimation);
+        PolygonCollider booperBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100));
+        booperBody.setMask(2, true);
+        booper.addComponent(booperBody);
 
-        //PLAYER
+
+                //PLAYER
         player = new GameObject("Player", new Vector2f(600, 600), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
         PolygonCollider playerBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100));
+        playerBody.setLayer(2, true);
         playerBody.setMask(2, true);
         player.addComponent(playerBody);
+        player.addComponent(CollisionHandlers.unpassablePolygonCollider(playerBody));
         player.addComponent(new SpriteRenderer(a.getSprite(132), new Vector2f(100)));
         Dynamics dynamics = new Dynamics();
         player.addComponent(dynamics);

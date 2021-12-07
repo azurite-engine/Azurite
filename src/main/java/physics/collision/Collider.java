@@ -87,4 +87,13 @@ public interface Collider {
      */
     void setMask(int layer, boolean active);
 
+    /**
+     * Defines the behaviour of this collider.
+     * A passive collider will never get checked against others colliders,
+     * however any collider might get checked against it.
+     *
+     * @return whether this collider is passive
+     */
+    boolean passive();
+
 }
