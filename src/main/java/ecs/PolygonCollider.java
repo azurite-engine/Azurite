@@ -26,7 +26,7 @@ public class PolygonCollider extends Component implements Collider {
     /**
      * A short representing a binary series of 0s and 1s.
      * 0 means not present, 1 means present.
-     * Beeing present means, beeing present on the collision layer
+     * Being present means being present on the collision layer
      * and allow collision with all objects having a present mask on this layer.
      */
     private short collisionLayer;
@@ -34,8 +34,8 @@ public class PolygonCollider extends Component implements Collider {
     /**
      * A short representing a binary series of 0s and 1s.
      * 0 means not present, 1 means present.
-     * Beeing present means, beeing able to collide with all objects present on that layer,
-     * while its not required to be present on the layer.
+     * Being present means being able to collide with all objects present on that layer,
+     * while it's not required to be present on the layer.
      */
     private short collisionMask;
 
