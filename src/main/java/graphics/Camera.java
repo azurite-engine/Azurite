@@ -1,9 +1,9 @@
-package graphics; 
+package graphics;
 
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import util.Utils;
+import util.MathUtils;
 
 /**
  * <h1>Azurite</h1>
@@ -92,9 +92,9 @@ public class Camera {
 
         float smoothing = 0.045f;
         Vector2f desiredPosition = new Vector2f(c.x - Window.getWidth() / 2f, c.y - Window.getHeight() / 2f);
-        Vector2f smoothedPosition = new Vector2f(Utils.lerp(position.x, desiredPosition.x, smoothing), Utils.lerp(position.y, desiredPosition.y, smoothing));
+        Vector2f smoothedPosition = new Vector2f(MathUtils.lerp(position.x, desiredPosition.x, smoothing), MathUtils.lerp(position.y, desiredPosition.y, smoothing));
         // If you notice black bars while the camera is panning, it is because floating point positions can cause discrepencies, unfortunately casing the lerp to an int makes the motion a little  bit choppy
-        if (Utils.dist(desiredPosition, position) < 10) {
+        if (MathUtils.dist(desiredPosition, position) < 10) {
             position = desiredPosition;
         }
         position = smoothedPosition;

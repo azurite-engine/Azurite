@@ -15,7 +15,7 @@ import tiles.Spritesheet;
 import tiles.Tilesystem;
 import util.Assets;
 import util.Engine;
-import util.Utils;
+import util.MathUtils;
 
 import java.util.Arrays;
 
@@ -83,10 +83,10 @@ public class DemoTopDown extends Scene {
 
     public void update() {
         super.update();
-        player.getComponent(PointLight.class).intensity = Utils.map((float) Math.sin(Engine.millisRunning() / 600), -1, 1, 100, 140);
+        player.getComponent(PointLight.class).intensity = MathUtils.map((float) Math.sin(Engine.millisRunning() / 600), -1, 1, 100, 140);
         if (booper.getComponent(PointLight.class) != null)
-            booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
-        greenLight.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
+            booper.getComponent(PointLight.class).intensity = MathUtils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
+        greenLight.getComponent(PointLight.class).intensity = MathUtils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 
         //this is not clean:
         //player.getRawTransform().addRotation(1);

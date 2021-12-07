@@ -8,7 +8,7 @@ import graphics.renderer.DefaultRenderBatch;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import util.Assets;
-import util.Utils;
+import util.MathUtils;
 
 import static graphics.Color.WHITE;
 
@@ -186,7 +186,7 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> {
      * @param a alpha/opacity
      */
     public void setAlpha(float a) {
-        color.w = Utils.map(a, 0, 255, 0, 1);
+        color.w = MathUtils.map(a, 0, 255, 0, 1);
     }
 
     /**

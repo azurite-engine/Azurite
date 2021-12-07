@@ -6,7 +6,7 @@ import ecs.SpriteRenderer;
 import org.joml.Vector2f;
 import physics.collision.Shapes;
 import scene.Scene;
-import util.Utils;
+import util.MathUtils;
 
 /**
  * <h1>Azurite</h1>
@@ -43,15 +43,15 @@ public class TilesystemSideScroll {
                 if (m.getMap()[x][y] == 1) {
                     gameObjects[x][y].addComponent(new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, width, height)).layer(layers));
                     gameObjects[x][y].addComponent(new SpriteRenderer(s.getSprite(
-                            Utils.randomInt(0, 6) == 0 ? 11 : Utils.randomInt(1, 5)
+                            MathUtils.randomInt(0, 6) == 0 ? 11 : MathUtils.randomInt(1, 5)
 
                     ), new Vector2f(width, height)));
 
                 } else {
                     if (m.getMap()[x][y] != 1 && m.getMap()[x][y - 1] == 1) {
-                        if (Utils.randomInt(0, 5) == 1) {
+                        if (MathUtils.randomInt(0, 5) == 1) {
                             gameObjects[x][y].addComponent(new SpriteRenderer(s.getSprite(19), new Vector2f(width, height))); // hanging vines
-                        } else if (Utils.randomInt(0, 5) == 1) {
+                        } else if (MathUtils.randomInt(0, 5) == 1) {
                             gameObjects[x][y].addComponent(new SpriteRenderer(s.getSprite(25), new Vector2f(width, height)));
                         }
                     }

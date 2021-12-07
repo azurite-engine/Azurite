@@ -5,7 +5,7 @@ import ecs.PolygonCollider;
 import ecs.SpriteRenderer;
 import org.joml.Vector2f;
 import physics.collision.Shapes;
-import util.Utils;
+import util.MathUtils;
 
 public class Tilesystem {
 
@@ -55,7 +55,7 @@ public class Tilesystem {
                     }
                 } else if (getAt(x, y, 31) >= 256) {
                     gameObjects[x][y].addComponent(new SpriteRenderer(b.getSprite(
-                            (int) Utils.map(getAt(x, y, 31), 256, 256 * 2 - 1, 0, 255)
+                            (int) MathUtils.map(getAt(x, y, 31), 256, 256 * 2 - 1, 0, 255)
                     ), new Vector2f(width, height)));
                 }
                 i++;

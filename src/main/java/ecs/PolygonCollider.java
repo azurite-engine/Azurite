@@ -2,9 +2,8 @@ package ecs;
 
 import physics.collision.Collider;
 import physics.collision.CollisionInformation;
-import physics.collision.CollisionUtil;
 import physics.collision.shape.PrimitiveShape;
-import util.Utils;
+import util.MathUtils;
 
 /**
  * @author Juyas
@@ -80,7 +79,7 @@ public class PolygonCollider extends Component implements Collider {
 
     @Override
     public CollisionInformation detectCollision(Collider collider) {
-        return CollisionUtil.gjksmCollision(this.getShape(), collider.getShape());
+        return MathUtils.gjksmCollision(this.getShape(), collider.getShape());
     }
 
     @Override
@@ -100,22 +99,22 @@ public class PolygonCollider extends Component implements Collider {
 
     @Override
     public boolean hasMask(int layer) {
-        return (Utils.encode(layer) & mask()) != 0;
+        return (MathUtils.encode(layer) & mask()) != 0;
     }
 
     @Override
     public boolean isOnLayer(int layer) {
-        return (Utils.encode(layer) & layers()) != 0;
+        return (MathUtils.encode(layer) & layers()) != 0;
     }
 
     @Override
     public void setLayer(int layer, boolean active) {
-        this.collisionLayer = (short) (active ? (layers() | Utils.encode(layer)) : layers() & ~Utils.encode(layer));
+        this.collisionLayer = (short) (active ? (layers() | MathUtils.encode(layer)) : layers() & ~MathUtils.encode(layer));
     }
 
     @Override
     public void setMask(int layer, boolean active) {
-        this.collisionMask = (short) (active ? (this.collisionMask | Utils.encode(layer)) : this.collisionMask & ~Utils.encode(layer));
+        this.collisionMask = (short) (active ? (this.collisionMask | MathUtils.encode(layer)) : this.collisionMask & ~MathUtils.encode(layer));
     }
 
     @Override

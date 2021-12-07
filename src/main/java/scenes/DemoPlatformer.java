@@ -15,7 +15,7 @@ import tiles.Spritesheet;
 import tiles.TilesystemSideScroll;
 import util.Assets;
 import util.Engine;
-import util.Utils;
+import util.MathUtils;
 
 import static graphics.Graphics.setDefaultBackground;
 
@@ -76,8 +76,8 @@ public class DemoPlatformer extends Scene {
 
     public void update() {
         super.update();
-        player.getComponent(PointLight.class).intensity = Utils.map((float) Math.sin(Engine.millisRunning() / 600), -1, 1, 80, 120);
-        booper.getComponent(PointLight.class).intensity = Utils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
+        player.getComponent(PointLight.class).intensity = MathUtils.map((float) Math.sin(Engine.millisRunning() / 600), -1, 1, 80, 120);
+        booper.getComponent(PointLight.class).intensity = MathUtils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 
         text.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS());
 

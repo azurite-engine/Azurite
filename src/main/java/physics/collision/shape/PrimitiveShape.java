@@ -1,8 +1,7 @@
 package physics.collision.shape;
 
 import org.joml.Vector2f;
-import physics.collision.CollisionUtil;
-import util.Utils;
+import util.MathUtils;
 
 /**
  * <h1>Azurite</h1>
@@ -103,7 +102,7 @@ public abstract class PrimitiveShape {
             this.faces = new Face[0];
         } else {
             //ensures that all relative coords are sorted and dereferenced from the original ones
-            this.relatives = Utils.copy(CollisionUtil.convexHull(relatives));
+            this.relatives = MathUtils.copy(MathUtils.convexHull(relatives));
             this.vertices = relatives.length;
             this.absolutes = new Vector2f[this.vertices];
             this.faces = new Face[this.vertices];
@@ -162,8 +161,8 @@ public abstract class PrimitiveShape {
      * In some special cases this might be done quicker in a different way.
      */
     protected final void initSphere() {
-        this.relativeCentroid = CollisionUtil.polygonCentroid(this.relatives);
-        this.boundingSphere = new Circle(relativeCentroid, CollisionUtil.boundingSphere(relativeCentroid, this.relatives));
+        this.relativeCentroid = MathUtils.polygonCentroid(this.relatives);
+        this.boundingSphere = new Circle(relativeCentroid, MathUtils.boundingSphere(relativeCentroid, this.relatives));
     }
 
     /**
@@ -197,8 +196,8 @@ public abstract class PrimitiveShape {
      * @param type        the type of rotation
      * @param point       the optional point to rotate around; if type is not {@link RotationType#AROUND_POINT}, the point can be null
      * @return true, if the rotation was successful
-     * @see Utils#rotateAroundPoint(Vector2f, Vector2f, float)
-     * @see Utils#radian(float)
+     * @see MathUtils#rotateAroundPoint(Vector2f, Vector2f, float)
+     * @see MathUtils#radian(float)
      */
     public final boolean rotateShape(float radianAngle, RotationType type, Vector2f point) {
         //rotating a circle around its center is pointless
@@ -225,11 +224,11 @@ public abstract class PrimitiveShape {
         //rotate all relative vertices if the shape is not a circle
         if (this.type != ShapeType.CIRCLE)
             for (int i = 0; i < vertices; i++) {
-                relatives[i] = Utils.rotateAroundPoint(relatives[i], pointToRotateAround, radianAngle);
+                relatives[i] = MathUtils.rotateAroundPoint(relatives[i], pointToRotateAround, radianAngle);
             }
         //the centeroid does change, if the centroid is not the point to rotate around
         if (type != RotationType.AROUND_CENTER)
-            relativeCentroid = Utils.rotateAroundPoint(relativeCentroid, pointToRotateAround, radianAngle);
+            relativeCentroid = MathUtils.rotateAroundPoint(relativeCentroid, pointToRotateAround, radianAngle);
         //adjust all absolute points
         adjust();
         return true;
@@ -264,7 +263,7 @@ public abstract class PrimitiveShape {
      * @return the point of the shape that is most in the direction of v
      */
     public Vector2f supportPoint(Vector2f v) {
-        return CollisionUtil.maxDotPoint(absolutes, v);
+        return MathUtils.maxDotPoint(absolutes, v);
     }
 
     /**

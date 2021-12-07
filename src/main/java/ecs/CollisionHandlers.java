@@ -3,7 +3,7 @@ package ecs;
 import org.joml.Vector2f;
 import physics.collision.Collider;
 import physics.collision.CollisionInformation;
-import physics.collision.CollisionUtil;
+import util.MathUtils;
 
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ public class CollisionHandlers {
             @Override
             public void collision(Collider environment, CollisionInformation collisionInformation) {
                 //calculate basic repulse vector
-                Optional<Vector2f> optional = CollisionUtil.expandingPolytopeAlgorithm(collider.getShape(), environment.getShape(), (Vector2f[]) collisionInformation.get());
+                Optional<Vector2f> optional = MathUtils.expandingPolytopeAlgorithm(collider.getShape(), environment.getShape(), (Vector2f[]) collisionInformation.get());
                 //well, I cannot react... I guess
                 if(!optional.isPresent()) return;
                 Vector2f repulse = optional.get();
