@@ -79,9 +79,7 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
      * Prepare for rendering. Do anything like setting background here.
      */
     @Override
-    protected void prepare() {
-        Graphics.background(Graphics.defaultBackground);
-    }
+    protected void prepare() {}
 
     /**
      * Adds the ElementRenderer to a single batch, and creates a new batch if their is no space.
