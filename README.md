@@ -52,14 +52,19 @@
 #### BoilerPlate Code:
 ```java
 public class Main extends Scene {
-	
-	public void awake() {		
-		setDefaultBackground(Color.BLACK);
+	public static void main(String[] args) {
+		Engine.init(1920, 1080, "Azurite Engine Demo In Comment", 1.0f);
+		Engine.scenes().switchScene(new Main(), true);
+		Engine.showWindow();
+	}
+
+	public void awake() {
 		camera = new Camera();
+		...
 	}
 
 	public void update() {
-
+		...
 	}
 }
 ```
@@ -67,20 +72,26 @@ public class Main extends Scene {
 #### Simple example with sprites:
 ```java
 public class Main extends Scene {
-	
-	GameObject greenRectangle = new GameObject(new Transform(600, 230, 50, 50), 1);
-	GameObject mario = new GameObject(new Transform(600, 200, 50, 50), 2);
-	
-	public void awake() {	
-		setDefaultBackground(Color.BLACK);
+	GameObject player;
+	Sprite s;
+
+	public static void main(String[] args) {
+		Engine.init(1920, 1080, "Azurite Engine Demo In Comment", 1.0f);
+		Engine.scenes().switchScene(new Main(), true);
+		Engine.showWindow();
+	}
+
+	public void awake() {
 		camera = new Camera();
-		
-		greenRectangle.addComponent(new SpriteRenderer(new Color(0, 255, 0, 255))); // Creates a new green sprite element
-		mario.addComponent(new SpriteRenderer(new Sprite(Assets.getTexture("src/assets/images/marioSprite.png"))));	// Loads the image from the filesystem into a sprite element
+
+		player = new GameObject();
+		s = new Sprite
+		player.addComponent(new SpriteRenderer(s, new Vector2f(100)));
 	}
 
 	public void update() {
-
+		if (Keyboard.getKeyDown(GLFW.GLFW_KEY_SPACE))
+			player.transform.add(new Vector2f(1, 0));
 	}
 }
 ```
@@ -100,7 +111,7 @@ Build gradle, then run the Main scene (located in the scenes package).
 Follow this [link](https://azurite-engine.github.io/Azurite-Docs/tutorials/set-a-project.html) for tutorials on cloning and importing to either Intellj or Eclipse.
 
 ### Documentation
-* [Documentatation](https://azurite-engine.github.io/Azurite-Docs/) (Done but we are still adding stuff to it)
+* [Documentatation](https://azurite-engine.github.io/Azurite-Docs/) (Heavy WIP)
 * [Javadocs](https://azurite-engine.github.io/azurite-javadocs/)
 * [Contributing guidelines](https://github.com/Games-With-Gabe-Community/Azurite/blob/main/CONTRIBUTING.md)
 * [Azurite Code style](https://azurite-engine.github.io/Azurite-Docs/docs/azurite-style.html)
