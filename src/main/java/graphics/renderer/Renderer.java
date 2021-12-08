@@ -1,6 +1,6 @@
 package graphics.renderer; 
 
-import components.GameObject;
+import ecs.GameObject;
 import graphics.Framebuffer;
 import graphics.Shader;
 import graphics.Texture;

@@ -1,7 +1,7 @@
 package graphics.renderer;
 
-import components.GameObject;
-import components.PointLight;
+import ecs.GameObject;
+import ecs.PointLight;
 import graphics.Color;
 import graphics.Framebuffer;
 import graphics.Graphics;
@@ -74,7 +74,7 @@ public class LightmapRenderer extends Renderer<QuadRenderBatch> {
 
         for (int i = 0; i < lights.size(); i++) {
             PointLight light = lights.get(i);
-            lightPositions[i] = new Vector2f(light.lastLocation.x, light.lastLocation.y);
+            lightPositions[i] = new Vector2f(light.gameObject.getPositionData()[0], light.gameObject.getPositionData()[1]);
             lightColors[i] = light.color;
             lightIntensities[i] = light.intensity;
         }

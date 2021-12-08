@@ -1,4 +1,4 @@
-package ui.fonts;
+package fonts;
 
 import ui.Text;
 import graphics.Color;
@@ -6,8 +6,8 @@ import graphics.Texture;
 import graphics.renderer.TextRendererBatch;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
+import util.MathUtils;
 import util.Transform;
-import util.Utils;
 
 import static graphics.Color.BLUE;
 
@@ -148,7 +148,7 @@ public class GlyphRenderer {
      * @param a alpha/opacity
      */
     public void setAlpha (float a) {
-        color.w = Utils.map(a, 0, 255, 0, 1);
+        color.w = MathUtils.map(a, 0, 255, 0, 1);
     }
 
     /**

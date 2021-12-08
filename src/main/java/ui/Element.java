@@ -4,7 +4,8 @@ import ui.fonts.Font;
 import graphics.Color;
 import input.Mouse;
 import org.lwjgl.glfw.GLFW;
-import physics.collision.CollisionUtil;
+
+import util.MathUtils;
 import util.Observable;
 
 /**
@@ -73,7 +74,7 @@ public abstract class Element {
 
     public final void update() {
         //to reduce redundant calculation, it gets- calculated each update once
-        this.mouseOverThis = CollisionUtil.inRect(Mouse.mouse, getX(), getY(), getWidth(), getHeight());
+        this.mouseOverThis = MathUtils.inRect(Mouse.mouse, getX(), getY(), getWidth(), getHeight());
         if (isMouseOnThis())
             CursorManager.requestCursor(cursor);
         if (eventHandler != null)

@@ -7,7 +7,7 @@ package ui.fonts;
 
 import graphics.Texture;
 import org.lwjgl.BufferUtils;
-
+import fonts.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -32,7 +32,7 @@ public class Font {
     /**
      * Contains the glyphs for each char.
      */
-    private final Map<Character, Glyph> glyphs;
+    private final Map<Character, fonts.Glyph> glyphs;
     /**
      * Contains the font texture.
      */
@@ -342,7 +342,7 @@ public class Font {
         return fontHeight;
     }
 
-    public Map<Character, Glyph> getGlyphs () {
+    public Map<Character, fonts.Glyph> getGlyphs () {
         return glyphs;
     }
 

@@ -1,6 +1,6 @@
-package ui.fonts;
+package fonts;
 
-import components.Sprite;
+import graphics.Sprite;
 import graphics.Texture;
 import org.joml.Vector2f;
 

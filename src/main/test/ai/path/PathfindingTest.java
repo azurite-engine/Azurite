@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * <h1>Azurite</h1>
- *
  * @author Juyas
  * @version 14.07.2021
  * @since 14.07.2021

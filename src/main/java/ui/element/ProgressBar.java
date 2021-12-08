@@ -2,7 +2,7 @@ package ui.element;
 
 import ui.Alignment;
 import ui.Element;
-import util.Utils;
+import util.MathUtils;
 
 /**
  * @author Juyas
@@ -45,7 +45,7 @@ public class ProgressBar extends Element implements ValueHolder {
 
     @Override
     public void setValue(float newValue) {
-        this.value = Utils.constrain(newValue, 0, 1);
+        this.value = MathUtils.constrain(newValue, 0, 1);
     }
 
 }

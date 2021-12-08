@@ -1,4 +1,4 @@
-package components;
+package ecs;
 
 import graphics.Sprite;
 
@@ -15,9 +15,9 @@ import java.util.function.Consumer;
  */
 public class SpriteAnimation extends Component {
 
-    private SpriteRenderer renderer;
+    private final SpriteRenderer renderer;
 
-    private HashMap<String, List<Sprite>> animations;
+    private final HashMap<String, List<Sprite>> animations;
     private Sprite baseImage;
     private int currentRepetition = 0;
     private int currentSprite = 0;
@@ -33,11 +33,11 @@ public class SpriteAnimation extends Component {
     };
 
     public SpriteAnimation(SpriteRenderer renderer, Sprite baseImage, float timePerSprite) {
+        super(ComponentOrder.POST_DRAW);
         this.renderer = renderer;
         this.animations = new HashMap<>();
         this.baseImage = baseImage;
         this.timePerSprite = timePerSprite;
-        this.order = SpriteRenderer.ORDER - 1;
     }
 
     public void setAnimation(String name, List<Sprite> sprites) {

@@ -1,7 +1,7 @@
 package graphics.renderer;
 
 import ui.Text;
-import ui.fonts.GlyphRenderer;
+import fonts.GlyphRenderer;
 import graphics.Framebuffer;
 import graphics.Shader;
 import util.Assets;

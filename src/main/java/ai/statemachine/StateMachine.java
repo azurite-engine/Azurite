@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * <h1>Azurite</h1>
  * A flexible implementation of a statemachine.
  * This class can represent a deterministic or non-deterministic statemachine,
  * however the actual transitions will never be random, therefore all statemachines are predictable in their transitions.

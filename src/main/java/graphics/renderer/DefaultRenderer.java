@@ -1,7 +1,7 @@
 package graphics.renderer;
 
-import components.GameObject;
-import components.SpriteRenderer;
+import ecs.GameObject;
+import ecs.SpriteRenderer;
 import graphics.Framebuffer;
 import graphics.Graphics;
 import graphics.Shader;

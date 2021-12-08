@@ -3,8 +3,6 @@ package physics.collision.shape;
 import org.joml.Vector2f;
 
 /**
- * <h1>Azurite</h1>
- * <p>
  * The shape implementation of a line.
  *
  * @author Juyas

@@ -1,7 +1,6 @@
 package ai.statemachine;
 
 /**
- * <h1>Azurite</h1>
  * Defines a state inside a {@link StateMachine} and can basically do anything inside its boundaries.
  *
  * @author Juyas

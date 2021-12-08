@@ -2,7 +2,7 @@ package ui;
 
 import org.joml.Vector2f;
 import org.joml.Vector4f;
-import physics.collision.CollisionUtil;
+import util.MathUtils;
 import util.Observable;
 
 /**
@@ -111,7 +111,7 @@ public class Frame extends Observable<Void> {
     }
 
     public boolean isInFrame(Vector2f coords) {
-        return CollisionUtil.inRect(coords, this.x.getValue(), this.y.getValue(), this.w.getValue(), this.h.getValue());
+        return MathUtils.inRect(coords, this.x.getValue(), this.y.getValue(), this.w.getValue(), this.h.getValue());
     }
 
     @Override

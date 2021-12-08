@@ -1,7 +1,9 @@
-package graphics.renderer; 
+package graphics.renderer;
 
-import ui.fonts.GlyphRenderer;
-import graphics.*;
+import fonts.GlyphRenderer;
+import graphics.Primitive;
+import graphics.ShaderDatatype;
+import graphics.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import util.Transform;

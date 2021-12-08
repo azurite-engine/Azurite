@@ -1,13 +1,10 @@
-package physics.collision;
+package util;
 
 import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
+import physics.collision.CollisionInformation;
 import physics.collision.shape.PrimitiveShape;
 import physics.collision.shape.ShapeType;
-import util.Pair;
-import util.Transform;
-import util.Triple;
-import util.Utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,17 +12,13 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * <h1>Azurite</h1>
- * A util class containing a lot of useful methods to determine collision and some math around that.
- * Important to mention are the algorithms:
- * * GJK
- * * EPA with GJK
+ * An util class containing a lot of useful methods to do maths and physics calculations.
  *
  * @author Juyas
  * @version 19.06.2021
- * @since 19.06.2021
+ * @since 07.12.2021
  */
-public class CollisionUtil {
+public class MathUtils {
 
 
     /**
@@ -297,7 +290,7 @@ public class CollisionUtil {
      * @param pointB the starting point of ray 2
      * @param rayB   the direction and length of ray 2
      * @return the intersection point
-     * @see CollisionUtil#rayCastIntersection(Vector2f, Vector2f, Vector2f, Vector2f)
+     * @see MathUtils#rayCastIntersection(Vector2f, Vector2f, Vector2f, Vector2f)
      */
     public static Optional<Vector2f> rayCastIntersectionPoint(Vector2f pointA, Vector2f rayA, Vector2f pointB, Vector2f rayB) { //x,a,y,b
         return rayCastIntersection(pointA, rayA, pointB, rayB).map(Pair::getLeft);
@@ -413,7 +406,7 @@ public class CollisionUtil {
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(float inX, float inY, float circleX, float circleY, float radius) {
-        return Utils.dist(inX, inY, circleX, circleY) <= radius;
+        return dist(inX, inY, circleX, circleY) <= radius;
     }
 
     /**
@@ -426,7 +419,7 @@ public class CollisionUtil {
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(Vector2f in, float circleX, float circleY, float radius) {
-        return Utils.dist(in.x, in.y, circleX, circleY) <= radius;
+        return dist(in.x, in.y, circleX, circleY) <= radius;
     }
 
     /**
@@ -438,7 +431,7 @@ public class CollisionUtil {
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(Vector2f in, Vector2f circle, float radius) {
-        return Utils.dist(in.x, in.y, circle.x, circle.y) <= radius;
+        return dist(in.x, in.y, circle.x, circle.y) <= radius;
     }
 
     /**
@@ -482,6 +475,208 @@ public class CollisionUtil {
                 inRect(new Vector2f(t1.getX(), t1.getY() + t1.getHeight()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight()) &&
                 inRect(new Vector2f(t1.getX() + t1.getWidth(), t1.getY()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight()) &&
                 inRect(new Vector2f(t1.getX() + t1.getWidth(), t1.getY() + t1.getHeight()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight());
+    }
+
+    /**
+     * Transforms an angle from degree into radian.
+     *
+     * @param degree the angle in degree
+     * @return the radian angle
+     */
+    public static float radian(float degree) {
+        return (float) Math.toRadians(degree);
+    }
+
+    /**
+     * Rotates a point around the origin of the system.
+     *
+     * @param point       the point to rotate
+     * @param radianAngle the radian angle to rotate
+     * @return a new point that is rotated by radianAngle starting from the given point
+     */
+    public static Vector2f rotateAroundOrigin(Vector2f point, float radianAngle) {
+        float cos = (float) Math.cos(radianAngle);
+        float sin = (float) Math.sin(radianAngle);
+        return new Vector2f(point.x * cos - point.y * sin, point.y * cos + point.x * sin);
+    }
+
+    /**
+     * Rotates a point around a given point in the same system.
+     *
+     * @param point          the point to rotate
+     * @param relativeOrigin the point to rotate around
+     * @param radianAngle    the radian angle to rotate
+     * @return a new point that is rotated by radianAngle around the given relativeOrigin point starting from the given point
+     */
+    public static Vector2f rotateAroundPoint(Vector2f point, Vector2f relativeOrigin, float radianAngle) {
+        point = point.sub(relativeOrigin, new Vector2f());
+        float cos = (float) Math.cos(radianAngle);
+        float sin = (float) Math.sin(radianAngle);
+        return new Vector2f(point.x * cos - point.y * sin, point.y * cos + point.x * sin).add(relativeOrigin);
+    }
+
+    /**
+     * Generates a random number from a range of floats.
+     *
+     * @param min Minimum possible output
+     * @param max Maximum possible output
+     * @return returns a random float from the range passed.
+     */
+    public static float random(float min, float max) {
+        return map((float) Math.random(), 0, 1, min, max);
+    }
+
+    /**
+     * Generates a random number from a range of ints.
+     *
+     * @param min Minimum possible output
+     * @param max Maximum possible output
+     * @return returns a random int from the range passed.
+     */
+    public static int randomInt(int min, int max) {
+        return (int) map((float) Math.random(), 0, 1, min, max);
+    }
+
+    /**
+     * This is for people who are too lazy to even import Math, but do want to import util.Utils. ¯\_(ツ)_/¯
+     *
+     * @param x Number to be rounded
+     * @return Returns the rounded number "x".
+     */
+    public static float round(float x) {
+        return Math.round(x);
+    }
+
+    /**
+     * Returns the distance between two sets of X and Y coordinates in the form of "physics.Vector2"s.
+     *
+     * @param pos1 First physics.Vector2 position
+     * @param pos2 Second physics.Vector2 position
+     * @return Returns the distance as a float.
+     */
+    public static float dist(Vector2f pos1, Vector2f pos2) {
+        return (float) Math.hypot(pos1.x - pos2.x, pos1.y - pos2.y);
+    }
+
+    /**
+     * Re-maps a number from one range to another.
+     *
+     * @param value  Number to me re-mapped
+     * @param start1 Lowest number of first range
+     * @param stop1  Highest number of first range
+     * @param start2 Lowest number of second range
+     * @param stop2  Highest number of second range
+     * @return Returns the re-mapped value as a float.
+     */
+    public static float map(float value, float start1, float stop1, float start2, float stop2) {
+        return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
+    }
+
+    /**
+     * Returns the distance between two sets of X and Y coordinates.
+     *
+     * @param x1 First X coordinate
+     * @param y1 First Y coordinate
+     * @param x2 Second X coordinate
+     * @param y2 Second Y coordinate
+     * @return Returns the distance as a float.
+     */
+    public static float dist(float x1, float y1, float x2, float y2) {
+        return (float) Math.hypot(x1 - x2, y1 - y2);
+    }
+
+
+    /**
+     * Takes an integer value clamps/constrains it between a minimum and maximum.
+     *
+     * @param value Input to be constrained
+     * @param min   Minimum possible value
+     * @param max   Maximum possible value
+     * @return Constrained value as an int.
+     */
+    public static int constrain(int value, int min, int max) {
+        return Math.min(Math.max(value, min), max);
+    }
+
+    /**
+     * Takes a float value clamps/constrains it between a minimum and maximum.
+     *
+     * @param value Input to be constrained
+     * @param min   Minimum possible value
+     * @param max   Maximum possible value
+     * @return Constrained value as a float.
+     */
+    public static float constrain(float value, float min, float max) {
+        return Math.min(Math.max(value, min), max);
+    }
+
+    /**
+     * Linearly interpolates between floats by a certain amount.
+     *
+     * @param start starting value
+     * @param end   ending value
+     * @param amt   amount to interpolate (0-1)
+     * @return returns a float that is the lerp of the two values by the amount.
+     */
+    public static float lerp(float start, float end, float amt) {
+        return (1 - amt) * start + amt * end;
+    }
+
+    /**
+     * Encodes all given input into a short.
+     * Note, that the range of Short is 16 bytes and therefore only 0-14 (15 different values) can be encoded.
+     * Any value that is not within this range, will lead to undefined behaviour.
+     *
+     * @param data a list of integers in no particular order
+     * @return the encoded data as a short
+     */
+    public static short encode(int[] data) {
+        short allLayers = 0;
+        for (int layer : data) {
+            allLayers |= 0b100000000000000 >> layer;
+        }
+        return allLayers;
+    }
+
+    /**
+     * Encodes a given input into a short.
+     * Note, that the range of Short is 16 bytes and therefore only 0-14 (15 different values) can be encoded.
+     * Any value that is not within this range, will lead to undefined behaviour.
+     *
+     * @param data the integer in range to encode
+     * @return the encoded data as a short
+     */
+    public static short encode(int data) {
+        return (short) (0b100000000000000 >> data);
+    }
+
+    /**
+     * Make a dereferenced copy of a vector array
+     *
+     * @param original the original array
+     * @return a array containing a copy of each vector
+     */
+    public static Vector2f[] copy(Vector2f[] original) {
+        Vector2f[] copy = new Vector2f[original.length];
+        for (int i = 0; i < copy.length; i++)
+            copy[i] = new Vector2f(original[i]);
+        return copy;
+    }
+
+    /**
+     * Shifts a part of the array to overwrite the given region (fromIndex, toIndex)
+     * FromIndex is INCLUSIVE, ToIndex is EXCLUSIVE
+     *
+     * @param array     the array from which the region has to be removed
+     * @param fromIndex start of the region
+     * @param toIndex   end of the region
+     * @return the new effective length
+     */
+    public static int shiftOverwrite(float[] array, int fromIndex, int toIndex) {
+        int length = array.length;
+        if (fromIndex > toIndex || length <= fromIndex || length < toIndex) return length;
+        System.arraycopy(array, toIndex, array, fromIndex, length - toIndex);
+        return length - (toIndex - fromIndex);
     }
 
 }

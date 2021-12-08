@@ -1,4 +1,4 @@
-package components;
+package ecs;
  
 import graphics.Texture;
 import org.joml.Vector2f;

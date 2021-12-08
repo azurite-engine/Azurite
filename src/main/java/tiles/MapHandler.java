@@ -1,6 +1,6 @@
 package tiles;
 
-import util.Utils;
+import util.MathUtils;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ class MapHandler {
     public int MapHeight = 21;
     public int PercentAreWalls = 50;
     public int[][] Map = new int[MapWidth][MapHeight];
-    int rand = Utils.randomInt(0, 100);
+    int rand = MathUtils.randomInt(0, 100);
 
     public MapHandler(int w, int h, int f) {
         MapWidth = w;
@@ -187,7 +187,7 @@ class MapHandler {
     }
 
     int RandomPercent(int percent) {
-        if (percent >= Utils.random(1, 101)) {
+        if (percent >= MathUtils.random(1, 101)) {
             return 1;
         }
         return 0;

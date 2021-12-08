@@ -1,11 +1,10 @@
 package graphics.renderer;
 
-import components.SpriteRenderer;
+import ecs.SpriteRenderer;
 import graphics.Primitive;
 import graphics.ShaderDatatype;
 import graphics.Texture;
 import org.joml.Vector2f;
-import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ public class DefaultRenderBatch extends RenderBatch {
             }
 
             // Load position
-            Vector3f loc = sprite.gameObject.getReadOnlyLocation();
+            Vector2f loc = sprite.gameObject.getReadOnlyPosition();
 //            Vector2f pos = new Vector2f(loc.x, loc.y);
             Vector2f scale = sprite.getSize();
 

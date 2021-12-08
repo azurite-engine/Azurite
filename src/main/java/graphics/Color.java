@@ -2,7 +2,7 @@ package graphics;
 
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import util.Utils;
+import util.MathUtils;
 
 import java.util.Random;
 
@@ -149,7 +149,7 @@ public class Color {
      * Utility function to Map a color value from range 0-255 to range 0-1
      */
     private float m(float p) {
-        return Utils.map(p, 0, 255, 0, 1);
+        return MathUtils.map(p, 0, 255, 0, 1);
     }
 
     /**
@@ -170,8 +170,8 @@ public class Color {
      * Turn a Color with normalised values to a color with values from 0-255
      */
     public Color fromNormalized() {
-        return new Color(Utils.map(r, 0, 1, 0, 255), Utils.map(g, 0, 1, 0, 255), Utils.map(b, 0, 1, 0, 255),
-                Utils.map(a, 0, 1, 0, 255));
+        return new Color(MathUtils.map(r, 0, 1, 0, 255), MathUtils.map(g, 0, 1, 0, 255), MathUtils.map(b, 0, 1, 0, 255),
+                MathUtils.map(a, 0, 1, 0, 255));
     }
 
     /**

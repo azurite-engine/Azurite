@@ -3,7 +3,6 @@ package physics.collision;
 import physics.collision.shape.PrimitiveShape;
 
 /**
- * <h1>Azurite</h1>
  * Describes an object that can collide with others.
  *
  * @author Juyas
@@ -17,21 +16,7 @@ public interface Collider {
      *
      * @return the shape of the collider
      */
-    PrimitiveShape getCollisionShape();
-
-    /**
-     * Is called if there is a collision with this object.
-     *
-     * @param otherCollider the object that this object collided with
-     * @param info          the result of the collision detection
-     */
-    void handleCollision(Collider otherCollider, CollisionInformation info);
-
-    /**
-     * Called after collision is handled each update cycle.
-     * Can be used to determine a collision duration or collision state.
-     */
-    void resetCollision();
+    PrimitiveShape getShape();
 
     /**
      * Determines whether a collider intersects with another collider IGNORING the collision layers.
@@ -39,7 +24,7 @@ public interface Collider {
      * @param collider the other collider
      * @return an object containing the result of collision detection
      */
-    CollisionInformation doesCollideWith(Collider collider);
+    CollisionInformation detectCollision(Collider collider);
 
     /**
      * Determines whether a collider could potentially intersect with another collider ONLY by their collision layers.
@@ -100,5 +85,14 @@ public interface Collider {
      * @param active whether the mask should enabled (true) or disabled (false)
      */
     void setMask(int layer, boolean active);
+
+    /**
+     * Defines the behaviour of this collider.
+     * A passive collider will never get checked against others colliders,
+     * however any collider might get checked against it.
+     *
+     * @return whether this collider is passive
+     */
+    boolean passive();
 
 }

@@ -1,10 +1,9 @@
 package graphics;
 
-import components.Component;
+import ecs.Component;
 import graphics.renderer.RenderBatch;
 
 /**
- * <h1>Azurite</h1>
  * A Class that represents a component that can be rendered by a specific renderer.
  * This is used to store the exact location of the component in the data buffer for safe removal.
  *
@@ -12,6 +11,11 @@ import graphics.renderer.RenderBatch;
  * @see RenderBatch
  */
 public abstract class RenderableComponent<T extends RenderBatch> extends Component {
+
+    public RenderableComponent() {
+        super(ComponentOrder.DRAW);
+    }
+
     /**
      * The batch in which this component has been added
      */

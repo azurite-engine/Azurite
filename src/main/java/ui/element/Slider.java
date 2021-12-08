@@ -3,7 +3,7 @@ package ui.element;
 import ui.Alignment;
 import ui.Element;
 import util.Observable;
-import util.Utils;
+import util.MathUtils;
 
 /**
  * A bar with a single node on it, that can be slided across the bar.
@@ -47,7 +47,7 @@ public class Slider extends Element implements ValueHolder {
      * @return the current absolute value
      */
     public float getCurrentScale() {
-        return Utils.map(currentScale.getValue(), 0, 1, minScale, maxScale);
+        return MathUtils.map(currentScale.getValue(), 0, 1, minScale, maxScale);
     }
 
     /**
@@ -83,7 +83,7 @@ public class Slider extends Element implements ValueHolder {
      * @param currentScale the current scale
      */
     public void setCurrentScale(float currentScale) {
-        this.currentScale.setValue(Utils.constrain(currentScale, 0, 1));
+        this.currentScale.setValue(MathUtils.constrain(currentScale, 0, 1));
     }
 
     /**
@@ -139,6 +139,6 @@ public class Slider extends Element implements ValueHolder {
 
     @Override
     public void setValue(float newValue) {
-        setCurrentScale(Utils.map(newValue, minScale, maxScale, 0, 1));
+        setCurrentScale(MathUtils.map(newValue, minScale, maxScale, 0, 1));
     }
 }
