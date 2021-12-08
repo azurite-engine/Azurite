@@ -4,8 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * <h1>Azurite</h1>
- *
  * @author Juyas
  * @version 19.07.2021
  * @since 19.07.2021

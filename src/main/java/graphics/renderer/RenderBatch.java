@@ -1,10 +1,10 @@
-package graphics.renderer; 
+package graphics.renderer;
 
 import graphics.Primitive;
 import graphics.ShaderDatatype;
 import graphics.Texture;
 import org.lwjgl.BufferUtils;
-import util.Utils;
+import util.MathUtils;
 
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -226,7 +226,7 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
      * @param index the index
      */
     protected void remove(int index) {
-        Utils.shiftOverwrite(data, getOffset(index), getOffset(index + 1));
+        MathUtils.shiftOverwrite(data, getOffset(index), getOffset(index + 1));
         spriteCount--;
     }
 

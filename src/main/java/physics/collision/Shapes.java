@@ -7,7 +7,6 @@ import physics.collision.shape.Quadrilateral;
 import physics.collision.shape.Triangle;
 
 /**
- * <h1>Azurite</h1>
  * Util methods to create {@link physics.collision.shape.PrimitiveShape} on the fly.
  *
  * @author Juyas

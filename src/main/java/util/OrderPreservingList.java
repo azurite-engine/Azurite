@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * <h1>Azurite</h1>
- * <p>
  * A LinkedList override to create an order-preserving list to improve speed in a special use case: <br>
  * You want to remove and add object from/to a list and
  * keep the elements in the list sorted without having to re-sort each time.

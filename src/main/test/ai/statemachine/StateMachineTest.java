@@ -5,8 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * <h1>Azurite</h1>
- *
  * @author Juyas
  * @version 15.07.2021
  * @since 15.07.2021

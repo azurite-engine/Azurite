@@ -1,4 +1,5 @@
 package ecs;
+
 import fonts.Font;
 import fonts.Glyph;
 import fonts.GlyphRenderer;
@@ -7,10 +8,10 @@ import graphics.HSLColor;
 import graphics.renderer.TextRenderer;
 import graphics.renderer.TextRendererBatch;
 import org.joml.Vector2f;
-import util.Transform;
 import util.Engine;
 import util.Logger;
-import util.Utils;
+import util.MathUtils;
+import util.Transform;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -103,7 +104,7 @@ public class Text {
     }
 
     /**
-     * Update method called for every text object by the {@link scene.Scene.updateUI()} method.
+     * Update method called for every text object by the scene.Scene.updateUI() method.
      * This should not be called by general users.
      */
     public void update () {
@@ -211,7 +212,7 @@ public class Text {
             if (!isCentered) {
                 glyphRenderers.add(new GlyphRenderer(new Transform(drawX, drawY, g.width, g.height), g, this, ch, isSticky, this.color));
             } else {
-                glyphRenderers.add(new GlyphRenderer(new Transform(Utils.round(drawX - lineLengths[lineIncreases]/2), drawY, g.width, g.height), g, this, ch, isSticky, this.color));
+                glyphRenderers.add(new GlyphRenderer(new Transform(MathUtils.round(drawX - lineLengths[lineIncreases]/2), drawY, g.width, g.height), g, this, ch, isSticky, this.color));
             }
 
             drawX += g.width;
@@ -252,7 +253,7 @@ public class Text {
         for (int i = 0; i < this.glyphRenderers.size(); i ++) {
             GlyphRenderer g = this.glyphRenderers.get(i);
 
-            g.setColor(new HSLColor(Utils.map(i, 0, this.glyphRenderers.size(), 0, 360), 100, 50, 1).toRGBColor());
+            g.setColor(new HSLColor(MathUtils.map(i, 0, this.glyphRenderers.size(), 0, 360), 100, 50, 1).toRGBColor());
         }
     }
 

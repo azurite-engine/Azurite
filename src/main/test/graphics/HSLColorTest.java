@@ -8,8 +8,6 @@ import org.junit.Test;
 import java.util.Arrays;
 
 /**
- * <h1>Azurite</h1>
- *
  * @author Juyas
  * @version 15.07.2021
  * @since 15.07.2021

@@ -3,8 +3,6 @@ package physics.collision;
 import org.joml.Vector2f;
 
 /**
- * <h1>Azurite</h1>
- *
  * @author Juyas
  * @version 21.06.2021
  * @since 21.06.2021
@@ -80,9 +78,3 @@ public class RayCastResult {
     }
 
 }
-
-/***********************************************************************************************
- *
- *                  All rights reserved, SpaceParrots UG (c) copyright 2021
- *
- ***********************************************************************************************/

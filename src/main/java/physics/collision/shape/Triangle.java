@@ -3,7 +3,6 @@ package physics.collision.shape;
 import org.joml.Vector2f;
 
 /**
- * <h1>Azurite</h1>
  * The shape implementation of a triangle.
  *
  * @author Juyas

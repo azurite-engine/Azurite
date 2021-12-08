@@ -106,6 +106,10 @@ public class Keyboard {
         return ((keystateBitfields[keycode] & 0b00000001) /*>> 0*/) != 0;
     }
 
+    public static boolean keyDownOrHold(int keycode) {
+        return getKeyDown(keycode) || getKeyHeld(keycode);
+    }
+
     /**
      * Returns true if a key was just released.
      *
