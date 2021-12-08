@@ -36,7 +36,7 @@ public class ElementRenderer extends Element {
 
     private Sprite sprite;
 
-    private Vector2f size;
+//    private Vector2f size;
     private boolean isDirty; // Dirty flag, tells renderer to redraw if object components have changed
 
     /**
@@ -48,7 +48,7 @@ public class ElementRenderer extends Element {
         this.setColor(color);
         this.sprite = new Sprite(null);
         this.isDirty = true;
-        this.size = size;
+//        this.size = size;
     }
 
     /**
@@ -61,7 +61,7 @@ public class ElementRenderer extends Element {
         this.setColor(color.toNormalizedVec4f());
         this.sprite = new Sprite(null);
         this.isDirty = true;
-        this.size = size;
+//        this.size = size;
     }
 
     /**
@@ -74,7 +74,7 @@ public class ElementRenderer extends Element {
         this.sprite = sprite;
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;
-        this.size = size;
+//        this.size = size;
     }
 
     /**
@@ -86,7 +86,7 @@ public class ElementRenderer extends Element {
         this.sprite = new Sprite(Assets.getTexture(path));
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;
-        this.size = size;
+//        this.size = size;
     }
 
     /**
@@ -117,12 +117,12 @@ public class ElementRenderer extends Element {
         return sprite.getTexture();
     }
 
-    public Vector2f getSize() {
-        return size;
-    }
+//    public Vector2f getSize() {
+//        return size;
+//    }
 
     public void setSize(Vector2f size) {
-        this.size = size;
+//        this.size = size;
     }
 
     /**

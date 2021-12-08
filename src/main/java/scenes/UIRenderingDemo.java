@@ -3,13 +3,11 @@ package scenes;
 import graphics.Camera;
 import graphics.Color;
 import graphics.Window;
+import input.Mouse;
 import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 import scene.Scene;
-import ui.Container;
-import ui.CursorManager;
-import ui.ElementRenderer;
-import ui.Layer;
+import ui.*;
 import ui.element.Button;
 import ui.fonts.Font;
 import ui.layout.BoxLayout;
@@ -20,6 +18,8 @@ import static graphics.Graphics.setDefaultBackground;
 public class UIRenderingDemo extends Scene {
 
     Font openSans;
+    Text movingText;
+
     ElementRenderer e;
 
     public static void main(String[] args) {
@@ -29,14 +29,17 @@ public class UIRenderingDemo extends Scene {
     }
 
     private Layer menu;
-    Button button, button2;
+    Button button;
 
     public void awake() {
 
         camera = new Camera();
-        setDefaultBackground(Color.DARK_GREEN);
+        setDefaultBackground(Color.WHITE);
 
-        menu = new Layer(0, 0, Window.getWidth(), Window.getHeight());
+        openSans = new Font("src/assets/fonts/OpenSans-Regular.ttf", 20, true);
+        movingText = new Text("HAHA", openSans, Color.GREEN, 200, 200);
+
+        menu = new Layer(100, 0, Window.getWidth(), Window.getHeight());
         Container container = new Container(0, 0, 800, 900, new BoxLayout(BoxLayout.Orientation.VERTICAL));
         menu.registerComponent(container);
 
@@ -46,12 +49,10 @@ public class UIRenderingDemo extends Scene {
 
         uiRenderer.add(e);
         addUIElement(e);
-
-        openSans = new Font("src/assets/fonts/OpenSans-Regular.ttf", 20, true);
     }
 
     public void update () {
-
+        movingText.setPosition(Mouse.mouse);
     }
 
 }

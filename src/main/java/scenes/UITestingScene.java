@@ -49,25 +49,17 @@ public class UITestingScene extends Scene {
         menu.registerComponent(container);
 
         // --------------------  just to show them:  --------------------
-        GameObject top = new GameObject(new Vector3f(0, 0, 0));
         GameObject bot = new GameObject(new Vector3f(0, 450, 0));
-        top.addComponent(new SpriteRenderer(Color.GREEN, new Vector2f(800, 450)));
         bot.addComponent(new SpriteRenderer(Color.RED, new Vector2f(800, 450)));
         // -------------------- -------------------- --------------------
 
-        //create two buttons
-        button = new Button("topButton");
+        //create the button
         button2 = new Button("bottomButton");
         //set cursor for testing on bottom button
         button2.setCursor(GLFW.GLFW_HAND_CURSOR);
         //add them to the container
-        container.addComponent(button);
         container.addComponent(button2);
         //add onClick functions
-        button.getEventHandler().registerListener(EventHandler.Event.MOUSE_CLICK, eventHandler -> {
-            if (eventHandler.isMouseButtonClicked(GLFW.GLFW_MOUSE_BUTTON_LEFT))
-                System.out.println("Left click on upper button");
-        });
         button2.getEventHandler().registerListener(EventHandler.Event.MOUSE_CLICK, eventHandler -> {
             if (eventHandler.isMouseButtonClicked(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
                 bot.getComponent(SpriteRenderer.class).setColor(Color.randomColor());
@@ -83,7 +75,6 @@ public class UITestingScene extends Scene {
         menu.update();
         i = (i + 1) % 60;
         if (i == 0) {
-            System.out.println(button.getFrame());
             System.out.println(button2.getFrame());
             System.out.println(Mouse.mouse.toString(NumberFormat.getInstance()));
         }

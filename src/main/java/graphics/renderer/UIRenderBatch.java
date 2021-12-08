@@ -70,7 +70,7 @@ public class UIRenderBatch extends RenderBatch {
 
             // Load position
             Vector2f loc = new Vector2f(elementRenderer.getX(), elementRenderer.getY());
-            Vector2f scale = elementRenderer.getSize();
+            Vector2f scale = new Vector2f(elementRenderer.getWidth(), elementRenderer.getHeight());
 
             float scaledX = (xAdd * scale.x);
             float scaledY = (yAdd * scale.y);
