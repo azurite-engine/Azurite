@@ -40,8 +40,8 @@ public class DemoPlatformer extends Scene {
 
     public void awake() {
 
-        f = new Font("src/assets/ui.fonts/OpenSans-Regular.ttf", 18, true);
-        text = new Text("Azurite Engine demo", f, Color.RED, 15, 5, 100, true, false);
+        f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 18, true);
+        text = new Text("Azurite Engine demo", f, Color.WHITE, 15, 5, 100, true, false);
 
         camera = new Camera();
         setDefaultBackground(new Color(41, 30, 49));
