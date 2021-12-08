@@ -5,9 +5,11 @@ import graphics.Color;
 import graphics.Window;
 import input.Mouse;
 import org.joml.Vector2f;
-import org.lwjgl.glfw.GLFW;
 import scene.Scene;
-import ui.*;
+import ui.Container;
+import ui.ElementRenderer;
+import ui.Layer;
+import ui.Text;
 import ui.element.Button;
 import ui.fonts.Font;
 import ui.layout.BoxLayout;
@@ -52,6 +54,7 @@ public class UIRenderingDemo extends Scene {
     }
 
     public void update () {
+        menu.update();
         movingText.setPosition(Mouse.mouse);
     }
 
