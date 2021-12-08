@@ -36,7 +36,6 @@ public class ElementRenderer extends Element {
 
     private Sprite sprite;
 
-    private Vector2f lastLocation = new Vector2f();
     private Vector2f size;
     private boolean isDirty; // Dirty flag, tells renderer to redraw if object components have changed
 
@@ -94,8 +93,7 @@ public class ElementRenderer extends Element {
      * Initialize the Component, called once after creation.
      */
     public void start() {
-        this.lastLocation.x = getX();
-        this.lastLocation.y = getY();
+
     }
 
 
@@ -106,11 +104,6 @@ public class ElementRenderer extends Element {
      */
     public void update(float dt) {
 
-    }
-
-    public void update(Vector2f changedLocationData) {
-        this.lastLocation = changedLocationData;
-        isDirty = true;
     }
 
     public void remove() {

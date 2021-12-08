@@ -303,7 +303,6 @@ public abstract class Scene {
         lightmapRenderer.render();
         lightmapRenderer.bindLightmap();
         renderer.render();
-        uiRenderer.render();
     }
 
     public void debugRender () {
@@ -311,6 +310,7 @@ public abstract class Scene {
     }
 
     public final void textRender() {
+        uiRenderer.render();
         textRenderer.render();
     }
 

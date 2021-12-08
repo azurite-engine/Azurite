@@ -35,7 +35,7 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
      */
     @Override
     protected Framebuffer createFramebuffer() {
-        return Framebuffer.createWithColorAttachment();
+        return Framebuffer.createDefault();
     }
 
     /**
