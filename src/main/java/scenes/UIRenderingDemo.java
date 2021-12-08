@@ -23,6 +23,7 @@ public class UIRenderingDemo extends Scene {
     Text movingText;
 
     ElementRenderer e;
+    ElementRenderer f;
 
     public static void main(String[] args) {
         Engine.init(900, 600, "Azurite UI Rendering Demo");
@@ -42,15 +43,19 @@ public class UIRenderingDemo extends Scene {
         movingText = new Text("HAHA", openSans, Color.GREEN, 200, 200);
 
         menu = new Layer(100, 0, Window.getWidth(), Window.getHeight());
-        Container container = new Container(0, 0, 800, 900, new BoxLayout(BoxLayout.Orientation.VERTICAL));
+        Container container = new Container(100, 100, 500, 400, new BoxLayout(BoxLayout.Orientation.VERTICAL));
         menu.registerComponent(container);
 
         e = new ElementRenderer(Color.RED, new Vector2f(100, 100));
+        f = new ElementRenderer(Color.GREEN, new Vector2f(100, 100));
 
         container.addComponent(e);
+        container.addComponent(f);
 
         uiRenderer.add(e);
+        uiRenderer.add(f);
         addUIElement(e);
+        addUIElement(f);
     }
 
     public void update () {
