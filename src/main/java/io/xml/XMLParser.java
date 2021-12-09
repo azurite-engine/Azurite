@@ -26,19 +26,8 @@ public class XMLParser {
 
     private XMLParser(String input) {
         int index = input.lastIndexOf("?>");
-        this.input = index > 0 ? input.substring(index + 2) : input;
+        this.input = index > 0 ? input.substring(index + 2).trim() : input;
         this.tokens = null;
-    }
-
-    public static void main(String[] args) {
-        String input = "<root>\n" +
-                "<wangtile tileid=\"6\" wangid=\"0,1,0,1,0,1,0,2\"/>\n" +
-                "<wangtile tileid=\"7\" wangid=\"0,2,0,1,0,1,0,1\"/>\n" +
-                "<!--wangtile tileid=\"7\" wangid=\"0,2,0,1,0,1,0,1\"/-->\n" +
-                "<wangtile tileid=\"8\" wangid=\"0,2,0,2,0,2,0,1\"/>\n" +
-                "</root>";
-        XMLElement data = parse(input);
-        System.out.println(data.toString(true));
     }
 
     public static Charset readHeader(byte[] input) {
@@ -197,13 +186,21 @@ public class XMLParser {
         return token -> token == null || !token.getType().equals(reader.type());
     }
 
-    public static String transformValue(String value, boolean rawToValue) {
-        if (rawToValue) {
+    public static String transformValue(String value, boolean isRaw) {
+        if (isRaw) {
             //make value ready to read
-            return value.replace("&lt;", "<").replace("&gt;", ">").replace("&amp;", "&").replace("&apos;", "'").replace("&quot;", "\"");
+            return value.replace("&amp;", "&")
+                    .replace("&lt;", "<")
+                    .replace("&gt;", ">")
+                    .replace("&apos;", "'")
+                    .replace("&quot;", "\"");
         } else {
             //make value ready to write
-            return value.replace("<", "&lt;").replace(">", "&gt;").replace("&", "&amp;").replace("'", "&apos;").replace("\"", "&quot;");
+            return value.replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;")
+                    .replace("'", "&apos;")
+                    .replace("\"", "&quot;");
         }
     }
 
