@@ -5,6 +5,8 @@ import io.token.TokenReader;
 import io.token.TokenStream;
 import util.Pair;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,16 +25,32 @@ public class XMLParser {
     private List<Token> tokens;
 
     private XMLParser(String input) {
-        this.input = input;
+        int index = input.lastIndexOf("?>");
+        this.input = index > 0 ? input.substring(index + 2) : input;
         this.tokens = null;
     }
 
-    public static XMLElement parse(String input) {
-        return new XMLParser(input).tokenize().parseTokens();
+    public static Charset readHeader(byte[] input) {
+        String data = new String(input, StandardCharsets.UTF_8);
+        if (!data.contains("<?") || !data.contains("?>")) return StandardCharsets.UTF_8;
+        data = data.replace("<?", "<");
+        data = data.replace("?>", "/>");
+        data = data.substring(0, data.indexOf(">") + 1);
+        XMLElement parse = parse(data);
+        String encoding = parse.getAttributes().getOrDefault("encoding", "UTF-8");
+        return Charset.isSupported(encoding) ? Charset.forName(encoding) : StandardCharsets.UTF_8;
     }
 
-    private XMLElement parseTokens() {
-        return parse(0).getLeft();
+    public static XMLElement parse(byte[] input) {
+        return new XMLParser(new String(input, readHeader(input))).tokenize().parse(0).getLeft();
+    }
+
+    public static XMLElement parse(byte[] input, Charset charset) {
+        return new XMLParser(new String(input, charset)).tokenize().parse(0).getLeft();
+    }
+
+    public static XMLElement parse(String input) {
+        return new XMLParser(input).tokenize().parse(0).getLeft();
     }
 
     private Pair<XMLElement, Integer> parse(int pos) {
@@ -73,13 +91,12 @@ public class XMLParser {
                         if (!tokens.get(p + 2).getValue().equals(element.getTag()))
                             fail("Closing tag doesnt match opening tag: \"" + element.getTag() + "\" <> \"" + tokens.get(p + 3).getValue() + "\"");
                         ending = p + 4;
-                    } else
-                        fail("Missing closing tag for \"" + element.getTag() + "\"");
+                    } else fail("Missing closing tag for \"" + element.getTag() + "\"");
                 }
             } else if (check(pos, SELF_CLOSE, CLOSE_TAG)) {
                 ending = pos + 2;
             }
-        } else fail("Expected start of a new tag, but got: " + tokens.get(pos));
+        } else if (tokens.size() > pos) fail("Expected start of a new tag, but got: " + tokens.get(pos));
         return new Pair<>(element, ending);
     }
 
@@ -114,8 +131,7 @@ public class XMLParser {
                     .eatConditionally(QUOTATION, e(ATTR_EQUALS)) //quotation after equals
                     .eatConditionally(VALUE, e(QUOTATION)) // value after quotation
                     .eatHistorically(QUOTATION, eh(QUOTATION, VALUE)) //quotation at the end of a value
-                    .eatHistorically(SPACING, eh(QUOTATION, VALUE, QUOTATION))
-                    .eatConditionally(SELF_CLOSE, e(QUOTATION))
+                    .eatHistorically(SPACING, eh(QUOTATION, VALUE, QUOTATION)).eatConditionally(SELF_CLOSE, e(QUOTATION))
                     //end tag
                     .eatConditionally(CLOSE_TAG, e(IDENTIFIER).or(e(QUOTATION)).or(e(SELF_CLOSE))) //close tag after identifier in tag or quotation of attribute
                     .eatHistorically(SPACING, eh(CLOSE_TAG)) //eat spacing after close tag
@@ -136,7 +152,7 @@ public class XMLParser {
         return this;
     }
 
-    private Predicate<LinkedList<Token>> eh(TokenReader... reader) {
+    private static Predicate<LinkedList<Token>> eh(TokenReader... reader) {
         return tokens -> {
             Iterator<Token> itr = tokens.descendingIterator();
             int r = reader.length - 1;
@@ -150,11 +166,11 @@ public class XMLParser {
         };
     }
 
-    private Predicate<Token> e(TokenReader reader) {
+    private static Predicate<Token> e(TokenReader reader) {
         return token -> token != null && token.getType().equals(reader.type());
     }
 
-    private Predicate<Token> ne(TokenReader reader) {
+    private static Predicate<Token> ne(TokenReader reader) {
         return token -> token == null || !token.getType().equals(reader.type());
     }
 

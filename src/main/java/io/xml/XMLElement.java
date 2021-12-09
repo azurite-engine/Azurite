@@ -101,7 +101,11 @@ public class XMLElement {
             builder.append(element.toString(fancy, layer + "\t"));
             if (fancy) builder.append('\n');
         }
-        if (value != null) builder.append(XMLParser.transformValue(value, false));
+        if (value != null) {
+            builder.append(XMLParser.transformValue(value, false));
+            if (value.contains("\n"))
+                builder.append(layer);
+        }
         builder.append('<').append('/').append(tag).append(">");
         return builder.toString();
     }
