@@ -3,8 +3,11 @@ package io.xml;
 import io.token.Token;
 import io.token.TokenReader;
 import io.token.TokenStream;
+import util.Pair;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Predicate;
 
 import static io.xml.XMLTokens.*;
@@ -29,14 +32,60 @@ public class XMLParser {
     }
 
     private XMLElement parseTokens() {
-        Stack<String> tree = new Stack<>();
-        Stack<XMLElement> elements = new Stack<>();
-        Map<String, Map<String, String>> attributes = new HashMap<>();
-        int pos = 0;
-        while (pos < tokens.size()) {
-            pos++; //TODO
+        return parse(0).getLeft();
+    }
+
+    private Pair<XMLElement, Integer> parse(int pos) {
+        XMLElement element = null;
+        int ending = 0;
+        if (is(pos, SPACING)) pos++;
+        if (check(pos, OPEN_TAG, IDENTIFIER)) {
+            //read start of the element
+            element = new XMLElement(tokens.get(pos + 1).getValue(), (String) null);
+            pos += 2;
+            if (is(pos, SPACING)) {
+                while (check(pos, SPACING, IDENTIFIER, ATTR_EQUALS, QUOTATION, VALUE, QUOTATION)) {
+                    element.addAttribute(tokens.get(pos + 1).getValue(), tokens.get(pos + 4).getValue());
+                    pos += 6;
+                }
+            }
+            //header is done
+            if (is(pos, CLOSE_TAG)) {
+                pos++;
+                //value and close tag
+                if (is(pos, SPACING)) pos++;
+                if (check(pos, VALUE, OPEN_TAG, SELF_CLOSE, IDENTIFIER, CLOSE_TAG)) {
+                    element.setValue(transformValue(tokens.get(pos).getValue(), true));
+                    ending = pos + 5;
+                } else {
+                    int p = pos;
+                    while (check(p, OPEN_TAG, IDENTIFIER)) {
+                        Pair<XMLElement, Integer> parse = parse(p);
+                        element.addSubElement(parse.getLeft());
+                        p = parse.getRight();
+                        if (is(p, SPACING)) p++;
+                    }
+                    if (check(p, OPEN_TAG, SELF_CLOSE, IDENTIFIER, CLOSE_TAG)) {
+                        if (!tokens.get(p + 2).getValue().equals(element.getTag()))
+                            fail("Closing tag doesnt match opening tag: \"" + element.getTag() + "\" <> \"" + tokens.get(p + 3).getValue() + "\"");
+                        ending = p + 4;
+                    } else
+                        fail("Missing closing tag for \"" + element.getTag() + "\", found: \"" + tokens.get(0).getValue() + tokens.get(p + 1).getValue() + "\"");
+                }
+            }
+        } else fail("Expected start of a new tag, but got: " + tokens.get(pos));
+        return new Pair<>(element, ending);
+    }
+
+    private void fail(String why) {
+        throw new XMLSyntaxException(why);
+    }
+
+    private boolean check(int pos, TokenReader... readers) {
+        for (int i = pos; i < readers.length + pos; i++) {
+            if (!is(i, readers[i - pos])) return false;
         }
-        return null;
+        return true;
     }
 
     private boolean is(int pos, TokenReader reader) {
@@ -60,6 +109,7 @@ public class XMLParser {
                     .eatHistorically(QUOTATION, eh(QUOTATION, VALUE)) //quotation at the end of a value
                     //end tag
                     .eatConditionally(CLOSE_TAG, e(IDENTIFIER).or(e(QUOTATION))) //close tag after identifier in tag or quotation of attribute
+                    .eatConditionally(SPACING, e(CLOSE_TAG)) //eat spacing after close tag
                     .eatHistorically(VALUE, eh(QUOTATION, CLOSE_TAG).or(eh(OPEN_TAG, IDENTIFIER, CLOSE_TAG))) //value between tags
                     //spacing between tags - ignorable spacing
                     .eatHistorically(SPACING, eh(SELF_CLOSE, CLOSE_TAG).or(eh(SELF_CLOSE, IDENTIFIER, CLOSE_TAG))) //spacing after a finished tag

@@ -1,9 +1,6 @@
 package io.xml;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Juyas
@@ -32,7 +29,7 @@ public class XMLElement {
 
     public XMLElement(String tag, Map<String, String> attributes, String value) {
         this.attributes = attributes;
-        this.subElements = Collections.emptyList();
+        this.subElements = new ArrayList<>();
         this.tag = tag;
         this.value = value;
     }
@@ -49,7 +46,7 @@ public class XMLElement {
     }
 
     public List<XMLElement> getChildren() {
-        return Collections.unmodifiableList(subElements);
+        return this.subElements == null ? null : Collections.unmodifiableList(subElements);
     }
 
     public Map<String, String> getAttributes() {
@@ -74,20 +71,23 @@ public class XMLElement {
         this.attributes.put(name, value);
     }
 
-
     public void addSubElement(XMLElement element) {
         if (value != null) throw new XMLSyntaxException("This element has already a value applied to it.");
         this.subElements.add(element);
     }
 
     public String toString(boolean fancy) {
+        return toString(fancy, "");
+    }
+
+    private String toString(boolean fancy, String layer) {
         StringBuilder builder = new StringBuilder();
         if (tag.equals(COMMENT_TAG)) {
             //comment element
-            builder.append("<!--").append(value).append("-->");
+            builder.append(layer).append("<!--").append(value).append("-->");
             return builder.toString();
         }
-        builder.append('<').append(tag);
+        builder.append(layer).append('<').append(tag);
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
             builder.append(' ').append(entry.getKey()).append('=').append('"').append(XMLParser.transformValue(entry.getValue(), false)).append('"');
         }
@@ -98,7 +98,7 @@ public class XMLElement {
         builder.append('>');
         if (fancy && subElements.size() > 0) builder.append('\n');
         for (XMLElement element : subElements) {
-            builder.append(element.toString(fancy));
+            builder.append(element.toString(fancy, layer + "\t"));
             if (fancy) builder.append('\n');
         }
         if (value != null) builder.append(XMLParser.transformValue(value, false));
