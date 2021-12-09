@@ -52,10 +52,14 @@ public class XMLParser {
             //header is done
             if (is(pos, CLOSE_TAG)) {
                 pos++;
+                String spacing = "";
+                if (is(pos, SPACING)) {
+                    spacing = tokens.get(pos).getValue();
+                    pos++;
+                }
                 //value and close tag
-                if (is(pos, SPACING)) pos++;
                 if (check(pos, VALUE, OPEN_TAG, SELF_CLOSE, IDENTIFIER, CLOSE_TAG)) {
-                    element.setValue(transformValue(tokens.get(pos).getValue(), true));
+                    element.setValue(transformValue(spacing + tokens.get(pos).getValue(), true));
                     ending = pos + 5;
                 } else {
                     int p = pos;
@@ -70,8 +74,10 @@ public class XMLParser {
                             fail("Closing tag doesnt match opening tag: \"" + element.getTag() + "\" <> \"" + tokens.get(p + 3).getValue() + "\"");
                         ending = p + 4;
                     } else
-                        fail("Missing closing tag for \"" + element.getTag() + "\", found: \"" + tokens.get(0).getValue() + tokens.get(p + 1).getValue() + "\"");
+                        fail("Missing closing tag for \"" + element.getTag() + "\"");
                 }
+            } else if (check(pos, SELF_CLOSE, CLOSE_TAG)) {
+                ending = pos + 2;
             }
         } else fail("Expected start of a new tag, but got: " + tokens.get(pos));
         return new Pair<>(element, ending);
@@ -89,6 +95,7 @@ public class XMLParser {
     }
 
     private boolean is(int pos, TokenReader reader) {
+        if (pos >= tokens.size()) return false;
         return tokens.get(pos).getType().equals(reader.type());
     }
 
@@ -107,10 +114,13 @@ public class XMLParser {
                     .eatConditionally(QUOTATION, e(ATTR_EQUALS)) //quotation after equals
                     .eatConditionally(VALUE, e(QUOTATION)) // value after quotation
                     .eatHistorically(QUOTATION, eh(QUOTATION, VALUE)) //quotation at the end of a value
+                    .eatHistorically(SPACING, eh(QUOTATION, VALUE, QUOTATION))
+                    .eatConditionally(SELF_CLOSE, e(QUOTATION))
                     //end tag
-                    .eatConditionally(CLOSE_TAG, e(IDENTIFIER).or(e(QUOTATION))) //close tag after identifier in tag or quotation of attribute
-                    .eatConditionally(SPACING, e(CLOSE_TAG)) //eat spacing after close tag
+                    .eatConditionally(CLOSE_TAG, e(IDENTIFIER).or(e(QUOTATION)).or(e(SELF_CLOSE))) //close tag after identifier in tag or quotation of attribute
+                    .eatHistorically(SPACING, eh(CLOSE_TAG)) //eat spacing after close tag
                     .eatHistorically(VALUE, eh(QUOTATION, CLOSE_TAG).or(eh(OPEN_TAG, IDENTIFIER, CLOSE_TAG))) //value between tags
+                    .eatHistorically(VALUE, eh(QUOTATION, CLOSE_TAG, SPACING).or(eh(OPEN_TAG, IDENTIFIER, CLOSE_TAG, SPACING))) //value between tags with spacing
                     //spacing between tags - ignorable spacing
                     .eatHistorically(SPACING, eh(SELF_CLOSE, CLOSE_TAG).or(eh(SELF_CLOSE, IDENTIFIER, CLOSE_TAG))) //spacing after a finished tag
                     //comment block
