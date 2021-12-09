@@ -30,6 +30,17 @@ public class XMLParser {
         this.tokens = null;
     }
 
+    public static void main(String[] args) {
+        String input = "<root>\n" +
+                "<wangtile tileid=\"6\" wangid=\"0,1,0,1,0,1,0,2\"/>\n" +
+                "<wangtile tileid=\"7\" wangid=\"0,2,0,1,0,1,0,1\"/>\n" +
+                "<!--wangtile tileid=\"7\" wangid=\"0,2,0,1,0,1,0,1\"/-->\n" +
+                "<wangtile tileid=\"8\" wangid=\"0,2,0,2,0,2,0,1\"/>\n" +
+                "</root>";
+        XMLElement data = parse(input);
+        System.out.println(data.toString(true));
+    }
+
     public static Charset readHeader(byte[] input) {
         String data = new String(input, StandardCharsets.UTF_8);
         if (!data.contains("<?") || !data.contains("?>")) return StandardCharsets.UTF_8;
@@ -57,7 +68,12 @@ public class XMLParser {
         XMLElement element = null;
         int ending = 0;
         if (is(pos, SPACING)) pos++;
-        if (check(pos, OPEN_TAG, IDENTIFIER)) {
+        //read comments
+        if (check(pos, OPEN_TAG, COMMENT_MARK, COMMENT_DASHES, COMMENT_CONTENT, COMMENT_DASHES, CLOSE_TAG)) {
+            Token commentToken = tokens.get(pos + 3);
+            element = new XMLElement(commentToken.getValue());
+            ending = pos + 6;
+        } else if (check(pos, OPEN_TAG, IDENTIFIER)) {
             //read start of the element
             element = new XMLElement(tokens.get(pos + 1).getValue(), (String) null);
             pos += 2;
@@ -81,23 +97,30 @@ public class XMLParser {
                     ending = pos + 5;
                 } else {
                     int p = pos;
-                    while (check(p, OPEN_TAG, IDENTIFIER)) {
+                    while (check(p, OPEN_TAG, IDENTIFIER) || check(p, OPEN_TAG, COMMENT_MARK)) {
                         Pair<XMLElement, Integer> parse = parse(p);
                         element.addSubElement(parse.getLeft());
                         p = parse.getRight();
                         if (is(p, SPACING)) p++;
                     }
-                    if (check(p, OPEN_TAG, SELF_CLOSE, IDENTIFIER, CLOSE_TAG)) {
+                    if (check(p - 2, SELF_CLOSE, CLOSE_TAG) || check(p - 3, SELF_CLOSE, CLOSE_TAG, SPACING)) {
+                        ending = p;
+                    } else if (check(p, OPEN_TAG, SELF_CLOSE, IDENTIFIER, CLOSE_TAG)) {
                         if (!tokens.get(p + 2).getValue().equals(element.getTag()))
-                            fail("Closing tag doesnt match opening tag: \"" + element.getTag() + "\" <> \"" + tokens.get(p + 3).getValue() + "\"");
+                            fail("Closing tag doesnt match opening tag: \"" + element.getTag() + "\" <> " + get(p + 3));
                         ending = p + 4;
-                    } else fail("Missing closing tag for \"" + element.getTag() + "\"");
+                    } else
+                        fail("Missing closing tag for \"" + element.getTag() + "\", found " + get(p) + " at " + p + "/" + tokens.size());
                 }
             } else if (check(pos, SELF_CLOSE, CLOSE_TAG)) {
                 ending = pos + 2;
             }
         } else if (tokens.size() > pos) fail("Expected start of a new tag, but got: " + tokens.get(pos));
         return new Pair<>(element, ending);
+    }
+
+    private String get(int pos) {
+        return pos >= tokens.size() ? null : tokens.get(pos).toString();
     }
 
     private void fail(String why) {

@@ -5,6 +5,7 @@ import io.token.Token;
 import io.token.TokenReader;
 
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 /**
  * @author Juyas
@@ -24,7 +25,7 @@ public class XMLTokens {
     public static TokenReader COMMENT_CONTENT = new RepetitiveTokenReader("COMMENT_CONTENT", "--", RepetitiveTokenReader.NO_LIMIT) {
         @Override
         public boolean canRead(Scanner scanner) {
-            scanner.useDelimiter(" ");
+            scanner.useDelimiter(Pattern.compile("\\p{javaWhitespace}+"));
             boolean has = scanner.hasNext(target + ".*");
             scanner.useDelimiter("");
             return !has;
@@ -34,11 +35,9 @@ public class XMLTokens {
         public Token read(Scanner scanner) {
             StringBuilder builder = new StringBuilder();
             int amount = 0;
-            boolean c = false;
-            while (!(c && scanner.hasNext("-")) && scanner.hasNext() && (amount <= limit || limit < 0)) {
+            while (!scanner.hasNext("-") && scanner.hasNext()) {
                 String next = scanner.next();
                 builder.append(next);
-                c = next.equals("-");
                 amount++;
             }
             return new Token(targetType, builder.toString());
@@ -48,7 +47,7 @@ public class XMLTokens {
     public static TokenReader COMMENT_DASHES = new TokenReader("COMMENT_DASHES", "--") {
         @Override
         public boolean canRead(Scanner scanner) {
-            scanner.useDelimiter(" ");
+            scanner.useDelimiter(Pattern.compile("\\p{javaWhitespace}+"));
             boolean has = scanner.hasNext(target + ".*");
             scanner.useDelimiter("");
             return has;
