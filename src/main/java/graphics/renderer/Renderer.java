@@ -42,12 +42,11 @@ import static org.lwjgl.opengl.GL11.glDrawElements;
  *     buffer which GPU pixel data is stored in to be drawn all at once on the monitor.
  * </p>
  *
- * @param <T> type of batch to render
  * @see RenderBatch
  * @see Shader
  * @see Framebuffer
  */
-public abstract class Renderer<T extends RenderBatch> {
+public abstract class Renderer {
     /**
      * Texture slots to be uploaded to the shader. You don't have to upload them in your custom renderer.
      */
@@ -56,7 +55,7 @@ public abstract class Renderer<T extends RenderBatch> {
     /**
      * A list of batches
      */
-    protected final List<T> batches;
+    protected final List<RenderBatch> batches;
     /**
      * Framebuffer to which this renderer will render
      */
@@ -85,6 +84,12 @@ public abstract class Renderer<T extends RenderBatch> {
     protected abstract Framebuffer createFramebuffer();
 
     /**
+     * Create a new Batch with appropriate parameters
+     * @return a new batch
+     */
+    protected abstract RenderBatch createBatch(int zIndex);
+
+    /**
      * Upload the required uniforms
      *
      * @param shader the shader
@@ -92,20 +97,64 @@ public abstract class Renderer<T extends RenderBatch> {
     protected abstract void uploadUniforms(Shader shader);
 
     /**
+     * Rebuffer all the data into batches
+     */
+    protected abstract void rebuffer();
+
+    /**
+     * Start batches. Ready for buffering data
+     */
+    private void start() {
+        for (RenderBatch batch : batches) {
+            batch.start();
+        }
+    }
+
+    /**
+     * Finish Setting data for all batches. Upload to gpu ready for rendering
+     */
+    private void finish() {
+        for (RenderBatch batch : batches) {
+            batch.finish();
+        }
+    }
+
+    /**
+     * Get the batch in which the current data can be submitted
+     * Has to be called PER PRIMITIVE SUBMISSION
+     * @param texture
+     */
+    public RenderBatch getAvailableBatch(Texture texture, int reqdZ) {
+        for (RenderBatch batch : batches) {
+            if (!batch.isFull && batch.zIndex() == reqdZ)
+                return batch;
+
+            if (batch.isFull_Textures)
+                if (batch.hasTexture(texture) && batch.zIndex() == reqdZ)
+                    return batch;
+        }
+
+        // All batches full
+        RenderBatch batch = createBatch(reqdZ);
+        batch.init();
+        batch.start();
+        batches.add(batch);
+        return batch;
+    }
+
+    /**
      * Add a gameObject to the renderer, and if it contains a component that affects rendering, like a sprite or light, those are added to a batch.
      *
      * @param gameObject the GameObject with renderable components
      */
-    public void add(GameObject gameObject) {
-    }
+    public void add(GameObject gameObject) {}
 
     /**
      * Remove a gameObject from the renderer if it contains the component that gets rendered.
      *
-     * @param gameObject the GameObject with renderable components
+     * @param gameObject the GameObject with renderable componentsl
      */
-    public void remove(GameObject gameObject) {
-    }
+    public void remove(GameObject gameObject) {}
 
     /**
      * Creates the renderer's shader and framebuffer
@@ -133,8 +182,12 @@ public abstract class Renderer<T extends RenderBatch> {
         prepare();
         shader.attach();
         uploadUniforms(shader);
-        for (T batch : batches) {
-            batch.updateBuffer();
+
+        start();
+        rebuffer();
+        finish();
+
+        for (RenderBatch batch : batches) {
             batch.bind();
             glDrawElements(batch.primitive.openglPrimitive, batch.getVertexCount(), GL_UNSIGNED_INT, 0);
             batch.unbind();

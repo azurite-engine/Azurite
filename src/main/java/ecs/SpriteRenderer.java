@@ -1,10 +1,8 @@
 package ecs;
 
 import graphics.Color;
-import graphics.RenderableComponent;
 import graphics.Sprite;
 import graphics.Texture;
-import graphics.renderer.DefaultRenderBatch;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import util.Assets;
@@ -21,7 +19,7 @@ import static graphics.Color.WHITE;
  * @author Gabe
  */
 
-public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> {
+public class SpriteRenderer extends Component {
 
     private Vector4f color = new Color(255, 100, 100, 255).toNormalizedVec4f();
 
@@ -100,11 +98,6 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> {
     public void update(float dt) {
         if (!position().equals(this.lastLocation)) markDirty();
         this.lastLocation = position();
-    }
-
-    @Override
-    public void remove() {
-        getBatch().getRenderer().remove(this.gameObject);
     }
 
     /**

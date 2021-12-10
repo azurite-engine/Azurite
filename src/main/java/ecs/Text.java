@@ -6,7 +6,6 @@ import fonts.GlyphRenderer;
 import graphics.Color;
 import graphics.HSLColor;
 import graphics.renderer.TextRenderer;
-import graphics.renderer.TextRendererBatch;
 import org.joml.Vector2f;
 import util.Engine;
 import util.Logger;
@@ -30,7 +29,6 @@ public class Text {
     private boolean isCentered = false;
 
     private ArrayList<GlyphRenderer> glyphRenderers;
-    private TextRendererBatch currentBatch;
     private Color color = Color.WHITE;
 
     private Font font;
@@ -69,8 +67,6 @@ public class Text {
         generateGlyphs();
         Engine.scenes().currentScene().textRenderer.add(this);
         Engine.scenes().currentScene().addUiObject(this);
-
-        currentBatch = glyphRenderers.get(0).getBatch();
     }
 
     /**
@@ -128,13 +124,13 @@ public class Text {
      * @param string the text to change the current string to.
      */
     public void change (String string) {
-        currentBatch = glyphRenderers.get(0).getBatch();
+//        Engine.scenes().currentScene().textRenderer.remove(this);
         glyphRenderers.clear();
 
         this.text = string + " ";
 
         generateGlyphs();
-        Engine.scenes().currentScene().textRenderer.changeText(this, currentBatch);
+//        Engine.scenes().currentScene().textRenderer.add(this);
     }
 
     private char ch;
@@ -221,14 +217,6 @@ public class Text {
         if (textHeight > font.getFontHeight()) {
             drawY += textHeight - font.getFontHeight();
         }
-    }
-
-    /**
-     * @return the {@link graphics.renderer.TextRendererBatch} that this Text object belongs to.
-     */
-    public int getBatchIndex () {
-        if (glyphRenderers.size() == 0) return -1;
-        return glyphRenderers.get(0).getBatchIndex();
     }
 
     public ArrayList<GlyphRenderer> getGlyphRenderers () {
