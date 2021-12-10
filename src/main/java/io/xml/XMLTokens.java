@@ -60,7 +60,7 @@ public class XMLTokens {
             return new Token(targetType, dash);
         }
     };
-    public static TokenReader IDENTIFIER = new RepetitiveTokenReader("IDENTIFIER", "[a-zA-Z0-9_]", -1, RepetitiveTokenReader.NO_LIMIT) {
+    public static TokenReader IDENTIFIER = new RepetitiveTokenReader("IDENTIFIER", "[a-zA-Z0-9_-]", -1, RepetitiveTokenReader.NO_LIMIT) {
         @Override
         public boolean canRead(Scanner scanner) {
             return scanner.hasNext("[a-zA-Z_]");

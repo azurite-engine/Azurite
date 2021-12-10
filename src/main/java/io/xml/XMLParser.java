@@ -15,6 +15,20 @@ import java.util.function.Predicate;
 import static io.xml.XMLTokens.*;
 
 /**
+ * A simple XML string parsing class.
+ * Accepts:
+ * - spacing at any allowed position
+ * - node, sub nodes and attributes inside nodes
+ * - self-closing nodes
+ * - comments
+ * - different encoding in ?xml header
+ * Does not accept e.g.:
+ * - namespaces
+ * - complex ?xml headers
+ * - stylesheet
+ * - DTD declaration and data
+ * - entities
+ *
  * @author Juyas
  * @version 08.12.2021
  * @since 08.12.2021
@@ -30,6 +44,12 @@ public class XMLParser {
         this.tokens = null;
     }
 
+    /**
+     * Read the encoding as {@link Charset} from a xml header in raw utf-8 bytes.
+     *
+     * @param input the raw utf-8 input bytes
+     * @return the charset as defined in the header; if there is none, it will return {@link StandardCharsets#UTF_8}
+     */
     public static Charset readHeader(byte[] input) {
         String data = new String(input, StandardCharsets.UTF_8);
         if (!data.contains("<?") || !data.contains("?>")) return StandardCharsets.UTF_8;
@@ -41,14 +61,34 @@ public class XMLParser {
         return Charset.isSupported(encoding) ? Charset.forName(encoding) : StandardCharsets.UTF_8;
     }
 
+    /**
+     * Parse xml data using the defined encoding in the header, or utf-8 if there is none defined
+     * and return the root element if the document.
+     *
+     * @param input the raw utf-8 input bytes
+     * @return the root element of the xml document
+     */
     public static XMLElement parse(byte[] input) {
         return new XMLParser(new String(input, readHeader(input))).tokenize().parse(0).getLeft();
     }
 
+    /**
+     * Parse xml data using the defined encoding charset and return the root element if the document.
+     *
+     * @param input   the raw input bytes
+     * @param charset the defined charset
+     * @return the root element of the xml document
+     */
     public static XMLElement parse(byte[] input, Charset charset) {
         return new XMLParser(new String(input, charset)).tokenize().parse(0).getLeft();
     }
 
+    /**
+     * Parse xml data and return the root element of the document.
+     *
+     * @param input the input data as string
+     * @return the root element of the document
+     */
     public static XMLElement parse(String input) {
         return new XMLParser(input).tokenize().parse(0).getLeft();
     }
