@@ -1,13 +1,9 @@
 package io;
 
 import io.token.Token;
-import io.token.TokenReader;
 
 import java.nio.charset.Charset;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * @author Juyas
@@ -15,28 +11,6 @@ import java.util.function.Predicate;
  * @since 11.12.2021
  */
 public abstract class Tokenizer {
-
-    public static Predicate<LinkedList<Token>> eh(TokenReader... reader) {
-        return tokens -> {
-            Iterator<Token> itr = tokens.descendingIterator();
-            int r = reader.length - 1;
-            while (r >= 0) {
-                if (!itr.hasNext()) return false;
-                String next = itr.next().getType();
-                if (!next.equals(reader[r].type())) return false;
-                r--;
-            }
-            return true;
-        };
-    }
-
-    public static Predicate<Token> e(TokenReader reader) {
-        return token -> token != null && token.getType().equals(reader.type());
-    }
-
-    public static Predicate<Token> ne(TokenReader reader) {
-        return token -> token == null || !token.getType().equals(reader.type());
-    }
 
     /**
      * Reads an input string and extracts all tokens depending on the implementation from it

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import static io.token.TokenStream.*;
+
 /**
  * @author Juyas
  * @version 11.12.2021
