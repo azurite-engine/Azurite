@@ -24,7 +24,8 @@ import static io.xml.XMLTokenizer.*;
  * - entities
  *
  * @author Juyas
- * @version 08.12.2021
+ * @version 11.12.2021
+ * @see XMLTokenizer
  * @since 08.12.2021
  */
 public final class XMLParser extends Parser<XMLElement> {

@@ -10,7 +10,7 @@ import java.util.function.Predicate;
  * Uses the {@link Scanner} class and {@link TokenReader}s reading character by character to tokenize an input.
  *
  * @author Juyas
- * @version 08.12.2021
+ * @version 11.12.2021
  * @see io.Tokenizer
  * @since 08.12.2021
  */

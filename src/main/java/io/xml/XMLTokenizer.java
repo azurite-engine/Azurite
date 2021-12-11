@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
 import static io.token.TokenStream.*;
 
 /**
+ * @see XMLParser
  * @author Juyas
  * @version 11.12.2021
  * @since 11.12.2021

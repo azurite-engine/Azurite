@@ -8,6 +8,7 @@ import java.util.List;
 /**
  * @author Juyas
  * @version 11.12.2021
+ * @see io.token.TokenStream
  * @since 11.12.2021
  */
 public abstract class Tokenizer {
