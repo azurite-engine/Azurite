@@ -13,8 +13,8 @@ public class XMLElement {
 
     private final Map<String, String> attributes;
     private final String tag;
-    private String value;
     private final List<XMLElement> subElements;
+    private String value;
 
     public XMLElement(String tag, Map<String, String> attributes, List<XMLElement> subElements) {
         this.attributes = attributes;

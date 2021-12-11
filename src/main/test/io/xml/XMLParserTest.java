@@ -3,8 +3,9 @@ package io.xml;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+
+import static io.FileFormats.XML;
 
 /**
  * @author Juyas
@@ -23,34 +24,26 @@ public class XMLParserTest {
     private static String header2 = "<?xml version=\"1.0\" encoding=\"us-ascii\"?>\n" + headerless1;
 
     @Test
-    public void readHeader() {
-        Charset charset = XMLParser.readHeader(header1.getBytes(StandardCharsets.UTF_8));
-        Assert.assertEquals(StandardCharsets.UTF_8, charset);
-        Charset charset2 = XMLParser.readHeader(header2.getBytes(StandardCharsets.UTF_8));
-        Assert.assertEquals(StandardCharsets.US_ASCII, charset2);
-    }
-
-    @Test
     public void parse() {
-        XMLElement element = XMLParser.parse(headerless1);
+        XMLElement element = XML.parse(headerless1);
         Assert.assertEquals(headerless1, element.toString(true));
-        element = XMLParser.parse(header1);
+        element = XML.parse(header1);
         Assert.assertEquals(headerless1, element.toString(true));
-        element = XMLParser.parse(header2);
-        Assert.assertEquals(headerless1, element.toString(true));
-
-        element = XMLParser.parse(headerless1.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
-        Assert.assertEquals(headerless1, element.toString(true));
-        element = XMLParser.parse(header1.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
-        Assert.assertEquals(headerless1, element.toString(true));
-        element = XMLParser.parse(header2.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+        element = XML.parse(header2);
         Assert.assertEquals(headerless1, element.toString(true));
 
-        element = XMLParser.parse(headerless1.getBytes(StandardCharsets.UTF_8));
+        element = XML.parse(headerless1.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
         Assert.assertEquals(headerless1, element.toString(true));
-        element = XMLParser.parse(header1.getBytes(StandardCharsets.UTF_8));
+        element = XML.parse(header1.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
         Assert.assertEquals(headerless1, element.toString(true));
-        element = XMLParser.parse(header2.getBytes(StandardCharsets.US_ASCII));
+        element = XML.parse(header2.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+        Assert.assertEquals(headerless1, element.toString(true));
+
+        element = XML.parse(headerless1.getBytes(StandardCharsets.UTF_8));
+        Assert.assertEquals(headerless1, element.toString(true));
+        element = XML.parse(header1.getBytes(StandardCharsets.UTF_8));
+        Assert.assertEquals(headerless1, element.toString(true));
+        element = XML.parse(header2.getBytes(StandardCharsets.US_ASCII));
         Assert.assertEquals(headerless1, element.toString(true));
 
     }

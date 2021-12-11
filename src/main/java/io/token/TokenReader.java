@@ -37,8 +37,7 @@ public class TokenReader implements Comparable<TokenReader> {
         return new Token(targetType, scanner.next(target));
     }
 
-    public String type()
-    {
+    public String type() {
         return targetType;
     }
 
