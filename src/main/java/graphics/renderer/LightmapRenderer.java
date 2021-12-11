@@ -17,6 +17,7 @@ public class LightmapRenderer extends Renderer {
 
     public LightmapRenderer() {
         lights = new ArrayList<>();
+        noRebuffer = true;
     }
 
     @Override
@@ -25,10 +26,12 @@ public class LightmapRenderer extends Renderer {
 
         RenderBatch batch = new RenderBatch(1, 0, Primitive.QUAD, ShaderDatatype.FLOAT2);
         batch.init();
+        batch.start();
         batch.pushVec2(0, 0);
         batch.pushVec2(Window.getWidth(), 0);
         batch.pushVec2(Window.getWidth(), Window.getHeight());
         batch.pushVec2(0, Window.getHeight());
+        batch.finish();
         batches.add(batch);
     }
 
@@ -98,10 +101,7 @@ public class LightmapRenderer extends Renderer {
      */
     @Override
     protected void rebuffer() {
-        // This feels kinda hacky but add 8 to the offset.
-        // The RenderBatch::begin() function resets this offset
-        // which isn't good.
-        batches.get(0).dataOffset += 8;
+        // Will never be called since noRebuffer flag is set
     }
 
 

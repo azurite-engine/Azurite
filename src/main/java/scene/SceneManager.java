@@ -72,10 +72,10 @@ public class SceneManager {
     }
 
     public void updateUI() {
-//        if (currentScene != null) {
-//            currentScene.updateUI();
-//            currentScene.textRender();
-//        }
+        if (currentScene != null) {
+            currentScene.updateUI();
+            currentScene.textRender();
+        }
     }
 
     /**

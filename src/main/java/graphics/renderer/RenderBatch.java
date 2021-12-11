@@ -297,6 +297,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
      */
     public void pushFloat(float f) {
         data[dataOffset++] = f;
+        checkFullness();
     }
 
     /**
@@ -305,6 +306,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
      */
     public void pushInt(int i) {
         data[dataOffset++] = i;
+        checkFullness();
     }
 
     /**
@@ -315,6 +317,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     public void pushVec2(float x, float y) {
         data[dataOffset++] = x;
         data[dataOffset++] = y;
+        checkFullness();
     }
 
     /**
@@ -324,6 +327,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     public void pushVec2(Vector2f v) {
         data[dataOffset++] = v.x;
         data[dataOffset++] = v.y;
+        checkFullness();
     }
 
     /**
@@ -336,6 +340,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         data[dataOffset++] = x;
         data[dataOffset++] = y;
         data[dataOffset++] = z;
+        checkFullness();
     }
 
     /**
@@ -346,6 +351,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         data[dataOffset++] = v.x;
         data[dataOffset++] = v.y;
         data[dataOffset++] = v.z;
+        checkFullness();
     }
 
     /**
@@ -360,6 +366,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         data[dataOffset++] = y;
         data[dataOffset++] = z;
         data[dataOffset++] = w;
+        checkFullness();
     }
 
     /**
@@ -371,6 +378,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         data[dataOffset++] = v.y;
         data[dataOffset++] = v.z;
         data[dataOffset++] = v.w;
+        checkFullness();
     }
 
     /**
@@ -383,6 +391,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
         data[dataOffset++] = v.y;
         data[dataOffset++] = v.z;
         data[dataOffset++] = v.w;
+        checkFullness();
     }
 
 //    public void beginVertex() {

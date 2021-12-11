@@ -75,10 +75,8 @@ public class TextRenderer extends Renderer {
         for (Text text : texts) {
             ArrayList<GlyphRenderer> glyphs = text.getGlyphRenderers();
             for (GlyphRenderer glyph : glyphs) {
-                for (int i = 0; i < 4; i++) {
-                    RenderBatch batch = getAvailableBatch(glyph.getTexture(), text.zIndex());
-                    pushGlyph(batch, glyph);
-                }
+                RenderBatch batch = getAvailableBatch(glyph.getTexture(), text.zIndex());
+                pushGlyph(batch, glyph);
             }
         }
     }
@@ -97,13 +95,25 @@ public class TextRenderer extends Renderer {
         else textureID = 0;
 
         // Push verts to the batch
+        float xAdd = 1.0f;
+        float yAdd = 1.0f;
         for (int i = 0; i < 4; i++) {
-            batch.pushVec2(spr.getPosition().x + (spr.scale.x), spr.getPosition().y + (spr.scale.y));
+            switch (i) {
+                case 1: yAdd = 0.0f; break;
+                case 2: xAdd = 0.0f; break;
+                case 3: yAdd = 1.0f; break;
+            }
+            batch.pushVec2(spr.getPosition().x + (xAdd * spr.scale.x), spr.getPosition().y + (yAdd * spr.scale.y));
             batch.pushColor(glyph.getColor());
             batch.pushVec2(textureCoordinates[i]);
             batch.pushInt(textureID);
             batch.pushFloat(glyph.isSticky() ? 1.f : 0.f);
         }
+    }
+
+    @Override
+    public void render() {
+        super.render();
     }
 
     @Override

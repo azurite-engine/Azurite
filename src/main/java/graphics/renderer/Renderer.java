@@ -65,6 +65,8 @@ public abstract class Renderer {
      */
     private Shader shader;
 
+    protected boolean noRebuffer = false;
+
     public Renderer() {
         this.batches = new ArrayList<>();
     }
@@ -183,9 +185,11 @@ public abstract class Renderer {
         shader.attach();
         uploadUniforms(shader);
 
-        start();
-        rebuffer();
-        finish();
+        if (!noRebuffer) {
+            start();
+            rebuffer();
+            finish();
+        }
 
         for (RenderBatch batch : batches) {
             batch.bind();
