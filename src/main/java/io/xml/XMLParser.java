@@ -29,17 +29,6 @@ import static io.xml.XMLTokenizer.*;
  */
 public final class XMLParser extends Parser<XMLElement> {
 
-//    public static Charset readHeader(byte[] input) {
-//        String data = new String(input, StandardCharsets.UTF_8);
-//        if (!data.contains("<?") || !data.contains("?>")) return StandardCharsets.UTF_8;
-//        data = data.replace("<?", "<");
-//        data = data.replace("?>", "/>");
-//        data = data.substring(0, data.indexOf(">") + 1);
-//        XMLElement parse = parse(data);
-//        String encoding = parse.getAttributes().getOrDefault("encoding", "UTF-8");
-//        return Charset.isSupported(encoding) ? Charset.forName(encoding) : StandardCharsets.UTF_8;
-//    }
-
     public static String transformValue(String value, boolean isRaw) {
         if (isRaw) {
             //make value ready to read

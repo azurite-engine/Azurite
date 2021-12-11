@@ -13,6 +13,9 @@ import java.nio.charset.Charset;
  */
 public class FileFormats {
 
+    /**
+     * Simple XML format, based on {@link XMLParser} and {@link XMLTokenizer}.
+     */
     public static final FileFormat<XMLElement> XML = new FileFormat<XMLElement>() {
         private final XMLTokenizer tokenizer = new XMLTokenizer();
         private final XMLParser parser = new XMLParser();
