@@ -623,6 +623,28 @@ public class MathUtils {
     }
 
     /**
+     * An alternative randomization method. <br>
+     * Based on noise generation and hashing techniques - it generates a random value using a position and a seed. <br>
+     * - Could also be used as one dimensional value noise. <br>
+     * - Guarantees reproducible results for identical inputs. <br>
+     * - The seed is less significant than the position. <br>
+     *
+     * @param pos  the position in the spectrum.
+     * @param seed the seed used for fixing the spectrum
+     * @return a reproducible randomized number between 0 and 1
+     */
+    public static double fastRandom(int pos, int seed) {
+        pos *= 1610612741;
+        pos += seed;
+        pos ^= pos >> 8;
+        pos += 402653189;
+        pos ^= pos << 8;
+        pos *= 201326611;
+        pos ^= pos >> 1; //killing negative numbers
+        return 1d * pos / Integer.MAX_VALUE;
+    }
+
+    /**
      * Encodes all given input into a short.
      * Note, that the range of Short is 16 bytes and therefore only 0-14 (15 different values) can be encoded.
      * Any value that is not within this range, will lead to undefined behaviour.
