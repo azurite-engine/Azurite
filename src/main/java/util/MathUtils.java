@@ -633,7 +633,7 @@ public class MathUtils {
      * @param seed the seed used for fixing the spectrum
      * @return a reproducible randomized number between 0 and 1
      */
-    public static double fastRandom(int pos, int seed) {
+    public static float fastRandom(int pos, int seed) {
         pos *= 1610612741;
         pos += seed;
         pos ^= pos >> 8;
@@ -641,7 +641,7 @@ public class MathUtils {
         pos ^= pos << 8;
         pos *= 201326611;
         pos ^= pos >> 1; //killing negative numbers
-        return 1d * pos / Integer.MAX_VALUE;
+        return 1f * pos / Integer.MAX_VALUE;
     }
 
     /**
