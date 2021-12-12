@@ -406,7 +406,7 @@ public class MathUtils {
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(float inX, float inY, float circleX, float circleY, float radius) {
-        return dist(inX, inY, circleX, circleY) <= radius;
+        return (inX - circleX) * (inX - circleX) + (inY - circleY) * (inY - circleY) <= radius * radius;
     }
 
     /**
@@ -419,19 +419,19 @@ public class MathUtils {
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(Vector2f in, float circleX, float circleY, float radius) {
-        return dist(in.x, in.y, circleX, circleY) <= radius;
+        return inCircle(in.x, in.y, circleX, circleY, radius);
     }
 
     /**
      * Checks if a set of X and Y coordinates are inside of a circle.
      *
      * @param in     physics.Vector2f containing coordinates of point to check
-     * @param circle physics.Vector2f containing coordinates of the circle
+     * @param circle physics.Vector2f containing coordinates of the center of the circle
      * @param radius Radius of circle
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(Vector2f in, Vector2f circle, float radius) {
-        return dist(in.x, in.y, circle.x, circle.y) <= radius;
+        return inCircle(in, circle.x, circle.y, radius);
     }
 
     /**
@@ -523,7 +523,7 @@ public class MathUtils {
      * @return returns a random float from the range passed.
      */
     public static float random(float min, float max) {
-        return map((float) Math.random(), 0, 1, min, max);
+        return (float) (Math.random() * (max - min) + min);
     }
 
     /**
@@ -534,7 +534,7 @@ public class MathUtils {
      * @return returns a random int from the range passed.
      */
     public static int randomInt(int min, int max) {
-        return (int) map((float) Math.random(), 0, 1, min, max);
+        return (int) (Math.random() * (max - min) + min);
     }
 
     /**
