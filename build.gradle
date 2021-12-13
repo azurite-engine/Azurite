@@ -75,7 +75,7 @@ test {
 }
 
 dependencies {
-    testCompileOnly group: 'junit', name: 'junit', version: '4.12'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
 
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
