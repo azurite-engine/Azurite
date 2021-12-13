@@ -36,6 +36,7 @@ public class SpriteRenderer extends Component {
      * @param color of type JOML Vector4f, range from 0-1
      */
     public SpriteRenderer(Vector4f color, Vector2f size) {
+        super(ComponentOrder.DRAW);
         this.setColor(color);
         this.sprite = new Sprite(null);
         this.isDirty = true;
@@ -48,6 +49,7 @@ public class SpriteRenderer extends Component {
      * @param color of type Color, range from 0-255
      */
     public SpriteRenderer(Color color, Vector2f size) {
+        super(ComponentOrder.DRAW);
         // Note that type Color is normalized below in setColor()
         this.setColor(color.toNormalizedVec4f());
         this.sprite = new Sprite(null);
@@ -62,6 +64,7 @@ public class SpriteRenderer extends Component {
      * @param sprite
      */
     public SpriteRenderer(Sprite sprite, Vector2f size) {
+        super(ComponentOrder.DRAW);
         this.sprite = sprite;
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;
@@ -74,6 +77,7 @@ public class SpriteRenderer extends Component {
      * @param path to the image (ie. "src/assets/images/pepper.png")
      */
     public SpriteRenderer(String path, Vector2f size) {
+        super(ComponentOrder.DRAW);
         this.sprite = new Sprite(Assets.getTexture(path));
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;

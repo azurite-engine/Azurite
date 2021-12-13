@@ -36,6 +36,7 @@ public class PointLight extends Component {
      * @param intensity float: Intensity of the light
      */
     public PointLight(Color color, float intensity) {
+        super(ComponentOrder.DRAW);
         this.color = color.toNormalizedVec3f();
         this.intensity = intensity;
     }
