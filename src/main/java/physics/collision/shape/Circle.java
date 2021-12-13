@@ -4,8 +4,6 @@ import org.joml.Vector2f;
 import physics.collision.RayCastResult;
 
 /**
- * <h1>Azurite</h1>
- * <p>
  * The shape implementation of a circle.
  *
  * @author Juyas

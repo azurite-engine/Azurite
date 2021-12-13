@@ -1,7 +1,7 @@
-package graphics;
+package graphics; 
 
 import static org.lwjgl.opengl.GL11.*;
-import static util.Utils.map;
+import static util.MathUtils.map;
 
 /**
  * <h1>Azurite</h1>

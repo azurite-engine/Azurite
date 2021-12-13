@@ -3,7 +3,6 @@ package util;
 import org.joml.Vector2f;
 
 /**
- * <h1>Azurite</h1>
  * Represents the position in X and Y coordinates, rotation and the scale (width and height)
  */
 public class Transform {
@@ -106,6 +105,24 @@ public class Transform {
     }
 
     /**
+     * @return Returns a new transform which is identical to this object, can be used to copy into a new physics.Transform object.
+     */
+    public Transform copy() {
+        return new Transform(new Vector2f(this.position.x(), this.position.y()), new Vector2f(this.scale.x(), this.scale.y()));
+    }
+
+    /**
+     * Takes a reference to an external transform, and copies this physics.Transform to it.
+     *
+     * @param to The physics.Transform to be changed.
+     */
+    public void copy(Transform to) {
+        to.position.set(this.position);
+        to.rotation = this.rotation;
+        to.scale.set(this.scale);
+    }
+
+    /**
      * Checks to see if to Transforms are equal.
      *
      * @param o Transform to be checked for equality against this instance of util.Transform.
@@ -134,12 +151,16 @@ public class Transform {
         return this.position.y;
     }
 
-    public void addX(float x) {
-        this.position.add(x, 0);
+    public void setY (float y) { this.position.set(this.position.x(), y); }
+
+    public void setX (float x) { this.position.set(x, this.position.y()); }
+
+    public void addY (float y) {
+        this.position.add(0, y);
     }
 
-    public void addY(float y) {
-        this.position.add(0, y);
+    public void addX (float x) {
+        this.position.add(x, 0);
     }
 
     public float getWidth() {

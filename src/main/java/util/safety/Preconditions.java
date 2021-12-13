@@ -1,8 +1,6 @@
 package util.safety;
 
 /**
- * <h1>Azurite</h1>
- *
  * @author Juyas
  * @version 18.06.2021
  * @since 18.06.2021

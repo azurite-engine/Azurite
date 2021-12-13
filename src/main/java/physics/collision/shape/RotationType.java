@@ -1,8 +1,6 @@
 package physics.collision.shape;
 
 /**
- * <h1>Azurite</h1>
- *
  * @author Juyas
  * @version 21.07.2021
  * @since 21.07.2021

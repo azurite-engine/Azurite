@@ -10,7 +10,7 @@ public class Sprite {
     /**
      * The texture for this sprite
      */
-    private Texture texture;
+    protected Texture texture;
 
     /**
      * This sprite's texture coords

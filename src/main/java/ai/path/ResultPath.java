@@ -3,7 +3,6 @@ package ai.path;
 import java.util.List;
 
 /**
- * <h1>Azurite</h1>
  * The result of a pathfinding algorithm containing a full path from start to target.
  *
  * @author Juyas

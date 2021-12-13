@@ -1,4 +1,4 @@
-package graphics;
+package graphics; 
 
 import org.lwjgl.BufferUtils;
 import util.specs.TextureSpec;
@@ -17,213 +17,292 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.stb.STBImage.*;
 
 /**
- * This is a class for an OpenGL texture.
+ * This is a class for an OpenGL texture
+ * @author Asher Haun
+ * @author VoxelRifts
  */
 public class Texture {
-    /**
-     * Filepath of this texture.
-     * If the instance is just a wrapper around an id (by using Texture.wrap()),
-     * this will be set to "==== Wrapper ===="
-     */
-    private String filepath;
+	/**
+	 * Filepath of this texture.
+	 * If the instance is just a wrapper around an id (by using Texture.wrap()),
+	 * 		this will be set to "==== Wrapper ===="
+	 */
+	private String filepath;
 
-    /**
-     * The id of the texture
-     */
-    private int textureID;
+	/**
+	 * The id of the texture
+	 */
+	private int textureID;
 
-    /**
-     * Width and the height of the texture
-     */
-    private int width, height;
+	/**
+	 * Width and the height of the texture
+	 */
+	private int width, height;
 
-    /**
-     * Wrap the given id into a texture object
-     *
-     * @param id the id to be wrapped
-     */
-    private Texture(int id) {
-        this.textureID = id;
-        this.width = -1;
-        this.height = -1;
-        filepath = "==== Wrapper ====";
-    }
+	/**
+	 * Wrap the given id into a texture object
+	 *
+	 * @param id the id to be wrapped
+	 */
+	private Texture(int id) {
+		this.textureID = id;
+		this.width = -1;
+		this.height = -1;
+		filepath = "==== Wrapper ====";
+	}
 
-    /**
-     * Load a Texture from a filepath.
-     * Recommended to use Assets.loadTexture instead of calling this function
-     *
-     * @param filepath filepath of the texture
-     */
-    public Texture(String filepath) {
-        this.filepath = filepath;
+	public Texture() {
+		this.textureID = glGenTextures();
+	}
 
-        // generate texture on GPU
-        textureID = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, textureID);
+	/**
+	 * Load a Texture from a filepath.
+	 * Recommended to use Assets.loadTexture instead of calling this function
+	 *
+	 * @param filepath filepath of the texture
+	 */
+	public Texture (String filepath) {
+		this.filepath = filepath;
 
-        // Set texture parameters
-        // tile image in both directions
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		// generate texture on GPU
+		textureID = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, textureID);
 
-        // When stretching the image, pixelate it
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		// Set texture parameters
+		// tile image in both directions
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-        // Also pixelate image when shrinking image
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		// When stretching the image, pixelate it
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-        // Load image using STB
-        IntBuffer width = BufferUtils.createIntBuffer(1);
-        IntBuffer height = BufferUtils.createIntBuffer(1);
-        IntBuffer channels = BufferUtils.createIntBuffer(1);
-        stbi_set_flip_vertically_on_load(true);
-        ByteBuffer image = stbi_load(filepath, width, height, channels, 0);
+		// Also pixelate image when shrinking image
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-        if (image != null) {
-            this.width = width.get(0);
-            this.height = height.get(0);
+		// Load image using STB
+		IntBuffer width = BufferUtils.createIntBuffer(1);
+		IntBuffer height = BufferUtils.createIntBuffer(1);
+		IntBuffer channels = BufferUtils.createIntBuffer(1);
+		stbi_set_flip_vertically_on_load(true);
+		ByteBuffer image = stbi_load(filepath, width, height, channels, 0);
 
-            if (channels.get(0) == 3) {
-                // RGB
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, image);
-            } else if (channels.get(0) == 4) {
-                // RGBA
-                glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-            } else {
-                assert false : "[ERROR] Graphics.Texture - Unknown number of channels \"" + channels.get(0) + "\".";
-            }
-        } else {
-            assert false : "[ERROR] Graphics.Texture - Could not load image \"" + filepath + "\".";
-        }
+		if (image != null) {
+			this.width = width.get(0);
+			this.height = height.get(0);
 
-        stbi_image_free(image);
-    }
+			if (channels.get(0) == 3) {
+				// RGB
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width.get(0), height.get(0), 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+			} else if (channels.get(0) == 4) {
+				// RGBA
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width.get(0), height.get(0), 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+			} else {
+				assert false : "[ERROR] Graphics.Texture - Unknown number of channels \"" + channels.get(0) + "\".";
+			}
+		} else {
+			assert false : "[ERROR] Graphics.Texture - Could not load image \"" + filepath + "\".";
+		}
 
-    public Texture(int width, int height, TextureSpec spec) {
-        filepath = "==== Created ====";
-        textureID = glGenTextures();
-        glBindTexture(GL_TEXTURE_2D, textureID);
-        glTexImage2D(GL_TEXTURE_2D, 0, spec.format.internalFormat, width, height, 0, spec.format.format, spec.format.datatype, 0);
+		stbi_image_free(image);
+	}
 
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, spec.minificationFilter.glType);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, spec.magnificationFilter.glType);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, spec.rFilter.glType);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, spec.sFilter.glType);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, spec.tFilter.glType);
-    }
+	public Texture(int width, int height, TextureSpec spec) {
+		filepath = "==== Created ====";
+		textureID = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, textureID);
+		glTexImage2D(GL_TEXTURE_2D, 0, spec.format.internalFormat, width, height, 0, spec.format.format, spec.format.datatype, 0);
 
-    /**
-     * Will write am OpenGL Texture to the provided file
-     *
-     * @param file   path where the image is to be stored with extension
-     * @param id     id of the OpenGL Texture Resource
-     * @param width  width of the texture
-     * @param height height of the texture
-     */
-    public static void toFile(String file, int id, int width, int height) {
-        glBindTexture(GL_TEXTURE_2D, id);
-        ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, spec.minificationFilter.glType);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, spec.magnificationFilter.glType);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, spec.rFilter.glType);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, spec.sFilter.glType);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, spec.tFilter.glType);
+	}
 
-        glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+	/**
+	 * Will write am OpenGL Texture to the provided file
+	 * @param file path where the image is to be stored with extension
+	 * @param id id of the OpenGL Texture Resource
+	 * @param width width of the texture
+	 * @param height height of the texture
+	 */
+	public static void toFile(String file, int id, int width, int height) {
+		glBindTexture(GL_TEXTURE_2D, id);
+		ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 
-        for (int x = 0; x < width; ++x) {
-            for (int y = 0; y < height; ++y) {
-                int i = (x + y * width) * 4;
+		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
 
-                int r = buffer.get(i) & 0xFF;
-                int g = buffer.get(i + 1) & 0xFF;
-                int b = buffer.get(i + 2) & 0xFF;
-                int a = buffer.get(i + 3) & 0xFF;
+		for (int x = 0; x < width; ++x) {
+			for (int y = 0; y < height; ++y) {
+				int i = (x + y * width) * 4;
 
-                image.setRGB(x, y, (a << 24) | (r << 16) | (g << 8) | b);
-            }
-        }
-        try {
-            ImageIO.write(image, "PNG", new File(file));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+				int r = buffer.get(i) & 0xFF;
+				int g = buffer.get(i + 1) & 0xFF;
+				int b = buffer.get(i + 2) & 0xFF;
+				int a = buffer.get(i + 3) & 0xFF;
 
-    /**
-     * Wrap the given id into a texture object
-     *
-     * @param id the id to be wrapped
-     * @return the texture instance
-     */
-    public static Texture wrap(int id) {
-        return new Texture(id);
-    }
+				image.setRGB(x, y, (a << 24) | (r << 16) | (g << 8) | b);
+			}
+		}
+		try {
+			ImageIO.write(image, "PNG", new File(file));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    /**
-     * Bind this texture to the currently active texture slot
-     */
-    public void bind() {
-        glBindTexture(GL_TEXTURE_2D, textureID);
-    }
+	/**
+	 * Uploads image data with specified width and height.
+	 *
+	 * @param width  Width of the image
+	 * @param height Height of the image
+	 * @param data   Pixel data of the image
+	 */
+	public void uploadData(int width, int height, ByteBuffer data) {
+		uploadData(GL_RGBA8, width, height, GL_RGBA, data);
+	}
 
-    /**
-     * Bind this texture to a specific texture slot
-     *
-     * @param unit the texture unit to bind this texture to
-     */
-    public void bindToSlot(int unit) {
-        glActiveTexture(GL_TEXTURE0 + unit);
-        glBindTexture(GL_TEXTURE_2D, textureID);
-    }
+	/**
+	 * Uploads image data with specified internal format, width, height and image
+	 * format.
+	 *
+	 * @param internalFormat Internal format of the image data
+	 * @param width          Width of the image
+	 * @param height         Height of the image
+	 * @param format         Format of the image data
+	 * @param data           Pixel data of the image
+	 */
+	public void uploadData(int internalFormat, int width, int height, int format, ByteBuffer data) {
+		glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+	}
 
-    /**
-     * Unbind the texture
-     */
-    public void unbind() {
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
+	/**
+	 * Creates a texture with specified width, height and data.
+	 *
+	 * @param width  Width of the texture
+	 * @param height Height of the texture
+	 * @param data   Picture Data in RGBA format
+	 *
+	 * @return Texture from the specified data
+	 */
+	public Texture createTexture(int width, int height, ByteBuffer data) {
 
-    /**
-     * Get This texture's width. Will be -1 if the instance is just a wrapper
-     *
-     * @return the width of the texture
-     */
-    public int getWidth() {
-        return this.width;
-    }
+		setWidth(width);
+		setHeight(height);
 
-    /**
-     * Get This texture's height. Will be -1 if the instance is just a wrapper
-     *
-     * @return the height of the texture
-     */
-    public int getHeight() {
-        return this.height;
-    }
+		bind();
 
-    /**
-     * Get the texture's id.
-     *
-     * @return the id of the texture
-     */
-    public int getTextureID() {
-        return textureID;
-    }
+		// Set texture parameters
+		// tile image in both directions
+		setParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
+		setParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    /**
-     * The filepath from which this texture was loaded.
-     * Will return "==== Wrapper ====" if it is just a wrapper around an id.
-     *
-     * @return filepath from which the texture was loaded
-     */
-    public String getFilePath() {
-        return filepath;
-    }
+		// When stretching the image, pixelate it
+		setParameter(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
-    public void setId(int id) {
-        this.textureID = id;
-    }
+		// Also pixelate image when shrinking image
+		setParameter(GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    public void delete() {
-        glDeleteTextures(textureID);
-    }
+		uploadData(GL_RGBA8, width, height, GL_RGBA, data);
+
+		return this;
+
+	}
+
+	/**
+	 * Sets a parameter of the texture.
+	 *
+	 * @param name  Name of the parameter
+	 * @param value Value to set
+	 */
+	public void setParameter(int name, int value) {
+		glTexParameteri(GL_TEXTURE_2D, name, value);
+	}
+
+	/**
+	 * Wrap the given id into a texture object
+	 * @param id the id to be wrapped
+	 * @return the texture instance
+	 */
+	public static Texture wrap(int id) {
+		return new Texture(id);
+	}
+
+	/**
+	 * Bind this texture to the currently active texture slot
+	 */
+	public void bind () {
+		glBindTexture(GL_TEXTURE_2D, textureID);
+	}
+
+	/**
+	 * Bind this texture to a specific texture slot
+	 * @param unit the texture unit to bind this texture to
+	 */
+	public void bindToSlot(int unit) {
+		glActiveTexture(GL_TEXTURE0 + unit);
+		glBindTexture(GL_TEXTURE_2D, textureID);
+	}
+
+	/**
+	 * Unbind the texture
+	 */
+	public void unbind () {
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	/**
+	 * Get This texture's width. Will be -1 if the instance is just a wrapper
+	 *
+	 * @return the width of the texture
+	 */
+	public int getWidth() {
+		return this.width;
+	}
+
+	/**
+	 * Get This texture's height. Will be -1 if the instance is just a wrapper
+	 *
+	 * @return the height of the texture
+	 */
+	public int getHeight() {
+		return this.height;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	/**
+	 * Get the texture's id.
+	 *
+	 * @return the id of the texture
+	 */
+	public int getTextureID () {
+		return textureID;
+	}
+
+	/**
+	 * The filepath from which this texture was loaded.
+	 * Will return "==== Wrapper ====" if it is just a wrapper around an id.
+	 *
+	 * @return filepath from which the texture was loaded
+	 */
+	public String getFilePath () {
+		return filepath;
+	}
+
+	public void setId(int id) {
+		this.textureID = id;
+	}
+
+	public void delete() {
+		glDeleteTextures(textureID);
+	}
 }
