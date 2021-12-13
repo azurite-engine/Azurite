@@ -5,7 +5,8 @@ import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
 
-public class JSONObject {
+@Deprecated
+public class JSONObjectOld {
     private StringBuilder stringBuilder = new StringBuilder();
 
     public String getJSON() {
