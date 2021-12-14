@@ -4,9 +4,11 @@ import event.EventData;
 import event.Events;
 import util.specs.FramebufferSpec;
 import util.specs.TextureSpec;
-
+import static org.lwjgl.glfw.GLFW.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.lwjgl.BufferUtils;
 
 import static org.lwjgl.opengl.GL45.*;
 
@@ -178,7 +180,14 @@ public class Framebuffer {
      */
     public static void unbind() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        glViewport(0, 0, Window.getWidth(), Window.getHeight());
+        int[] w = new int[4];
+        int[] h = new int[4];
+        glfwGetFramebufferSize(Window.glfwWindow(), w, h);
+
+        int width = w[0];
+        int height = h[0];
+
+        glViewport(0, 0, width, height);
     }
 
     /**
@@ -302,7 +311,16 @@ public class Framebuffer {
     public void bind() {
         glBindFramebuffer(GL_FRAMEBUFFER, this.id);
         if (!isDefault()) glViewport(0, 0, this.width, this.height);
-        else glViewport(0, 0, Window.getWidth(), Window.getHeight());
+        else {
+            int[] w = new int[4];
+            int[] h = new int[4];
+            glfwGetFramebufferSize(Window.glfwWindow(), w, h);
+
+            int width = w[0];
+            int height = h[0];
+
+            glViewport(0, 0, width, height);
+        }
     }
 
     /**
