@@ -667,6 +667,28 @@ public class MathUtils {
     }
 
     /**
+     * Flooring a value fast by using casting instead of actual calculation.
+     *
+     * @param x the value to floor
+     * @return the floored integer value
+     */
+    public static int fastFloor(float x) {
+        int xi = (int) x;
+        return x < xi ? xi - 1 : xi;
+    }
+
+    /**
+     * Flooring a value fast by using casting instead of actual calculation.
+     *
+     * @param x the value to floor
+     * @return the floored integer value
+     */
+    public static int fastFloor(double x) {
+        int xi = (int) x;
+        return x < xi ? xi - 1 : xi;
+    }
+
+    /**
      * Encodes all given input into a short.
      * Note, that the range of Short is 16 bytes and therefore only 0-14 (15 different values) can be encoded.
      * Any value that is not within this range, will lead to undefined behaviour.
