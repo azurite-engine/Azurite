@@ -128,11 +128,13 @@ public class Window {
         glfwMakeContextCurrent(glfwWindow);
 
         // Enable V-Sync
-//        glfwSwapInterval(1);
+        glfwSwapInterval(1);
 
         // Center the window
         glfwSetWindowPos(glfwWindow, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
         GL.createCapabilities();
+
+        System.setProperty("java.awt.headless", "true");
 
     }
 
@@ -178,10 +180,10 @@ public class Window {
         sceneManager.enable();
 
         while (!glfwWindowShouldClose(glfwWindow)) {
-
             frameEndTime = glfwGetTime();
             Engine.updateDeltaTime((float) (frameEndTime - frameBeginTime));
             frameBeginTime = frameEndTime;
+
             glfwPollEvents();
 
             if (!sleeping) {
