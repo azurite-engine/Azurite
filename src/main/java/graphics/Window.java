@@ -180,8 +180,8 @@ public class Window {
                 PostProcessing.prepare();
                 sceneManager.postProcess(currentScene().renderer.fetchColorAttachment(0));
                 PostProcessing.finish();
-                sceneManager.debugRender();
                 sceneManager.updateUI();
+                sceneManager.debugRender();
             }
             glfwSwapBuffers(glfwWindow);
             getFPS();

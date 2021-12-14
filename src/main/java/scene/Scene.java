@@ -88,10 +88,10 @@ public abstract class Scene {
 
     protected Camera camera;
     protected ForwardToTexture forwardToScreen;
-    private List<Renderer<?>> rendererRegistry = new LinkedList<>();
+    private final List<Renderer> rendererRegistry = new LinkedList<>();
     private boolean debugMode = false;
     private boolean active = false;
-    private ArrayList<Text> uiObjects = new ArrayList<>();
+    private final ArrayList<Text> uiObjects = new ArrayList<>();
 
     public boolean isActive() {
         return active;
@@ -224,7 +224,7 @@ public abstract class Scene {
      *
      * @param renderer the renderer to be registered
      */
-    public void registerRenderer(Renderer<?> renderer) {
+    public void registerRenderer(Renderer renderer) {
         rendererRegistry.add(renderer);
     }
 

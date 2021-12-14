@@ -2,23 +2,29 @@ package graphics.renderer;
 
 import ecs.GameObject;
 import ecs.SpriteRenderer;
-import graphics.Framebuffer;
-import graphics.Graphics;
-import graphics.Shader;
+import graphics.*;
+import org.joml.Vector2f;
 import util.Assets;
 import util.Engine;
+import util.Transform;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * <h1>Azurite</h1>
  * Used to render sprites, which are rendered as {@code Primitive.QUAD}s
  * with textures. This should be used to render any renderable {@code gameObject}.
- *
- * @see DefaultRenderBatch
  */
-public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
+public class DefaultRenderer extends Renderer {
     private static final int MAX_BATCH_SIZE = 1000;
+
+    private final List<SpriteRenderer> sprites;
+
+    public DefaultRenderer() {
+        sprites = new ArrayList<>();
+    }
 
     /**
      * Create a shader
@@ -41,6 +47,18 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
     }
 
     /**
+     * Create a new Batch with appropriate parameters
+     *
+     * @param zIndex
+     * @return a new batch
+     */
+    @Override
+    protected RenderBatch createBatch(int zIndex) {
+        return new RenderBatch(MAX_BATCH_SIZE, zIndex, Primitive.QUAD,
+                ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT);
+    }
+
+    /**
      * Upload uniforms to the shader
      *
      * @param shader the shader
@@ -57,6 +75,43 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
     }
 
     /**
+     * Rebuffer all the data into batches
+     */
+    @Override
+    protected void rebuffer() {
+        for (SpriteRenderer sprite : sprites) {
+            RenderBatch batch = getAvailableBatch(sprite.getTexture(), sprite.gameObject.zIndex());
+
+            Vector2f pos = sprite.gameObject.getReadOnlyPosition();
+            Vector2f scale = sprite.getSize();
+            Vector2f[] textureCoordinates = sprite.getTexCoords();
+
+            int textureID;
+            if (sprite.getTexture() != null) textureID = batch.addTexture(sprite.getTexture());
+            else textureID = 0;
+
+            // Push verts to the batch
+            float xAdd = 1.0f;
+            float yAdd = 1.0f;
+            for (int i = 0; i < 4; i++) {
+                switch (i) {
+                    case 1: yAdd = 0.0f; break;
+                    case 2: xAdd = 0.0f; break;
+                    case 3: yAdd = 1.0f; break;
+                }
+
+                float scaledX = (xAdd * scale.x);
+                float scaledY = (yAdd * scale.y);
+
+                batch.pushVec2(pos.x + scaledX, pos.y + scaledY);
+                batch.pushColor(sprite.getColor());
+                batch.pushVec2(textureCoordinates[i]);
+                batch.pushInt(textureID);
+            }
+        }
+    }
+
+    /**
      * Add a gameObject to this renderer
      *
      * @param gameObject the GameObject with renderable components
@@ -65,7 +120,7 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
     public void add(GameObject gameObject) {
         SpriteRenderer spr = gameObject.getComponent(SpriteRenderer.class);
         if (spr != null) {
-            addSpriteRenderer(spr);
+            sprites.add(spr);
         }
     }
 
@@ -78,9 +133,7 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
     public void remove(GameObject gameObject) {
         SpriteRenderer spr = gameObject.getComponent(SpriteRenderer.class);
         if (spr != null) {
-            spr.markDirty();
-            spr.remove();
-            spr.getBatch().removeSprite(spr);
+            sprites.remove(spr);
         }
     }
 
@@ -90,25 +143,5 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
     @Override
     protected void prepare() {
         Graphics.background(Graphics.defaultBackground);
-    }
-
-    /**
-     * Adds the SpriteRenderer to a single batch, and creates a new batch if their is no space.
-     *
-     * @param sprite SpriteRenderer: The SpriteRenderer component to be added
-     */
-    protected void addSpriteRenderer(SpriteRenderer sprite) {
-        for (DefaultRenderBatch batch : batches) {
-            if (batch.addSprite(sprite)) {
-                return;
-            }
-        }
-        // If unable to add to previous batch, create a new one
-        DefaultRenderBatch newBatch = new DefaultRenderBatch(MAX_BATCH_SIZE, sprite.gameObject.zIndex());
-        newBatch.setRenderer(this);
-        newBatch.start();
-        batches.add(newBatch);
-        newBatch.addSprite(sprite);
-        Collections.sort(batches);
     }
 }

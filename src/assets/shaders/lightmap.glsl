@@ -30,7 +30,7 @@ uniform float uIntensity[MAX_LIGHTS];
 uniform float uMinLighting;
 uniform int uNumLights;
 
-out vec4 color;
+layout (location=0) out vec4 color;
 
 float distance(vec2 a, vec2 b) {
 	vec2 c = b - a;
