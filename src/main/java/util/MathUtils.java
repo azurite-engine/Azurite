@@ -731,36 +731,4 @@ public class MathUtils {
         return length - (toIndex - fromIndex);
     }
 
-    /**
-     * An in place radix sort implementation for linear number sorting.
-     * Uses a recursive portioning algorithm.
-     * Does only work on either positive or negative values since it's based on binary.
-     *
-     * @param data the array containing the numbers to be sorted
-     */
-    public static void radixSort(int[] data) {
-        recursiveRadixSort(data, 0, data.length - 1, 31);
-    }
-
-    private static void recursiveRadixSort(int[] data, int start, int end, int shift) {
-        if (start == end) return;
-        int s = start, e = end;
-        while (start < end) {
-            while (start <= end && ((data[start] >> shift) & 0b1) == 0b0) start++;
-            while (start <= end && ((data[end] >> shift) & 0b1) == 0b1) end--;
-            if (start >= end) break;
-            int tmp = data[start];
-            data[start] = data[end];
-            data[end] = tmp;
-        }
-        if (shift == 0) return;
-        if (e != end) {
-            recursiveRadixSort(data, s, start - 1, shift - 1);
-            recursiveRadixSort(data, start, e, shift - 1);
-        } else {
-            recursiveRadixSort(data, s, e, shift - 1);
-        }
-    }
-
-
 }
