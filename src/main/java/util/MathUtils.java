@@ -406,7 +406,7 @@ public class MathUtils {
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(float inX, float inY, float circleX, float circleY, float radius) {
-        return dist(inX, inY, circleX, circleY) <= radius;
+        return (inX - circleX) * (inX - circleX) + (inY - circleY) * (inY - circleY) <= radius * radius;
     }
 
     /**
@@ -419,19 +419,19 @@ public class MathUtils {
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(Vector2f in, float circleX, float circleY, float radius) {
-        return dist(in.x, in.y, circleX, circleY) <= radius;
+        return inCircle(in.x, in.y, circleX, circleY, radius);
     }
 
     /**
      * Checks if a set of X and Y coordinates are inside of a circle.
      *
      * @param in     physics.Vector2f containing coordinates of point to check
-     * @param circle physics.Vector2f containing coordinates of the circle
+     * @param circle physics.Vector2f containing coordinates of the center of the circle
      * @param radius Radius of circle
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(Vector2f in, Vector2f circle, float radius) {
-        return dist(in.x, in.y, circle.x, circle.y) <= radius;
+        return inCircle(in, circle.x, circle.y, radius);
     }
 
     /**
@@ -523,7 +523,7 @@ public class MathUtils {
      * @return returns a random float from the range passed.
      */
     public static float random(float min, float max) {
-        return map((float) Math.random(), 0, 1, min, max);
+        return (float) (Math.random() * (max - min) + min);
     }
 
     /**
@@ -534,7 +534,7 @@ public class MathUtils {
      * @return returns a random int from the range passed.
      */
     public static int randomInt(int min, int max) {
-        return (int) map((float) Math.random(), 0, 1, min, max);
+        return (int) (Math.random() * (max - min) + min);
     }
 
     /**
@@ -633,7 +633,7 @@ public class MathUtils {
      * @param seed the seed used for fixing the spectrum
      * @return a reproducible randomized number between 0 and 1
      */
-    public static double fastRandom(int pos, int seed) {
+    public static float fastRandom(int pos, int seed) {
         pos *= 1610612741;
         pos += seed;
         pos ^= pos >> 8;
@@ -641,7 +641,51 @@ public class MathUtils {
         pos ^= pos << 8;
         pos *= 201326611;
         pos ^= pos >> 1; //killing negative numbers
-        return 1d * pos / Integer.MAX_VALUE;
+        return 1f * pos / Integer.MAX_VALUE;
+    }
+
+    /**
+     * An alternative randomization method. <br>
+     * Based on noise generation and hashing techniques - it generates a random value using a position and a seed. <br>
+     * - Could also be used as one dimensional value noise. <br>
+     * - Guarantees reproducible results for identical inputs. <br>
+     * - The seed is less significant than the position. <br>
+     *
+     * @param pos  the position in the spectrum.
+     * @param seed the seed used for fixing the spectrum
+     * @return a reproducible randomized number between 0 and 1
+     */
+    public static double fastRandom(long pos, long seed) {
+        pos *= 845120141862461849L;
+        pos += seed;
+        pos ^= pos >> 8;
+        pos += 980103725416435007L;
+        pos ^= pos << 8;
+        pos *= 618222799641048809L;
+        pos ^= pos >> 1; //killing negative numbers
+        return 1d * pos / Long.MAX_VALUE;
+    }
+
+    /**
+     * Flooring a value fast by using casting instead of actual calculation.
+     *
+     * @param x the value to floor
+     * @return the floored integer value
+     */
+    public static int fastFloor(float x) {
+        int xi = (int) x;
+        return x < xi ? xi - 1 : xi;
+    }
+
+    /**
+     * Flooring a value fast by using casting instead of actual calculation.
+     *
+     * @param x the value to floor
+     * @return the floored integer value
+     */
+    public static int fastFloor(double x) {
+        int xi = (int) x;
+        return x < xi ? xi - 1 : xi;
     }
 
     /**
