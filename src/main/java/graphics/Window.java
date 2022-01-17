@@ -34,6 +34,13 @@ public class Window {
     public static int width;
     public static int height;
 
+
+
+
+
+
+
+
     private float dt = 0; // deltaTime (accessible from util.Engine.deltaTime)
 
     public Window(int pwidth, int pheight, String ptitle, boolean fullscreen, float minSceneLighting) {

@@ -19,6 +19,8 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 	private final List<PointLight> lights;
 	private int numberOfLights;
 
+
+
 	public DefaultRenderer() {
 		lights = new ArrayList<>();
 		this.numberOfLights = 0;
@@ -56,7 +58,6 @@ public class DefaultRenderer extends Renderer<DefaultRenderBatch> {
 		// This is here so that all renderers can have different cameras OR no cameras at all
 		shader.uploadMat4f("uProjection", Window.currentScene.camera().getProjectionMatrix());
 		shader.uploadMat4f("uView", Window.currentScene.camera().getViewMatrix());
-
 		shader.uploadInt("uLightmap", 8);
 	}
 
