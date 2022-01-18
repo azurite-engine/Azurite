@@ -92,3 +92,16 @@ dependencies {
     runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
     implementation "org.joml:joml:${jomlVersion}"
 }
+
+task generateApiDocs(type: Javadoc) {
+    title = ""
+    options.noTimestamp(false)
+    source sourceSets.main.allJava
+    classpath = configurations.runtimeClasspath
+    options.encoding 'UTF-8'
+    destinationDir = file("build/generated-files")
+    options.addStringOption("doclet", "com.microsoft.doclet.DocFxDoclet")
+    options.docletpath = [file("lib/docfx-doclet-1.0-SNAPSHOT-jar-with-dependencies.jar")]
+    dependsOn build
+}
+
