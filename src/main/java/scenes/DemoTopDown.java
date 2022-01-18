@@ -62,6 +62,7 @@ public class DemoTopDown extends Scene {
         booper.addComponent(booperAnimation);
         PolygonCollider booperBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100)).mask(2);
         booper.addComponent(booperBody);
+        booper.addComponent(new Tween());
 
 
         //PLAYER
@@ -90,6 +91,18 @@ public class DemoTopDown extends Scene {
 
         //this is not clean:
         //player.getRawTransform().addRotation(1);
+
+        //Tween demo. You can remove the if statement for endless movement back and forth between these tweens.
+        //Position is a primitive in a GameObject so to change position by tweening you have to use more logic
+        if(!booper.getComponent(Tween.class).tweenFinishedAll()) {
+
+            booper.getComponent(Tween.class).setUpTweenPosition( new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), new Vector2f(800, 600), 2, Tween.TweenMode.EASING_IN);
+            booper.getComponent(Tween.class).setUpTweenPosition( new Vector2f(800, 600), new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), 2, Tween.TweenMode.EASING_OUT);
+            booper.getComponent(Tween.class).setUpTweenPosition( new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), new Vector2f(800, 600), 1, Tween.TweenMode.NO_EASING);
+            booper.getComponent(Tween.class).setUpTweenPosition( new Vector2f(800, 600), new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), 1, Tween.TweenMode.EASING_IN_OUT);
+
+            booper.getComponent(Tween.class).play();
+        }
 
         camera.smoothFollow(player.getReadOnlyPosition());
         if (Keyboard.getKeyDown(Keys.AZ_KEY_SPACE)) {
