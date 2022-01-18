@@ -23,7 +23,5 @@ in vec4 fColor;
 out vec4 color;
 
 void main () {
-	vec4 texColor;
-
-	color = texColor;
+	color = fColor;
 }

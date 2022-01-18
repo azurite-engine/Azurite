@@ -2,120 +2,147 @@ package graphics.renderer;
 
 import ecs.GameObject;
 import ecs.PointLight;
-import ecs.SpriteRenderer;
-import event.Events;
 import graphics.*;
-import graphics.renderer.DefaultRenderBatch;
-import graphics.renderer.Renderer;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 import util.Assets;
-import util.specs.FramebufferSpec;
-import util.specs.FramebufferTextureSpec;
+import util.Engine;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.glClearColor;
+public class LightmapRenderer extends Renderer {
+    // The light data
+    private final List<PointLight> lights;
 
-public class LightmapRenderer extends Renderer<QuadRenderBatch> {
-	private static final int MAX_BATCH_SIZE = 1000;
+    public LightmapRenderer() {
+        lights = new ArrayList<>();
+        noRebuffer = true;
+    }
 
-	// The light data
-	private final List<PointLight> lights;
-	private int numberOfLights;
+    @Override
+    public void init() {
+        super.init();
 
-	public LightmapRenderer() {
-		lights = new ArrayList<>();
-		this.numberOfLights = 0;
-	}
+        RenderBatch batch = new RenderBatch(1, 0, Primitive.QUAD, ShaderDatatype.FLOAT2);
+        batch.init();
+        batch.start();
+        batch.pushVec2(0, 0);
+        batch.pushVec2(Window.getWidth(), 0);
+        batch.pushVec2(Window.getWidth(), Window.getHeight());
+        batch.pushVec2(0, Window.getHeight());
+        batch.finish();
+        batches.add(batch);
+    }
 
-	@Override
-	public void init() {
-		super.init();
-		QuadRenderBatch qb = new QuadRenderBatch();
-		qb.start();
-		qb.loadQuad();
-		batches.add(qb);
-		Events.windowResizeEvent.subscribe(data -> {
-			framebuffer.resize(data.x, data.y);
-		});
-	}
+    /**
+     * Create a shader
+     *
+     * @return the created shader
+     */
+    @Override
+    protected Shader createShader() {
+        return Assets.getShader("src/assets/shaders/lightmap.glsl");
+    }
 
-	/**
-	 * Create a shader
-	 *
-	 * @return the created shader
-	 */
-	@Override
-	protected Shader createShader() {
-		return Assets.getShader("src/assets/shaders/lightmap.glsl");
-	}
+    /**
+     * Create a framebuffer
+     *
+     * @return the created Framebuffer
+     */
+    @Override
+    protected Framebuffer createFramebuffer() {
+        return Framebuffer.createWithColorAttachment();
+    }
 
-	/**
-	 * Create a framebuffer
-	 *
-	 * @return the created Framebuffer
-	 */
-	@Override
-	protected Framebuffer createFramebuffer() {
-		return new Framebuffer(Window.getWidth(), Window.getHeight(), new FramebufferSpec(new FramebufferTextureSpec(FramebufferTextureSpec.FramebufferTextureFormat.RGBA8)));
-	}
+    /**
+     * Create a new Batch with appropriate parameters
+     *
+     * @param zIndex
+     * @return a new batch
+     */
+    @Override
+    protected RenderBatch createBatch(int zIndex) {
+        return null;
+    }
 
-	/**
-	 * Upload uniforms to the shader
-	 *
-	 * @param shader the shader
-	 */
-	@Override
-	protected void uploadUniforms(Shader shader) {
-		// This is here so that all renderers can have different cameras OR no cameras at all
-		shader.uploadMat4f("uProjection", Window.currentScene.camera().getProjectionMatrix());
-		shader.uploadVec2f("uCameraOffset", Window.currentScene.camera().getPosition());
+    /**
+     * Upload uniforms to the shader
+     *
+     * @param shader the shader
+     */
+    @Override
+    protected void uploadUniforms(Shader shader) {
+        // This is here so that all renderers can have different cameras OR no cameras at all
+        shader.uploadMat4f("uProjection", Engine.window().currentScene().camera().getProjectionMatrix());
+        shader.uploadVec2f("uCameraOffset", Engine.window().currentScene().camera().getPosition());
 
-		// Set lighting uniforms
-		Vector2f[] lightPositions = new Vector2f[numberOfLights];
-		Vector3f[] lightColors = new Vector3f[numberOfLights];
-		float[] lightIntensities = new float[numberOfLights];
+        // Set lighting uniforms
+        Vector2f[] lightPositions = new Vector2f[lights.size()];
+        Vector3f[] lightColors = new Vector3f[lights.size()];
+        float[] lightIntensities = new float[lights.size()];
 
-		for (int i = 0; i < numberOfLights; i++) {
-			PointLight light = lights.get(i);
-			lightPositions[i] = light.lastTransform.getPosition();
-			lightColors[i] = light.color;
-			lightIntensities[i] = light.intensity;
-		}
+        for (int i = 0; i < lights.size(); i++) {
+            PointLight light = lights.get(i);
+            lightPositions[i] = new Vector2f(light.gameObject.getPositionData()[0], light.gameObject.getPositionData()[1]);
+            lightColors[i] = light.color;
+            lightIntensities[i] = light.intensity;
+        }
 
-		shader.uploadVec2fArray("uLightPosition", lightPositions);
-		shader.uploadVec3fArray("uLightColor", lightColors);
-		shader.uploadFloatArray("uIntensity", lightIntensities);
-		shader.uploadFloat("uMinLighting", Window.currentScene.minLighting);
-		shader.uploadInt("uNumLights", numberOfLights);
-	}
+        shader.uploadVec2fArray("uLightPosition", lightPositions);
+        shader.uploadVec3fArray("uLightColor", lightColors);
+        shader.uploadFloatArray("uIntensity", lightIntensities);
+        shader.uploadFloat("uMinLighting", Engine.scenes().getMinSceneLight());
+        shader.uploadInt("uNumLights", lights.size());
+    }
 
-	@Override
-	public void add(GameObject gameObject) {
-		PointLight l = gameObject.getComponent(PointLight.class);
-		if (l != null) {
-			numberOfLights++;
-			assert numberOfLights <= 10 : "NO MORE THAN 10 LIGHTS";
-			lights.add(l);
-		}
-	}
+    /**
+     * Rebuffer all the data into batches
+     */
+    @Override
+    protected void rebuffer() {
+        // Will never be called since noRebuffer flag is set
+    }
 
-	/**
-	 * Prepare for rendering. Do anything like setting background here.
-	 */
-	@Override
-	protected void prepare() {
-		Graphics.background(Color.WHITE);
-	}
 
-	public void bindLightmap() {
-		GL13.glActiveTexture(GL13.GL_TEXTURE8);
-		GL11.glBindTexture(GL_TEXTURE_2D, framebuffer.fetchColorAttachment(0));
-	}
+
+    /**
+     * Add a gameObject to this renderer
+     *
+     * @param gameObject the GameObject with renderable components
+     */
+    @Override
+    public void add(GameObject gameObject) {
+        PointLight l = gameObject.getComponent(PointLight.class);
+        if (l != null) {
+            if (lights.contains(l)) return;
+            lights.add(l);
+            assert lights.size() <= 10 : "NO MORE THAN 10 LIGHTS";
+        }
+    }
+
+    /**
+     * Remove a gameObject from this renderer
+     *
+     * @param gameObject the GameObject with renderable components
+     */
+    @Override
+    public void remove(GameObject gameObject) {
+        PointLight l = gameObject.getComponent(PointLight.class);
+        if (l != null) {
+            lights.remove(l);
+        }
+    }
+
+    /**
+     * Prepare for rendering. Do anything like setting background here.
+     */
+    @Override
+    protected void prepare() {
+        Graphics.background(Color.WHITE);
+    }
+
+    public void bindLightmap() {
+        framebuffer.getColorAttachment(0).bindToSlot(8);
+    }
 }

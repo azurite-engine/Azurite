@@ -1,96 +1,139 @@
-package util;
+package util; 
 
 import graphics.Window;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import scene.SceneManager;
+import util.safety.Preconditions;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 
-public class Engine {
+public final class Engine {
 
-	/**
-	 * The Engine class initializes GLFW and the game loop.
-	 */
+    /**
+     * The Engine class initializes GLFW and the game loop.
+     */
 
-	private static long startMillis = System.currentTimeMillis();
-	public static Window w;
-	public static boolean running = true;
-	public static float deltaTime = 0;
+    private static final Engine instance = new Engine();
 
-	/**
-	 * Start the engine, and initialize GLFW.
-	 * @param windowWidth Width of the window to be created
-	 * @param windowHeight Height of the window to be created
-	 * @param windowTitle Title of the window to be created
-	 * @param minSceneLighting float from 0-1 indicating the minimum scene light level
-	 */
-	public static void init(int windowWidth, int windowHeight, String windowTitle, float minSceneLighting) {
+    private final long startMillis;
+    private Window window;
+    private boolean running;
+    private float deltaTime;
 
-		GLFWErrorCallback.createPrint(System.err).set();
+    //private to prevent creating new instances
+    private Engine() {
+        running = true;
+        deltaTime = 0;
+        startMillis = System.currentTimeMillis();
+    }
 
-		if (!glfwInit())
-			throw new IllegalStateException("[FATAL] Failed to initialize GLFW.");
+    /**
+     * Get the global unique instance of the Engine object.
+     */
+    public static Engine getInstance() {
+        return instance;
+    }
 
-		w = new Window(windowWidth, windowHeight, windowTitle, minSceneLighting);
+    public static float deltaTime() {
+        return getInstance().getDeltaTime();
+    }
 
-		w.showWindow();
-	}
+    public static void updateDeltaTime(float deltaTime) {
+        getInstance().deltaTime = deltaTime;
+    }
 
-	/**
-	 * Start the engine, and initialize GLFW.
-	 * @param windowWidth Width of the window to be created
-	 * @param windowHeight Height of the window to be created
-	 * @param windowTitle Title of the window to be created
-	 */
-	public static void init(int windowWidth, int windowHeight, String windowTitle) {
+    public static boolean isRunning() {
+        return getInstance().running;
+    }
 
-		GLFWErrorCallback.createPrint(System.err).set();
+    public static Window window() {
+        return getInstance().getWindow();
+    }
 
-		if (!glfwInit())
-			throw new IllegalStateException("[FATAL] Failed to initialize GLFW.");
+    public static void showWindow() {
+        Preconditions.nonNull("window", window()).showWindow();
+    }
 
-		w = new Window(windowWidth, windowHeight, windowTitle);
+    public static SceneManager scenes() {
+        return window().getSceneManager();
+    }
 
-		w.showWindow();
-	}
+    //internal method called before any init
+    private static void preInit() {
 
-	/**
-	 * Start the engine, and initialize GLFW. This will create a fullscreen window.
-	 * @param windowTitle Title of the window to be created
-	 * @param minSceneLighting float from 0-1 indicating the minimum scene light level
-	 */
-	public static void init(String windowTitle, float minSceneLighting) {
+        //ensure that the Engine is running on main thread
+        Preconditions.ensureMainThread("engine initialization");
 
-		GLFWErrorCallback.createPrint(System.err).set();
+        GLFWErrorCallback.createPrint(System.err).set();
 
-		if (!glfwInit())
-			throw new IllegalStateException("[FATAL] Failed to initialize GLFW.");
+        if (!glfwInit())
+            throw new IllegalStateException("[FATAL] Failed to initialize GLFW.");
+    }
 
-		w = new Window(windowTitle, minSceneLighting);
+    /**
+     * Start the engine, and initialize GLFW.
+     *
+     * @param windowWidth      Width of the window to be created
+     * @param windowHeight     Height of the window to be created
+     * @param windowTitle      Title of the window to be created
+     * @param minSceneLighting float from 0-1 indicating the minimum scene light level
+     */
+    public static void init(int windowWidth, int windowHeight, String windowTitle, float minSceneLighting) {
+        preInit();
+        getInstance().window = new Window(windowWidth, windowHeight, windowTitle, minSceneLighting, false);
+    }
 
-		w.showWindow();
-	}
+    /**
+     * Start the engine, and initialize GLFW.
+     *
+     * @param windowWidth  Width of the window to be created
+     * @param windowHeight Height of the window to be created
+     * @param windowTitle  Title of the window to be created
+     */
+    public static void init(int windowWidth, int windowHeight, String windowTitle) {
+        preInit();
+        getInstance().window = new Window(windowWidth, windowHeight, windowTitle, false);
+    }
 
-	/**
-	 * Start the engine, and initialize GLFW.
-	 * @param windowTitle Title of the window to be created
-	 */
-	public static void init(String windowTitle) {
+    /**
+     * Start the engine, and initialize GLFW. This will create a fullscreen window.
+     *
+     * @param windowTitle      Title of the window to be created
+     * @param minSceneLighting float from 0-1 indicating the minimum scene light level
+     */
+    public static void init(String windowTitle, float minSceneLighting) {
+        preInit();
+        getInstance().window = new Window(windowTitle, minSceneLighting, false);
+    }
 
-		GLFWErrorCallback.createPrint(System.err).set();
+    public static void init(int windowWidth, int windowHeight, String windowTitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
+        preInit();
+        getInstance().window = new Window(windowWidth, windowHeight, windowTitle, minSceneLighting, recalculateProjectionOnResize);
+    }
 
-		if (!glfwInit())
-			throw new IllegalStateException("[FATAL] Failed to initialize GLFW.");
+    /**
+     * Start the engine, and initialize GLFW.
+     *
+     * @param windowTitle Title of the window to be created
+     */
+    public static void init(String windowTitle) {
+        preInit();
+        getInstance().window = new Window(windowTitle);
+    }
 
-		w = new Window(windowTitle);
+    /**
+     * @return Returns the number of milliseconds since the engine started. (since the first call)
+     */
+    public static double millisRunning() {
+        return System.currentTimeMillis() - getInstance().startMillis;
+    }
 
-		w.showWindow();
-	}
+    public Window getWindow() {
+        return window;
+    }
 
-	/**
-	 * @return Returns the number of milliseconds since the engine started.
-	 */
-	public static double millis() {
-		return System.currentTimeMillis() - startMillis;
-	}
+    public float getDeltaTime() {
+        return deltaTime;
+    }
 
 }

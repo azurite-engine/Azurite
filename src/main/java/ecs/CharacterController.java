@@ -1,70 +1,99 @@
 package ecs;
 
-import input.Gamepad;
 import input.Keyboard;
 import org.joml.Vector2f;
-import physics.AABB;
-import physics.Transform;
-import util.Engine;
+import physics.force.Force;
 
+//this class is just made to support topDown and platformer demo scenes - its not good at all!!!!
 public class CharacterController extends Component {
 
-    Vector2f position = new Vector2f(0, 0);
-    Vector2f speed = new Vector2f(5, 5);
+    private final float speedModifier;
+    private final Force playerInputForce;
 
-    float gravity = 9;
-    private boolean grounded = false;
-    private Vector2f lastPosition;
-
-    float sprintSpeed = 0;
-
-    AABB collision;
-    public boolean AABB_enabled = false;
-
-    @Override
-    public void start() {
-        lastPosition = new Vector2f();
-        position = gameObject.getTransform().getPosition();
-        super.start();
+    private CharacterController(float speedModifier, Force playerInputForce) {
+        super(ComponentOrder.INPUT);
+        this.playerInputForce = playerInputForce;
+        this.speedModifier = speedModifier;
     }
 
-    @Override
-    public void update (float dt) {
-
-        moveX();
-        if (collision != null) collision.collideX();
-
-        moveY();
-        if (collision != null) collision.collideY();
+    public float getSpeedModifier() {
+        return speedModifier;
     }
 
-    public void enableAABB () {
-        AABB_enabled = true;
-        collision = gameObject.getComponent(AABB.class);
+    public Force getPlayerInputForce() {
+        return playerInputForce;
     }
 
-    private void moveX () {
-        // X
-        gameObject.setTransformX(position.x);
-        if (Keyboard.getKey(Keyboard.A_KEY) || Keyboard.getKey(Keyboard.LEFT_ARROW)) {
-            position.x += -speed.x + sprintSpeed * Engine.deltaTime;
-        }
-        if (Keyboard.getKey(Keyboard.D_KEY) || Keyboard.getKey(Keyboard.RIGHT_ARROW)) {
-            position.x += speed.x + sprintSpeed * Engine.deltaTime;
-        }
+    public static CharacterController standardPlatformer(Dynamics dynamics, float speedModifier) {
+        Force f = new Force() {
+            private final Vector2f direction = new Vector2f(0, 0);
+
+            @Override
+            public String identifier() {
+                return "GodlikePlayerInput";
+            }
+
+            @Override
+            public boolean update(float dt) {
+                direction.set(0, 0);
+                if (up()) direction.add(0, -speedModifier);
+                //nothing on down input
+                if (left()) direction.add(-speedModifier, 0);
+                if (right()) direction.add(speedModifier, 0);
+                return true;
+            }
+
+            @Override
+            public Vector2f direction() {
+                return direction;
+            }
+        };
+        dynamics.applyForce(f);
+        return new CharacterController(speedModifier, f);
     }
 
-    private void moveY () {
-        // Y
-        gameObject.setTransformY(position.y);
+    public static CharacterController standardTopDown(Dynamics dynamics, float speedModifier) {
+        Force f = new Force() {
+            private final Vector2f direction = new Vector2f(0, 0);
 
-        if (Keyboard.getKey(Keyboard.W_KEY) || Keyboard.getKey(Keyboard.UP_ARROW)) {
-            position.y += -speed.y + sprintSpeed * Engine.deltaTime;
-        }
-        if (Keyboard.getKey(Keyboard.S_KEY) || Keyboard.getKey(Keyboard.DOWN_ARROW)) {
-            position.y += speed.y + sprintSpeed * Engine.deltaTime;
-        }
+            @Override
+            public String identifier() {
+                return "GodlikePlayerInput";
+            }
+
+            @Override
+            public boolean update(float dt) {
+                direction.set(0, 0);
+                if (up()) direction.add(0, -speedModifier);
+                if (down()) direction.add(0, speedModifier);
+                if (left()) direction.add(-speedModifier, 0);
+                if (right()) direction.add(speedModifier, 0);
+                return true;
+            }
+
+            @Override
+            public Vector2f direction() {
+                return direction;
+            }
+        };
+        dynamics.applyForce(f);
+        return new CharacterController(speedModifier, f);
     }
 
+    private static boolean up() {
+        return Keyboard.keyDownOrHold(Keyboard.UP_ARROW) || Keyboard.keyDownOrHold(Keyboard.W_KEY);
+    }
+
+    private static boolean down() {
+        return Keyboard.keyDownOrHold(Keyboard.DOWN_ARROW) || Keyboard.keyDownOrHold(Keyboard.S_KEY);
+    }
+
+    private static boolean left() {
+        return Keyboard.keyDownOrHold(Keyboard.LEFT_ARROW) || Keyboard.keyDownOrHold(Keyboard.A_KEY);
+    }
+
+    private static boolean right() {
+        return Keyboard.keyDownOrHold(Keyboard.RIGHT_ARROW) || Keyboard.keyDownOrHold(Keyboard.D_KEY);
+    }
 
 }
