@@ -5,16 +5,21 @@ import org.joml.Vector2f;
 import org.junit.Assert;
 import org.junit.Test;
 import physics.collision.shape.Circle;
+import physics.collision.shape.ConvexPolygon;
+import physics.collision.shape.Point;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.OptionalDouble;
+import java.util.stream.Collectors;
 
 /**
  * @author Juyas
  * @version 16.07.2021
  * @since 16.07.2021
  */
-public class UtilsTest {
+public class MathUtilsTest {
 
     final float minimalDelta = Float.MIN_VALUE;
     final float smallDelta = 0.0001f;
@@ -179,45 +184,45 @@ public class UtilsTest {
 
     }
 
-    @Test
-    public void gjksmCollision() {
-        //TODO hard to test
-    }
-
-    @Test
-    public void expandingPolytopeAlgorithm() {
-        //TODO hard to test
-    }
-
-    @Test
-    public void maxDotPointMinkDiff() {
-        //TODO hard to test
-    }
-
-    @Test
-    public void maxDotPoint() {
-        //TODO hard to test
-    }
-
-    @Test
-    public void solveSimultaneousEquations() {
-        //TODO hard to test
-    }
-
-    @Test
-    public void rayCastIntersectionPoint() {
-        //TODO hard to test
-    }
-
-    @Test
-    public void rayCastIntersection() {
-        //TODO hard to test
-    }
-
-    @Test
-    public void rayCastToLineIntersectionPoint() {
-        //TODO hard to test
-    }
+//    @Test
+//    public void gjksmCollision() {
+//        //TODO hard to test
+//    }
+//
+//    @Test
+//    public void expandingPolytopeAlgorithm() {
+//        //TODO hard to test
+//    }
+//
+//    @Test
+//    public void maxDotPointMinkDiff() {
+//        //TODO hard to test
+//    }
+//
+//    @Test
+//    public void maxDotPoint() {
+//        //TODO hard to test
+//    }
+//
+//    @Test
+//    public void solveSimultaneousEquations() {
+//        //TODO hard to test
+//    }
+//
+//    @Test
+//    public void rayCastIntersectionPoint() {
+//        //TODO hard to test
+//    }
+//
+//    @Test
+//    public void rayCastIntersection() {
+//        //TODO hard to test
+//    }
+//
+//    @Test
+//    public void rayCastToLineIntersectionPoint() {
+//        //TODO hard to test
+//    }
 
     @Test
     public void centroidAndSphere() {
@@ -273,6 +278,87 @@ public class UtilsTest {
         Transform notInside = new Transform(1, 1, 7, 19);
         Assert.assertTrue(MathUtils.rectInRect(inside, transform));
         Assert.assertFalse(MathUtils.rectInRect(notInside, transform));
+    }
+
+    @Test
+    public void convexHull() {
+        for (int test = 0; test < 10; test++) {
+            Vector2f[] vectors = new Vector2f[(int) (Math.random() * 50 + 4)];
+            for (int i = 0; i < vectors.length; i++) {
+                vectors[i] = new Vector2f((float) (Math.random() * -1000 + 500), (float) (Math.random() * -1000 + 500));
+            }
+            ConvexPolygon polygon = new ConvexPolygon(vectors);
+            polygon.setPosition(0, 0);
+            // all non-edge points shall be inside the polygon
+            for (Vector2f vec : Arrays.stream(vectors).filter(v -> !Arrays.asList(polygon.getAbsolutePoints()).contains(v)).collect(Collectors.toList())) {
+                Point point = new Point(vec);
+                point.setPosition(0, 0);
+                Assert.assertTrue(MathUtils.gjksmCollision(point, polygon).collision());
+            }
+        }
+    }
+
+    @Test
+    public void boundingSphere() {
+        for (int test = 0; test < 10; test++) {
+            Vector2f[] vectors = new Vector2f[(int) (Math.random() * 15 + 4)];
+            for (int i = 0; i < vectors.length; i++) {
+                vectors[i] = new Vector2f((float) (Math.random() * -1000 + 500), (float) (Math.random() * -1000 + 500));
+            }
+            Vector2f[] vector2fs = MathUtils.convexHull(vectors);
+            Vector2f c = MathUtils.polygonCentroid(vector2fs);
+            float radius = MathUtils.boundingSphere(c, vector2fs);
+            Assert.assertNotNull(c);
+            OptionalDouble max = Arrays.stream(vector2fs).mapToDouble(v -> v.distance(c)).max();
+            Assert.assertTrue(max.isPresent());
+            double d = max.getAsDouble();
+            Assert.assertTrue(d <= radius);
+        }
+    }
+
+//    @Test
+//    public void polygonCentroid() {
+//        //how to test?
+//    }
+
+    @Test
+    public void randomInt() {
+        //exhaustive testing for range
+        int max = 1000000;
+        for (int i = 0; i < max; i += 500) {
+            int random = MathUtils.randomInt(i, max);
+            Assert.assertTrue(random >= i);
+            Assert.assertTrue(random <= max);
+        }
+    }
+
+
+    @Test
+    public void fastRandom() {
+        //exhaustive testing for range
+        int seedInt = (int) (Math.random() * Long.MAX_VALUE);
+        for (int i = 0; i < 1000000; i += 500) {
+            float random = MathUtils.fastRandom(i, seedInt);
+            Assert.assertTrue(random >= 0);
+            Assert.assertTrue(random <= 1);
+        }
+        long seedLong = (long) (Math.random() * Long.MAX_VALUE);
+        for (long i = 0; i < 1000000000000L; i += 500000000L) {
+            double random = MathUtils.fastRandom(i, seedLong);
+            Assert.assertTrue(random >= 0);
+            Assert.assertTrue(random <= 1);
+        }
+    }
+
+    @Test
+    public void fastFloor() {
+        //exhaustive testing for precise output
+        for (int i = 0; i < 100000; i++) {
+            double d = Math.random() * Integer.MAX_VALUE;
+            float f = (float) (Math.random() * Integer.MAX_VALUE);
+            Assert.assertEquals((int) Math.floor(d), MathUtils.fastFloor(d));
+            Assert.assertEquals((int) Math.floor(f), MathUtils.fastFloor(f));
+        }
     }
 
 }
