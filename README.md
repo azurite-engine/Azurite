@@ -93,7 +93,7 @@ public class Main extends Scene {
 		camera = new Camera();
 
 		player = new GameObject();
-		s = new Sprite
+		s = new Sprite("src/assets/sprite.png");
 		player.addComponent(new SpriteRenderer(s, new Vector2f(100)));
 	}
 
