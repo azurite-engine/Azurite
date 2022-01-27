@@ -1,12 +1,11 @@
-package ui;
+package ecs;
 
-import ui.fonts.Font;
+import fonts.Font;
 import fonts.Glyph;
 import fonts.GlyphRenderer;
 import graphics.Color;
 import graphics.HSLColor;
 import graphics.renderer.TextRenderer;
-import graphics.renderer.TextRendererBatch;
 import org.joml.Vector2f;
 import util.Engine;
 import util.Logger;
@@ -30,7 +29,6 @@ public class Text {
     private boolean isCentered = false;
 
     private ArrayList<GlyphRenderer> glyphRenderers;
-    private TextRendererBatch currentBatch;
     private Color color = Color.WHITE;
 
     private Font font;
@@ -49,10 +47,10 @@ public class Text {
     public Text (String string, Font font, Color color, float x, float y, int zIndex, boolean isSticky, boolean isCentered) {
         this.text = string;
         // String sizes are automatically chopped off at a certain length due to rendering speed and memory limitations.
-        if (string.length() >= TextRenderer.getMaxBatchSize()) {
-            Logger.logInfo("The String \"" + string.substring(0, 7) + "...\" passed is longer than the allowed string size for text: " + TextRenderer.getMaxBatchSize());
-            this.text = string.substring(0, TextRenderer.getMaxBatchSize() - 4) + "...";
-        }
+//        if (string.length() >= TextRenderer.getMaxBatchSize()) {
+//            Logger.logInfo("The String \"" + string.substring(0, 7) + "...\" passed is longer than the allowed string size for text: " + TextRenderer.getMaxBatchSize());
+//            this.text = string.substring(0, TextRenderer.getMaxBatchSize() - 4) + "...";
+//        }
 
         this.font = font;
         this.color = color;
@@ -68,9 +66,7 @@ public class Text {
 
         generateGlyphs();
         Engine.scenes().currentScene().textRenderer.add(this);
-        Engine.scenes().currentScene().addText(this);
-
-        currentBatch = glyphRenderers.get(0).getBatch();
+        Engine.scenes().currentScene().addUiObject(this);
     }
 
     /**
@@ -128,13 +124,9 @@ public class Text {
      * @param string the text to change the current string to.
      */
     public void change (String string) {
-        currentBatch = glyphRenderers.get(0).getBatch();
         glyphRenderers.clear();
-
         this.text = string + " ";
-
         generateGlyphs();
-        Engine.scenes().currentScene().textRenderer.changeText(this, currentBatch);
     }
 
     private char ch;
@@ -221,14 +213,6 @@ public class Text {
         if (textHeight > font.getFontHeight()) {
             drawY += textHeight - font.getFontHeight();
         }
-    }
-
-    /**
-     * @return the {@link graphics.renderer.TextRendererBatch} that this Text object belongs to.
-     */
-    public int getBatchIndex () {
-        if (glyphRenderers.size() == 0) return -1;
-        return glyphRenderers.get(0).getBatchIndex();
     }
 
     public ArrayList<GlyphRenderer> getGlyphRenderers () {

@@ -1,8 +1,7 @@
 package util.debug;
 
+import ecs.Component;
 import graphics.Color;
-import graphics.RenderableComponent;
-import graphics.renderer.DebugRenderBatch;
 import org.joml.Vector2f;
 
 // NOTE: Even though this is not a component, it extends RenderableComponent. This was the easiest
@@ -12,7 +11,7 @@ import org.joml.Vector2f;
  * Represents a Line which can be rendered by DebugRenderer
  * The most basic primitive for Debug Rendering
  */
-public class DebugLine extends RenderableComponent<DebugRenderBatch> {
+public class DebugLine {
     /**
      * Start point for the line
      */

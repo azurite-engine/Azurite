@@ -54,8 +54,7 @@ public class MathUtils {
         int pointsConfirmed = 1;
         int loop = 0;
         int maxLoop = shapeA.vertices() + shapeB.vertices();
-        if (shapeA.type() == ShapeType.CIRCLE || shapeB.type() == ShapeType.CIRCLE)
-            maxLoop += 20;
+        if (shapeA.type() == ShapeType.CIRCLE || shapeB.type() == ShapeType.CIRCLE) maxLoop += 20;
 
         while (pointsConfirmed < 3) {
 
@@ -68,8 +67,7 @@ public class MathUtils {
             //Shape combinedShape = minkDiff(shapeA, shapeB); combinedShape.supportPoint(direction);
             Vector2f pointA = maxDotPointMinkDiff(shapeA, shapeB, direction);
 
-            if (pointA.dot(direction) < 0)
-                return new CollisionInformation(null, false); //no intersection
+            if (pointA.dot(direction) < 0) return new CollisionInformation(null, false); //no intersection
 
             //do Simplex -> two points needed for that
             {
@@ -85,16 +83,13 @@ public class MathUtils {
                     Vector2f perpendicular = new Vector2f(ab).perpendicular();
 
                     //decide if negating is necessary - it should point towards AO, therefore dot product has to be > 0
-                    if (!rightDirection(perpendicular, ao))
-                        perpendicular.mul(-1);
+                    if (!rightDirection(perpendicular, ao)) perpendicular.mul(-1);
 
                     direction.set(perpendicular);
 
                     //points.add(ao);
-                    if (pointsConfirmed == 1)
-                        simplex.setMiddle(pointA);
-                    else if (pointsConfirmed == 2)
-                        simplex.setRight(pointA);
+                    if (pointsConfirmed == 1) simplex.setMiddle(pointA);
+                    else if (pointsConfirmed == 2) simplex.setRight(pointA);
 
                     //triangular check not necessary
                     //if the next point derived from the perpendicular direction can find a point
@@ -149,8 +144,7 @@ public class MathUtils {
             normal = closestFace.getRight();
             Vector2f vector2f = maxDotPointMinkDiff(shapeA, shapeB, normal);
             //if the vector*normal is close to normal*normal, its the point we seek
-            if (Math.abs(normal.dot(vector2f) - squareLength) < 0.001f)
-                return Optional.of(normal.mul(-1));
+            if (Math.abs(normal.dot(vector2f) - squareLength) < 0.001f) return Optional.of(normal.mul(-1));
             polygon.add(1 + closestFace.getLeft(), vector2f);
         }
         return Optional.empty();
@@ -244,8 +238,7 @@ public class MathUtils {
         // find the leftmost point
         int leftMost = 0;
         for (int i = 1; i < n; i++)
-            if (points[i].x < points[leftMost].x)
-                leftMost = i;
+            if (points[i].x < points[leftMost].x) leftMost = i;
         int start = leftMost, curr;
 
         ordered[last++] = points[start];
@@ -256,15 +249,13 @@ public class MathUtils {
                 Vector2f p = points[start];
                 Vector2f q = points[i];
                 Vector2f r = points[curr];
-                if ((q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y) < 0)
-                    curr = i;
+                if ((q.y - p.y) * (r.x - q.x) - (q.x - p.x) * (r.y - q.y) < 0) curr = i;
             }
             ordered[last++ % n] = points[curr];
             start = curr;
         } while (start != leftMost);
         //are any points unused for the hull
-        if (last >= n)
-            return ordered;
+        if (last >= n) return ordered;
         else return Arrays.copyOf(ordered, last);
     }
 
@@ -355,11 +346,9 @@ public class MathUtils {
         int current = 1;
         do {
             currDist = centroid.sub(vertices[current], new Vector2f()).lengthSquared();
-            if (currDist > max)
-                max = currDist;
+            if (currDist > max) max = currDist;
             current++;
-        }
-        while (vertices.length > current);
+        } while (vertices.length > current);
         return (float) Math.sqrt(max);
     }
 
@@ -406,7 +395,7 @@ public class MathUtils {
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(float inX, float inY, float circleX, float circleY, float radius) {
-        return dist(inX, inY, circleX, circleY) <= radius;
+        return (inX - circleX) * (inX - circleX) + (inY - circleY) * (inY - circleY) <= radius * radius;
     }
 
     /**
@@ -419,19 +408,19 @@ public class MathUtils {
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(Vector2f in, float circleX, float circleY, float radius) {
-        return dist(in.x, in.y, circleX, circleY) <= radius;
+        return inCircle(in.x, in.y, circleX, circleY, radius);
     }
 
     /**
      * Checks if a set of X and Y coordinates are inside of a circle.
      *
      * @param in     physics.Vector2f containing coordinates of point to check
-     * @param circle physics.Vector2f containing coordinates of the circle
+     * @param circle physics.Vector2f containing coordinates of the center of the circle
      * @param radius Radius of circle
      * @return Returns true if the point is inside the circle, otherwise returns false.
      */
     public static boolean inCircle(Vector2f in, Vector2f circle, float radius) {
-        return dist(in.x, in.y, circle.x, circle.y) <= radius;
+        return inCircle(in, circle.x, circle.y, radius);
     }
 
     /**
@@ -471,10 +460,7 @@ public class MathUtils {
      * @return returns boolean true if t1 is inside of t2
      */
     public static boolean rectInRect(Transform t1, Transform t2) {
-        return inRect(new Vector2f(t1.getX(), t1.getY()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight()) &&
-                inRect(new Vector2f(t1.getX(), t1.getY() + t1.getHeight()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight()) &&
-                inRect(new Vector2f(t1.getX() + t1.getWidth(), t1.getY()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight()) &&
-                inRect(new Vector2f(t1.getX() + t1.getWidth(), t1.getY() + t1.getHeight()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight());
+        return inRect(new Vector2f(t1.getX(), t1.getY()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight()) && inRect(new Vector2f(t1.getX(), t1.getY() + t1.getHeight()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight()) && inRect(new Vector2f(t1.getX() + t1.getWidth(), t1.getY()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight()) && inRect(new Vector2f(t1.getX() + t1.getWidth(), t1.getY() + t1.getHeight()), t2.getX(), t2.getY(), t2.getWidth(), t2.getHeight());
     }
 
     /**
@@ -523,7 +509,7 @@ public class MathUtils {
      * @return returns a random float from the range passed.
      */
     public static float random(float min, float max) {
-        return map((float) Math.random(), 0, 1, min, max);
+        return (float) (Math.random() * (max - min) + min);
     }
 
     /**
@@ -534,7 +520,7 @@ public class MathUtils {
      * @return returns a random int from the range passed.
      */
     public static int randomInt(int min, int max) {
-        return (int) map((float) Math.random(), 0, 1, min, max);
+        return (int) (Math.random() * (max - min) + min);
     }
 
     /**
@@ -620,6 +606,72 @@ public class MathUtils {
      */
     public static float lerp(float start, float end, float amt) {
         return (1 - amt) * start + amt * end;
+    }
+
+    /**
+     * An alternative randomization method. <br>
+     * Based on noise generation and hashing techniques - it generates a random value using a position and a seed. <br>
+     * - Could also be used as one dimensional value noise. <br>
+     * - Guarantees reproducible results for identical inputs. <br>
+     * - The seed is less significant than the position. <br>
+     *
+     * @param pos  the position in the spectrum.
+     * @param seed the seed used for fixing the spectrum
+     * @return a reproducible randomized number between 0 and 1
+     */
+    public static float fastRandom(int pos, int seed) {
+        pos *= 1610612741;
+        pos += seed;
+        pos ^= pos >> 8;
+        pos += 402653189;
+        pos ^= pos << 8;
+        pos *= 201326611;
+        pos ^= pos >> 1; //killing negative numbers
+        return 1f * pos / Integer.MAX_VALUE;
+    }
+
+    /**
+     * An alternative randomization method. <br>
+     * Based on noise generation and hashing techniques - it generates a random value using a position and a seed. <br>
+     * - Could also be used as one dimensional value noise. <br>
+     * - Guarantees reproducible results for identical inputs. <br>
+     * - The seed is less significant than the position. <br>
+     *
+     * @param pos  the position in the spectrum.
+     * @param seed the seed used for fixing the spectrum
+     * @return a reproducible randomized number between 0 and 1
+     */
+    public static double fastRandom(long pos, long seed) {
+        pos *= 845120141862461849L;
+        pos += seed;
+        pos ^= pos >> 8;
+        pos += 980103725416435007L;
+        pos ^= pos << 8;
+        pos *= 618222799641048809L;
+        pos ^= pos >> 1; //killing negative numbers
+        return 1d * pos / Long.MAX_VALUE;
+    }
+
+    /**
+     * Flooring a value fast by using casting instead of actual calculation.
+     *
+     * @param x the value to floor
+     * @return the floored integer value
+     */
+    public static int fastFloor(float x) {
+        int xi = (int) x;
+        return x < xi ? xi - 1 : xi;
+    }
+
+    /**
+     * Flooring a value fast by using casting instead of actual calculation.
+     *
+     * @param x the value to floor
+     * @return the floored integer value
+     */
+    public static int fastFloor(double x) {
+        int xi = (int) x;
+        return x < xi ? xi - 1 : xi;
     }
 
     /**

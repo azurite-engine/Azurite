@@ -1,10 +1,8 @@
 package ecs;
 
 import graphics.Color;
-import graphics.RenderableComponent;
 import graphics.Sprite;
 import graphics.Texture;
-import graphics.renderer.DefaultRenderBatch;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import util.Assets;
@@ -21,7 +19,7 @@ import static graphics.Color.WHITE;
  * @author Gabe
  */
 
-public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> {
+public class SpriteRenderer extends Component {
 
     private Vector4f color = new Color(255, 100, 100, 255).toNormalizedVec4f();
 
@@ -38,6 +36,7 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> {
      * @param color of type JOML Vector4f, range from 0-1
      */
     public SpriteRenderer(Vector4f color, Vector2f size) {
+        super(ComponentOrder.DRAW);
         this.setColor(color);
         this.sprite = new Sprite(null);
         this.isDirty = true;
@@ -50,6 +49,7 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> {
      * @param color of type Color, range from 0-255
      */
     public SpriteRenderer(Color color, Vector2f size) {
+        super(ComponentOrder.DRAW);
         // Note that type Color is normalized below in setColor()
         this.setColor(color.toNormalizedVec4f());
         this.sprite = new Sprite(null);
@@ -64,6 +64,7 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> {
      * @param sprite
      */
     public SpriteRenderer(Sprite sprite, Vector2f size) {
+        super(ComponentOrder.DRAW);
         this.sprite = sprite;
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;
@@ -76,6 +77,7 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> {
      * @param path to the image (ie. "src/assets/images/pepper.png")
      */
     public SpriteRenderer(String path, Vector2f size) {
+        super(ComponentOrder.DRAW);
         this.sprite = new Sprite(Assets.getTexture(path));
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;
@@ -100,11 +102,6 @@ public class SpriteRenderer extends RenderableComponent<DefaultRenderBatch> {
     public void update(float dt) {
         if (!position().equals(this.lastLocation)) markDirty();
         this.lastLocation = position();
-    }
-
-    @Override
-    public void remove() {
-        getBatch().getRenderer().remove(this.gameObject);
     }
 
     /**

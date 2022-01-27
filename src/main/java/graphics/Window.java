@@ -42,6 +42,12 @@ public class Window {
 
         // Configure GLFW
         glfwDefaultWindowHints();
+
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
@@ -52,6 +58,8 @@ public class Window {
     }
 
     public Window(String ptitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
+        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
+
         videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         width = videoMode.width();
         height = videoMode.height();
@@ -65,6 +73,12 @@ public class Window {
 
         // Configure GLFW
         glfwDefaultWindowHints();
+
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
@@ -116,11 +130,13 @@ public class Window {
         glfwMakeContextCurrent(glfwWindow);
 
         // Enable V-Sync
-//        glfwSwapInterval(1);
+        glfwSwapInterval(1);
 
         // Center the window
         glfwSetWindowPos(glfwWindow, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
         GL.createCapabilities();
+
+        System.setProperty("java.awt.headless", "true");
 
     }
 
@@ -166,10 +182,10 @@ public class Window {
         sceneManager.enable();
 
         while (!glfwWindowShouldClose(glfwWindow)) {
-
             frameEndTime = glfwGetTime();
             Engine.updateDeltaTime((float) (frameEndTime - frameBeginTime));
             frameBeginTime = frameEndTime;
+
             glfwPollEvents();
 
             if (!sleeping) {
@@ -180,8 +196,8 @@ public class Window {
                 PostProcessing.prepare();
                 sceneManager.postProcess(currentScene().renderer.fetchColorAttachment(0));
                 PostProcessing.finish();
-                sceneManager.debugRender();
                 sceneManager.updateUI();
+                sceneManager.debugRender();
             }
             glfwSwapBuffers(glfwWindow);
             getFPS();

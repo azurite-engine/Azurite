@@ -1,8 +1,6 @@
 package ecs;
 
 import graphics.Color;
-import graphics.RenderableComponent;
-import graphics.renderer.QuadRenderBatch;
 import org.joml.Vector3f;
 
 /**
@@ -11,7 +9,7 @@ import org.joml.Vector3f;
  *
  * @author VoxelRifts
  */
-public class PointLight extends RenderableComponent<QuadRenderBatch> {
+public class PointLight extends Component {
 
     /**
      * Colour of the light
@@ -38,6 +36,7 @@ public class PointLight extends RenderableComponent<QuadRenderBatch> {
      * @param intensity float: Intensity of the light
      */
     public PointLight(Color color, float intensity) {
+        super(ComponentOrder.DRAW);
         this.color = color.toNormalizedVec3f();
         this.intensity = intensity;
     }
@@ -45,11 +44,6 @@ public class PointLight extends RenderableComponent<QuadRenderBatch> {
     @Override
     public void start() {
 
-    }
-
-    @Override
-    public void remove() {
-        getBatch().getRenderer().remove(this.gameObject);
     }
 
     @Override

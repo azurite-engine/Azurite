@@ -199,6 +199,15 @@ public abstract class Scene {
     }
 
     /**
+     * Register a renderer to this scene
+     *
+     * @param renderer the renderer to be registered
+     */
+    public void registerRenderer(Renderer renderer) {
+        rendererRegistry.add(renderer);
+    }
+
+    /**
      * @return Returns the scene's instance of Camera
      */
     public Camera camera() {

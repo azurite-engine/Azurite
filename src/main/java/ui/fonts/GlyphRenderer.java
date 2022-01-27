@@ -1,9 +1,8 @@
 package fonts;
 
-import ui.Text;
+import ecs.Text;
 import graphics.Color;
 import graphics.Texture;
-import graphics.renderer.TextRendererBatch;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import util.MathUtils;
@@ -25,9 +24,6 @@ public class GlyphRenderer {
     private Transform localTransform;
     private Transform lastTransform = new Transform();
     private boolean isDirty = false; // Dirty flag, tells renderer to redraw if object has changed
-
-    private TextRendererBatch batch;
-    private int batchIndex;
 
     private boolean isSticky = false;
 
@@ -58,22 +54,9 @@ public class GlyphRenderer {
         }
     }
 
-    public void setRendererBatch (TextRendererBatch batch, int index) {
-        this.batch = batch;
-        batchIndex = index;
-    }
-
     public void updatePosition (Vector2f delta) {
         localTransform.addX(delta.x());
         localTransform.addY(delta.y());
-    }
-
-    public TextRendererBatch getBatch () {
-        return batch;
-    }
-
-    public int getBatchIndex () {
-        return batchIndex;
     }
 
     public char getCharacter () {

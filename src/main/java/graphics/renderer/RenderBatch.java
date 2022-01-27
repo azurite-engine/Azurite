@@ -1,17 +1,17 @@
 package graphics.renderer;
 
+import graphics.Color;
 import graphics.Primitive;
 import graphics.ShaderDatatype;
 import graphics.Texture;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
-import util.MathUtils;
 
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.glEnableVertexAttribArray;
@@ -57,7 +57,8 @@ import static org.lwjgl.opengl.GL30.*;
  *
  * @see Renderer
  */
-public abstract class RenderBatch implements Comparable<RenderBatch> {
+public class RenderBatch implements Comparable<RenderBatch> {
+    private static int num = 0;
     /**
      * The primitive that this batch draws
      */
@@ -75,9 +76,13 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
      */
     private final ShaderDatatype[] attributes;
     /**
-     * Does the batch have room for more submissions
+     * Is this batch full due to filled up geometry
      */
-    public boolean hasRoom;
+    public boolean isFull;
+    /**
+     * Is this batch full due to having 8 textures occupied already
+     */
+    public boolean isFull_Textures;
     /**
      * How many floats/ints in a single vertex
      */
@@ -99,9 +104,9 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
      */
     protected float[] data;
     /**
-     * Internal count of how many primitives have been submitted to this batch
+     * The internal data offset
      */
-    protected int spriteCount;
+    protected int dataOffset;
     /**
      * Vertex Array id
      */
@@ -120,11 +125,6 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
     private int ebo;
 
     /**
-     * Parent Renderer
-     */
-    private Renderer<?> renderer;
-
-    /**
      * @param maxBatchSize the maximum number of primitives in a batch
      * @param zIndex       the zIndex of the batch. Used to sort the batches in order of which sprites appear above others.
      * @param primitive    the primitive
@@ -136,8 +136,9 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
         this.primitive = primitive;
         this.attributes = attributes;
 
-        spriteCount = 0;
-        hasRoom = true;
+        dataOffset = 0;
+        isFull = false;
+        isFull_Textures = false;
         textureIndex = 0;
         textures = new ArrayList<>();
         for (ShaderDatatype t : attributes) {
@@ -147,13 +148,14 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
         data = new float[maxBatchSize * primitive.vertexCount * vertexCount];
 
         this.primitiveVertices = new float[vertexCount * primitive.vertexCount];
+        System.out.println("Created Renderbatch: " + num++);
     }
 
     /**
      * Create the GPU resources.
      * Generates a vao, a dynamic vbo, and a static buffer of indices.
      */
-    public void start() {
+    public void init() {
         vao = glGenVertexArrays();
         glBindVertexArray(vao);
         vbo = glGenBuffers();
@@ -173,61 +175,23 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
     }
 
     /**
-     * Get the renderer this batch belongs to
-     *
-     * @return the renderer this batch belongs to
+     * Get batch ready for submission of data
      */
-    public Renderer<?> getRenderer() {
-        return renderer;
+    public void start() {
+        textureIndex = 0;
+        dataOffset = 0;
+        isFull_Textures = false;
+        isFull = false;
+        textures.clear();
+        // No need to reset data array or anything. Stuff will get overridden and correctly handled.
     }
 
     /**
-     * Set the renderer this batch belongs to
-     *
-     * @param renderer the renderer this batch belongs to
+     * Finish setting batch data. upload to gpu
      */
-    public void setRenderer(Renderer<?> renderer) {
-        this.renderer = renderer;
-    }
-
-    /**
-     * Load up a primitive to the data array
-     *
-     * @param index  index of the primitive to be loaded
-     * @param offset offset of where the primitive should start being added to the array
-     */
-    protected abstract void loadVertexProperties(int index, int offset);
-
-    /**
-     * Calculates offset into the data array based on index of the sprite
-     *
-     * @param index index of the sprite
-     * @return offset into data array at which the sprites data has to be added
-     */
-    protected int getOffset(int index) {
-        return index * primitive.vertexCount * vertexCount;
-    }
-
-    /**
-     * Function for calling loadVertexProperties but also sets up necessary stuff relating
-     * to uploading data to the gpu.
-     * Always call this function instead of calling loadVertexProperties()
-     *
-     * @param index index of the sprite to be loaded
-     */
-    protected void load(int index) {
-        if (index >= spriteCount) spriteCount++;
-        loadVertexProperties(index, getOffset(index));
-    }
-
-    /**
-     * Remove the object at index
-     *
-     * @param index the index
-     */
-    protected void remove(int index) {
-        MathUtils.shiftOverwrite(data, getOffset(index), getOffset(index + 1));
-        spriteCount--;
+    public void finish() {
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, data);
     }
 
     /**
@@ -237,51 +201,21 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
      * @return the index at which texture is placed.
      * The texture will be bound to this texture slot. Hence, set the texture attribute to this value.
      */
-    protected int addTexture(Texture texture) {
+    public int addTexture(Texture texture) {
         int texIndex;
         if (textures.contains(texture)) {
             texIndex = textures.indexOf(texture) + 1;
         } else {
             textures.add(texture);
             texIndex = ++textureIndex;
+
+            if (textures.size() >= 8) {
+                isFull_Textures = true;
+                isFull = false;
+            }
         }
         return texIndex;
     }
-
-    /**
-     * Update the buffer on the GPU
-     */
-    public void updateBufferFull() {
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, data);
-    }
-
-    /**
-     * Update the buffer on the GPU
-     */
-    public void updateBuffer() {
-        updateBufferFull();
-    }
-
-    /**
-     * Update the buffer with a memory taken as a pointer from GPU and only update the sprite that needs updating
-     *
-     * @param spriteIndex the index of a sprite that needs updating
-     */
-    public void updateBuffer(int spriteIndex) {
-        //Create a pointer to a buffer memory where the mapping will begin
-        FloatBuffer vertexPtr;
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        vertexPtr = Objects.requireNonNull(glMapBufferRange(GL_ARRAY_BUFFER, spriteIndex * primitive.vertexCount * vertexSize,
-                primitive.vertexCount * vertexSize, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_RANGE_BIT))
-                .order(ByteOrder.nativeOrder()).asFloatBuffer();
-        load(spriteIndex);
-
-        // Get vertices from createQuad
-        vertexPtr.put(primitiveVertices).position(0);
-        glUnmapBuffer(GL_ARRAY_BUFFER);
-    }
-
 
     /**
      * Binds the vertex array and all the textures to the required slots
@@ -293,6 +227,7 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
     }
 
     /**
+     * @USELESS
      * Unbinds the vertex array and all the textures
      */
     public void unbind() {
@@ -316,7 +251,10 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
      * @return the number of vertices to be drawn
      */
     public int getVertexCount() {
-        return spriteCount * primitive.elementCount;
+        // Safety check
+        if (dataOffset % vertexCount != 0)
+            System.err.println("A Renderer Seems to not have the correct amount of data!!!");
+        return (dataOffset * primitive.elementCount) / (vertexCount * primitive.vertexCount);
     }
 
     /**
@@ -333,14 +271,6 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
         return elementBuffer;
     }
 
-    public boolean hasRoomLeft() {
-        return hasRoom;
-    }
-
-    public boolean hasTextureRoom() {
-        return this.textures.size() < 8;
-    }
-
     public boolean hasTexture(Texture tex) {
         return this.textures.contains(tex);
     }
@@ -353,4 +283,123 @@ public abstract class RenderBatch implements Comparable<RenderBatch> {
     public int compareTo(RenderBatch a) {
         return Integer.compare(this.zIndex, a.zIndex);
     }
+
+    private void checkFullness() {
+        if (dataOffset >= data.length) {
+            isFull = true;
+            isFull_Textures = false;
+        }
+    }
+
+    /**
+     * Push a float to the data array
+     * @param f the value
+     */
+    public void pushFloat(float f) {
+        data[dataOffset++] = f;
+        checkFullness();
+    }
+
+    /**
+     * Push an int to the data array
+     * @param i the value
+     */
+    public void pushInt(int i) {
+        data[dataOffset++] = i;
+        checkFullness();
+    }
+
+    /**
+     * Push two floats to the data array
+     * @param x x value
+     * @param y y value
+     */
+    public void pushVec2(float x, float y) {
+        data[dataOffset++] = x;
+        data[dataOffset++] = y;
+        checkFullness();
+    }
+
+    /**
+     * Push two floats to the data array
+     * @param v the 2d vector
+     */
+    public void pushVec2(Vector2f v) {
+        data[dataOffset++] = v.x;
+        data[dataOffset++] = v.y;
+        checkFullness();
+    }
+
+    /**
+     * Push three floats to the data array
+     * @param x x value
+     * @param y y value
+     * @param z z value
+     */
+    public void pushVec3(float x, float y, float z) {
+        data[dataOffset++] = x;
+        data[dataOffset++] = y;
+        data[dataOffset++] = z;
+        checkFullness();
+    }
+
+    /**
+     * Push three floats to the data array
+     * @param v the 3d vector
+     */
+    public void pushVec3(Vector3f v) {
+        data[dataOffset++] = v.x;
+        data[dataOffset++] = v.y;
+        data[dataOffset++] = v.z;
+        checkFullness();
+    }
+
+    /**
+     * Push four floats to the data array
+     * @param x x value
+     * @param y y value
+     * @param z z value
+     * @param w w value
+     */
+    public void pushVec4(float x, float y, float z, float w) {
+        data[dataOffset++] = x;
+        data[dataOffset++] = y;
+        data[dataOffset++] = z;
+        data[dataOffset++] = w;
+        checkFullness();
+    }
+
+    /**
+     * Push four floats to the data array
+     * @param v the 4d vector
+     */
+    public void pushVec4(Vector4f v) {
+        data[dataOffset++] = v.x;
+        data[dataOffset++] = v.y;
+        data[dataOffset++] = v.z;
+        data[dataOffset++] = v.w;
+        checkFullness();
+    }
+
+    /**
+     * Push four floats to the data array
+     * @param c the color
+     */
+    public void pushColor(Color c) {
+        Vector4f v = c.toNormalizedVec4f();
+        data[dataOffset++] = v.x;
+        data[dataOffset++] = v.y;
+        data[dataOffset++] = v.z;
+        data[dataOffset++] = v.w;
+        checkFullness();
+    }
+
+//    public void beginVertex() {
+//        // DOES LITERALLY NOTHING
+//    }
+//
+//    public void endVertex() {
+//        vertexCount++;
+//        checkFullness();
+//    }
 }

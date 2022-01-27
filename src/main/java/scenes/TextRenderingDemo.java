@@ -16,6 +16,14 @@ import static graphics.Graphics.setDefaultBackground;
 
 public class TextRenderingDemo extends Scene {
 
+
+
+    public static void main(String[] args) {
+        Engine.init(900, 600, "Azurite Font Rendering Demo");
+        Engine.scenes().switchScene(new TextRenderingDemo(), true);
+        Engine.showWindow();
+    }
+
     Font maghrib;
     Font openSans;
 
@@ -25,12 +33,6 @@ public class TextRenderingDemo extends Scene {
     Text rainbowText;
 
     GameObject centerLine;
-
-    public static void main(String[] args) {
-        Engine.init(900, 600, "Azurite Font Rendering Demo");
-        Engine.scenes().switchScene(new TextRenderingDemo(), true);
-        Engine.showWindow();
-    }
 
     public void awake () {
 
@@ -51,7 +53,7 @@ public class TextRenderingDemo extends Scene {
 
     public void update () {
 
-        rainbowText.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS() + "\nMouse " + Mouse.mouse.x() + " | " + Mouse.mouse.y());
+        rainbowText.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS() + "\nMouse " + Mouse.mouse.x + " | " + Mouse.mouse.y);
 
         movingText.setPosition(Mouse.mouse);
 

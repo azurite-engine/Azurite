@@ -14,7 +14,7 @@ public class Mouse {
     /**
      * Position of the mouse
      */
-    public static Vector2f mouse;
+    public static Vector2f mouse = new Vector2f();
     /**
      * X Position of the mouse
      */
@@ -26,7 +26,7 @@ public class Mouse {
     /**
      * Position of the mouse on the previous frame
      */
-    public static Vector2f pmouse;
+    public static Vector2f pmouse = new Vector2f();
     /**
      * X Position of the mouse on the previous frame
      */
@@ -66,6 +66,11 @@ public class Mouse {
     private static int _action;
 
     /**
+     * Mouse was moved this frame or not
+     */
+    private static boolean moved = false;
+
+    /**
      * Apply the latest changes to the mouseButton array
      */
     public static void pollMouseButtons() {
@@ -97,6 +102,17 @@ public class Mouse {
             _action = action;
             Events.mouseButtonEvent.onEvent(new EventData.MouseButtonEventData(button, action, mods));
         });
+
+        glfwSetCursorPosCallback(Window.glfwWindow(), (w, xpos, ypos) -> {
+            long pmouseX = mouseX;
+            long pmouseY = mouseY;
+            pmouse.set(pmouseX, pmouseY);
+
+            mouseX = (long) xpos;
+            mouseY = (long) ypos;
+            mouse.set(mouseX, mouseY);
+            moved = true;
+        });
     }
 
     /**
@@ -105,24 +121,11 @@ public class Mouse {
     public static void update() {
         pollMouseButtons();
 
-        DoubleBuffer x = BufferUtils.createDoubleBuffer(1);
-        DoubleBuffer y = BufferUtils.createDoubleBuffer(1);
-
-        glfwGetCursorPos(Window.glfwWindow(), x, y);
-        x.rewind();
-        y.rewind();
-
-        long pmouseX = mouseX;
-        long pmouseY = mouseY;
-        pmouse = new Vector2f(pmouseX, pmouseY);
-
-        mouseX = (long) x.get();
-        mouseY = (long) y.get();
-        mouse = new Vector2f(mouseX, mouseY);
-
-        if (mouseX != pmouseX || mouseY != pmouseY) {
+        if (moved) {
             mouseDragged = mouseButton[0] || mouseButton[1] || mouseButton[2];
         }
+
+        moved = false;
     }
 
     /**
