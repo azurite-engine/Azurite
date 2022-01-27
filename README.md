@@ -43,6 +43,16 @@
 * Modern OpenGL through the LWJGL 3 library for fast GPU rendering.
 * Entity Component System
 
+| Name | Support | Render Context |
+|------|:------:|:--------------:|
+| Windows 		| Working 	 | OpenGL 330 |
+| macOS 		| Working 	 | OpenGL 3.3 Core |
+| Debian / Ubuntu 	| Working	 | OpenGL 330 |
+| Arch / Manjaro 	| Working 	 | OpenGL 330 |
+| Other Distros 	| Planned 	 | OpenGL 330 |
+| Android	 	| Planned 	 | OpenGL ES |
+| IOS		 	| Not Planned 	 | - |
+
 ### Built With
 * [LWJGL 3](https://www.lwjgl.org/)
 
@@ -83,7 +93,7 @@ public class Main extends Scene {
 		camera = new Camera();
 
 		player = new GameObject();
-		s = new Sprite
+		s = new Sprite("src/assets/sprite.png");
 		player.addComponent(new SpriteRenderer(s, new Vector2f(100)));
 	}
 
