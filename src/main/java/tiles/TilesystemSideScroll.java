@@ -1,13 +1,23 @@
 package tiles;
 
 import ecs.GameObject;
+import ecs.PolygonCollider;
 import ecs.SpriteRenderer;
-import graphics.Color;
-import physics.AABB;
-import physics.Transform;
+import org.joml.Vector2f;
+import physics.collision.Shapes;
 import scene.Scene;
-import util.Utils;
+import util.MathUtils;
 
+/**
+ * <h1>Azurite</h1>
+ * An example class of a platformer stage and it's tilemap. Eventually I think this should
+ * be expanded to a more general API, maybe even with a {@link Scene} dedicated to an
+ * in-engine way of constructing them (Mario Maker flavoured Azurite?), but that's likely
+ * a future plan; I, the mortal JavaDocumentator, don't have insight into the minds of
+ * the owners of this game engine (go ask Asher, idk).
+ *
+ * @see Scene
+ */
 public class TilesystemSideScroll {
     Spritesheet sheet;
     GameObject[][] gameObjects = new GameObject[0][0];
@@ -17,37 +27,32 @@ public class TilesystemSideScroll {
 
     int w, h;
 
-    public TilesystemSideScroll(Scene scene, Spritesheet s, int xTiles, int yTiles, int width, int height, GameObject c) {
+    public TilesystemSideScroll(Spritesheet s, int xTiles, int yTiles, int width, int height, GameObject c, int[] layers) {
         sheet = s;
         gameObjects = new GameObject[xTiles][yTiles];
-        m = new MapHandler(xTiles, yTiles, 40);
+        m = new MapHandler(xTiles, yTiles, 30);
         w = width;
         h = height;
 
         int i = 0;
 
-
-        background = new GameObject(scene,"Background", new Transform(0, 0, xTiles * w, yTiles * h), 0);
-        background.addComponent(new SpriteRenderer(new Color(41, 30, 49)));
-        scene.addGameObjectToScene(background);
-
         for (int x = 0; x < xTiles; x++) {
             for (int y = 0; y < yTiles; y++) {
-                gameObjects[x][y] = new GameObject(scene,"Tile " + i, new Transform(x * width, y * height, width, height), 0);
+                gameObjects[x][y] = new GameObject("Tile " + i, new Vector2f(x * width, y * height), 0);
 
                 if (m.getMap()[x][y] == 1) {
-                    gameObjects[x][y].addComponent(new AABB());
+                    gameObjects[x][y].addComponent(new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, width, height)).layer(layers));
                     gameObjects[x][y].addComponent(new SpriteRenderer(s.getSprite(
-                            Utils.randomInt(0, 6) == 0 ? 11 : Utils.randomInt(1, 5)
+                            MathUtils.randomInt(0, 6) == 0 ? 11 : MathUtils.randomInt(1, 5)
 
-                    )));
+                    ), new Vector2f(width, height)));
 
                 } else {
                     if (m.getMap()[x][y] != 1 && m.getMap()[x][y - 1] == 1) {
-                        if (Utils.randomInt(0, 5) == 1) {
-                            gameObjects[x][y].addComponent(new SpriteRenderer(s.getSprite(19))); // hanging vines
-                        } else if (Utils.randomInt(0, 5) == 1) {
-                            gameObjects[x][y].addComponent(new SpriteRenderer(s.getSprite(25)));
+                        if (MathUtils.randomInt(0, 5) == 1) {
+                            gameObjects[x][y].addComponent(new SpriteRenderer(s.getSprite(19), new Vector2f(width, height))); // hanging vines
+                        } else if (MathUtils.randomInt(0, 5) == 1) {
+                            gameObjects[x][y].addComponent(new SpriteRenderer(s.getSprite(25), new Vector2f(width, height)));
                         }
                     }
                 }
@@ -68,13 +73,6 @@ public class TilesystemSideScroll {
         int y = (int) worldY / h;
 
         return new int[]{x, y};
-    }
-
-    public Transform getTransform(int worldX, int worldY) {
-        int x = (int) worldX / w;
-        int y = (int) worldY / h;
-
-        return gameObjects[x][y].getTransform();
     }
 
 }

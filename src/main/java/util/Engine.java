@@ -51,14 +51,6 @@ public final class Engine {
         return getInstance().getWindow();
     }
 
-    public Window getWindow() {
-        return window;
-    }
-
-    public float getDeltaTime() {
-        return deltaTime;
-    }
-
     public static void showWindow() {
         Preconditions.nonNull("window", window()).showWindow();
     }
@@ -137,6 +129,14 @@ public final class Engine {
      */
     public static double millisRunning() {
         return System.currentTimeMillis() - getInstance().startMillis;
+    }
+
+    public Window getWindow() {
+        return window;
+    }
+
+    public float getDeltaTime() {
+        return deltaTime;
     }
 
 }

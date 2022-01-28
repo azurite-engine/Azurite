@@ -1,6 +1,7 @@
 package tiles;
 
-import util.Utils;
+import util.MathUtils;
+
 import java.util.ArrayList;
 
 /*
@@ -9,13 +10,11 @@ import java.util.ArrayList;
 */
 
 class MapHandler {
-    int rand = Utils.randomInt(0, 100);
-
     public int MapWidth = 90;
     public int MapHeight = 21;
     public int PercentAreWalls = 50;
-
     public int[][] Map = new int[MapWidth][MapHeight];
+    int rand = MathUtils.randomInt(0, 100);
 
     public MapHandler(int w, int h, int f) {
         MapWidth = w;
@@ -28,6 +27,14 @@ class MapHandler {
     public MapHandler() {
         RandomFillMap();
         MakeCaverns();
+    }
+
+    public MapHandler(int mapWidth, int mapHeight, int[][] map, int percentWalls) {
+        this.MapWidth = mapWidth;
+        this.MapHeight = mapHeight;
+        this.PercentAreWalls = percentWalls;
+        this.Map = new int[this.MapWidth][this.MapHeight];
+        this.Map = map;
     }
 
     public void MakeCaverns() {
@@ -118,7 +125,7 @@ class MapHandler {
                 "\n"
         );
 
-        ArrayList<String> mapSymbols = new ArrayList<String> ();
+        ArrayList<String> mapSymbols = new ArrayList<String>();
         mapSymbols.add(".");
         mapSymbols.add("#");
         mapSymbols.add("+");
@@ -136,7 +143,7 @@ class MapHandler {
         return returnString;
     }
 
-    public int[][] getMap () {
+    public int[][] getMap() {
         return Map;
     }
 
@@ -180,17 +187,9 @@ class MapHandler {
     }
 
     int RandomPercent(int percent) {
-        if (percent >= Utils.random(1, 101)) {
+        if (percent >= MathUtils.random(1, 101)) {
             return 1;
         }
         return 0;
-    }
-
-    public MapHandler(int mapWidth, int mapHeight, int[][] map, int percentWalls) {
-        this.MapWidth = mapWidth;
-        this.MapHeight = mapHeight;
-        this.PercentAreWalls = percentWalls;
-        this.Map = new int[this.MapWidth][this.MapHeight];
-        this.Map = map;
     }
 }

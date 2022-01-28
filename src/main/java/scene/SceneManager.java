@@ -1,4 +1,4 @@
-package scene;
+package scene; 
 
 import graphics.Texture;
 
@@ -36,13 +36,12 @@ public class SceneManager {
      * This method is used to enable the sceneManager and call all initialization methods on a possible currentScene.
      * After this method finished, all newly added scenes will call this methods directly.
      */
-    public void enable()
-    {
+    public void enable() {
         this.enabled = true;
         //init the currentScene if there is one
-        if(currentScene != null)
-        {
+        if (currentScene != null) {
             currentScene.initRenderers();
+            currentScene.startUi();
             currentScene.awake();
         }
     }
@@ -66,9 +65,17 @@ public class SceneManager {
         if (add && enabled) {
             // a newly added scene is probably raw and uninitialized
             scene.initRenderers();
+            scene.startUi();
             scene.awake();
         }
         return add;
+    }
+
+    public void updateUI() {
+        if (currentScene != null) {
+            currentScene.updateUI();
+            currentScene.textRender();
+        }
     }
 
     /**

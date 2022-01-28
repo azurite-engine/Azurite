@@ -3,7 +3,6 @@ package ai.path;
 import java.util.List;
 
 /**
- * <h1>Azurite</h1>
  * A {@link Node} describes a single node of a finite graph and does knows all paths to its neighbors.
  * It is a container for any external position data for using in a {@link Map} for a pathfinding algorithm.
  *
@@ -12,6 +11,9 @@ import java.util.List;
  * @since 08.07.2021
  */
 public abstract class Node<Position> {
+
+    //a marker used for pathfinding algorithms - can be anything depending on the algorithm
+    private Marker<Position> marker = null;
 
     /**
      * The external position data contained in this node.
@@ -29,24 +31,19 @@ public abstract class Node<Position> {
      */
     public abstract List<Path<Position>> paths();
 
-    //-------------------------------------- used by pathfinding only ---------------------------------------------
-
-    interface Marker<T> {
+    public final Marker<Position> getMarker() {
+        return marker;
     }
-
-    //a marker used for pathfinding algorithms - can be anything depending on the algorithm
-    private Marker<Position> marker = null;
 
     public final void setMarker(Marker<Position> marker) {
         this.marker = marker;
     }
 
-    public final Marker<Position> getMarker() {
-        return marker;
-    }
-
     public final boolean hasMarker() {
         return marker != null;
+    }
+
+    interface Marker<T> {
     }
 
 }

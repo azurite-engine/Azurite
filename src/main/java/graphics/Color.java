@@ -2,10 +2,18 @@ package graphics;
 
 import org.joml.Vector3f;
 import org.joml.Vector4f;
-import util.Utils;
+import util.MathUtils;
 
 import java.util.Random;
 
+/**
+ * <h1>Azurite</h1>
+ * Represents a 4-channel color of either RGBA or HSLA type, with some helper functions
+ * to convert an RGBA to HSLA, or vice versa. This Class also contains some predefined
+ * colors, a random color generator, and some OpenGL-related helper functions.
+ *
+ * @see HSLColor
+ */
 public class Color {
 
     public static final int TYPE_RGBA = 0;
@@ -39,14 +47,6 @@ public class Color {
     public static Color BROWN = new Color(165, 42, 42, 255);
     public static Color FIREBRICK = new Color(178, 34, 34, 255);
     public static Color CRIMSON = new Color(220, 20, 60, 255);
-
-    /**
-     * @return random Color
-     */
-    public static Color randomColor() {
-        return new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 255);
-    }
-
     /**
      * Red component for this color. Range: 0-255
      */
@@ -100,6 +100,45 @@ public class Color {
     }
 
     /**
+     * @return random Color
+     */
+    public static Color randomColor() {
+        return new Color(random.nextInt(255), random.nextInt(255), random.nextInt(255), 255);
+    }
+
+    /**
+     * Create a new color.
+     *
+     * @param x         the first component
+     * @param y         the second component
+     * @param z         the third component
+     * @param a         the alpha value
+     * @param inputType whether the input values are RGBA or HSLA
+     * @return a RGBA {@link Color} representing the input
+     */
+    public static Color getColor(float x, float y, float z, float a, int inputType) {
+        switch (inputType) {
+            case TYPE_HSLA:
+                return new HSLColor(x, y, z, a).toRGBColor();
+            case TYPE_RGBA:
+            default:
+                return new Color(x, y, z, a);
+        }
+    }
+
+    /**
+     * Decode a rgb color code into a {@link Color}
+     *
+     * @param colorCode the color code
+     * @return a valid rgb color
+     * @see Integer#decode(String)
+     */
+    public static Color decode(String colorCode) {
+        int i = Integer.decode(colorCode);
+        return new Color((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
+    }
+
+    /**
      * Returns a Vector4f with rgba as xyzw
      */
     public Vector4f toVec4f() {
@@ -110,7 +149,7 @@ public class Color {
      * Utility function to Map a color value from range 0-255 to range 0-1
      */
     private float m(float p) {
-        return Utils.map(p, 0, 255, 0, 1);
+        return MathUtils.map(p, 0, 255, 0, 1);
     }
 
     /**
@@ -131,8 +170,8 @@ public class Color {
      * Turn a Color with normalised values to a color with values from 0-255
      */
     public Color fromNormalized() {
-        return new Color(Utils.map(r, 0, 1, 0, 255), Utils.map(g, 0, 1, 0, 255), Utils.map(b, 0, 1, 0, 255),
-                Utils.map(a, 0, 1, 0, 255));
+        return new Color(MathUtils.map(r, 0, 1, 0, 255), MathUtils.map(g, 0, 1, 0, 255), MathUtils.map(b, 0, 1, 0, 255),
+                MathUtils.map(a, 0, 1, 0, 255));
     }
 
     /**
@@ -188,38 +227,6 @@ public class Color {
                 a = value;
                 break;
         }
-    }
-
-    /**
-     * Create a new color.
-     *
-     * @param x         the first component
-     * @param y         the second component
-     * @param z         the third component
-     * @param a         the alpha value
-     * @param inputType whether the input values are RGBA or HSLA
-     * @return a RGBA {@link Color} representing the input
-     */
-    public static Color getColor(float x, float y, float z, float a, int inputType) {
-        switch (inputType) {
-            case TYPE_HSLA:
-                return new HSLColor(x, y, z, a).toRGBColor();
-            case TYPE_RGBA:
-            default:
-                return new Color(x, y, z, a);
-        }
-    }
-
-    /**
-     * Decode a rgb color code into a {@link Color}
-     *
-     * @param colorCode the color code
-     * @return a valid rgb color
-     * @see Integer#decode(String)
-     */
-    public static Color decode(String colorCode) {
-        int i = Integer.decode(colorCode);
-        return new Color((i >> 16) & 0xFF, (i >> 8) & 0xFF, i & 0xFF);
     }
 
 }

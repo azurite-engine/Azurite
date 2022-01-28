@@ -5,7 +5,6 @@ import org.joml.Vector2f;
 import util.Engine;
 
 import static org.lwjgl.openal.AL10.*;
-import static util.Utils.worldToScreenCoords;
 
 /**
  * <h1>Azurite</h1>
@@ -42,12 +41,13 @@ public class AudioListener extends Component {
     }
 
     public void update(float dt) {
-        Vector2f firstPos = worldToScreenCoords(position, Engine.scenes().currentScene().camera());
-        Vector2f secondPos = worldToScreenCoords(gameObject.getTransform().position, Engine.scenes().currentScene().camera());
+        if (gameObject == null) return;
+        Vector2f firstPos = position;
+        Vector2f secondPos = gameObject.getReadOnlyPosition();
         alListener3f(AL_POSITION, secondPos.x, secondPos.y, 0.0f);
         alListener3f(AL_VELOCITY,
                 secondPos.x - firstPos.x,
                 secondPos.y - firstPos.y, 0.0f);
-        position = gameObject.getTransform().position;
+        position = gameObject.getReadOnlyPosition();
     }
 }

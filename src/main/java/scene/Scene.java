@@ -1,41 +1,97 @@
 package scene;
 
 import ecs.GameObject;
+import ecs.Text;
 import graphics.Camera;
 import graphics.Texture;
-import graphics.renderer.DebugRenderer;
-import graphics.renderer.DefaultRenderer;
-import graphics.renderer.LightmapRenderer;
-import graphics.renderer.Renderer;
+import graphics.renderer.*;
 import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
+import physics.collision.Collider;
 import postprocess.ForwardToTexture;
 import postprocess.PostProcessStep;
-import util.Assets;
 import util.Engine;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @author Asher Haun
+ * @author Juyas
+ * @author VoxelRifts
+ *
+ * <p>
+ * Abstract class encapsulating the game logic, the gameObjects, the renderers, the physics
+ * specifications and all the necessary ecs-related logic. Programming/Interacting with this
+ * game engine will usually involve the following boilerplate code:
+ * <pre>
+ *     public class Main extends Scene {
+ *         public static void main(String[] args) {
+ *             Engine.init(1920, 1080, "Azurite Engine Demo In Comment", 1.0f);
+ *             Engine.scenes().switchScene(new Main(), true);
+ *             Engine.showWindow();
+ *         }
+ *
+ *         public void awake() {
+ *             camera = new Camera();
+ *             ...
+ *         }
+ *
+ *         public void update() {
+ *             ...
+ *         }
+ *     }
+ * </pre>
+ * A simple example of a scene with just a rendered sprite:
+ * <pre>
+ *     public class Main extends Scene {
+ *         GameObject player;
+ *         Sprite s;
+ *
+ *         public static void main(String[] args) {
+ *             Engine.init(1920, 1080, "Azurite Engine Demo In Comment", 1.0f);
+ *             Engine.scenes().switchScene(new Main(), true);
+ *             Engine.showWindow();
+ *         }
+ *
+ *         public void awake() {
+ *             camera = new Camera();
+ *
+ *             player = new GameObject();
+ *             s = new Sprite
+ *             player.addComponent(new SpriteRenderer(s, new Vector2f(100)));
+ *         }
+ *
+ *         public void update() {
+ *             if (Keyboard.getKeyDown(GLFW.GLFW_KEY_SPACE)) {
+ *                 player.transform.add(new Vector2f(1, 0));
+ *             }
+ *         }
+ *     }
+ * </pre>
+ * </p>
+ * @see SceneManager
+ */
 public abstract class Scene {
 
     private static int sceneCounter = 0;
+    private final int sceneId = sceneCounter++;
+    private final List<GameObject> gameObjects = new LinkedList<>();
+
+    private final List<Collider> colliders = new LinkedList<>();
 
     public DefaultRenderer renderer = new DefaultRenderer();
     public LightmapRenderer lightmapRenderer = new LightmapRenderer();
     public DebugRenderer debugRenderer = new DebugRenderer();
-
-    private List<Renderer<?>> rendererRegistry = new LinkedList<>();
+    public TextRenderer textRenderer = new TextRenderer();
 
     protected Camera camera;
-    private boolean debugMode = true;
-    private boolean active = false;
-    private List<GameObject> gameObjects = new LinkedList<>();
-
     protected ForwardToTexture forwardToScreen;
-
-    private int sceneId = sceneCounter++;
+    private final List<Renderer> rendererRegistry = new LinkedList<>();
+    private boolean debugMode = false;
+    private boolean active = false;
+    private final ArrayList<Text> uiObjects = new ArrayList<>();
 
     public boolean isActive() {
         return active;
@@ -77,6 +133,7 @@ public abstract class Scene {
 
     /**
      * Apply post processing to a texture
+     *
      * @param texture input texture
      */
     public void postProcess(Texture texture) {
@@ -91,10 +148,40 @@ public abstract class Scene {
         this.renderer.clean();
         this.lightmapRenderer.clean();
         this.debugRenderer.clean();
+        this.textRenderer.clean();
         rendererRegistry.forEach(Renderer::clean);
     }
 
     // The following methods shouldn't be overridden. For this, added final keyword
+
+    public final void startUi() {
+        textRenderer.init();
+    }
+
+    /**
+     * Loops through all gameobjects already in the scene and calls their start methods.
+     */
+    public final void startGameObjects() {
+        for (GameObject gameObject : gameObjects) {
+            gameObject.start();
+            this.renderer.add(gameObject);
+            this.lightmapRenderer.add(gameObject);
+            this.debugRenderer.add(gameObject);
+            rendererRegistry.forEach(r -> r.add(gameObject));
+        }
+    }
+
+    public List<Collider> getColliders() {
+        return colliders;
+    }
+
+    public final void registerCollider(GameObject gameObject) {
+        colliders.add(gameObject.getComponent(Collider.class));
+    }
+
+    public final void unregisterCollider(GameObject gameObject) {
+        colliders.remove(gameObject.getComponent(Collider.class));
+    }
 
     /**
      * The sceneId is meant to represent the instance of a scene as an integer
@@ -106,10 +193,10 @@ public abstract class Scene {
     }
 
     /**
-     * @return Returns the List of gameObjects contained in the scene.
+     * @return the List of gameObjects contained in the scene.
      */
     public List<GameObject> getGameObjects() {
-        return Collections.unmodifiableList(gameObjects);
+        return gameObjects;
     }
 
     /**
@@ -137,7 +224,7 @@ public abstract class Scene {
      *
      * @param renderer the renderer to be registered
      */
-    public void registerRenderer(Renderer<?> renderer) {
+    public void registerRenderer(Renderer renderer) {
         rendererRegistry.add(renderer);
     }
 
@@ -179,8 +266,23 @@ public abstract class Scene {
         forwardToScreen.init();
     }
 
+    public void addUiObject(Text t) {
+        uiObjects.add(t);
+    }
+
+    public final void textRender() {
+        textRenderer.render();
+    }
+
+    public void updateUI() {
+        for (Text i : uiObjects) {
+            i.update();
+        }
+    }
+
     /**
      * Add a gameObject to all renderers
+     *
      * @param gameObject the gameObject to be added
      */
     public void addToRenderers(GameObject gameObject) {
@@ -192,6 +294,7 @@ public abstract class Scene {
 
     /**
      * Remove a gameObject from all renderers
+     *
      * @param gameObject the gameObject to be removed
      */
     private void removeFromRenderers(GameObject gameObject) {

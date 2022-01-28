@@ -2,65 +2,98 @@ package ecs;
 
 import input.Keyboard;
 import org.joml.Vector2f;
-import physics.AABB;
-import util.Engine;
+import physics.force.Force;
 
+//this class is just made to support topDown and platformer demo scenes - its not good at all!!!!
 public class CharacterController extends Component {
 
-	Vector2f position = new Vector2f(0, 0);
-	Vector2f speed = new Vector2f(300, 300);
+    private final float speedModifier;
+    private final Force playerInputForce;
 
-	float gravity = 9;
-	private final boolean grounded = false;
-	protected Vector2f lastPosition;
+    private CharacterController(float speedModifier, Force playerInputForce) {
+        super(ComponentOrder.INPUT);
+        this.playerInputForce = playerInputForce;
+        this.speedModifier = speedModifier;
+    }
 
-	float sprintSpeed = 0;
+    public float getSpeedModifier() {
+        return speedModifier;
+    }
 
-	protected AABB collision;
-	public boolean AABB_enabled = false;
+    public Force getPlayerInputForce() {
+        return playerInputForce;
+    }
 
-	@Override
-	public void start() {
-		lastPosition = new Vector2f();
-		position = gameObject.getTransform().getPosition();
-		super.start();
-	}
+    public static CharacterController standardPlatformer(Dynamics dynamics, float speedModifier) {
+        Force f = new Force() {
+            private final Vector2f direction = new Vector2f(0, 0);
 
-	@Override
-	public void update(float dt) {
-		moveX();
-		if (collision != null) collision.collideX();
+            @Override
+            public String identifier() {
+                return "GodlikePlayerInput";
+            }
 
-		moveY();
-		if (collision != null) collision.collideY();
-	}
+            @Override
+            public boolean update(float dt) {
+                direction.set(0, 0);
+                if (up()) direction.add(0, -speedModifier);
+                //nothing on down input
+                if (left()) direction.add(-speedModifier, 0);
+                if (right()) direction.add(speedModifier, 0);
+                return true;
+            }
 
-	public void enableAABB() {
-		AABB_enabled = true;
-		collision = gameObject.getComponent(AABB.class);
-	}
+            @Override
+            public Vector2f direction() {
+                return direction;
+            }
+        };
+        dynamics.applyForce(f);
+        return new CharacterController(speedModifier, f);
+    }
 
-	protected void moveX() {
-		// X
-		gameObject.setTransformX(position.x);
-		if (Keyboard.getKey(Keyboard.A_KEY) || Keyboard.getKey(Keyboard.LEFT_ARROW)) {
-			position.x += (-speed.x + sprintSpeed) * Engine.deltaTime();
-		}
-		if (Keyboard.getKey(Keyboard.D_KEY) || Keyboard.getKey(Keyboard.RIGHT_ARROW)) {
-			position.x += (speed.x + sprintSpeed) * Engine.deltaTime();
-		}
-	}
+    public static CharacterController standardTopDown(Dynamics dynamics, float speedModifier) {
+        Force f = new Force() {
+            private final Vector2f direction = new Vector2f(0, 0);
 
-	protected void moveY() {
-		// Y
-		gameObject.setTransformY(position.y);
+            @Override
+            public String identifier() {
+                return "GodlikePlayerInput";
+            }
 
-		if (Keyboard.getKey(Keyboard.W_KEY) || Keyboard.getKey(Keyboard.UP_ARROW)) {
-			position.y += (-speed.y + sprintSpeed) * Engine.deltaTime();
-		}
-		if (Keyboard.getKey(Keyboard.S_KEY) || Keyboard.getKey(Keyboard.DOWN_ARROW)) {
-			position.y += (speed.y + sprintSpeed) * Engine.deltaTime();
-		}
-	}
+            @Override
+            public boolean update(float dt) {
+                direction.set(0, 0);
+                if (up()) direction.add(0, -speedModifier);
+                if (down()) direction.add(0, speedModifier);
+                if (left()) direction.add(-speedModifier, 0);
+                if (right()) direction.add(speedModifier, 0);
+                return true;
+            }
+
+            @Override
+            public Vector2f direction() {
+                return direction;
+            }
+        };
+        dynamics.applyForce(f);
+        return new CharacterController(speedModifier, f);
+    }
+
+    private static boolean up() {
+        return Keyboard.keyDownOrHold(Keyboard.UP_ARROW) || Keyboard.keyDownOrHold(Keyboard.W_KEY);
+    }
+
+    private static boolean down() {
+        return Keyboard.keyDownOrHold(Keyboard.DOWN_ARROW) || Keyboard.keyDownOrHold(Keyboard.S_KEY);
+    }
+
+    private static boolean left() {
+        return Keyboard.keyDownOrHold(Keyboard.LEFT_ARROW) || Keyboard.keyDownOrHold(Keyboard.A_KEY);
+    }
+
+    private static boolean right() {
+        return Keyboard.keyDownOrHold(Keyboard.RIGHT_ARROW) || Keyboard.keyDownOrHold(Keyboard.D_KEY);
+    }
 
 }

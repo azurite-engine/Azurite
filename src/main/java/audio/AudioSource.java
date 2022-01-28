@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.openal.AL10.*;
-import static util.Utils.worldToScreenCoords;
 
 /**
  * <h1>Azurite</h1>
@@ -77,9 +76,10 @@ public class AudioSource extends Component {
      * this buffer.
      */
     public void play(int index) {
+        System.out.println("hi");
         int[] isPlaying = new int[1];
         alGetSourcei(this.sourceID, AL_SOURCE_STATE, isPlaying);
-        if (isPlaying[0] == AL_PLAYING) this.stop();
+        //if (isPlaying[0] == AL_PLAYING) this.stop();
 
         setSelectedBuffer(index);
         this.timeLeft = this.getSelectedBuffer().getTime();
@@ -133,7 +133,7 @@ public class AudioSource extends Component {
     @Override
     public void start() {
         sourceID = alGenSources();
-        Vector2f screenPos = worldToScreenCoords(position, Engine.scenes().currentScene().camera());
+        Vector2f screenPos = Engine.scenes().currentScene().camera().position;
         alSourcei(sourceID, AL_BUFFER, getSelectedBuffer().getName());
         alSource3f(sourceID, AL_POSITION, screenPos.x, screenPos.y, 0f);
         alSource3f(sourceID, AL_VELOCITY, 0f, 0f, 0f);
@@ -146,14 +146,6 @@ public class AudioSource extends Component {
 
     @Override
     public void update(float dt) {
-        Vector2f firstPos = worldToScreenCoords(position, Engine.scenes().currentScene().camera());
-        Vector2f secondPos = worldToScreenCoords(gameObject.getTransform().position, Engine.scenes().currentScene().camera());
-        alListener3f(AL_POSITION, secondPos.x, secondPos.y, 0.0f);
-        alListener3f(AL_VELOCITY,
-                secondPos.x - firstPos.x,
-                secondPos.y - firstPos.y, 0.0f);
-        position = gameObject.getTransform().position;
-
         timeLeft -= dt;
         if (timeLeft <= 0) {
             if (!isLooping && isPlaying())
@@ -161,5 +153,14 @@ public class AudioSource extends Component {
             else
                 timeLeft = getSelectedBuffer().getTime();
         }
+
+        if (gameObject == null) return;
+        Vector2f firstPos = position;
+        Vector2f secondPos = gameObject.getReadOnlyPosition();
+        alListener3f(AL_POSITION, secondPos.x, secondPos.y, 0.0f);
+        alListener3f(AL_VELOCITY,
+                secondPos.x - firstPos.x,
+                secondPos.y - firstPos.y, 0.0f);
+        position = gameObject.getReadOnlyPosition();
     }
 }

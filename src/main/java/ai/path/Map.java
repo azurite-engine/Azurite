@@ -1,7 +1,6 @@
 package ai.path;
 
 /**
- * <h1>Azurite</h1>
  * A Map describes the complete state of a finite graph
  * and offers a start and target node to be processed by a pathfinding algorithm.
  *

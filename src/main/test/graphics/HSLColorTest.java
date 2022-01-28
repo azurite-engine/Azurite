@@ -8,32 +8,26 @@ import org.junit.Test;
 import java.util.Arrays;
 
 /**
- * <h1>Azurite</h1>
- *
  * @author Juyas
  * @version 15.07.2021
  * @since 15.07.2021
  */
 public class HSLColorTest {
 
+    //3% off is fine
+    final double deltaAccepted = 0.03;
     HSLColor color1 = new HSLColor(200, 50, 50, 1); //rgb: 63,148,191
     HSLColor color2 = new HSLColor(100, 25, 75, 1); //rgb: 186,207,175
     HSLColor color3 = new HSLColor(150, 10, 25, 1); //rgb: 57,70,64
-
     float[] hslcolor1 = new float[]{200, 50, 50, 1};
     float[] hslcolor2 = new float[]{100, 25, 75, 1};
     float[] hslcolor3 = new float[]{150, 10, 25, 1};
-
     float[] rgacolor1 = new float[]{63, 148, 191, 255};
     float[] rgacolor2 = new float[]{186, 207, 175, 255};
     float[] rgacolor3 = new float[]{57, 70, 64, 255};
-
     float[] rgacolor1N = normalizedRGB(rgacolor1);
     float[] rgacolor2N = normalizedRGB(rgacolor2);
     float[] rgacolor3N = normalizedRGB(rgacolor3);
-
-    //3% off is fine
-    final double deltaAccepted = 0.03;
 
     private double delta(double a) {
         return a * deltaAccepted;

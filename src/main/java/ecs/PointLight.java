@@ -1,64 +1,54 @@
 package ecs;
 
 import graphics.Color;
-import graphics.RenderableComponent;
-import graphics.renderer.QuadRenderBatch;
 import org.joml.Vector3f;
-import physics.Transform;
 
 /**
- * A Point Light Component.
+ * A Point Light Component is essentially a location in the world that emits light in
+ * all directions. One can also specify both it's color and it's intensity.
  *
  * @author VoxelRifts
  */
-public class PointLight extends RenderableComponent<QuadRenderBatch> {
-	/**
-	 * Colour of the light
-	 */
-	public Vector3f color;
+public class PointLight extends Component {
 
-	/**
-	 * Intensity of the light
-	 * It controls how far the light's attenuation will reach
-	 */
-	public float intensity;
+    /**
+     * Colour of the light
+     */
+    public Vector3f color;
 
-	/**
-	 * Transform of the parent GameObject to get the position
-	 */
-	public Transform lastTransform;
+    /**
+     * Intensity of the light
+     * It controls how far the light's attenuation will reach
+     */
+    public float intensity;
 
-	/**
-	 * Constructor which sets color of the light by default to white.
-	 * @param intensity float: Intensity of the light
-	 */
-	public PointLight(float intensity) {
-		this(Color.WHITE, intensity);
-	}
+    /**
+     * Constructor which sets color of the light by default to white.
+     *
+     * @param intensity float: Intensity of the light
+     */
+    public PointLight(float intensity) {
+        this(Color.WHITE, intensity);
+    }
 
-	/**
-	 * @param color Vector3f: Color of the light
-	 * @param intensity float: Intensity of the light
-	 */
-	public PointLight(Color color, float intensity) {
-		this.color = color.toNormalizedVec3f();
-		this.intensity = intensity;
-	}
+    /**
+     * @param color     Vector3f: Color of the light
+     * @param intensity float: Intensity of the light
+     */
+    public PointLight(Color color, float intensity) {
+        super(ComponentOrder.DRAW);
+        this.color = color.toNormalizedVec3f();
+        this.intensity = intensity;
+    }
 
-	@Override
-	public void start() {
-		this.lastTransform = gameObject.getTransform().copy();
-	}
+    @Override
+    public void start() {
 
-	@Override
-	public void remove() {
-		getBatch().getRenderer().remove(this.gameObject);
-	}
+    }
 
-	@Override
-	public void update(float dt) {
-		if (!this.lastTransform.equals(this.gameObject.getTransform())) {
-			this.gameObject.getTransform().copy(this.lastTransform);
-		}
-	}
+    @Override
+    public void update(float dt) {
+
+    }
+
 }
