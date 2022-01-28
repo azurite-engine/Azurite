@@ -32,7 +32,8 @@ public class AudioSource extends Component {
     private long timeLeft = 0;
 
     /**
-     * Whether the buffer loops, a.k.a. the value of <code>alGetSourcei(this.sourceID, AL_LOOPING, dest)</code>
+     * Whether the buffer loops, a.k.a. the value of dest after
+     * <code>alGetSourcei(this.sourceID, AL_LOOPING, dest)</code> is run.
      */
     private boolean isLooping;
 
@@ -76,7 +77,6 @@ public class AudioSource extends Component {
      * this buffer.
      */
     public void play(int index) {
-        System.out.println("hi");
         int[] isPlaying = new int[1];
         alGetSourcei(this.sourceID, AL_SOURCE_STATE, isPlaying);
         //if (isPlaying[0] == AL_PLAYING) this.stop();
