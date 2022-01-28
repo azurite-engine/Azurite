@@ -54,7 +54,7 @@ public class DemoNoise extends Scene {
         // this:
         booper = new GameObject(this, "Booper", new Transform(800, 800, 100, 100), 2);
         booper.addComponent(new Animation(1, a.getSprite(132), a.getSprite(150)));
-        booper.addComponent(new AudioSource(Assets.getAudioBuffer("src/assets/sounds/hit.wav")));
+        booper.addComponent(new AudioSource(Assets.getAudioBuffer("src/assets/sounds/test1.wav")));
         booper.addComponent(new CollisionTrigger(data -> {
             System.out.println("Boop");
             booper.getComponent(AudioSource.class).play(0);

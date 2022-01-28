@@ -20,13 +20,22 @@ import static util.Utils.worldToScreenCoords;
 public class AudioSource extends Component {
 
     /**
-     * List of audio buffers this source can play.<br>
+     * List of audio buffers this source can play.
      */
     public List<AudioBuffer> audioBuffers = new ArrayList<>();
     /**
      * Index of the currently selected buffer.
      */
     private int index = 0;
+    /**
+     * Amount of time left until selected buffer has finished playing, in milliseconds.
+     */
+    private long timeLeft = 0;
+
+    /**
+     * Whether the buffer loops, a.k.a. the value of <code>alGetSourcei(this.sourceID, AL_LOOPING, dest)</code>
+     */
+    private boolean isLooping;
 
     private int sourceID;
     private Vector2f position;
@@ -50,23 +59,31 @@ public class AudioSource extends Component {
         AudioMaster.get().addSource(this);
     }
 
+    public void setLooping(boolean looping) {
+        if (looping) {
+            alSourcei(sourceID, AL_LOOPING, AL_TRUE);
+        } else {
+            alSourcei(sourceID, AL_LOOPING, AL_FALSE);
+        }
+        isLooping = looping;
+    }
+
+    public boolean isLooping() {
+        return isLooping;
+    }
+
     /**
      * Sets the selected buffer to whatever the index indicates, then plays all of
      * this buffer.
      */
     public void play(int index) {
+        int[] isPlaying = new int[1];
+        alGetSourcei(this.sourceID, AL_SOURCE_STATE, isPlaying);
+        if (isPlaying[0] == AL_PLAYING) this.stop();
+
         setSelectedBuffer(index);
-
-        Thread t = new Thread(() -> {
-            alSourcePlay(sourceID);
-            try {
-                Thread.sleep(audioBuffers.get(index).getTime());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-        t.start();
+        this.timeLeft = this.getSelectedBuffer().getTime();
+        alSourcePlay(sourceID);
     }
 
     /**
@@ -74,22 +91,25 @@ public class AudioSource extends Component {
      * milliseconds of this buffer.
      */
     public void play(int index, long millis) {
+        int[] isPlaying = new int[1];
+        alGetSourcei(this.sourceID, AL_SOURCE_STATE, isPlaying);
+        if (isPlaying[0] == AL_PLAYING) this.stop();
+
         setSelectedBuffer(index);
+        this.timeLeft = millis;
+        alSourcePlay(sourceID);
+    }
 
-        Thread t = new Thread(() -> {
-            alSourcePlay(sourceID);
-            try {
-                Thread.sleep(Math.min(audioBuffers.get(index).getTime(), millis));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-        t.start();
+    public boolean isPlaying() {
+        int[] isPlaying = new int[1];
+        alGetSourcei(this.sourceID, AL_SOURCE_STATE, isPlaying);
+        return isPlaying[0] == AL_PLAYING;
     }
 
     public void stop() {
         alSourceStop(sourceID);
+        this.timeLeft = 0;
+        System.out.println("foo");
     }
 
     public void delete() {
@@ -121,6 +141,7 @@ public class AudioSource extends Component {
         alSourcef(sourceID, AL_PITCH, 1);
         alSourcef(sourceID, AL_GAIN, 1f);
         alSourcei(sourceID, AL_LOOPING, AL_FALSE);
+        this.isLooping = false;
     }
 
     @Override
@@ -132,5 +153,13 @@ public class AudioSource extends Component {
                 secondPos.x - firstPos.x,
                 secondPos.y - firstPos.y, 0.0f);
         position = gameObject.getTransform().position;
+
+        timeLeft -= dt;
+        if (timeLeft <= 0) {
+            if (!isLooping && isPlaying())
+                this.stop();
+            else
+                timeLeft = getSelectedBuffer().getTime();
+        }
     }
 }
