@@ -17,13 +17,17 @@ import static util.Utils.worldToScreenCoords;
 public class AudioSource extends Component {
 
     /**
-     * List of audio buffers this source can play.<br>
+     * List of audio buffers this source can play.
      */
     public List<AudioBuffer> audioBuffers = new ArrayList<>();
     /**
      * Index of the currently selected buffer.
      */
     private int index = 0;
+    /**
+     * Amount of time left until selected buffer has finished playing, in milliseconds.
+     */
+    private long timeLeft = 0;
 
     private int sourceID;
     private Vector2f position;
@@ -52,18 +56,13 @@ public class AudioSource extends Component {
      * this buffer.
      */
     public void play(int index) {
+        int[] isPlaying = new int[1];
+        alGetSourcei(this.sourceID, AL_SOURCE_STATE, isPlaying);
+        if (isPlaying[0] == AL_PLAYING) this.stop();
+
         setSelectedBuffer(index);
-
-        Thread t = new Thread(() -> {
-            alSourcePlay(sourceID);
-            try {
-                Thread.sleep(audioBuffers.get(index).getTime());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-        t.start();
+        this.timeLeft = this.getSelectedBuffer().getTime();
+        alSourcePlay(sourceID);
     }
 
     /**
@@ -71,22 +70,18 @@ public class AudioSource extends Component {
      * milliseconds of this buffer.
      */
     public void play(int index, long millis) {
+        int[] isPlaying = new int[1];
+        alGetSourcei(this.sourceID, AL_SOURCE_STATE, isPlaying);
+        if (isPlaying[0] == AL_PLAYING) this.stop();
+
         setSelectedBuffer(index);
-
-        Thread t = new Thread(() -> {
-            alSourcePlay(sourceID);
-            try {
-                Thread.sleep(Math.min(audioBuffers.get(index).getTime(), millis));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-
-        t.start();
+        this.timeLeft = millis;
+        alSourcePlay(sourceID);
     }
 
     public void stop() {
         alSourceStop(sourceID);
+        this.timeLeft = 0;
     }
 
     public void delete() {
@@ -129,5 +124,8 @@ public class AudioSource extends Component {
                 secondPos.x - firstPos.x,
                 secondPos.y - firstPos.y, 0.0f);
         position = gameObject.getTransform().position;
+
+        timeLeft -= dt / 1000;
+        if (timeLeft == 0) this.stop();
     }
 }
