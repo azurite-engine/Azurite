@@ -1,7 +1,7 @@
 package util.specs;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * Specification for a framebuffer
  *
  * @author VoxelRifts

@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * <p>
  * The SceneManager to handle all scenes of a window instance.
  * It contains a scene pool and a currently active scene.
