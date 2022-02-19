@@ -105,3 +105,13 @@ task generateApiDocs(type: Javadoc) {
     dependsOn build
 }
 
+// Possible thing to look into later... this doesn't work, I am too tired rn to try making it work.
+//task execute(type: JavaExec) {
+//    classpath(sourceSets.main.runtimeClasspath)
+//    main('com.name.enginetester.GameLoop')
+//
+//    if (os.isMacOsX()) {
+//        jvmArgs '-XstartOnFirstThread'
+//    }
+//}
+
