@@ -18,11 +18,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @author Asher Haun
- * @author Juyas
- * @author VoxelRifts
- *
- * <p>
  * Abstract class encapsulating the game logic, the gameObjects, the renderers, the physics
  * specifications and all the necessary ecs-related logic. Programming/Interacting with this
  * game engine will usually involve the following boilerplate code:
@@ -71,8 +66,10 @@ import java.util.List;
  *         }
  *     }
  * </pre>
- * </p>
  * @see SceneManager
+ * @author Asher Haun
+ * @author Juyas
+ * @author VoxelRifts
  */
 public abstract class Scene {
 
