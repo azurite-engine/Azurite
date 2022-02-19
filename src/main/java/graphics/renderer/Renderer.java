@@ -13,7 +13,7 @@ import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glDrawElements;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * <p>
  * A renderer is responsible for taking collected data of a specified type,
  * formatting it for a selected shader, and rendering it. Every renderer has

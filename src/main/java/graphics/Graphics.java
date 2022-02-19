@@ -4,7 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static util.MathUtils.map;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * A utility class for changing background colors. More functionality will probably added to this
  * class as the engine starts to grow.
  */

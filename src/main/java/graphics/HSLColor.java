@@ -6,7 +6,7 @@ import org.joml.Vector4f;
 import java.util.Arrays;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * Represents a HSLA color.
  *
  * @author Juyas

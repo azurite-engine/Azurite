@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * <h1>Azurite</h1>
+ * 
  *
  * @author Juyas
  * @version 26.07.2021

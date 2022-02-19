@@ -7,7 +7,7 @@ import util.MathUtils;
 import java.util.Random;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * Represents a 4-channel color of either RGBA or HSLA type, with some helper functions
  * to convert an RGBA to HSLA, or vice versa. This Class also contains some predefined
  * colors, a random color generator, and some OpenGL-related helper functions.

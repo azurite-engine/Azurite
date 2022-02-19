@@ -19,6 +19,7 @@ import java.util.List;
 import static org.lwjgl.opengl.GL11.glLineWidth;
 
 /**
+ * 
  * Used to render debug materials, like collision hitboxes, raycasts, or test
  * data in general. Only supports rendering lines.
  */

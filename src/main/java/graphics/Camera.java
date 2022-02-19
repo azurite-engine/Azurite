@@ -6,7 +6,7 @@ import org.joml.Vector3f;
 import util.MathUtils;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * Represents a basic camera. The purpose of a digital camera capturing a digital point of view
  * is to translate the 3D locations in game onto the 2 dimensions of your monitor (if you come
  * from the future with holograms in it, Hi! welcome to the past!) The camera does so by way of

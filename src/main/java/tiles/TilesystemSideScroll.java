@@ -9,7 +9,7 @@ import scene.Scene;
 import util.MathUtils;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * An example class of a platformer stage and it's tilemap. Eventually I think this should
  * be expanded to a more general API, maybe even with a {@link Scene} dedicated to an
  * in-engine way of constructing them (Mario Maker flavoured Azurite?), but that's likely
