@@ -1,7 +1,7 @@
 package graphics.renderer;
 
 import ui.Text;
-import fonts.GlyphRenderer;
+import ui.fonts.GlyphRenderer;
 import graphics.*;
 import org.joml.Vector2f;
 import util.Assets;
@@ -9,6 +9,7 @@ import util.Engine;
 import util.Logger;
 import util.Transform;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 

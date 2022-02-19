@@ -1,4 +1,4 @@
-package fonts;
+package ui.fonts;
 
 import graphics.Sprite;
 import graphics.Texture;

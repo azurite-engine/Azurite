@@ -7,7 +7,7 @@ package ui.fonts;
 
 import graphics.Texture;
 import org.lwjgl.BufferUtils;
-import fonts.*;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
@@ -24,7 +24,7 @@ import static java.awt.Font.*;
 /**
  * This class contains a font texture for drawing text.
  * A lot of credit for the base of this file goes to @SilverTiger on GitHub, his base has been heavily modified to work in Azurite.
- * @author Heiko Brumme (SilverTiger) {@link https://github.com/SilverTiger/lwjgl3-tutorial}
+ * @author Heiko Brumme (SilverTiger) {@link <a href="https://github.com/SilverTiger/lwjgl3-tutorial">...</a>}
  * @author Asher Haun
  */
 public class Font {
@@ -32,7 +32,7 @@ public class Font {
     /**
      * Contains the glyphs for each char.
      */
-    private final Map<Character, fonts.Glyph> glyphs;
+    private final Map<Character, Glyph> glyphs;
     /**
      * Contains the font texture.
      */
@@ -44,7 +44,7 @@ public class Font {
     private int fontHeight;
 
     /**
-     * Creates a default antialiased font with monospaced glyphs and default
+     * Creates a default anti-aliased font with monospaced glyphs and default
      * size 16.
      */
     public Font() {
@@ -54,14 +54,14 @@ public class Font {
     /**
      * Creates a default font with monospaced glyphs and default size 16.
      *
-     * @param antiAlias Wheter the font should be antialiased or not
+     * @param antiAlias Whether the font should be anti-aliased or not
      */
     public Font(boolean antiAlias) {
         this(new java.awt.Font(MONOSPACED, PLAIN, 16), antiAlias);
     }
 
     /**
-     * Creates a default antialiased font with monospaced glyphs and specified
+     * Creates a default anti-aliased font with monospaced glyphs and specified
      * size.
      *
      * @param size Font size
@@ -74,14 +74,14 @@ public class Font {
      * Creates a default font with monospaced glyphs and specified size.
      *
      * @param size      Font size
-     * @param antiAlias Wheter the font should be antialiased or not
+     * @param antiAlias Whether the font should be anti-aliased or not
      */
     public Font(int size, boolean antiAlias) {
         this(new java.awt.Font(MONOSPACED, PLAIN, size), antiAlias);
     }
 
     /**
-     * Creates a antialiased Font from an input stream.
+     * Creates an anti-aliased Font from an input stream.
      *
      * @param in   The input stream
      * @param size Font size
@@ -99,7 +99,7 @@ public class Font {
      *
      * @param in        The input stream
      * @param size      Font size
-     * @param antiAlias Wheter the font should be antialiased or not
+     * @param antiAlias Whether the font should be anti-aliased or not
      *
      * @throws FontFormatException if fontFile does not contain the required
      *                             font tables for the specified format
@@ -114,7 +114,7 @@ public class Font {
      *
      * @param path      Path to TTF file
      * @param size      Font size
-     * @param antiAlias Whether the font should be antialiased or not
+     * @param antiAlias Whether the font should be anti-aliased or not
      */
     public Font(String path, float size, boolean antiAlias) {
         java.awt.Font f = null;
@@ -131,7 +131,7 @@ public class Font {
     }
 
     /**
-     * Creates a antialiased font from an AWT Font.
+     * Creates an anti-aliased font from an AWT Font.
      *
      * @param font The AWT Font
      */
@@ -143,7 +143,7 @@ public class Font {
      * Creates a font from an AWT Font.
      *
      * @param font      The AWT Font
-     * @param antiAlias Wheter the font should be antialiased or not
+     * @param antiAlias Whether the font should be anti-aliased or not
      */
     public Font(java.awt.Font font, boolean antiAlias) {
         glyphs = new HashMap<>();
@@ -154,7 +154,7 @@ public class Font {
      * Creates a font texture from specified AWT font.
      *
      * @param font      The AWT font
-     * @param antiAlias Wheter the font should be antialiased or not
+     * @param antiAlias Whether the font should be anti-aliased or not
      *
      * @return Font texture
      */
@@ -187,7 +187,6 @@ public class Font {
         Graphics2D g = image.createGraphics();
 
         int x = 0;
-        int y = 0;
 
         // Create image for the standard chars, omitting ASCII 0 to 31 because they are just control codes.
         for (int i = 32; i < 256; i++) {
@@ -216,9 +215,6 @@ public class Font {
 
         // Finally, calculate the UV coordinates on the generated texture and store it in each Glyph
         for (int i = 32; i < 256; i++) {
-
-
-
             if (glyphs.get((char) i) != null) {
                 glyphs.get((char) i).calculateUVs(finalTexture);
             }
@@ -261,11 +257,7 @@ public class Font {
 
         buffer.flip();
 
-        Texture t = new Texture().createTexture(width, height, buffer);
-        //Makes program crash on windows, but not on linux, commented out for now
-        //MemoryUtil.memFree(buffer);
-
-        return t;
+        return new Texture().createTexture(width, height, buffer);
     }
 
     /**
@@ -273,7 +265,7 @@ public class Font {
      *
      * @param font      The AWT font
      * @param c         The char
-     * @param antiAlias Whether the char should be antialiased or not
+     * @param antiAlias Whether the char should be anti-aliased or not
      *
      * @return Char image
      */
@@ -342,7 +334,7 @@ public class Font {
         return fontHeight;
     }
 
-    public Map<Character, fonts.Glyph> getGlyphs () {
+    public Map<Character, Glyph> getGlyphs () {
         return glyphs;
     }
 

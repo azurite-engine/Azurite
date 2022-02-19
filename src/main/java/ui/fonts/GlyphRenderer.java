@@ -1,12 +1,13 @@
-package fonts;
+package ui.fonts;
 
-import ecs.Text;
+import ui.Text;
 import graphics.Color;
 import graphics.Texture;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import util.MathUtils;
 import util.Transform;
+import ui.fonts.Glyph;
 
 import static graphics.Color.BLUE;
 
