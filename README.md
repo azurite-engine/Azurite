@@ -108,9 +108,7 @@ public class Main extends Scene {
 ### Prerequisites
 * OpenGL capable graphics card (minimum `core 330`)
 * OpenGL capable graphics driver
-  * Linux nouveau drivers for nvidia cards do not currently work, you will have to install proprietary drivers.
-  * FOSS AMD Drivers for linux do work.
-* Java 1.8
+* Java 11
   
 ### Project Setup
 To begin contributing, create a fork of this repository.
