@@ -16,13 +16,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public abstract class Scene {
 /**
- * @author Asher Haun
- * @author Juyas
- * @author VoxelRifts
- *
- * <p>
  * Abstract class encapsulating the game logic, the gameObjects, the renderers, the physics
  * specifications and all the necessary ecs-related logic. Programming/Interacting with this
  * game engine will usually involve the following boilerplate code:
@@ -71,9 +65,12 @@ public abstract class Scene {
  *         }
  *     }
  * </pre>
- * </p>
  * @see SceneManager
+ * @author Asher Haun
+ * @author Juyas
+ * @author VoxelRifts
  */
+public abstract class Scene {
 
     private static int sceneCounter = 0;
     private final int sceneId = sceneCounter++;
