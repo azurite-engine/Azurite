@@ -3,7 +3,6 @@ package ui;
 import graphics.Color;
 import graphics.Sprite;
 import graphics.Texture;
-import graphics.renderer.UIRenderBatch;
 import org.joml.Vector2f;
 import org.joml.Vector4f;
 import util.Assets;
@@ -22,15 +21,6 @@ import static graphics.Color.WHITE;
  */
 
 public class ElementRenderer extends Element {
-
-    /**
-     * The batch in which this component has been added
-     */
-    private UIRenderBatch batch;
-    /**
-     * The index at which this component is placed in the batch
-     */
-    private int index;
 
     private Vector4f color = new Color(255, 100, 100, 255).toNormalizedVec4f();
 
@@ -104,10 +94,6 @@ public class ElementRenderer extends Element {
      */
     public void update(float dt) {
 
-    }
-
-    public void remove() {
-        getBatch().getRenderer().remove(this);
     }
 
     /**
@@ -222,34 +208,5 @@ public class ElementRenderer extends Element {
      */
     public void setClean() {
         isDirty = false;
-    }
-
-    /**
-     * Sets this component's batch and index to where it has currently been added
-     *
-     * @param batch the batch that this component has been added to
-     * @param index the index at which this component is placed in the batch
-     */
-    public void setLocation(UIRenderBatch batch, int index) {
-        this.batch = batch;
-        this.index = index;
-    }
-
-    /**
-     * Get the batch in which this component has been added
-     *
-     * @return The batch in which this component has been added
-     */
-    public UIRenderBatch getBatch() {
-        return batch;
-    }
-
-    /**
-     * Get the index at which this component is placed in the batch
-     *
-     * @return The index at which this component is placed in the batch
-     */
-    public int getIndex() {
-        return index;
     }
 }

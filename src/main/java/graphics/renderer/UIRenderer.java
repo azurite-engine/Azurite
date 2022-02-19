@@ -1,22 +1,30 @@
 package graphics.renderer;
 
-import graphics.Framebuffer;
-import graphics.Graphics;
-import graphics.Shader;
+import ecs.SpriteRenderer;
+import graphics.*;
+import org.joml.Vector2f;
 import ui.ElementRenderer;
 import util.Assets;
 import util.Engine;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Used to render sprites, which are rendered as {@code Primitive.QUAD}s
  * with textures. This should be used to render any renderable {@code gameObject}.
  *
- * @see UIRenderBatch
+ *
  */
-public class UIRenderer extends Renderer<UIRenderBatch> {
+public class UIRenderer extends Renderer {
     private static final int MAX_BATCH_SIZE = 1000;
+
+    private final List<ElementRenderer> elementRenderers;
+
+    public UIRenderer () {
+        elementRenderers = new ArrayList<>();
+    }
 
     /**
      * Create a shader
@@ -38,6 +46,11 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
         return Framebuffer.createDefault();
     }
 
+    @Override
+    protected RenderBatch createBatch(int zIndex) {
+        return new RenderBatch(MAX_BATCH_SIZE, zIndex, Primitive.QUAD, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT4, ShaderDatatype.FLOAT2, ShaderDatatype.FLOAT);
+    }
+
     /**
      * Upload uniforms to the shader
      *
@@ -52,6 +65,44 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
         shader.uploadMat4f("uView", Engine.window().currentScene().camera().getViewMatrix());
     }
 
+    @Override
+    protected void rebuffer() {
+        /**
+         * NOTE TO SELF (Asher), THIS PROBABLY WON"T WORK, It only looks correct.
+         *
+         */
+        for (ElementRenderer er : elementRenderers) {
+            RenderBatch batch = getAvailableBatch(er.getTexture(), er.zIndex());
+
+            Vector2f pos = er.getFrame().getPosition();
+            Vector2f scale = er.getFrame().getScale();
+            Vector2f[] textureCoordinates = er.getTexCoords();
+
+            int textureID;
+            if (er.getTexture() != null) textureID = batch.addTexture(er.getTexture());
+            else textureID = 0;
+
+            // Push verts to the batch
+            float xAdd = 1.0f;
+            float yAdd = 1.0f;
+            for (int i = 0; i < 4; i++) {
+                switch (i) {
+                    case 1: yAdd = 0.0f; break;
+                    case 2: xAdd = 0.0f; break;
+                    case 3: yAdd = 1.0f; break;
+                }
+
+                float scaledX = (xAdd * scale.x);
+                float scaledY = (yAdd * scale.y);
+
+                batch.pushVec2(pos.x + scaledX, pos.y + scaledY);
+                batch.pushColor(er.getColor());
+                batch.pushVec2(textureCoordinates[i]);
+                batch.pushInt(textureID);
+            }
+        }
+    }
+
     /**
      *
      * @param e UI ElementRenderer
@@ -59,20 +110,6 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
     public void add(ElementRenderer e) {
         if (e == null) return;
         addElementRenderer(e);
-    }
-
-    /**
-     * Remove a UIComponentRenderer from this renderer
-     *
-     * @param r UIComponentRenderer
-     */
-    @Override
-    public void remove(ElementRenderer r) {
-        if (r != null) {
-            r.markDirty();
-            r.remove();
-            r.getBatch().removeSprite(r);
-        }
     }
 
     /**
@@ -84,19 +121,20 @@ public class UIRenderer extends Renderer<UIRenderBatch> {
     /**
      * Adds the ElementRenderer to a single batch, and creates a new batch if their is no space.
      *
-     * @param elementRenderer elementRenderer: The ElementRenderer to be added
+     * @param elementRenderer elementRenderer: The ElementRenderer to be added to a batch
      */
     protected void addElementRenderer(ElementRenderer elementRenderer) {
-        for (UIRenderBatch batch : batches) {
-            if (batch.addElementRenderer(elementRenderer)) return;
+        elementRenderers.add(elementRenderer);
+    }
+
+    /**
+     * Remove an ElementRenderer from this renderer
+     *
+     * @param r ElementRenderer
+     */
+    public void remove(ElementRenderer r) {
+        if (r != null) {
+            elementRenderers.remove(r);
         }
-
-        UIRenderBatch newBatch = new UIRenderBatch(MAX_BATCH_SIZE, elementRenderer.zIndex());
-        newBatch.setRenderer(this);
-        newBatch.start();
-        batches.add(newBatch);
-        newBatch.addElementRenderer(elementRenderer);
-
-        Collections.sort(batches);
     }
 }

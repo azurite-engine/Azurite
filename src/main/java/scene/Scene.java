@@ -84,7 +84,7 @@ public abstract class Scene {
     private final List<Text> texts = new ArrayList<>();
     private final List<ElementRenderer> uiElements = new ArrayList<>();
 
-    private List<Renderer<?>> rendererRegistry = new LinkedList<>();
+    private List<Renderer> rendererRegistry = new LinkedList<>();
 
 
     public DefaultRenderer renderer = new DefaultRenderer();
@@ -199,15 +199,6 @@ public abstract class Scene {
     }
 
     /**
-     * Register a renderer to this scene
-     *
-     * @param renderer the renderer to be registered
-     */
-    public void registerRenderer(Renderer renderer) {
-        rendererRegistry.add(renderer);
-    }
-
-    /**
      * @return Returns the scene's instance of Camera
      */
     public Camera camera() {
@@ -249,7 +240,7 @@ public abstract class Scene {
      *
      * @param renderer the renderer to be registered
      */
-    public void registerRenderer(Renderer<?> renderer) {
+    public void registerRenderer(Renderer renderer) {
         rendererRegistry.add(renderer);
     }
 

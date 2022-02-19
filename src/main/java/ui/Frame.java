@@ -54,6 +54,14 @@ public class Frame extends Observable<Void> {
         this.y.setValue(y);
     }
 
+    public Vector2f getPosition () {
+        return new Vector2f(x.getValue(), y.getValue());
+    }
+
+    public Vector2f getScale () {
+        return new Vector2f(w.getValue(), h.getValue());
+    }
+
     public float getWidth() {
         return w.getValue();
     }
