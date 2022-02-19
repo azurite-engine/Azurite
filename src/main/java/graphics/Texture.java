@@ -1,6 +1,7 @@
 package graphics; 
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryStack;
 import util.specs.TextureSpec;
 
 import javax.imageio.ImageIO;
@@ -304,5 +305,28 @@ public class Texture {
 
 	public void delete() {
 		glDeleteTextures(textureID);
+	}
+
+	/**
+	 * A Function to return an image in byteBuffer
+	 * @param path the path to the image
+	 * @return the image in byteBuffer
+	 */
+	public ByteBuffer loadImageInByteBuffer(String path) {
+		ByteBuffer image;
+		try(MemoryStack stack = MemoryStack.stackPush()) {
+			IntBuffer comp = stack.mallocInt(1);
+			IntBuffer width = stack.mallocInt(1);
+			IntBuffer height = stack.mallocInt(1);
+
+			stbi_set_flip_vertically_on_load(false);
+			image = stbi_load(path, width, height, comp, 4);
+			if(image == null) {
+				throw new RuntimeException("Failed to load image: " + path);
+			}
+			this.width = width.get();
+			this.height = height.get();
+		}
+		return image;
 	}
 }
