@@ -50,8 +50,10 @@
 | Debian / Ubuntu 	| Working	 | OpenGL 330 |
 | Arch / Manjaro 	| Working 	 | OpenGL 330 |
 | Other Distros 	| Planned 	 | OpenGL 330 |
+| FreeBSD		| Planned	 | - |
 | Android	 	| Planned 	 | OpenGL ES |
 | IOS		 	| Not Planned 	 | - |
+
 
 ### Built With
 * [LWJGL 3](https://www.lwjgl.org/)
