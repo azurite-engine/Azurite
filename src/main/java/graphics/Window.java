@@ -1,7 +1,5 @@
 package graphics; 
 
-
-import ecs.Text;
 import event.EventData;
 import event.Events;
 import input.Keyboard;
