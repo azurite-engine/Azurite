@@ -36,8 +36,9 @@ public class AudioListener extends Component {
     @Override
     public void start() {
         alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
+        AudioMaster.alGetError();
         alListener3f(AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-        alListener3f(AL_ORIENTATION, 0f, 0f, -1f);
+        AudioMaster.alGetError();
     }
 
     public void update(float dt) {
@@ -45,9 +46,11 @@ public class AudioListener extends Component {
         Vector2f firstPos = position;
         Vector2f secondPos = gameObject.getReadOnlyPosition();
         alListener3f(AL_POSITION, secondPos.x, secondPos.y, 0.0f);
+        AudioMaster.alGetError();
         alListener3f(AL_VELOCITY,
                 secondPos.x - firstPos.x,
                 secondPos.y - firstPos.y, 0.0f);
+        AudioMaster.alGetError();
         position = gameObject.getReadOnlyPosition();
     }
 }

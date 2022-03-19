@@ -107,7 +107,7 @@ public class DemoNoise extends Scene {
 
         camera.smoothFollow(player.getReadOnlyPosition());
         prev = Keyboard.getKey(GLFW_KEY_SPACE);
-        if (prev != curr && prev) player.getComponent(AudioSource.class).play(0);
+        if (prev != curr && prev) player.getComponent(AudioSource.class).play(0, true);
         curr = prev;
     }
 

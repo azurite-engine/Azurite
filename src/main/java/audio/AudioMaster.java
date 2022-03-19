@@ -8,6 +8,8 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.lwjgl.openal.AL10.alGetError;
+import static org.lwjgl.openal.AL10.alGetString;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.openal.EXTEfx.ALC_MAX_AUXILIARY_SENDS;
 
@@ -75,6 +77,7 @@ public class AudioMaster {
         }
 
         AL.createCapabilities(deviceCaps);
+        AudioMaster.alGetError();
     }
 
     public void addSource(AudioSource s) {
@@ -89,4 +92,13 @@ public class AudioMaster {
         sources.clear();
         alcCloseDevice(device);
     }
+
+    public static void alGetError() {
+        int err = AL10.alGetError();
+        if (err != 0) {
+            System.err.println("[FATAL] AL error received: " + alGetString(err));
+            throw new RuntimeException();
+        }
+    }
+
 }

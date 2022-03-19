@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import java.util.Arrays;
 
 import static org.lwjgl.openal.AL10.*;
 
@@ -43,17 +44,18 @@ public class AudioBuffer {
      */
     private byte[] audioData;
     /**
-     * Audio format of the file.
+     * Audio metadata.
      */
-    private int format;
+    private int format, channels, sampleSize;
+    private float sampleRate;
     /**
      * Length of time it would take to play this buffer, in milliseconds.
      */
     private long time;
-    /**
-     * "Name" of the file. Used by OpenAL to open an ALuint buffer, I think.
-     */
-    private final IntBuffer name = BufferUtils.createIntBuffer(1);
+
+    static final int NUM_BUFFERS = 8, BUFFER_SIZE = 2 << 15;
+
+    private int[] alBuffers = new int[NUM_BUFFERS];
 
     private AudioBuffer() {
 
@@ -73,7 +75,10 @@ public class AudioBuffer {
         if (fileSize != -1) return;
 
         try {
-            alGenBuffers(name);
+            for (int i = 0; i < NUM_BUFFERS; i++) {
+                alBuffers[i] = alGenBuffers();
+            }
+            AudioMaster.alGetError();
 
             stream = AudioSystem.getAudioInputStream(new File(path));
             fileSize = stream.getFrameLength() * stream.getFormat().getFrameSize();
@@ -81,34 +86,30 @@ public class AudioBuffer {
             AudioFormat audioFormat = stream.getFormat();
             if(audioFormat.isBigEndian()) throw new UnsupportedAudioFileException("Can't handle Big Endian formats yet");
 
-            int channels = audioFormat.getChannels();
-            int sampSize = audioFormat.getSampleSizeInBits();
+            channels = audioFormat.getChannels();
+            sampleSize = audioFormat.getSampleSizeInBits();
+            sampleRate = audioFormat.getSampleRate();
 
             if (channels == MONO) {
-                if (sampSize == 8) {
+                if (sampleSize == 8) {
                     format = AL_FORMAT_MONO8;
-                } else if (sampSize == 16) {
+                } else if (sampleSize == 16) {
                     format = AL_FORMAT_MONO16;
                 }
             } else if (channels == STEREO) {
-                if (sampSize == 8) {
+                if (sampleSize == 8) {
                     format = AL_FORMAT_STEREO8;
-                } else if (sampSize == 16) {
+                } else if (sampleSize == 16) {
                     format = AL_FORMAT_STEREO16;
                 }
             }
 
-            // load data into a ByteBuffer
             audioData = new byte[stream.available()];
             stream.read(audioData);
-            ByteBuffer bu = BufferUtils.createByteBuffer(audioData.length).put(audioData);
-            bu.flip();
-
-            alBufferData(getName(), format, bu, (int) audioFormat.getSampleRate());
-            time = (long) (1000f * stream.getFrameLength() / audioFormat.getFrameRate());
         } catch (UnsupportedAudioFileException | IOException e) {
             assert false : "something went wrong with loading file " + path + ": " + e;
             fileSize = -1;
+            alDeleteBuffers(alBuffers);
         }
     }
 
@@ -116,11 +117,23 @@ public class AudioBuffer {
         return audioData;
     }
 
-    public int getName() {
-        return name.get(0);
+    int getALBuffer(int index) {
+        return alBuffers[index];
     }
 
     public long getTime() {
         return time;
+    }
+
+    public int[] getALBuffers() {
+        return alBuffers;
+    }
+
+    public int getFormat() {
+        return format;
+    }
+
+    public float getSampleRate() {
+        return sampleRate;
     }
 }

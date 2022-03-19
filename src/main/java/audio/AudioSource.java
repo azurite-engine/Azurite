@@ -2,12 +2,16 @@ package audio;
 
 import ecs.Component;
 import org.joml.Vector2f;
+import org.lwjgl.BufferUtils;
 import util.Assets;
 import util.Engine;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static audio.AudioBuffer.BUFFER_SIZE;
+import static audio.AudioBuffer.NUM_BUFFERS;
 import static org.lwjgl.openal.AL10.*;
 
 /**
@@ -26,10 +30,18 @@ public class AudioSource extends Component {
      * Index of the currently selected buffer.
      */
     private int index = 0;
+
     /**
-     * Amount of time left until selected buffer has finished playing, in milliseconds.
+     * Index of the next alBuffer to be queued.
      */
-    private long timeLeft = 0;
+    private int buffPtr = 0;
+
+    /**
+     * Current position in loaded buffer. Updated every time a new buffer is queued.
+     */
+    private long cursor = 0;
+
+    private boolean atEnd = false;
 
     /**
      * Whether the buffer loops, a.k.a. the value of dest after
@@ -60,11 +72,8 @@ public class AudioSource extends Component {
     }
 
     public void setLooping(boolean looping) {
-        if (looping) {
-            alSourcei(sourceID, AL_LOOPING, AL_TRUE);
-        } else {
-            alSourcei(sourceID, AL_LOOPING, AL_FALSE);
-        }
+        // artificial looping, because it doesn't work with
+        // alSourcei
         isLooping = looping;
     }
 
@@ -76,43 +85,38 @@ public class AudioSource extends Component {
      * Sets the selected buffer to whatever the index indicates, then plays all of
      * this buffer.
      */
-    public void play(int index) {
-        int[] isPlaying = new int[1];
-        alGetSourcei(this.sourceID, AL_SOURCE_STATE, isPlaying);
-        //if (isPlaying[0] == AL_PLAYING) this.stop();
+    public void play(int index, boolean isLooping) {
+        if (isPlaying()) stop();
+        AudioMaster.alGetError();
+
+        this.cursor = 0;
+        this.atEnd = false;
+
+        setLooping(isLooping);
 
         setSelectedBuffer(index);
-        this.timeLeft = this.getSelectedBuffer().getTime();
-        alSourcePlay(sourceID);
-    }
-
-    /**
-     * Sets the selected buffer to whatever the index indicates, then plays <code>millis</code>
-     * milliseconds of this buffer.
-     */
-    public void play(int index, long millis) {
-        int[] isPlaying = new int[1];
-        alGetSourcei(this.sourceID, AL_SOURCE_STATE, isPlaying);
-        if (isPlaying[0] == AL_PLAYING) this.stop();
-
-        setSelectedBuffer(index);
-        this.timeLeft = millis;
         alSourcePlay(sourceID);
     }
 
     public boolean isPlaying() {
         int[] isPlaying = new int[1];
         alGetSourcei(this.sourceID, AL_SOURCE_STATE, isPlaying);
+        AudioMaster.alGetError();
         return isPlaying[0] == AL_PLAYING;
     }
 
     public void stop() {
         alSourceStop(sourceID);
-        this.timeLeft = 0;
-        System.out.println("foo");
+        AudioMaster.alGetError();
+
+        alSourceUnqueueBuffers(sourceID, getSelectedBuffer().getALBuffers());
+        AudioMaster.alGetError();
+
+        this.cursor = 0;
+        this.atEnd = true;
     }
 
-    public void delete() {
+    void delete() {
         alDeleteSources(sourceID);
     }
 
@@ -120,21 +124,84 @@ public class AudioSource extends Component {
         return audioBuffers.get(index);
     }
 
-    public void setSelectedBuffer(int i) {
+    void setSelectedBuffer(int i) {
         index = i;
-        alSourcei(sourceID, AL_BUFFER, getSelectedBuffer().getName());
+
+        AudioBuffer buff = audioBuffers.get(index);
+        for (int inc = 0; inc < NUM_BUFFERS; inc++) {
+            int toCopy = Math.min(BUFFER_SIZE, buff.getAudioData().length - inc*BUFFER_SIZE);
+            AudioMaster.alGetError();
+
+            ByteBuffer bu = BufferUtils.createByteBuffer(BUFFER_SIZE);
+            if (toCopy > 0) bu.put(buff.getAudioData(), (int) cursor, toCopy);
+            AudioMaster.alGetError();
+
+            bu.flip();
+            cursor += toCopy;
+
+            alBufferData(audioBuffers.get(index).getALBuffer(inc), buff.getFormat(), bu, (int) buff.getSampleRate());
+            AudioMaster.alGetError();
+
+            alSourceQueueBuffers(sourceID, audioBuffers.get(index).getALBuffer(inc));
+            AudioMaster.alGetError();
+        }
+        buffPtr = NUM_BUFFERS - 1;
+        atEnd = false;
     }
 
-    /*
-     * Here I define the audio source location as the location of the gameObject, I might want to make this a little
-     * more flexible; what if the sprite's mouth isn't located on it's stomach (or wherever the default position is
-     * in relation to the sprite)?
-     */
+    private void updateStream() {
+        int processedBuffers = alGetSourcei(sourceID, AL_BUFFERS_PROCESSED);
+
+        if (processedBuffers <= 0) return;
+
+        while (processedBuffers-- != 0) {
+            if (++buffPtr >= NUM_BUFFERS) buffPtr = 0;
+
+            int currentBuffer = getSelectedBuffer().getALBuffer(buffPtr);
+            alSourceUnqueueBuffers(sourceID, new int[]{currentBuffer});
+            AudioMaster.alGetError();
+            if (!isPlaying()) return;
+
+            int toCopy = Math.min(BUFFER_SIZE, getSelectedBuffer().getAudioData().length - (int) cursor);
+            AudioMaster.alGetError();
+
+            ByteBuffer bu;
+
+            // if this occurs we're at the end of the audio data
+            if (cursor + BUFFER_SIZE > getSelectedBuffer().getAudioData().length) {
+                // if we're looping, put start of file at the end of the most recent buffer
+                if (this.isLooping) {
+                    bu = BufferUtils.createByteBuffer(BUFFER_SIZE);
+                    bu.put(this.getSelectedBuffer().getAudioData(), (int) cursor, toCopy);
+                    if (!atEnd)
+                        bu.put(this.getSelectedBuffer().getAudioData(), 0, BUFFER_SIZE - toCopy);
+                    this.cursor = BUFFER_SIZE - toCopy;
+                } else {
+                    bu = BufferUtils.createByteBuffer(toCopy);
+                    bu.put(this.getSelectedBuffer().getAudioData(), (int) cursor, toCopy);
+                    atEnd = true; // otherwise we're at the end.
+                    this.cursor = getSelectedBuffer().getAudioData().length;
+                }
+            } else {
+                bu = BufferUtils.createByteBuffer(BUFFER_SIZE);
+                bu.put(this.getSelectedBuffer().getAudioData(), (int) cursor, BUFFER_SIZE);
+                this.cursor += BUFFER_SIZE;
+            }
+
+            bu.flip();
+
+            alBufferData(currentBuffer, getSelectedBuffer().getFormat(), bu, (int) getSelectedBuffer().getSampleRate());
+            AudioMaster.alGetError();
+            alSourceQueueBuffers(sourceID, currentBuffer);
+            AudioMaster.alGetError();
+        }
+    }
+
     @Override
     public void start() {
         sourceID = alGenSources();
         Vector2f screenPos = Engine.scenes().currentScene().camera().position;
-        alSourcei(sourceID, AL_BUFFER, getSelectedBuffer().getName());
+
         alSource3f(sourceID, AL_POSITION, screenPos.x, screenPos.y, 0f);
         alSource3f(sourceID, AL_VELOCITY, 0f, 0f, 0f);
 
@@ -146,13 +213,7 @@ public class AudioSource extends Component {
 
     @Override
     public void update(float dt) {
-        timeLeft -= dt;
-        if (timeLeft <= 0) {
-            if (!isLooping && isPlaying())
-                this.stop();
-            else
-                timeLeft = getSelectedBuffer().getTime();
-        }
+        updateStream();
 
         if (gameObject == null) return;
         Vector2f firstPos = position;
