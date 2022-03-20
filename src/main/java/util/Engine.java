@@ -1,4 +1,4 @@
-package util;
+package util; 
 
 import audio.AudioMaster;
 import graphics.Window;
@@ -69,7 +69,7 @@ public final class Engine {
 
         if (!glfwInit())
             throw new IllegalStateException("[FATAL] Failed to initialize GLFW.");
-
+      
         AudioMaster.get();
     }
 
@@ -138,5 +138,4 @@ public final class Engine {
     public float getDeltaTime() {
         return deltaTime;
     }
-
 }

@@ -6,7 +6,7 @@ import java.nio.IntBuffer;
 import java.util.function.BiConsumer;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * A primitive is a simple shape that contains all the information necessary to prepare
  * an element buffer of that primitive's type. The primitives available are:
  * <ul>

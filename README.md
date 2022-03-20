@@ -50,8 +50,10 @@
 | Debian / Ubuntu 	| Working	 | OpenGL 330 |
 | Arch / Manjaro 	| Working 	 | OpenGL 330 |
 | Other Distros 	| Planned 	 | OpenGL 330 |
+| FreeBSD		| Planned	 | - |
 | Android	 	| Planned 	 | OpenGL ES |
 | IOS		 	| Not Planned 	 | - |
+
 
 ### Built With
 * [LWJGL 3](https://www.lwjgl.org/)
@@ -108,9 +110,7 @@ public class Main extends Scene {
 ### Prerequisites
 * OpenGL capable graphics card (minimum `core 330`)
 * OpenGL capable graphics driver
-  * Linux nouveau drivers for nvidia cards do not currently work, you will have to install proprietary drivers.
-  * FOSS AMD Drivers for linux do work.
-* Java 1.8
+* Java 11
   
 ### Project Setup
 To begin contributing, create a fork of this repository.

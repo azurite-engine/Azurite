@@ -1,17 +1,20 @@
-package graphics;
-
+package graphics; 
 
 import audio.AudioMaster;
+import ecs.Text;
 import event.EventData;
 import event.Events;
 import input.Keyboard;
 import input.Mouse;
+import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import postprocess.PostProcessing;
 import scene.Scene;
 import scene.SceneManager;
 import util.Engine;
+
+import java.nio.ByteBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -221,5 +224,17 @@ public class Window {
 
     public SceneManager getSceneManager() {
         return sceneManager;
+    }
+
+    public void setIcon(String path) {
+        Texture icon = new Texture(path);
+        GLFWImage image = GLFWImage.malloc();
+        GLFWImage.Buffer buffer = GLFWImage.malloc(1);
+        ByteBuffer iconBuffer = icon.loadImageInByteBuffer(path);
+        image.set(icon.getWidth(), icon.getHeight(), iconBuffer);
+        buffer.put(0, image);
+        glfwSetWindowIcon(glfwWindow, buffer);
+        buffer.free();
+        image.free();
     }
 }
