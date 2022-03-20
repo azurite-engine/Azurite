@@ -4,7 +4,7 @@ import org.joml.Vector2f;
 import util.debug.DebugPrimitive;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * Abstract structure for ECS Components.
  * It is highly recommended to use this when implementing any system that can/should be applied to a GameObject.
  */

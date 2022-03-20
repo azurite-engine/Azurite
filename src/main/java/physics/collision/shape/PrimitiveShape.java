@@ -101,7 +101,7 @@ public abstract class PrimitiveShape {
         } else {
             //ensures that all relative coords are sorted and dereferenced from the original ones
             this.relatives = MathUtils.copy(MathUtils.convexHull(relatives));
-            this.vertices = relatives.length;
+            this.vertices = this.relatives.length;
             this.absolutes = new Vector2f[this.vertices];
             this.faces = new Face[this.vertices];
         }
