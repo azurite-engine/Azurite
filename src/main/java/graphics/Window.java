@@ -1,5 +1,7 @@
 package graphics; 
 
+import audio.AudioMaster;
+import ecs.Text;
 import event.EventData;
 import event.Events;
 import input.Keyboard;
@@ -209,6 +211,7 @@ public class Window {
         currentScene().clean();
         // Delete all framebuffers
         Framebuffer.clean();
+        AudioMaster.get().clean();
 
         glfwDestroyWindow(glfwWindow);
         glfwTerminate();

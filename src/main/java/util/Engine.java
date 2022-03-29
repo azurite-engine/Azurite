@@ -1,5 +1,6 @@
 package util; 
 
+import audio.AudioMaster;
 import graphics.Window;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import scene.SceneManager;
@@ -68,6 +69,8 @@ public final class Engine {
 
         if (!glfwInit())
             throw new IllegalStateException("[FATAL] Failed to initialize GLFW.");
+      
+        AudioMaster.get();
     }
 
     /**
