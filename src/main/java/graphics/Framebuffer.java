@@ -1,4 +1,4 @@
-package graphics; 
+package graphics;
 
 import event.EventData;
 import event.Events;
