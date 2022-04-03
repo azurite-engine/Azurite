@@ -1,5 +1,6 @@
-package util; 
+package util;
 
+import audio.AudioBuffer;
 import graphics.Shader;
 import graphics.Texture;
 import tiles.Spritesheet;
@@ -8,9 +9,10 @@ import java.io.File;
 import java.util.HashMap;
 
 public class Assets {
-    private static HashMap<String, Shader> shaders = new HashMap<>();
-    private static HashMap<String, Texture> textures = new HashMap<>();
-    private static HashMap<String, Spritesheet> spritesheets = new HashMap<>();
+	private static HashMap<String, Shader> shaders = new HashMap<>();
+	private static HashMap<String, Texture> textures = new HashMap<>();
+	private static HashMap<String, AudioBuffer> audioBuffers = new HashMap<>();
+	private static HashMap<String, Spritesheet> spritesheets = new HashMap<>();
 
     /**
      * Loads a shader from the filesystem, compiles it, then returns type Shader.
@@ -45,18 +47,27 @@ public class Assets {
         return texture;
     }
 
-    /**
-     * Adds a filepath and spritesheet to the Asset class's spritesheet hashmap. (private)
-     *
-     * @param path        to Texture resource (usually a .png file)
-     * @param spritesheet object
-     */
-    private static void addSpritesheet(String path, Spritesheet spritesheet) {
-        File file = new File(path);
-        if (!Assets.spritesheets.containsKey(file.getAbsolutePath())) {
-            Assets.spritesheets.put(file.getAbsolutePath(), spritesheet);
-        }
-    }
+    public static AudioBuffer getAudioBuffer(String path) {
+		File file = new File(path);
+		if (audioBuffers.containsKey(file.getAbsolutePath())) {
+			return audioBuffers.get(file.getAbsolutePath());
+		}
+		AudioBuffer audioBuffer = new AudioBuffer(path);
+		audioBuffers.put(file.getAbsolutePath(), audioBuffer);
+		return audioBuffer;
+	}
+
+	/**
+	 * Adds a filepath and spritesheet to the Asset class's spritesheet hashmap. (private)
+	 ** @param path to Texture resource (usually a .png file)
+	 * @param spritesheet object
+	 */
+	private static void addSpritesheet(String path, Spritesheet spritesheet) {
+		File file = new File(path);
+		if (!Assets.spritesheets.containsKey(file.getAbsolutePath())) {
+			Assets.spritesheets.put(file.getAbsolutePath(), spritesheet);
+		}
+	}
 
 
     private static Spritesheet getSpritesheet(String path) {
