@@ -70,11 +70,11 @@ public class Main extends Scene {
 
 	public void awake() {
 		camera = new Camera();
-		...
+		// Code
 	}
 
 	public void update() {
-		...
+		// Code
 	}
 }
 ```
@@ -115,7 +115,7 @@ public class Main extends Scene {
 ### Project Setup
 To begin contributing, create a fork of this repository.
 Using intellj, import this project from existing sources as a gradle project.
-Build gradle, then run the Main scene (located in the scenes package).
+Build gradle, then run the Main scene (located in the demo package).
 Follow this [link](https://azurite-engine.github.io/Azurite-Docs/tutorials/set-a-project.html) for tutorials on cloning and importing to either Intellj or Eclipse.
 
 ### Documentation

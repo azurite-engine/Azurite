@@ -1,4 +1,4 @@
-package scenes;
+package demo;
 
 import audio.AudioListener;
 import audio.AudioSource;

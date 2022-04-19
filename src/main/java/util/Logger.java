@@ -36,14 +36,16 @@ public class Logger {
         System.out.println("\u001b[32m[INFO] [" + clazz + "] " + info + "\u001b[0m");
     }
 
-    public static void logSystemCompatibilityError() {
-        System.out.println("System NOT COMPATIBLE, Might be driver or software issue.\n\n\tTry reinstalling program");
-        System.exit(0);
-    }
-
-    public static void logEngineError() {
-        System.out.println("We Encountered an Engine error it will be fixed soon. Thank you");
-        System.exit(-1);
+    /**
+     * Logs System Compatibility error in format: {@code [SYSTEM NOT COMPATIBLE] {error} <br> }
+     * Then exits with value 1 IF specified to exit
+     *
+     * @param error The System Compatibility Error.
+     * @param exit  IF true then exit else don't.
+     */
+    public static void logSystemCompatibilityError(String error, boolean exit) {
+        System.out.println("\u001b[31m[SYSTEM NOT COMPATIBLE]" + error + "\u001b[0m");
+        if(exit == true) System.exit(1);
     }
 
     /**

@@ -13,8 +13,10 @@ import postprocess.PostProcessing;
 import scene.Scene;
 import scene.SceneManager;
 import util.Engine;
+import util.Logger;
 
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -209,13 +211,13 @@ public class Window {
         }
 
         currentScene().clean();
-        // Delete all framebuffers
+        // Delete all frame buffers
         Framebuffer.clean();
         AudioMaster.get().clean();
 
         glfwDestroyWindow(glfwWindow);
         glfwTerminate();
-        glfwSetErrorCallback(null).free();
+        Objects.requireNonNull(glfwSetErrorCallback(null)).free();
     }
 
     public Scene currentScene() {
@@ -226,7 +228,12 @@ public class Window {
         return sceneManager;
     }
 
-    public void setIcon(String path) {
+    public void setIcon(String path) throws Exception {
+        String OS = System.getProperty("os.name").toLowerCase();
+        if(OS.equals("linux") || OS.contains("mac") || OS.contains("sunos") || OS.contains("nix") || OS.contains("nux") || OS.contains("aix")) {
+            Logger.logSystemCompatibilityError("The OS Used does not have support for `glfwSetWindowIcon()`", false);
+            throw new Exception("WINDOW ICON SUPPORT MISSING");
+        }
         Texture icon = new Texture(path);
         GLFWImage image = GLFWImage.malloc();
         GLFWImage.Buffer buffer = GLFWImage.malloc(1);
