@@ -3,6 +3,7 @@ package graphics;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.opengl.GL11;
 import util.MathUtils;
 
 /**
@@ -20,6 +21,26 @@ import util.MathUtils;
  * and yaw.
  */
 public class Camera {
+
+
+    /**
+     * FILL - Tries to fill the entire window with image
+     * EXTENDED - If the image is of larger resolution it will extend it beyond window boundaries
+     * ASPECT_RATIO - It will show the entire image on the screen but will keep the aspect ratio (might create black bars)
+     */
+    private enum Mode{
+        FILL,
+        EXTENDED,
+        ASPECT_RATIO,
+    }
+    public Mode mode = Mode.FILL;
+    /**
+     * Custom game resolution separate from device(window) resolution
+     */
+    public Vector2f resolution = new Vector2f(2000, 1080);
+
+
+
     /**
      * Position of the camera
      */
@@ -62,8 +83,37 @@ public class Camera {
      */
     public void adjustProjection() {
         projectionMatrix.identity();
-        // Top Left origin
-        projectionMatrix.ortho(0, Window.getWidth(), Window.getHeight(), 0, 0, 100);
+        //This should be checked with physicalAspectRatio!! but its fine right now
+        float windowAspectRatio = (float) Window.getWidth() / Window.getHeight();
+        float physicalAspectRatio = resolution.x() / resolution.y();
+
+
+        if(mode == Mode.FILL) {
+
+            projectionMatrix.ortho(0, Window.getWidth(), Window.getHeight(), 0, 0, 100);
+
+        }else if(mode == Mode.EXTENDED){
+
+            GL11.glViewport(0, 0, (int)resolution.x, (int)resolution.y);
+            projectionMatrix.ortho(0, Window.getWidth(), Window.getHeight(), 0, 0, 100);
+
+        }else if(mode == Mode.ASPECT_RATIO){
+
+            float aspectWidth = Window.getWidth();
+            float aspectHeight = aspectWidth / physicalAspectRatio;
+
+            if(aspectHeight > Window.getHeight()){
+                aspectHeight = Window.getHeight();
+                aspectWidth = aspectHeight * physicalAspectRatio;
+            }
+
+            int vpX = (int)(((float)Window.getWidth() / 2.0f) - (aspectWidth / 2.0f));
+            int vpY = (int)(((float)Window.getHeight() / 2.0f) - (aspectHeight / 2.0f));
+
+            GL11.glViewport(vpX, vpY, (int)aspectWidth, (int)aspectHeight);
+            projectionMatrix.ortho(0, Window.getWidth(), Window.getHeight(), 0, 0, 100);
+
+        }
     }
 
     /**
