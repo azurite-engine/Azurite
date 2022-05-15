@@ -4,7 +4,6 @@ import ecs.GameObject;
 import graphics.Framebuffer;
 import graphics.Shader;
 import graphics.Texture;
-import ui.ElementRenderer;
 import util.OrderPreservingList;
 
 import java.util.List;

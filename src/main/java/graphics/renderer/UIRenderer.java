@@ -1,14 +1,12 @@
 package graphics.renderer;
 
-import ecs.SpriteRenderer;
 import graphics.*;
 import org.joml.Vector2f;
-import ui.ElementRenderer;
+import ui.RenderableElement;
 import util.Assets;
 import util.Engine;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,10 +18,10 @@ import java.util.List;
 public class UIRenderer extends Renderer {
     private static final int MAX_BATCH_SIZE = 1000;
 
-    private final List<ElementRenderer> elementRenderers;
+    private final List<RenderableElement> renderableElements;
 
     public UIRenderer () {
-        elementRenderers = new ArrayList<>();
+        renderableElements = new ArrayList<>();
     }
 
     /**
@@ -71,15 +69,20 @@ public class UIRenderer extends Renderer {
          * NOTE TO SELF (Asher), THIS PROBABLY WON"T WORK, It only looks correct.
          *
          */
-        for (ElementRenderer er : elementRenderers) {
-            RenderBatch batch = getAvailableBatch(er.getTexture(), er.zIndex());
+        for (RenderableElement re : renderableElements) {
+            RenderBatch batch = getAvailableBatch(re.getTexture(), re.zIndex());
 
-            Vector2f pos = er.getFrame().getPosition();
-            Vector2f scale = er.getFrame().getScale();
-            Vector2f[] textureCoordinates = er.getTexCoords();
+            Vector2f pos = re.getFrame().getPosition();
+            Vector2f scale = re.getFrame().getScale();
+
+            if (re.getParent() != null) {
+                pos.add(re.getParent().getX(), re.getParent().getY());
+            }
+
+            Vector2f[] textureCoordinates = re.getTexCoords();
 
             int textureID;
-            if (er.getTexture() != null) textureID = batch.addTexture(er.getTexture());
+            if (re.getTexture() != null) textureID = batch.addTexture(re.getTexture());
             else textureID = 0;
 
             // Push verts to the batch
@@ -96,7 +99,7 @@ public class UIRenderer extends Renderer {
                 float scaledY = (yAdd * scale.y);
 
                 batch.pushVec2(pos.x + scaledX, pos.y + scaledY);
-                batch.pushColor(er.getColor());
+                batch.pushColor(re.getColor());
                 batch.pushVec2(textureCoordinates[i]);
                 batch.pushInt(textureID);
             }
@@ -107,7 +110,7 @@ public class UIRenderer extends Renderer {
      *
      * @param e UI ElementRenderer
      */
-    public void add(ElementRenderer e) {
+    public void add(RenderableElement e) {
         if (e == null) return;
         addElementRenderer(e);
     }
@@ -123,8 +126,8 @@ public class UIRenderer extends Renderer {
      *
      * @param elementRenderer elementRenderer: The ElementRenderer to be added to a batch
      */
-    protected void addElementRenderer(ElementRenderer elementRenderer) {
-        elementRenderers.add(elementRenderer);
+    protected void addElementRenderer(RenderableElement elementRenderer) {
+        renderableElements.add(elementRenderer);
     }
 
     /**
@@ -132,9 +135,9 @@ public class UIRenderer extends Renderer {
      *
      * @param r ElementRenderer
      */
-    public void remove(ElementRenderer r) {
+    public void remove(RenderableElement r) {
         if (r != null) {
-            elementRenderers.remove(r);
+            renderableElements.remove(r);
         }
     }
 }

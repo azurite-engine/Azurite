@@ -20,7 +20,7 @@ import static graphics.Color.WHITE;
  * @since 11.9.2021
  */
 
-public class ElementRenderer extends Element {
+public class RenderableElement extends Element {
 
     private Vector4f color = new Color(255, 100, 100, 255).toNormalizedVec4f();
 
@@ -34,11 +34,11 @@ public class ElementRenderer extends Element {
      *
      * @param color of type JOML Vector4f, range from 0-1
      */
-    public ElementRenderer(Vector4f color, Vector2f size) {
+    public RenderableElement(Vector4f color, Frame frame) {
         this.setColor(color);
         this.sprite = new Sprite(null);
         this.isDirty = true;
-//        this.size = size;
+        this.frame = frame;
     }
 
     /**
@@ -46,12 +46,12 @@ public class ElementRenderer extends Element {
      *
      * @param color of type Color, range from 0-255
      */
-    public ElementRenderer(Color color, Vector2f size) {
+    public RenderableElement(Color color, Frame frame) {
         // Note that type Color is normalized below in setColor()
         this.setColor(color.toNormalizedVec4f());
         this.sprite = new Sprite(null);
         this.isDirty = true;
-//        this.size = size;
+        this.frame = frame;
     }
 
     /**
@@ -60,11 +60,11 @@ public class ElementRenderer extends Element {
      *
      * @param sprite
      */
-    public ElementRenderer(Sprite sprite, Vector2f size) {
+    public RenderableElement(Sprite sprite, Frame frame) {
         this.sprite = sprite;
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;
-//        this.size = size;
+        this.frame = frame;
     }
 
     /**
@@ -72,11 +72,11 @@ public class ElementRenderer extends Element {
      *
      * @param path to the image (ie. "src/assets/images/pepper.png")
      */
-    public ElementRenderer(String path, Vector2f size) {
+    public RenderableElement(String path, Frame frame) {
         this.sprite = new Sprite(Assets.getTexture(path));
         this.color = WHITE.toNormalizedVec4f();
         this.isDirty = true;
-//        this.size = size;
+        this.frame = frame;
     }
 
     /**

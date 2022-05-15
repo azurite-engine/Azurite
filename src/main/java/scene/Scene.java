@@ -1,7 +1,7 @@
 package scene;
 
 import ecs.GameObject;
-import ui.ElementRenderer;
+import ui.RenderableElement;
 import ui.Text;
 import graphics.Camera;
 import graphics.Texture;
@@ -79,7 +79,7 @@ public abstract class Scene {
     private final List<GameObject> gameObjects = new LinkedList<>();
     private final List<Collider> colliders = new LinkedList<>();
     private final List<Text> texts = new ArrayList<>();
-    private final List<ElementRenderer> uiElements = new ArrayList<>();
+    private final List<RenderableElement> uiElements = new ArrayList<>();
 
     private List<Renderer> rendererRegistry = new LinkedList<>();
 
@@ -212,7 +212,7 @@ public abstract class Scene {
     }
 
     public void updateUI () {
-        for (ElementRenderer e : uiElements) {
+        for (RenderableElement e : uiElements) {
             e.update();
         }
         for (Text t : texts) {
@@ -256,7 +256,7 @@ public abstract class Scene {
     public final void startUi () {
         textRenderer.init();
 
-        for (ElementRenderer e : uiElements) {
+        for (RenderableElement e : uiElements) {
             e.start();
         }
     }
@@ -293,7 +293,7 @@ public abstract class Scene {
         texts.add(t);
     }
 
-    public void addUIElement (ElementRenderer e) {
+    public void addUIElement (RenderableElement e) {
         uiElements.add(e);
     }
 

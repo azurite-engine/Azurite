@@ -5,6 +5,7 @@ import graphics.Color;
 import input.Mouse;
 import org.lwjgl.glfw.GLFW;
 
+import util.Logger;
 import util.MathUtils;
 import util.Observable;
 
@@ -20,39 +21,39 @@ public abstract class Element {
     /**
      * The position and dimension of this component.
      */
-    private final Frame frame;
+    protected Frame frame;
 
     /**
      * The event handler for mouse events on this component.
      * Is null until {@link this#getEventHandler()} is called for the first time to reduce workload.
      */
-    private EventHandler eventHandler;
+    protected EventHandler eventHandler;
 
     /**
      * The font used for text in this element.
      * If the font is null - the parent font is used instead
      */
-    private Font font;
+    protected Font font;
 
     /**
      * The cursor id according to {@link CursorManager}
      */
-    private int cursor;
+    protected int cursor;
 
     //observable values
-    private final Observable<Color> foregroundColor;
-    private final Observable<Color> backgroundColor;
-    private final Observable<Boolean> focused;
-    private final Observable<Boolean> enabled;
-    private final Observable<Boolean> visible;
+    protected final Observable<Color> foregroundColor;
+    protected final Observable<Color> backgroundColor;
+    protected final Observable<Boolean> focused;
+    protected final Observable<Boolean> enabled;
+    protected final Observable<Boolean> visible;
 
     //for keeping track, if the mouse was/is over this component in the last/current update
-    private boolean mouseOverThis;
+    protected boolean mouseOverThis;
 
     //optional information for the layout - e.g. positioning or orientation
-    private Object layoutInfo;
+    protected Object layoutInfo;
 
-    private int zIndex;
+    protected int zIndex;
 
     public Element() {
         this.frame = new Frame();
@@ -70,13 +71,18 @@ public abstract class Element {
         this.cursor = GLFW.GLFW_ARROW_CURSOR;
     }
 
+    public Element (Frame frame) {
+        this();
+        this.frame =  frame;
+    }
+
     //------------ ------------ update function ------------ ------------
 
-    public final void update() {
+    public void update() {
         //to reduce redundant calculation, it gets- calculated each update once
         this.mouseOverThis = MathUtils.inRect(Mouse.mouse, getX(), getY(), getWidth(), getHeight());
         if (isMouseOnThis())
-            CursorManager.requestCursor(cursor);
+            CursorManager.requestCursor(this.cursor);
         if (eventHandler != null)
             eventHandler.update();
         postUpdate();
