@@ -11,13 +11,12 @@ import util.Engine;
 
 import static graphics.Graphics.setDefaultBackground;
 
-
 /**
  * Minimal usage example of the AudioListener and AudioSource components.
  */
 public class AudioDemo extends Scene {
     public static void main(String[] args) {
-        Engine.init(1080, 720, "Azurite Engine Demo 1", 0.01f);
+        Engine.init(1080, 720, "Azurite Audio Demo", 0.01f);
         Engine.scenes().switchScene(new AudioDemo(), true);
         Engine.showWindow();
     }
@@ -37,5 +36,4 @@ public class AudioDemo extends Scene {
     public void update() {
 
     }
-
 }
