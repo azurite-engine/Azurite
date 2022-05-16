@@ -95,7 +95,7 @@ public class Text {
      * @param y the Y position of the Text object.
      */
     public Text (String string, float x, float y) {
-        this(string, new Font(), Color.WHITE, x, y, 1, true, false);
+        this(string, new Font(), Color.BLUE, x, y, 1, false, false);
     }
 
     /**
@@ -128,6 +128,10 @@ public class Text {
         generateGlyphs();
     }
 
+    public String getText () {
+        return (String) this.text;
+    }
+
     private char ch;
     private float lineWidth = 0;
     /**
@@ -152,6 +156,8 @@ public class Text {
     /**
      * Creates the glyphs (essentially sprites) for each character in the string at the appropriate position relative to the anchor point and text alignment.
      */
+    int textHeight;
+    float maxTextWidth;
     private void generateGlyphs () {
 
         float[] lineLengths = new float[1];
@@ -165,9 +171,16 @@ public class Text {
             for (int i = 0; i < lines.length; i++) {
                 lineLengths[i] = calculateLineWidth(lines[i]);
             }
+
+            // Determine which line is the longest
+            for (float i : lineLengths) {
+                if (i > maxTextWidth) {
+                    maxTextWidth = i;
+                }
+            }
         }
 
-        int textHeight = font.getHeight(text);
+        textHeight = font.getHeight(text);
         int lineIncreases = 0;
 
         // Get the anchor point of the Text object
@@ -279,6 +292,14 @@ public class Text {
         return transform.getY();
     }
 
+    public float getHeight () {
+        return textHeight;
+    }
+
+    public float getLongestLineWidth () {
+        return maxTextWidth;
+    }
+
     public void setX (float x) {
         transform.setX(x);
     }
@@ -297,6 +318,16 @@ public class Text {
     }
 
     /**
+     * Allows the user to change the position of the Text object.
+     * @param x x position
+     * @param y y position
+     */
+    public void setPosition (float x, float y) {
+        setX(x);
+        setY(y);
+    }
+
+    /**
      * Add to the existing Y position incrementally each time this method is called.
      * @param y amount to increment Y position by.
      */
@@ -311,4 +342,5 @@ public class Text {
     public void addX (float x) {
         transform.addX(x);
     }
+
 }

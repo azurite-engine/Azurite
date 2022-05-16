@@ -23,7 +23,7 @@ import static graphics.Color.WHITE;
 public class RenderableElement extends Element {
 
 
-    protected Vector4f color = new Color(255, 100, 100, 255).toNormalizedVec4f();
+    protected Vector4f color = new Color(255, 0, 0, 255).toNormalizedVec4f();
     protected Vector4f defaultColor = color;
     public Vector4f hoverColor;
     public Vector4f tintColor;

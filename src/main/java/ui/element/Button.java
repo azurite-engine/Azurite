@@ -4,6 +4,7 @@ import graphics.Color;
 import org.lwjgl.glfw.GLFW;
 import ui.Frame;
 import ui.RenderableElement;
+import ui.Text;
 
 /**
  * @author Juyas
@@ -13,33 +14,37 @@ import ui.RenderableElement;
  */
 public class Button extends RenderableElement implements TextHolder {
 
-    private String text;
+    private Text label;
 
-    public Button(String label, Color color, Frame frame) {
-        super(color, frame);
-        this.text = label;
+    public Button(String label, Color backgroundColor, Color labelColor, Frame frame) {
+        super(backgroundColor, frame);
+        this.label = new Text(label, labelColor, 0, 0);
+        this.label.setCentered(true);
         this.cursor = GLFW.GLFW_CROSSHAIR_CURSOR;
     }
 
-    public Button(String label, String path, Frame frame) {
+    public Button(String label, String path, Color labelColor, Frame frame) {
         super(path, frame);
-        this.text = label;
+        this.label = new Text(label, labelColor, 0, 0);
+        this.label.setCentered(true);
         this.cursor = GLFW.GLFW_CROSSHAIR_CURSOR;
     }
 
     @Override
     public String getText() {
-        return text;
+        return label.getText();
     }
 
     @Override
     public void setText(String text) {
-        this.text = text;
+        this.label.change(text);
     }
 
     @Override
     public void update () {
         super.update();
+
+        label.setPosition(getX() + frame.getWidth() / 2, getY() + frame.getHeight() / 2 - label.getHeight() / 2);
 
         if (isMouseOnThis()) {
             this.setColor(tintColor);
