@@ -53,7 +53,10 @@ public class GridLayout implements ContainerLayout {
             int row, col;
             do {
                 //select component
-                element = container.getElements().get(curr++);
+                element = container.getElements().get(curr);
+                if (curr == container.getElements().size() - 1) break;
+                curr ++;
+
                 //if there is info specified in the component, use that
                 if (element.getLayoutInfo() != null) {
                     //info has to be vector2i
@@ -72,8 +75,8 @@ public class GridLayout implements ContainerLayout {
                         } else break;
                     }
                 }
-            }
-            while (element.getLayoutInfo() != null || curr >= container.getElements().size());
+
+            } while (element.getLayoutInfo() != null && curr <= container.getElements().size());
             //if there is no layout info, calculate the next cell based on the fillingOrder and assign component to that
             row = fillingOrder.getRow(i, columns, rows);
             col = fillingOrder.getColumn(i, columns, rows);
