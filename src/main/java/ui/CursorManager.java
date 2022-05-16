@@ -3,6 +3,7 @@ package ui;
 import graphics.Window;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
+import util.Logger;
 
 import java.util.HashMap;
 
@@ -35,9 +36,9 @@ public class CursorManager {
         return defaultCursor;
     }
 
-    public void loadCursor(int glfwID) {
-        long l = GLFW.glfwCreateStandardCursor(glfwID);
-        cursors.put(glfwID, l);
+    public void loadCursor(int cursorID) {
+        long l = GLFW.glfwCreateStandardCursor(cursorID);
+        cursors.put(cursorID, l);
     }
 
     public int loadCustomCursor(int x, int y, GLFWImage image) {
@@ -52,10 +53,11 @@ public class CursorManager {
 
     public void activateCursor(int cursorID) {
         if (currentCursor == cursorID) return;
-        if (cursors.containsKey(cursorID)) {
-            GLFW.glfwSetCursor(Window.glfwWindow(), cursors.get(cursorID));
-            this.currentCursor = cursorID;
-        }
+        if (!cursors.containsKey(cursorID)) loadCursor(cursorID);
+
+        GLFW.glfwSetCursor(Window.glfwWindow(), cursors.get(cursorID));
+        this.currentCursor = cursorID;
+
     }
 
     public void deactivateCursor() {

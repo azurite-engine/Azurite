@@ -59,7 +59,7 @@ public class EventHandler {
         this.listener.put(event, this.listener.get(event).andThen(listener));
     }
 
-    public Element getComponent() {
+    public Element getElement() {
         return parent;
     }
 
