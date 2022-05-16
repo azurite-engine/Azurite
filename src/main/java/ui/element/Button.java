@@ -7,8 +7,9 @@ import ui.RenderableElement;
 
 /**
  * @author Juyas
+ * @author Asher Haun
  * @version 07.11.2021
- * @since 07.11.2021
+ * @since 15.5.2022
  */
 public class Button extends RenderableElement implements TextHolder {
 
@@ -26,7 +27,6 @@ public class Button extends RenderableElement implements TextHolder {
         this.cursor = GLFW.GLFW_CROSSHAIR_CURSOR;
     }
 
-
     @Override
     public String getText() {
         return text;
@@ -42,7 +42,9 @@ public class Button extends RenderableElement implements TextHolder {
         super.update();
 
         if (isMouseOnThis()) {
-            this.setColor(Color.RED);
+            this.setColor(tintColor);
+        } else {
+            this.setColor(defaultColor);
         }
     }
 

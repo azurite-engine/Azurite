@@ -41,8 +41,6 @@ public abstract class Element {
     protected int cursor;
 
     //observable values
-    protected final Observable<Color> foregroundColor;
-    protected final Observable<Color> backgroundColor;
     protected final Observable<Boolean> focused;
     protected final Observable<Boolean> enabled;
     protected final Observable<Boolean> visible;
@@ -61,8 +59,6 @@ public abstract class Element {
         this.focused = new Observable<>(false);
         this.enabled = new Observable<>(true);
         this.visible = new Observable<>(true);
-        this.foregroundColor = new Observable<>(Color.BLACK);
-        this.backgroundColor = new Observable<>(Color.WHITE);
         this.parent = null;
         this.font = new Font();
         this.layoutInfo = null;
@@ -257,59 +253,7 @@ public abstract class Element {
         return eventHandler;
     }
 
-    /**
-     * The background color.
-     *
-     * @return the color used for background
-     */
-    public Color getBackgroundColor() {
-        return backgroundColor.getValue();
-    }
 
-    /**
-     * The foreground color.
-     *
-     * @return the color used for foreground
-     */
-    public Color getForegroundColor() {
-        return foregroundColor.getValue();
-    }
-
-    /**
-     * The observable of the background color.
-     *
-     * @return the observable of the background color
-     */
-    public Observable<Color> getBackgroundColorObs() {
-        return backgroundColor;
-    }
-
-    /**
-     * The observable of the foreground color.
-     *
-     * @return the observable of the foreground color
-     */
-    public Observable<Color> getForegroundColorObs() {
-        return foregroundColor;
-    }
-
-    /**
-     * Change the foreground color.
-     *
-     * @param foregroundColor the new color
-     */
-    public void setForegroundColor(Color foregroundColor) {
-        this.foregroundColor.setValue(foregroundColor);
-    }
-
-    /**
-     * Change the background color.
-     *
-     * @param backgroundColor the new color
-     */
-    public void setBackgroundColor(Color backgroundColor) {
-        this.backgroundColor.setValue(backgroundColor);
-    }
 
     /**
      * The {@link Frame} of this component.

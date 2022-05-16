@@ -90,7 +90,7 @@ public class Container extends Element {
      * @param element the component to add
      * @return whether the component was successfully added; false if and only if the component already has a parent
      */
-    public boolean addComponent(Element element) {
+    public boolean addElement(Element element) {
         //only one parent allowed
         if (element.getParent() != null) return false;
         elements.add(element);

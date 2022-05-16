@@ -3,8 +3,6 @@ package scenes;
 import graphics.Camera;
 import graphics.Color;
 import graphics.Window;
-import input.Mouse;
-import org.joml.Vector2f;
 import scene.Scene;
 import ui.*;
 import ui.element.Button;
@@ -44,10 +42,12 @@ public class UIRenderingDemo extends Scene {
         menu.registerComponent(container);
 
         e = new Button("Button", "src/assets/images/button-300-84.png", new Frame(10, 10, 300, 84));
+        e.tintColor = Color.RED.toNormalizedVec4f();
+
         f = new RenderableElement(Color.decode("#4e6b56"), new Frame(10, 110, 300, 84));
 
-        container.addComponent(e);
-        container.addComponent(f);
+        container.addElement(e);
+        container.addElement(f);
 
         uiRenderer.add(e);
         uiRenderer.add(f);

@@ -22,12 +22,15 @@ import static graphics.Color.WHITE;
 
 public class RenderableElement extends Element {
 
-    private Vector4f color = new Color(255, 100, 100, 255).toNormalizedVec4f();
+
+    protected Vector4f color = new Color(255, 100, 100, 255).toNormalizedVec4f();
+    protected Vector4f defaultColor = color;
+    public Vector4f hoverColor;
+    public Vector4f tintColor;
 
     private Sprite sprite;
 
 //    private Vector2f size;
-    private boolean isDirty; // Dirty flag, tells renderer to redraw if object components have changed
 
     /**
      * Create the spriteRenderer using a color vector, no sprite.
@@ -36,8 +39,8 @@ public class RenderableElement extends Element {
      */
     public RenderableElement(Vector4f color, Frame frame) {
         this.setColor(color);
+        this.defaultColor = color;
         this.sprite = new Sprite(null);
-        this.isDirty = true;
         this.frame = frame;
     }
 
@@ -49,8 +52,8 @@ public class RenderableElement extends Element {
     public RenderableElement(Color color, Frame frame) {
         // Note that type Color is normalized below in setColor()
         this.setColor(color.toNormalizedVec4f());
+        this.defaultColor = color.toNormalizedVec4f();
         this.sprite = new Sprite(null);
-        this.isDirty = true;
         this.frame = frame;
     }
 
@@ -63,7 +66,7 @@ public class RenderableElement extends Element {
     public RenderableElement(Sprite sprite, Frame frame) {
         this.sprite = sprite;
         this.color = WHITE.toNormalizedVec4f();
-        this.isDirty = true;
+        this.defaultColor = this.color;
         this.frame = frame;
     }
 
@@ -75,7 +78,7 @@ public class RenderableElement extends Element {
     public RenderableElement(String path, Frame frame) {
         this.sprite = new Sprite(Assets.getTexture(path));
         this.color = WHITE.toNormalizedVec4f();
-        this.isDirty = true;
+        this.defaultColor = this.color;
         this.frame = frame;
     }
 
@@ -119,7 +122,6 @@ public class RenderableElement extends Element {
     public void setTexture(Texture texture) {
         if (sprite.getTexture() != texture) {
             sprite.setTexture(texture);
-            isDirty = true;
         }
     }
 
@@ -152,7 +154,6 @@ public class RenderableElement extends Element {
     public void setColor(Vector4f color) {
         if (!this.color.equals(color)) {
             this.color = color;
-            isDirty = true;
         }
     }
 
@@ -164,7 +165,6 @@ public class RenderableElement extends Element {
     public void setColor(Color color) {
         if (!this.color.equals(color.toNormalizedVec4f())) {
             this.color = color.toNormalizedVec4f();
-            isDirty = true;
         }
     }
 
@@ -184,29 +184,5 @@ public class RenderableElement extends Element {
      */
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
-        isDirty = true;
-    }
-
-    /**
-     * Used by the renderer to determine if this sprite should be sent back to the GPU to be redrawn.
-     *
-     * @return true or false if the sprite or color has changes since last draw.
-     */
-    public boolean isDirty() {
-        return isDirty;
-    }
-
-    /**
-     * Mark this Sprite renderer as dirty
-     */
-    public void markDirty() {
-        isDirty = true;
-    }
-
-    /**
-     * Used by the renderer to reset the state of the SpriteRenderer to clean.
-     */
-    public void setClean() {
-        isDirty = false;
     }
 }
