@@ -20,14 +20,14 @@ public class Button extends RenderableElement implements TextHolder {
         super(backgroundColor, frame);
         this.label = new Text(label, labelColor, 0, 0);
         this.label.setCentered(true);
-        this.cursor = GLFW.GLFW_CROSSHAIR_CURSOR;
+        this.cursor = GLFW.GLFW_POINTING_HAND_CURSOR;
     }
 
     public Button(String label, String path, Color labelColor, Frame frame) {
         super(path, frame);
         this.label = new Text(label, labelColor, 0, 0);
         this.label.setCentered(true);
-        this.cursor = GLFW.GLFW_CROSSHAIR_CURSOR;
+        this.cursor = GLFW.GLFW_POINTING_HAND_CURSOR;
     }
 
     @Override
@@ -52,5 +52,4 @@ public class Button extends RenderableElement implements TextHolder {
             this.setColor(defaultColor);
         }
     }
-
 }

@@ -279,11 +279,6 @@ public class Text {
         return zIndex;
     }
 
-//    This method doesn't work yet
-//    public void setZindex(int z) {
-//        zIndex = z;
-//    }
-
     public float getX () {
         return transform.getX();
     }
