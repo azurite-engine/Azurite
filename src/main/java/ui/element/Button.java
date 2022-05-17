@@ -1,6 +1,7 @@
 package ui.element;
 
 import graphics.Color;
+import graphics.Sprite;
 import org.lwjgl.glfw.GLFW;
 import ui.Frame;
 import ui.RenderableElement;
@@ -25,6 +26,13 @@ public class Button extends RenderableElement implements TextHolder {
 
     public Button(String label, String path, Color labelColor, Frame frame) {
         super(path, frame);
+        this.label = new Text(label, labelColor, 0, 0);
+        this.label.setCentered(true);
+        this.cursor = GLFW.GLFW_POINTING_HAND_CURSOR;
+    }
+
+    public Button(String label, Sprite texture, Color labelColor, Frame frame) {
+        super(texture, frame);
         this.label = new Text(label, labelColor, 0, 0);
         this.label.setCentered(true);
         this.cursor = GLFW.GLFW_POINTING_HAND_CURSOR;

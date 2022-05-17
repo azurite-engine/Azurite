@@ -18,10 +18,6 @@ import java.util.List;
 
 import static graphics.Graphics.setDefaultBackground;
 
-/*
-
- */
-
 public class UIRenderingDemo extends Scene {
 
     public static void main(String[] args) {
@@ -38,7 +34,7 @@ public class UIRenderingDemo extends Scene {
     CheckBoxGroup radios;
     CheckBoxGroup checks;
 
-    Text selection;
+    Text description;
 
     Button button;
 
@@ -51,11 +47,14 @@ public class UIRenderingDemo extends Scene {
         background.addComponent(new SpriteRenderer("src/assets/images/paper background.png", new Vector2f(Window.getWidth(), Window.getHeight())));
         int size = 36;
         uiSprites = new Spritesheet(new Texture("src/assets/images/radio-checks.png"), size, size, 12, 0);
-//        int index = 0;
-//        for (Sprite i : uiSprites.getSprites()) {
-//            GameObject g = new GameObject(new Vector2f(index * size, size)).addComponent(new SpriteRenderer(i, new Vector2f(size, size)));
-//            index ++;
-//        }
+
+//        description = new Text("Hello World!", 200, 200);
+        
+        int index = 0;
+        for (Sprite i : uiSprites.getSprites()) {
+            GameObject g = new GameObject(new Vector2f(index * size + 30, 10)).addComponent(new SpriteRenderer(i, new Vector2f(size, size)));
+            index ++;
+        }
 
 //        menu = new Layer(0, 0, Window.getWidth(), Window.getHeight());
 //        Container container = new Container(100, 100, 500, 400, new AbsoluteLayout());
@@ -67,16 +66,28 @@ public class UIRenderingDemo extends Scene {
         radioOptions.add("Option??");
         radioOptions.add("Woah!");
 
-        radios = new CheckBoxGroup(CheckBox.Type.RADIO_SELECT, radioOptions, uiSprites.getSprite(0), uiSprites.getSprite(6), new Vector2f(30, 30));
+        radios = new CheckBoxGroup(CheckBox.Type.RADIO_SELECT, radioOptions, uiSprites.getSprite(0), uiSprites.getSprite(6), new Vector2f(30, 50));
 
         List<String> checkOptions = new ArrayList<>();
         checkOptions.add("A checkbox :O");
         checkOptions.add("So many choices...");
         checkOptions.add("You can select any of them!");
 
-        checks = new CheckBoxGroup(CheckBox.Type.MULTI_SELECT, checkOptions, uiSprites.getSprite(3), uiSprites.getSprite(9), new Vector2f(30, 150));
+        checks = new CheckBoxGroup(CheckBox.Type.MULTI_SELECT, checkOptions, uiSprites.getSprite(3), uiSprites.getSprite(9), new Vector2f(30, 170));
 
-        selection = new Text("", 200, 200);
+
+        
+
+
+        button = new Button("Button", "src/assets/images/Button-282-53.png", Color.WHITE, new Frame(30, 300, 282, 53));
+        button.tintColor = new Color(200, 200, 200, 255).toNormalizedVec4f();
+
+        uiRenderer.add(button);
+        addUIElement(button);
+
+        button.getEventHandler().registerListener(EventHandler.Event.MOUSE_CLICK, e -> {
+            Logger.logInfo("CLICKED! \n" + e.getElement().toString());
+        });
     }
 
     public void update () {
