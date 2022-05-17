@@ -30,6 +30,8 @@ public class RenderableElement extends Element {
 
     private Sprite sprite;
 
+    private Frame renderFrame;
+
 //    private Vector2f size;
 
     /**
@@ -42,6 +44,7 @@ public class RenderableElement extends Element {
         this.defaultColor = color;
         this.sprite = new Sprite(null);
         this.frame = frame;
+        this.renderFrame = frame;
     }
 
     /**
@@ -55,6 +58,7 @@ public class RenderableElement extends Element {
         this.defaultColor = color.toNormalizedVec4f();
         this.sprite = new Sprite(null);
         this.frame = frame;
+        this.renderFrame = frame;
     }
 
     /**
@@ -68,6 +72,7 @@ public class RenderableElement extends Element {
         this.color = WHITE.toNormalizedVec4f();
         this.defaultColor = this.color;
         this.frame = frame;
+        this.renderFrame = frame;
     }
 
     /**
@@ -80,10 +85,19 @@ public class RenderableElement extends Element {
         this.color = WHITE.toNormalizedVec4f();
         this.defaultColor = this.color;
         this.frame = frame;
+        this.renderFrame = frame;
+    }
+
+    public void setRenderFrame(Frame frame) {
+        this.renderFrame = frame;
+    }
+
+    public Frame getRenderFrame() {
+        return this.renderFrame;
     }
 
     /**
-     * Initialize the Component, called once after creation.
+     * Initialize the Element, called once after creation.
      */
     public void start() {
 

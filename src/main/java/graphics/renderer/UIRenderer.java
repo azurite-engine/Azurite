@@ -5,6 +5,7 @@ import org.joml.Vector2f;
 import ui.RenderableElement;
 import util.Assets;
 import util.Engine;
+import util.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,10 +73,11 @@ public class UIRenderer extends Renderer {
         for (RenderableElement re : renderableElements) {
             RenderBatch batch = getAvailableBatch(re.getTexture(), re.zIndex());
 
-            Vector2f pos = re.getFrame().getPosition();
-            Vector2f scale = re.getFrame().getScale();
+            Vector2f pos = re.getRenderFrame().getPosition();
+            Vector2f scale = re.getRenderFrame().getScale();
 
             if (re.getParent() != null) {
+                Logger.logInfo("PARENT");
                 pos.add(re.getParent().getX(), re.getParent().getY());
             }
 

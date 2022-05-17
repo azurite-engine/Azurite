@@ -1,6 +1,7 @@
 package scene;
 
 import ecs.GameObject;
+import ui.Element;
 import ui.RenderableElement;
 import ui.Text;
 import graphics.Camera;
@@ -79,7 +80,7 @@ public abstract class Scene {
     private final List<GameObject> gameObjects = new LinkedList<>();
     private final List<Collider> colliders = new LinkedList<>();
     private final List<Text> texts = new ArrayList<>();
-    private final List<RenderableElement> uiElements = new ArrayList<>();
+    private final List<Element> uiElements = new ArrayList<>();
 
     private List<Renderer> rendererRegistry = new LinkedList<>();
 
@@ -212,7 +213,7 @@ public abstract class Scene {
     }
 
     public void updateUI () {
-        for (RenderableElement e : uiElements) {
+        for (Element e : uiElements) {
             e.update();
         }
         for (Text t : texts) {
@@ -256,8 +257,10 @@ public abstract class Scene {
     public final void startUi () {
         textRenderer.init();
 
-        for (RenderableElement e : uiElements) {
-            e.start();
+        for (Element e : uiElements) {
+            if (e instanceof RenderableElement) {
+                ((RenderableElement) e).start();
+            }
         }
     }
 
@@ -293,8 +296,12 @@ public abstract class Scene {
         texts.add(t);
     }
 
-    public void addUIElement (RenderableElement e) {
+    public void addUIElement (Element e) {
         uiElements.add(e);
+
+        if (e instanceof RenderableElement) {
+            uiRenderer.add((RenderableElement) e);
+        }
     }
 
     /**
