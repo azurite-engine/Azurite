@@ -83,7 +83,7 @@ public final class Engine {
      */
     public static void init(int windowWidth, int windowHeight, String windowTitle, float minSceneLighting) {
         preInit();
-        getInstance().window = new Window(windowWidth, windowHeight, windowTitle, minSceneLighting, false);
+        getInstance().window = new Window(windowWidth, windowHeight, windowTitle, minSceneLighting, true);
     }
 
     /**
