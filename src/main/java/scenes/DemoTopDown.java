@@ -11,7 +11,7 @@ import physics.collision.Shapes;
 import graphics.postprocess.BloomEffect;
 import graphics.postprocess.PostProcessStep;
 import scene.Scene;
-import tiles.Spritesheet;
+import graphics.Spritesheet;
 import tiles.Tilesystem;
 import util.Assets;
 import util.Engine;
@@ -35,9 +35,9 @@ public class DemoTopDown extends Scene {
     boolean flip = true;
 
     public static void main(String[] args) {
-        Engine.init(900, 600, "Azurite Engine Demo 1", 0.01f);
+        Engine.init(1920, 1080, "Azurite Engine Demo 1", 0.01f);
         Engine.scenes().switchScene(new DemoTopDown(), true);
-        Engine.window().setIcon("src/assets/images/icon.png");
+//        Engine.window().setIcon("src/assets/images/icon.png");
         Engine.showWindow();
     }
 
@@ -47,7 +47,8 @@ public class DemoTopDown extends Scene {
 
         a = new Spritesheet(Assets.getTexture("src/assets/images/tileset.png"), 16, 16, 256, 0);
         b = new Spritesheet(Assets.getTexture("src/assets/images/walls.png"), 16, 16, 256, 0);
-        t = new Tilesystem(a, b, 31, 15, 200, 200, new int[]{2});
+
+        t = new Tilesystem("src/assets/tiles/demoSceneMap.tmx", 200, 200);
 
         trRes = new GameObject("", new Vector2f(0, 0), -20); //scale 100 for no image remove
 

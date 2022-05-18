@@ -11,7 +11,7 @@ import physics.force.ConstantForce;
 import graphics.postprocess.BloomEffect;
 import graphics.postprocess.PostProcessStep;
 import scene.Scene;
-import tiles.Spritesheet;
+import graphics.Spritesheet;
 import tiles.TilesystemSideScroll;
 import ui.Text;
 import util.Assets;

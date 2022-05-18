@@ -1,4 +1,4 @@
-package tiles;
+package graphics;
 
 import graphics.Sprite;
 import graphics.Texture;
