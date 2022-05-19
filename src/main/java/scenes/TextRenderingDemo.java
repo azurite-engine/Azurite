@@ -55,7 +55,7 @@ public class TextRenderingDemo extends Scene {
 
         rainbowText.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS() + "\nMouse " + Mouse.mouse.x + " | " + Mouse.mouse.y);
 
-        movingText.setPosition(Mouse.mouse);
+        movingText.setPosition(Mouse.worldMouse);
 
         rainbowText.rainbowify();
 

@@ -54,10 +54,14 @@ public class Camera {
      * Projection Matrix of the camera
      */
     private Matrix4f projectionMatrix;
+    private Matrix4f inverseProjectionM;
+
+
     /**
      * View Matrix of the camera
      */
     private Matrix4f viewMatrix;
+    private Matrix4f inverseViewM;
 
     /**
      * Creates a new Camera with a certain position
@@ -69,7 +73,10 @@ public class Camera {
         this.position = position;
         this.projectionMatrix = new Matrix4f();
         this.viewMatrix = new Matrix4f();
+        this.inverseProjectionM = new Matrix4f();
+        this.inverseViewM = new Matrix4f();
         adjustProjection();
+
     }
 
     /**
@@ -80,6 +87,8 @@ public class Camera {
         this.position = new Vector2f();
         this.projectionMatrix = new Matrix4f();
         this.viewMatrix = new Matrix4f();
+        this.inverseProjectionM = new Matrix4f();
+        this.inverseViewM = new Matrix4f();
         adjustProjection();
     }
 
@@ -97,8 +106,10 @@ public class Camera {
         if(mode == Mode.FREE){
             aspectWidth = Window.getWidth();
             aspectHeight = Window.getHeight();
+            viewportPosX = 0;
+            viewportPosX = 0;
 
-            GL11.glViewport(0, 0, Window.getWidth(), Window.getHeight());
+            GL11.glViewport(viewportPosX, viewportPosY, Window.getWidth(), Window.getHeight());
             projectionMatrix.ortho(0, worldSize.x * displayAspectRatio, worldSize.y, 0, 0, 100f);
         }else if(mode == Mode.ASPECT_RATIO){
 
@@ -117,6 +128,9 @@ public class Camera {
             projectionMatrix.ortho(0, worldSize.x, worldSize.y, 0, 0, 100f);
 
         }
+
+        projectionMatrix.invert(inverseProjectionM);
+
 
     }
 
@@ -159,5 +173,41 @@ public class Camera {
      */
     public Vector2f getPosition() {
         return this.position;
+    }
+
+
+
+
+    public Matrix4f getInverseProjection(){
+        return inverseProjectionM;
+    }
+
+    public Matrix4f getInverseView(){
+        return inverseViewM;
+    }
+
+    public Vector2f getWorldSize(){
+        return worldSize;
+    }
+
+
+    public float getViewportSizeX()
+    {
+        return aspectWidth;
+    }
+
+    public float getViewportSizeY()
+    {
+        return aspectHeight;
+    }
+
+    public int getViewportPosX()
+    {
+        return viewportPosX;
+    }
+
+    public int getViewportPosY()
+    {
+        return viewportPosY;
     }
 }
