@@ -132,6 +132,7 @@ public class Window {
             if (recalculateProjectionOnResize && currentScene().camera() != null)
                 currentScene().camera().adjustProjection();
             Events.windowResizeEvent.onEvent(new EventData.WindowResizeEventData(newWidth, newHeight));
+
         });
 
         Mouse.setupCallbacks();

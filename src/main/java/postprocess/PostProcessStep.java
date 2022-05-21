@@ -85,7 +85,6 @@ public abstract class PostProcessStep {
         ONE_COLOR_HALF_SIZE_TEXTURE_FRAMEBUFFER(Framebuffer::createHalfResWithColorAttachment);
 
         public Supplier<Framebuffer> createFramebuffer;
-
         Target(Supplier<Framebuffer> createFramebuffer) {
             this.createFramebuffer = createFramebuffer;
         }
