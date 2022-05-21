@@ -22,6 +22,8 @@ import util.MathUtils;
  */
 public class Camera {
 
+    public static Camera instance;
+
     /**
      * Caching these values here in case we have to pick up and drop objects into the world with a mouse
      */
@@ -30,8 +32,7 @@ public class Camera {
 
 
     /**
-     * FILL - Tries to fill the entire window with image
-     * EXTENDED - If the image is of larger resolution it will extend it beyond window boundaries
+     * FFREE - Uses whatever resolution for aspect ratio
      * ASPECT_RATIO - It will show the entire image on the screen but will keep the aspect ratio (might create black bars)
      */
     private enum Mode{
@@ -42,7 +43,7 @@ public class Camera {
     /**
      * World size otherwise known as pixel size
      */
-    public Vector2f worldSize = new Vector2f(1600, 1600);
+    public Vector2f worldSize = new Vector2f(16 * 45, 16 * 45);
 
 
 
@@ -70,6 +71,7 @@ public class Camera {
      * @param position initial position
      */
     public Camera(Vector2f position) {
+        instance = this;
         this.position = position;
         this.projectionMatrix = new Matrix4f();
         this.viewMatrix = new Matrix4f();
@@ -84,6 +86,7 @@ public class Camera {
      * Projection matrix is set to default: 0 to Window's width from left to right, 0 to Window's height from top to bottom
      */
     public Camera() {
+        instance = this;
         this.position = new Vector2f();
         this.projectionMatrix = new Matrix4f();
         this.viewMatrix = new Matrix4f();

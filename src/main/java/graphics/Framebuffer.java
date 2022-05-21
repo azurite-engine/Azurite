@@ -166,6 +166,7 @@ public class Framebuffer {
     /**
      * Resize all Framebuffers created via the createWithColorAttachment() or createHalfResWithColorAttachment() methods
      */
+
     public static void resizeAll(EventData.WindowResizeEventData data) {
         for (Framebuffer f : screenSize) {
             f.resize(data.x, data.y);
@@ -173,6 +174,7 @@ public class Framebuffer {
         for (Framebuffer f : halfScreenSize) {
             f.resize(data.x / 2, data.y / 2);
         }
+
     }
 
     /**
@@ -312,14 +314,12 @@ public class Framebuffer {
         glBindFramebuffer(GL_FRAMEBUFFER, this.id);
         if (!isDefault()) glViewport(0, 0, this.width, this.height);
         else {
-            int[] w = new int[4];
-            int[] h = new int[4];
-            glfwGetFramebufferSize(Window.glfwWindow(), w, h);
-
-            int width = w[0];
-            int height = h[0];
-
-            glViewport(0, 0, width, height);
+            //int[] w = new int[4];
+            //int[] h = new int[4];
+            //glfwGetFramebufferSize(Window.glfwWindow(), w, h);
+            //int width = w[0];
+            //int height = h[0];
+            glViewport(Camera.instance.getViewportPosX(), Camera.instance.getViewportPosY(), (int) Camera.instance.aspectWidth, (int) Camera.instance.aspectHeight);
         }
     }
 
