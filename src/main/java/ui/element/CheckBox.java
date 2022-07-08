@@ -1,17 +1,11 @@
 package ui.element;
 
-import com.sun.tools.javac.comp.Check;
-import ecs.GameObject;
-import ecs.SpriteRenderer;
 import graphics.Color;
 import graphics.Sprite;
-import jdk.jpackage.internal.Log;
-import org.joml.Vector2f;
 import org.lwjgl.glfw.GLFW;
 import ui.*;
 import ui.fonts.Font;
 import util.Engine;
-import util.Logger;
 import util.Observable;
 
 /**
