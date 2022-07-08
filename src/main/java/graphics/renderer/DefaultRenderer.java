@@ -70,7 +70,6 @@ public class DefaultRenderer extends Renderer {
         // This is here so that all renderers can have different cameras OR no cameras at all
         shader.uploadMat4f("uProjection", Engine.window().currentScene().camera().getProjectionMatrix());
         shader.uploadMat4f("uView", Engine.window().currentScene().camera().getViewMatrix());
-
         shader.uploadInt("uLightmap", 8);
     }
 

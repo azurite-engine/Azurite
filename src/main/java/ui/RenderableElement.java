@@ -1,5 +1,5 @@
-package ecs;
-
+package ui;
+ 
 import graphics.Color;
 import graphics.Sprite;
 import graphics.Texture;
@@ -11,36 +11,40 @@ import util.MathUtils;
 import static graphics.Color.WHITE;
 
 /**
- * SpriteRenderer is a component that can be added to a GameObject.
+ * UIComponentRenderer is the renderable part of a UI component
  * it can contain a solid color, a semi-transparent color, or a texture.
  * Sprites can be tinted by the color value.
  *
  * @author Asher Haun
- * @author Gabe
+ * @version 11.9.2021
+ * @since 11.9.2021
  */
 
-public class SpriteRenderer extends Component {
+public class RenderableElement extends Element {
 
-    private Vector4f color = new Color(255, 100, 100, 255).toNormalizedVec4f();
+
+    protected Vector4f color = new Color(255, 0, 0, 255).toNormalizedVec4f();
+    protected Vector4f defaultColor = color;
+    public Vector4f hoverColor;
+    public Vector4f tintColor;
 
     private Sprite sprite;
 
-    private Vector2f lastLocation;
-    private Vector2f size;
-    private float rotation;
-    private boolean isDirty; // Dirty flag, tells renderer to redraw if object components have changed
+    private Frame renderFrame;
+
+//    private Vector2f size;
 
     /**
      * Create the spriteRenderer using a color vector, no sprite.
      *
      * @param color of type JOML Vector4f, range from 0-1
      */
-    public SpriteRenderer(Vector4f color, Vector2f size) {
-        super(ComponentOrder.DRAW);
+    public RenderableElement(Vector4f color, Frame frame) {
         this.setColor(color);
+        this.defaultColor = color;
         this.sprite = new Sprite(null);
-        this.isDirty = true;
-        this.size = size;
+        this.frame = frame;
+        this.renderFrame = frame;
     }
 
     /**
@@ -48,13 +52,13 @@ public class SpriteRenderer extends Component {
      *
      * @param color of type Color, range from 0-255
      */
-    public SpriteRenderer(Color color, Vector2f size) {
-        super(ComponentOrder.DRAW);
+    public RenderableElement(Color color, Frame frame) {
         // Note that type Color is normalized below in setColor()
         this.setColor(color.toNormalizedVec4f());
+        this.defaultColor = color.toNormalizedVec4f();
         this.sprite = new Sprite(null);
-        this.isDirty = true;
-        this.size = size;
+        this.frame = frame;
+        this.renderFrame = frame;
     }
 
     /**
@@ -63,12 +67,12 @@ public class SpriteRenderer extends Component {
      *
      * @param sprite
      */
-    public SpriteRenderer(Sprite sprite, Vector2f size) {
-        super(ComponentOrder.DRAW);
+    public RenderableElement(Sprite sprite, Frame frame) {
         this.sprite = sprite;
         this.color = WHITE.toNormalizedVec4f();
-        this.isDirty = true;
-        this.size = size;
+        this.defaultColor = this.color;
+        this.frame = frame;
+        this.renderFrame = frame;
     }
 
     /**
@@ -76,32 +80,37 @@ public class SpriteRenderer extends Component {
      *
      * @param path to the image (ie. "src/assets/images/pepper.png")
      */
-    public SpriteRenderer(String path, Vector2f size) {
-        super(ComponentOrder.DRAW);
+    public RenderableElement(String path, Frame frame) {
         this.sprite = new Sprite(Assets.getTexture(path));
         this.color = WHITE.toNormalizedVec4f();
-        this.isDirty = true;
-        this.size = size;
+        this.defaultColor = this.color;
+        this.frame = frame;
+        this.renderFrame = frame;
+    }
+
+    public void setRenderFrame(Frame frame) {
+        this.renderFrame = frame;
+    }
+
+    public Frame getRenderFrame() {
+        return this.renderFrame;
     }
 
     /**
-     * Initialize the Component, called once after creation by the parent GameObject.
+     * Initialize the Element, called once after creation.
      */
-    @Override
     public void start() {
-        this.lastLocation = position();
-        isDirty = true;
+
     }
 
+
     /**
-     * Update method called every frame by parent GameObject
+     * Update method called every frame by parent
      *
      * @param dt Engine.deltaTime
      */
-    @Override
     public void update(float dt) {
-        if (!position().equals(this.lastLocation)) markDirty();
-        this.lastLocation = position();
+
     }
 
     /**
@@ -111,12 +120,12 @@ public class SpriteRenderer extends Component {
         return sprite.getTexture();
     }
 
-    public Vector2f getSize() {
-        return size;
-    }
+//    public Vector2f getSize() {
+//        return size;
+//    }
 
     public void setSize(Vector2f size) {
-        this.size = size;
+//        this.size = size;
     }
 
     /**
@@ -127,7 +136,6 @@ public class SpriteRenderer extends Component {
     public void setTexture(Texture texture) {
         if (sprite.getTexture() != texture) {
             sprite.setTexture(texture);
-            isDirty = true;
         }
     }
 
@@ -160,7 +168,6 @@ public class SpriteRenderer extends Component {
     public void setColor(Vector4f color) {
         if (!this.color.equals(color)) {
             this.color = color;
-            isDirty = true;
         }
     }
 
@@ -172,7 +179,6 @@ public class SpriteRenderer extends Component {
     public void setColor(Color color) {
         if (!this.color.equals(color.toNormalizedVec4f())) {
             this.color = color.toNormalizedVec4f();
-            isDirty = true;
         }
     }
 
@@ -192,29 +198,5 @@ public class SpriteRenderer extends Component {
      */
     public void setSprite(Sprite sprite) {
         this.sprite = sprite;
-        isDirty = true;
-    }
-
-    /**
-     * Used by the renderer to determine if this sprite should be sent back to the GPU to be redrawn.
-     *
-     * @return true or false if the sprite or color has changes since last draw.
-     */
-    public boolean isDirty() {
-        return isDirty;
-    }
-
-    /**
-     * Mark this Sprite renderer as dirty
-     */
-    public void markDirty() {
-        isDirty = true;
-    }
-
-    /**
-     * Used by the renderer to reset the state of the SpriteRenderer to clean.
-     */
-    public void setClean() {
-        isDirty = false;
     }
 }

@@ -1,4 +1,4 @@
-package postprocess;
+package graphics.postprocess;
 
 import graphics.Graphics;
 import graphics.Shader;
@@ -7,12 +7,12 @@ import graphics.Window;
 import util.Assets;
 
 /**
- * A Post Processing Step that renders the texture with a Vertical Blur.
+ * A Post Processing Step that renders the texture with a Horizontal Blur.
  * <p>
  * NOTE: If you want a more blurry texture, consider using Target.ONE_COLOR_HALF_SIZE_TEXTURE_FRAMEBUFFER
  * to get a smaller framebuffer size and in turn, a more blurrier texture
  */
-public class VerticalBlur extends PostProcessStep {
+public class HorizontalBlur extends PostProcessStep {
     /**
      * Id of input texture
      */
@@ -23,7 +23,7 @@ public class VerticalBlur extends PostProcessStep {
      *
      * @param target Where the final texture is to be rendered
      */
-    public VerticalBlur(Target target) {
+    public HorizontalBlur(Target target) {
         super(target);
     }
 
@@ -34,7 +34,7 @@ public class VerticalBlur extends PostProcessStep {
      */
     @Override
     public Shader createShader() {
-        return Assets.getShader("src/assets/shaders/vblur.glsl");
+        return Assets.getShader("src/assets/shaders/hblur.glsl");
     }
 
     /**
@@ -54,7 +54,7 @@ public class VerticalBlur extends PostProcessStep {
     protected void uploadUniforms(Shader shader) {
         shader.uploadTexture("uTexture", 0);
 
-        shader.uploadFloat("uPixelSize", framebuffer.isDefault() ? 1.0f / Window.getHeight() : 1.0f / framebuffer.getHeight());
+        shader.uploadFloat("uPixelSize", framebuffer.isDefault() ? 1.0f / Window.getWidth() : 1.0f / framebuffer.getWidth());
     }
 
     /**

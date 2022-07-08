@@ -62,6 +62,8 @@ public final class Engine {
     //internal method called before any init
     private static void preInit() {
 
+        System.setProperty("java.awt.headless", "true");
+
         //ensure that the Engine is running on main thread
         Preconditions.ensureMainThread("engine initialization");
 

@@ -148,7 +148,6 @@ public class RenderBatch implements Comparable<RenderBatch> {
         data = new float[maxBatchSize * primitive.vertexCount * vertexCount];
 
         this.primitiveVertices = new float[vertexCount * primitive.vertexCount];
-        System.out.println("Created Renderbatch: " + num++);
     }
 
     /**

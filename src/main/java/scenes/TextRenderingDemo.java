@@ -2,8 +2,8 @@ package scenes;
 
 import ecs.GameObject;
 import ecs.SpriteRenderer;
-import ecs.Text;
-import fonts.Font;
+import ui.Text;
+import ui.fonts.Font;
 import graphics.Camera;
 import graphics.Color;
 import graphics.Window;

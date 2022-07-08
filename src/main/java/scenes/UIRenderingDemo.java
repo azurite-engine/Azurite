@@ -4,9 +4,14 @@ import ecs.GameObject;
 import ecs.SpriteRenderer;
 import graphics.*;
 import org.joml.Vector2f;
+
+import org.lwjgl.glfw.GLFW;
 import scene.Scene;
-import graphics.Spritesheet;
-import ui.*;
+import ui.EventHandler;
+import ui.Frame;
+import ui.Layer;
+import ui.Text;
+
 import ui.element.Button;
 import ui.element.CheckBox;
 import ui.element.CheckBoxGroup;
@@ -15,6 +20,8 @@ import util.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+
 
 import static graphics.Graphics.setDefaultBackground;
 
@@ -29,6 +36,7 @@ public class UIRenderingDemo extends Scene {
     GameObject background;
     Spritesheet uiSprites;
 
+    Layer menu;
     CheckBoxGroup radios;
     CheckBoxGroup checks;
 
@@ -46,6 +54,19 @@ public class UIRenderingDemo extends Scene {
         int size = 36;
         uiSprites = new Spritesheet(new Texture("src/assets/images/radio-checks.png"), size, size, 12, 0);
 
+
+//        description = new Text("Hello World!", 200, 200);
+
+        int index = 0;
+        for (Sprite i : uiSprites.getSprites()) {
+            GameObject g = new GameObject(new Vector2f(index * size + 30, 10)).addComponent(new SpriteRenderer(i, new Vector2f(size, size)));
+            index++;
+        }
+
+//        menu = new Layer(0, 0, Window.getWidth(), Window.getHeight());
+//        Container container = new Container(100, 100, 500, 400, new AbsoluteLayout());
+//        menu.registerComponent(container);
+
         List<String> radioOptions = new ArrayList<>();
         radioOptions.add("Potion?");
         radioOptions.add("Option??");
@@ -60,9 +81,19 @@ public class UIRenderingDemo extends Scene {
 
         checks = new CheckBoxGroup(CheckBox.Type.MULTI_SELECT, checkOptions, uiSprites.getSprite(3), uiSprites.getSprite(9), new Vector2f(30, 170));
 
-
         button = new Button("Button", "src/assets/images/Button-282-53.png", Color.WHITE, new Frame(30, 300, 282, 53));
         button.tintColor = new Color(200, 200, 200, 255).toNormalizedVec4f();
+
+        button.getEventHandler().registerListener(EventHandler.Event.MOUSE_CLICK, new Consumer<EventHandler>() {
+            int amount = 0;
+
+            @Override
+            public void accept(EventHandler eventHandler) {
+                if (eventHandler.isMouseButtonClicked(GLFW.GLFW_MOUSE_BUTTON_LEFT)) {
+                    button.setText("Clicked " + (amount++) + " times!");
+                }
+            }
+        });
 
         uiRenderer.add(button);
         addUIElement(button);

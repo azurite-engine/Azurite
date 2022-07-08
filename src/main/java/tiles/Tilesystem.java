@@ -1,77 +1,158 @@
 package tiles;
 
 import ecs.GameObject;
-import ecs.PolygonCollider;
 import ecs.SpriteRenderer;
+import graphics.Spritesheet;
+import graphics.Texture;
+import io.xml.XMLElement;
 import org.joml.Vector2f;
-import physics.collision.Shapes;
 import util.MathUtils;
+
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+
+import static io.FileFormats.XML;
 
 public class Tilesystem {
 
-    public int map[] = {
-            257, 55, 2, 52, 1, 55, 3, 52, 2, 55, 1, 52, 3, 55, 2, 52, 1, 55, 3, 52, 2, 55, 1, 52, 3, 55, 2, 52, 1, 55, 259,
-            273, 71, 18, 54, 5, 71, 37, 17, 18, 71, 17, 21, 53, 71, 18, 19, 20, 71, 19, 53, 18, 71, 37, 18, 19, 71, 54, 18, 18, 71, 275,
-            289, 87, 34, 35, 33, 87, 35, 33, 34, 87, 33, 34, 35, 87, 34, 35, 85, 87, 35, 33, 34, 87, 33, 34, 35, 87, 97, 98, 99, 100, 291,
-            273, 97, 98, 99, 100, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 387, 51, 113, 114, 115, 116, 275,
-            289, 113, 117, 117, 116, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 387, 97, 98, 99, 100, 51, 51, 51, 51, 51, 129, 130, 131, 372, 275,
-            273, 113, 114, 115, 116, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 113, 114, 115, 116, 51, 51, 51, 51, 51, 51, 51, 51, 372, 291,
-            289, 129, 130, 131, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 129, 130, 131, 132, 51, 51, 51, 51, 51, 51, 51, 51, 372, 275,
-            273, 387, 51, 51, 51, 51, 51, 51, 51, 97, 99, 98, 99, 100, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 372, 275,
-            273, 51, 51, 51, 51, 51, 51, 51, 51, 113, 117, 103, 117, 116, 51, 51, 51, 51, 51, 51, 97, 98, 99, 100, 51, 51, 51, 51, 51, 51, 291,
-            273, 51, 51, 51, 51, 51, 51, 51, 51, 129, 130, 119, 103, 99, 100, 51, 51, 51, 51, 51, 113, 114, 115, 116, 51, 51, 51, 51, 51, 51, 275,
-            273, 370, 51, 51, 51, 51, 51, 51, 51, 51, 387, 113, 119, 117, 116, 51, 51, 51, 51, 51, 129, 130, 131, 132, 51, 51, 51, 51, 51, 51, 291,
-            273, 370, 51, 51, 51, 51, 51, 51, 51, 51, 51, 113, 117, 117, 116, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 275,
-            273, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 129, 130, 131, 132, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 275,
-            273, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 51, 291,
-            167, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 359, 0
-    };
+    ArrayList<Tileset> tilesets = new ArrayList<>();
+    ArrayList<Layer> layers = new ArrayList<>();
+
     GameObject[][] gameObjects;
-    int w, h;
+    int tileWidth, tileHeight;
 
-    // hilt of blade = 87
-    // should be 48
+    public Tilesystem(String tmxFile, int width, int height) {
 
-    public Tilesystem(Spritesheet a, Spritesheet b, int xTiles, int yTiles, int width, int height, int[] layers) {
+        // Find CWD path
+        Path tilesetPath = Paths.get(tmxFile);
+        String directory = tilesetPath.getParent().toString();
 
+        this.tileWidth = width;
+        this.tileHeight = height;
+
+        // Extract XML data
+        XMLElement root = XML.parse(tmxFile);
+
+        // Determine number of tiles on X and Y axis'
+        int xTiles = Integer.parseInt(root.getAttributes().get("width"));
+        int yTiles = Integer.parseInt(root.getAttributes().get("height"));
+
+        for (XMLElement i : root.getChildren()) {
+            // Determine number of tilesets and save their data
+            if (i.getTag().equals("tileset")) {
+                tilesets.add(new Tileset(
+                        Integer.parseInt(i.getAttributes().get("firstgid")),
+                        new File(directory, i.getAttributes().get("source")).toPath()
+                ));
+            }
+
+            // Determine number of layers and save their data
+            if (i.getTag().equals("layer")) {
+
+                String[] mapString = i.getChildren().get(0).getValue().split(",");
+
+                int[] map = new int[mapString.length];
+                for (int j = 0; j < mapString.length; j++) {
+                    map[j] = Integer.parseInt(mapString[j].trim());
+                }
+
+                layers.add(new Layer(
+                        Integer.parseInt(i.getAttributes().get("id")),
+                        i.getAttributes().get("name"),
+                        Integer.parseInt(i.getAttributes().get("width")),
+                        Integer.parseInt(i.getAttributes().get("height")),
+                        map
+                ));
+            }
+        }
 
         gameObjects = new GameObject[xTiles][yTiles];
-        w = width;
-        h = height;
-
-        int i = 0;
 
         for (int y = 0; y < yTiles; y++) {
             for (int x = 0; x < xTiles; x++) {
+                for (Layer layer : layers) {
 
-                gameObjects[x][y] = new GameObject("Tile " + i, new Vector2f(x * width, y * height), 0);
+                    // Get the raw ID from the tmx layer
+                    int tileID = getAt(x, y, layer.width, layer.map);
 
-                if (getAt(x, y, 31) <= 255 && getAt(x, y, 31) >= 0) {
-                    gameObjects[x][y].addComponent(new SpriteRenderer(a.getSprite(
-                            getAt(x, y, 31)
-                    ), new Vector2f(width, height)));
-                    if (y == 0 || x == 0 || y == yTiles-1 || x == xTiles-1) {
-                        gameObjects[x][y].addComponent(new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, width, height)).layer(layers));
-                    }
-                } else if (getAt(x, y, 31) >= 256) {
-                    gameObjects[x][y].addComponent(new SpriteRenderer(b.getSprite(
-                            (int) MathUtils.map(getAt(x, y, 31), 256, 256 * 2 - 1, 0, 255)
-                    ), new Vector2f(width, height)));
+                    // Determine which tileset to pull sprites from
+                    Tileset ts = getTileSet(tileID);
+
+                    // Normalize the index according to range defined by tileset tags
+                    int index = getNormalizedIndex(tileID, ts);
+
+                    gameObjects[x][y] = new GameObject(new Vector2f(x * tileWidth, y * tileHeight), 0).addComponent(
+                            new SpriteRenderer(ts.spritesheet.getSprite(index), new Vector2f(width, height))
+                    );
                 }
-                i++;
             }
         }
     }
 
-    public int getAt(int x, int y, int dimensionWidth) {
-        return map[(dimensionWidth * y) + x] - 1;
+    private Tileset getTileSet(int id) {
+        int currentFirstGID = 1;
+        for (int i = 0; i < tilesets.size(); i++) {
+            Tileset t = tilesets.get(i);
+            if (currentFirstGID < id && id < t.firstgid + t.spritesheet.getSize()) {
+                return t;
+            }
+            currentFirstGID = t.firstgid;
+        }
+
+        return tilesets.get(0);
+    }
+
+    public int getAt(int x, int y, int dimensionWidth, int[] map) {
+        return map[(dimensionWidth * y) + x];
+    }
+
+    private int getNormalizedIndex(int id, Tileset t) {
+        return (int) MathUtils.constrain(MathUtils.map(id, t.firstgid, t.firstgid + t.spritesheet.getSize(), 0, t.spritesheet.getSize()), 0, t.spritesheet.getSize());
     }
 
     public int[] getIndex(int worldX, int worldY) {
-        int x = worldX / w;
-        int y = worldY / h;
+        int x = worldX / tileWidth;
+        int y = worldY / tileHeight;
 
         return new int[]{x, y};
     }
+}
 
+class Tileset {
+    protected Spritesheet spritesheet;
+    protected int firstgid;
+    protected Path source;
+
+    Tileset(int firstgid, Path source) {
+        this.firstgid = firstgid;
+        this.source = source;
+
+        // Parse the .tsx file to extract the spritesheet data and texture path
+        XMLElement tsRoot = XML.parse(this.source.toString());
+
+        int tileWidth = Integer.parseInt(tsRoot.getAttributes().get("tilewidth"));
+        int tileHeight = Integer.parseInt(tsRoot.getAttributes().get("tileheight"));
+        int tileCount = Integer.parseInt(tsRoot.getAttributes().get("tilecount"));
+
+        String spriteSheetPath = new File(this.source.getParent().toString(), tsRoot.getChildren().get(0).getAttributes().get("source")).toString();
+
+        this.spritesheet = new Spritesheet(new Texture(spriteSheetPath), tileWidth, tileHeight, tileCount, 0);
+    }
+}
+
+class Layer {
+    protected int id;
+    protected String name;
+    protected int width, height;
+    protected int map[] = {};
+
+    public Layer(int id, String name, int width, int height, int[] map) {
+        this.id = id;
+        this.name = name;
+        this.width = width;
+        this.height = height;
+        this.map = map;
+    }
 }

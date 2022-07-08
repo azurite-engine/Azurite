@@ -1,4 +1,4 @@
-package postprocess;
+package graphics.postprocess;
 
 import graphics.Texture;
 

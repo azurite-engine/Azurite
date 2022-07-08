@@ -3,6 +3,7 @@ package tiles;
 import ecs.GameObject;
 import ecs.PolygonCollider;
 import ecs.SpriteRenderer;
+import graphics.Spritesheet;
 import org.joml.Vector2f;
 import physics.collision.Shapes;
 import scene.Scene;
