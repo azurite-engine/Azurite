@@ -1,4 +1,4 @@
-package postprocess;
+package graphics.postprocess;
 
 /**
  * Some Utility methods

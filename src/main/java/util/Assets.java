@@ -3,13 +3,16 @@ package util;
 import audio.AudioBuffer;
 import graphics.Shader;
 import graphics.Texture;
-import tiles.Spritesheet;
+import graphics.Spritesheet;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class Assets {
 	private static HashMap<String, Shader> shaders = new HashMap<>();
+    private static HashMap<String, String> dataFiles = new HashMap<>();
 	private static HashMap<String, Texture> textures = new HashMap<>();
 	private static HashMap<String, AudioBuffer> audioBuffers = new HashMap<>();
 	private static HashMap<String, Spritesheet> spritesheets = new HashMap<>();
@@ -29,6 +32,36 @@ public class Assets {
         shader.compile();
         shaders.put(file.getAbsolutePath(), shader);
         return shader;
+    }
+
+    /**
+     * Loads a text file from the filesystem and returns it in a String
+     *
+     * @param path to data file
+     * @return returns type String
+     */
+    public static String getDataFile (String path) {
+        String data = "";
+        try {
+            File file = new File(path);
+
+            if (dataFiles.containsKey(file.getAbsolutePath())) {
+                return dataFiles.get(file.getAbsolutePath());
+            }
+
+            Scanner scanner = new Scanner(file);
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                data += line + "\n";
+            }
+            scanner.close();
+
+            dataFiles.put(file.getAbsolutePath(), data);
+        } catch (FileNotFoundException e) {
+            System.out.println("An error occurred.");
+            e.printStackTrace();
+        }
+        return data;
     }
 
     /**

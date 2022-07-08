@@ -122,7 +122,7 @@ public class Texture {
 	}
 
 	/**
-	 * Will write am OpenGL Texture to the provided file
+	 * Will write a OpenGL Texture to the provided file
 	 * @param file path where the image is to be stored with extension
 	 * @param id id of the OpenGL Texture Resource
 	 * @param width width of the texture

@@ -449,7 +449,7 @@ public class MathUtils {
      * @return Returns true if the point is inside the rectangle, otherwise returns false.
      */
     public static boolean inRect(Vector2f in, float rectX, float rectY, float rectWidth, float rectHeight) {
-        return in.x >= rectX && in.x <= (rectY + rectWidth) && in.y >= rectY && in.y <= (rectY + rectHeight);
+        return in.x >= rectX && in.x <= (rectX + rectWidth) && in.y >= rectY && in.y <= (rectY + rectHeight);
     }
 
     /**

@@ -1,7 +1,6 @@
 package graphics; 
 
 import audio.AudioMaster;
-import ecs.Text;
 import event.EventData;
 import event.Events;
 import input.Keyboard;
@@ -9,7 +8,7 @@ import input.Mouse;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import postprocess.PostProcessing;
+import graphics.postprocess.PostProcessing;
 import scene.Scene;
 import scene.SceneManager;
 import util.Engine;
@@ -31,6 +30,8 @@ public class Window {
     private long frameCount = 0;
     private String title;
     private boolean sleeping = false;
+
+
 
     public Window(int pwidth, int pheight, String ptitle, boolean fullscreen, float minSceneLighting, boolean recalculateProjectionOnResize) {
         videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -139,8 +140,6 @@ public class Window {
         // Center the window
         glfwSetWindowPos(glfwWindow, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
         GL.createCapabilities();
-
-        System.setProperty("java.awt.headless", "true");
 
     }
 

@@ -1,7 +1,7 @@
 package graphics.renderer;
 
-import ecs.Text;
-import fonts.GlyphRenderer;
+import ui.Text;
+import ui.fonts.GlyphRenderer;
 import graphics.*;
 import org.joml.Vector2f;
 import util.Assets;

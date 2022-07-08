@@ -1,15 +1,17 @@
 package scene;
 
 import ecs.GameObject;
-import ecs.Text;
+import ui.Element;
+import ui.RenderableElement;
+import ui.Text;
 import graphics.Camera;
 import graphics.Texture;
 import graphics.renderer.*;
 import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
 import physics.collision.Collider;
-import postprocess.ForwardToTexture;
-import postprocess.PostProcessStep;
+import graphics.postprocess.ForwardToTexture;
+import graphics.postprocess.PostProcessStep;
 import util.Engine;
 
 import java.util.ArrayList;
@@ -21,49 +23,49 @@ import java.util.List;
  * specifications and all the necessary ecs-related logic. Programming/Interacting with this
  * game engine will usually involve the following boilerplate code:
  * <pre>
- *     public class Main extends Scene {
- *         public static void main(String[] args) {
- *             Engine.init(1920, 1080, "Azurite Engine Demo In Comment", 1.0f);
- *             Engine.scenes().switchScene(new Main(), true);
- *             Engine.showWindow();
- *         }
- *
- *         public void awake() {
- *             camera = new Camera();
- *             ...
- *         }
- *
- *         public void update() {
- *             ...
- *         }
+ * public class Main extends Scene {
+ *     public static void main(String[] args) {
+ *         Engine.init(1920, 1080, "Azurite Engine Demo In Comment", 1.0f);
+ *         Engine.scenes().switchScene(new Main(), true);
+ *         Engine.showWindow();
  *     }
+ *
+ *     public void awake() {
+ *         camera = new Camera();
+ *         ...
+ *     }
+ *
+ *     public void update() {
+ *         ...
+ *     }
+ * }
  * </pre>
  * A simple example of a scene with just a rendered sprite:
  * <pre>
- *     public class Main extends Scene {
- *         GameObject player;
- *         Sprite s;
+ * public class Main extends Scene {
+ *     GameObject player;
+ *     Sprite s;
  *
- *         public static void main(String[] args) {
- *             Engine.init(1920, 1080, "Azurite Engine Demo In Comment", 1.0f);
- *             Engine.scenes().switchScene(new Main(), true);
- *             Engine.showWindow();
- *         }
+ *     public static void main(String[] args) {
+ *         Engine.init(1920, 1080, "Azurite Engine Demo In Comment", 1.0f);
+ *         Engine.scenes().switchScene(new Main(), true);
+ *         Engine.showWindow();
+ *     }
  *
- *         public void awake() {
- *             camera = new Camera();
+ *     public void awake() {
+ *         camera = new Camera();
  *
- *             player = new GameObject();
- *             s = new Sprite
- *             player.addComponent(new SpriteRenderer(s, new Vector2f(100)));
- *         }
+ *         player = new GameObject();
+ *         s = new Sprite
+ *         player.addComponent(new SpriteRenderer(s, new Vector2f(100)));
+ *     }
  *
- *         public void update() {
- *             if (Keyboard.getKeyDown(GLFW.GLFW_KEY_SPACE)) {
- *                 player.transform.add(new Vector2f(1, 0));
- *             }
+ *     public void update() {
+ *         if (Keyboard.getKeyDown(GLFW.GLFW_KEY_SPACE)) {
+ *             player.transform.add(new Vector2f(1, 0));
  *         }
  *     }
+ * }
  * </pre>
  * @see SceneManager
  * @author Asher Haun
@@ -74,21 +76,25 @@ public abstract class Scene {
 
     private static int sceneCounter = 0;
     private final int sceneId = sceneCounter++;
-    private final List<GameObject> gameObjects = new LinkedList<>();
 
+    private final List<GameObject> gameObjects = new LinkedList<>();
     private final List<Collider> colliders = new LinkedList<>();
+    private final List<Text> texts = new ArrayList<>();
+    private final List<Element> uiElements = new ArrayList<>();
+
+    private List<Renderer> rendererRegistry = new LinkedList<>();
+
 
     public DefaultRenderer renderer = new DefaultRenderer();
     public LightmapRenderer lightmapRenderer = new LightmapRenderer();
     public DebugRenderer debugRenderer = new DebugRenderer();
     public TextRenderer textRenderer = new TextRenderer();
+    public UIRenderer uiRenderer = new UIRenderer();
 
     protected Camera camera;
     protected ForwardToTexture forwardToScreen;
-    private final List<Renderer> rendererRegistry = new LinkedList<>();
     private boolean debugMode = false;
     private boolean active = false;
-    private final ArrayList<Text> uiObjects = new ArrayList<>();
 
     public boolean isActive() {
         return active;
@@ -131,33 +137,16 @@ public abstract class Scene {
     /**
      * Apply post processing to a texture
      *
-     * @param texture input texture
+     * @see SceneManager
      */
-    public void postProcess(Texture texture) {
-        forwardToScreen.setTexture(texture);
-        forwardToScreen.apply();
-    }
-
-    /**
-     * This method is called at the end of the program
-     */
-    public void clean() {
-        this.renderer.clean();
-        this.lightmapRenderer.clean();
-        this.debugRenderer.clean();
-        this.textRenderer.clean();
-        rendererRegistry.forEach(Renderer::clean);
-    }
-
-    // The following methods shouldn't be overridden. For this, added final keyword
-
-    public final void startUi() {
-        textRenderer.init();
+    public final int sceneId() {
+        return sceneId;
     }
 
     /**
      * Loops through all gameobjects already in the scene and calls their start methods.
      */
+    // TODO not called? find out why
     public final void startGameObjects() {
         for (GameObject gameObject : gameObjects) {
             gameObject.start();
@@ -178,15 +167,6 @@ public abstract class Scene {
 
     public final void unregisterCollider(GameObject gameObject) {
         colliders.remove(gameObject.getComponent(Collider.class));
-    }
-
-    /**
-     * The sceneId is meant to represent the instance of a scene as an integer
-     *
-     * @see SceneManager
-     */
-    public final int sceneId() {
-        return sceneId;
     }
 
     /**
@@ -217,15 +197,6 @@ public abstract class Scene {
     }
 
     /**
-     * Register a renderer to this scene
-     *
-     * @param renderer the renderer to be registered
-     */
-    public void registerRenderer(Renderer renderer) {
-        rendererRegistry.add(renderer);
-    }
-
-    /**
      * @return Returns the scene's instance of Camera
      */
     public Camera camera() {
@@ -235,45 +206,101 @@ public abstract class Scene {
     /**
      * Loops through all the gameObjects in the scene and calls their update methods.
      */
-    public void updateGameObjects() {
+    public void updateGameObjects () {
         for (GameObject go : gameObjects) {
             go.update(Engine.deltaTime());
         }
     }
 
-    public void render() {
+    public void updateUI () {
+        for (Element e : uiElements) {
+            e.update();
+        }
+        for (Text t : texts) {
+            t.update();
+        }
+    }
+
+    // ----- Rendering -----
+
+    /**
+     * Apply post processing to a texture
+     *
+     * @param texture input texture
+     */
+    public void postProcess(Texture texture) {
+        forwardToScreen.setTexture(texture);
+        forwardToScreen.apply();
+    }
+
+    /**
+     * Register a renderer to this scene
+     *
+     * @param renderer the renderer to be registered
+     */
+    public void registerRenderer(Renderer renderer) {
+        rendererRegistry.add(renderer);
+    }
+
+    /**
+     * Initialize all renderers
+     */
+    public void initRenderers () {
+        debugRenderer.init();
+        lightmapRenderer.init();
+        renderer.init();
+        forwardToScreen = new ForwardToTexture(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
+        forwardToScreen.init();
+        uiRenderer.init();
+    }
+
+    public final void startUi () {
+        textRenderer.init();
+
+        for (Element e : uiElements) {
+            if (e instanceof RenderableElement) {
+                ((RenderableElement) e).start();
+            }
+        }
+    }
+
+    public void render () {
         rendererRegistry.forEach(Renderer::render);
         lightmapRenderer.render();
         lightmapRenderer.bindLightmap();
         renderer.render();
     }
 
-    public void debugRender() {
+    public void debugRender () {
         if (debugMode) this.debugRenderer.render();
     }
 
-    /**
-     * Initialize all renderers
-     */
-    public void initRenderers() {
-        debugRenderer.init();
-        lightmapRenderer.init();
-        renderer.init();
-        forwardToScreen = new ForwardToTexture(PostProcessStep.Target.DEFAULT_FRAMEBUFFER);
-        forwardToScreen.init();
-    }
-
-    public void addUiObject(Text t) {
-        uiObjects.add(t);
-    }
-
     public final void textRender() {
+        uiRenderer.render();
         textRenderer.render();
     }
 
-    public void updateUI() {
-        for (Text i : uiObjects) {
-            i.update();
+    /**
+     * This method is called at the end of the program
+     */
+    public void clean() {
+        this.renderer.clean();
+        this.lightmapRenderer.clean();
+        this.debugRenderer.clean();
+        this.textRenderer.clean();
+        this.uiRenderer.clean();
+        rendererRegistry.forEach(Renderer::clean);
+    }
+
+    public void addText (Text t) {
+        texts.add(t);
+    }
+
+    public void addUIElement (Element e) {
+        uiElements.add(e);
+
+        if (e instanceof RenderableElement) {
+            uiRenderer.add((RenderableElement) e);
         }
     }
 

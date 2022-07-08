@@ -1,4 +1,4 @@
-package postprocess;
+package graphics.postprocess;
 
 import static org.lwjgl.opengl.GL11.GL_FLOAT;
 import static org.lwjgl.opengl.GL15.*;
