@@ -6,6 +6,7 @@ import graphics.Spritesheet;
 import graphics.Texture;
 import io.xml.XMLElement;
 import org.joml.Vector2f;
+import util.Assets;
 import util.MathUtils;
 
 import java.io.File;
@@ -33,7 +34,7 @@ public class Tilesystem {
         this.tileHeight = height;
 
         // Extract XML data
-        XMLElement root = XML.parse(tmxFile);
+        XMLElement root = XML.parse(Assets.getDataFile(tmxFile));
 
         // Determine number of tiles on X and Y axis'
         int xTiles = Integer.parseInt(root.getAttributes().get("width"));
@@ -130,7 +131,7 @@ class Tileset {
         this.source = source;
 
         // Parse the .tsx file to extract the spritesheet data and texture path
-        XMLElement tsRoot = XML.parse(this.source.toString());
+        XMLElement tsRoot = XML.parse(Assets.getDataFile(this.source.toString()));
 
         int tileWidth = Integer.parseInt(tsRoot.getAttributes().get("tilewidth"));
         int tileHeight = Integer.parseInt(tsRoot.getAttributes().get("tileheight"));
