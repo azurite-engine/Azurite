@@ -161,6 +161,9 @@ public class Mouse {
         pmouse = new Vector2f(pmouseX, pmouseY);
     }
 
+    public static Vector2f get () {
+        return mouse;
+    }
 
     /**
      *

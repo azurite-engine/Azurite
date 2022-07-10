@@ -1,4 +1,4 @@
-package graphics; 
+package graphics;
 
 import audio.AudioMaster;
 import event.EventData;
@@ -42,7 +42,7 @@ public class Window {
         title = ptitle;
         this.recalculateProjectionOnResize = recalculateProjectionOnResize;
 
-        //create the sceneManager to be able to set a scene
+        // create the sceneManager to be able to set a scene
         sceneManager = new SceneManager();
 
         sceneManager.setMinSceneLight(minSceneLighting);
@@ -57,6 +57,8 @@ public class Window {
 
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
 
         if (!fullscreen)
             initWindow(width, height, title, 0);
@@ -67,15 +69,13 @@ public class Window {
     public Window(String ptitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
         instance = this;
 
-        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
-
         videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         width = videoMode.width();
         height = videoMode.height();
         title = ptitle;
         this.recalculateProjectionOnResize = recalculateProjectionOnResize;
 
-        //create the sceneManager to be able to set a scene
+        // create the sceneManager to be able to set a scene
         sceneManager = new SceneManager();
 
         sceneManager.setMinSceneLight(minSceneLighting);
@@ -91,10 +91,13 @@ public class Window {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
+        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
+
         initWindow(width, height, title, glfwGetPrimaryMonitor());
     }
 
-    public Window(int pwidth, int pheight, String ptitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
+    public Window(int pwidth, int pheight, String ptitle, float minSceneLighting,
+            boolean recalculateProjectionOnResize) {
         this(pwidth, pheight, ptitle, false, minSceneLighting, recalculateProjectionOnResize);
     }
 
@@ -149,8 +152,8 @@ public class Window {
     }
 
     public float getFPS() {
-        float fps = 1/Engine.deltaTime();
-        glfwSetWindowTitle(glfwWindow, title + " @ " + (int)fps + " FPS");
+        float fps = 1 / Engine.deltaTime();
+        glfwSetWindowTitle(glfwWindow, title + " @ " + (int) fps + " FPS");
         return fps;
     }
 
@@ -230,7 +233,7 @@ public class Window {
         return sceneManager;
     }
 
-    public static Camera getCamera(){
+    public static Camera getCamera() {
         return instance.currentScene().camera();
     }
 

@@ -93,13 +93,9 @@ public class DemoTopDown extends Scene {
             booper.getComponent(PointLight.class).intensity = MathUtils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
         greenLight.getComponent(PointLight.class).intensity = MathUtils.map((float) Math.cos(Engine.millisRunning() / 600), -1, 1, 70, 110);
 
-        //this is not clean:
-        //player.getRawTransform().addRotation(1);
-
         //Tween demo. You can remove the if statement for endless movement back and forth between these tweens.
         //Position is a primitive in a GameObject so to change position by tweening you have to use more logic
         if(!booper.getComponent(Tween.class).tweenFinishedAll()) {
-
             booper.getComponent(Tween.class).setUpTweenPosition( new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), new Vector2f(800, 600), 2, Tween.TweenMode.EASING_IN);
             booper.getComponent(Tween.class).setUpTweenPosition( new Vector2f(800, 600), new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), 2, Tween.TweenMode.EASING_OUT);
             booper.getComponent(Tween.class).setUpTweenPosition( new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), new Vector2f(800, 600), 1, Tween.TweenMode.NO_EASING);
@@ -109,39 +105,10 @@ public class DemoTopDown extends Scene {
         }
 
         camera.smoothFollow(player.getReadOnlyPosition());
-        if (Keyboard.getKeyDown(Keys.AZ_KEY_SPACE)) {
-//            if (added) {
-//                booper.removeComponent(PointLight.class);
-//                added = false;
-//            } else {
-//                booper.addComponent(booperLight);
-//                added = true;
-//            }
-
-//            if (flip) {
-//				removeGameObjectFromScene(booper);
-//				flip = false;
-//			} else {
-//				addGameObjectToScene(booper);
-//				flip = true;
-//			}
-
-//			if (flip) {
-//				booper.setZindex(1);
-//				flip = false;
-//			} else {
-//				booper.setZindex(2);
-//				flip = true;
-//			}
-
-        }
-
     }
 
     @Override
     public void postProcess(Texture texture) {
-
        bloom.apply(texture);
-
     }
 }

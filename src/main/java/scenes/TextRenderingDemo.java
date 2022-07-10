@@ -2,21 +2,21 @@ package scenes;
 
 import ecs.GameObject;
 import ecs.SpriteRenderer;
-import ui.Text;
-import ui.fonts.Font;
+
 import graphics.Camera;
 import graphics.Color;
 import graphics.Window;
 import input.Mouse;
 import org.joml.Vector2f;
+import ui.Text;
+
 import scene.Scene;
+import ui.fonts.Font;
 import util.Engine;
 
 import static graphics.Graphics.setDefaultBackground;
 
 public class TextRenderingDemo extends Scene {
-
-
 
     public static void main(String[] args) {
         Engine.init(900, 600, "Azurite Font Rendering Demo", 0, true);
@@ -32,9 +32,7 @@ public class TextRenderingDemo extends Scene {
     Text movingText;
     Text rainbowText;
 
-    GameObject centerLine;
-
-    public void awake () {
+    public void awake() {
 
         camera = new Camera();
         setDefaultBackground(Color.WHITE);
@@ -47,15 +45,13 @@ public class TextRenderingDemo extends Scene {
         movingText = new Text("HAHA", openSans, Color.RED, 200, 200);
         rainbowText = new Text("Rainbow text", openSans, Color.BLUE, 10, 50);
         centeredText = new Text("(Centered Text)\n(Centered Text line 2)", openSans, Color.BLACK, halfWindowWidth, 80, 1, true, true);
-
-        centerLine = new GameObject("", new Vector2f(halfWindowWidth, 50), 1).addComponent(new SpriteRenderer(Color.GRAY, new Vector2f(1, 100)));
     }
 
-    public void update () {
-
+    public void update() {
         rainbowText.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS() + "\nMouse " + Mouse.mouse.x + " | " + Mouse.mouse.y);
 
-        movingText.setPosition(Mouse.worldMouse);
+        movingText.setPosition(new Vector2f(Mouse.mouse.x(), Mouse.mouse.y));
+        movingText.change("X " + Mouse.mouse.x + " | Y " + Mouse.mouse.y);
 
         rainbowText.rainbowify();
 

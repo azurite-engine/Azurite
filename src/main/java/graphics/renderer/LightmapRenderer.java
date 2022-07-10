@@ -29,11 +29,12 @@ public class LightmapRenderer extends Renderer {
         batch.init();
         batch.start();
         batch.pushVec2(0, Window.getHeight());
-        batch.pushVec2(Window.getWidth() * 2.0f, Window.getHeight());
-        batch.pushVec2(Window.getWidth() * 2.0f, 0);
+        batch.pushVec2(Window.getWidth(), Window.getHeight());
+        batch.pushVec2(Window.getWidth(), 0);
         batch.pushVec2(0, 0);
         batch.finish();
         batches.add(batch);
+        // TODO: Add resize method to re-upload projection matrix @asher or @voxelrifts
     }
 
     /**

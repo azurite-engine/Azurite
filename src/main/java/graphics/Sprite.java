@@ -1,6 +1,5 @@
 package graphics;
 
-import jdk.jfr.internal.Logger;
 import org.joml.Vector2f;
 
 /**
