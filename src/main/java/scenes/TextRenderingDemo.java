@@ -19,7 +19,7 @@ public class TextRenderingDemo extends Scene {
 
 
     public static void main(String[] args) {
-        Engine.init(900, 600, "Azurite Font Rendering Demo");
+        Engine.init(900, 600, "Azurite Font Rendering Demo", 0, true);
         Engine.scenes().switchScene(new TextRenderingDemo(), true);
         Engine.showWindow();
     }
@@ -55,7 +55,7 @@ public class TextRenderingDemo extends Scene {
 
         rainbowText.change("Azurite Engine demo\nDT: " + Engine.deltaTime() + "\nFPS: " + (int) Engine.getInstance().getWindow().getFPS() + "\nMouse " + Mouse.mouse.x + " | " + Mouse.mouse.y);
 
-        movingText.setPosition(Mouse.mouse);
+        movingText.setPosition(Mouse.worldMouse);
 
         rainbowText.rainbowify();
 

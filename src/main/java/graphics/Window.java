@@ -31,9 +31,11 @@ public class Window {
     private String title;
     private boolean sleeping = false;
 
-
+    public static Window instance = null;
 
     public Window(int pwidth, int pheight, String ptitle, boolean fullscreen, float minSceneLighting, boolean recalculateProjectionOnResize) {
+        instance = this;
+
         videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         width = pwidth;
         height = pheight;
@@ -63,6 +65,8 @@ public class Window {
     }
 
     public Window(String ptitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
+        instance = this;
+
         glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
 
         videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -126,6 +130,7 @@ public class Window {
             if (recalculateProjectionOnResize && currentScene().camera() != null)
                 currentScene().camera().adjustProjection();
             Events.windowResizeEvent.onEvent(new EventData.WindowResizeEventData(newWidth, newHeight));
+
         });
 
         Mouse.setupCallbacks();
@@ -223,6 +228,10 @@ public class Window {
 
     public SceneManager getSceneManager() {
         return sceneManager;
+    }
+
+    public static Camera getCamera(){
+        return instance.currentScene().camera();
     }
 
     public void setIcon(String path) {

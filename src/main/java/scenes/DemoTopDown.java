@@ -35,7 +35,7 @@ public class DemoTopDown extends Scene {
     boolean flip = true;
 
     public static void main(String[] args) {
-        Engine.init(1920, 1080, "Azurite Engine Demo 1", 0.01f);
+        Engine.init(1280, 720, "Azurite Engine Demo 1", 0.01f, true);
         Engine.scenes().switchScene(new DemoTopDown(), true);
 //        Engine.window().setIcon("src/assets/images/icon.png");
         Engine.showWindow();
@@ -68,6 +68,7 @@ public class DemoTopDown extends Scene {
 
 
         //PLAYER
+
         player = new GameObject("Player", new Vector2f(600, 600), 2);
         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
         PolygonCollider playerBody = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, 100, 100)).layer(2).mask(2);
@@ -77,6 +78,7 @@ public class DemoTopDown extends Scene {
         Dynamics dynamics = new Dynamics();
         player.addComponent(dynamics);
         player.addComponent(CharacterController.standardTopDown(dynamics, 5));
+
 
         greenLight = new GameObject("Green light", new Vector2f(3315, 300), 3);
         greenLight.addComponent(new PointLight(new Color(102, 255, 102), 30));
@@ -138,6 +140,8 @@ public class DemoTopDown extends Scene {
 
     @Override
     public void postProcess(Texture texture) {
-        bloom.apply(texture);
+
+       bloom.apply(texture);
+
     }
 }

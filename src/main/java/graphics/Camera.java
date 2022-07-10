@@ -22,22 +22,28 @@ import util.MathUtils;
  */
 public class Camera {
 
+    public static Camera instance;
 
     /**
-     * FILL - Tries to fill the entire window with image
-     * EXTENDED - If the image is of larger resolution it will extend it beyond window boundaries
+     * Caching these values here in case we have to pick up and drop objects into the world with a mouse
+     */
+    float aspectWidth, aspectHeight;
+    int viewportPosX, viewportPosY;
+
+
+    /**
+     * FFREE - Uses whatever resolution for aspect ratio
      * ASPECT_RATIO - It will show the entire image on the screen but will keep the aspect ratio (might create black bars)
      */
     private enum Mode{
-        FILL,
-        EXTENDED,
+        FREE,
         ASPECT_RATIO,
     }
-    public Mode mode = Mode.FILL;
+    public Mode mode = Mode.FREE;
     /**
-     * Custom game resolution separate from device(window) resolution
+     * World size otherwise known as pixel size
      */
-    public Vector2f resolution = new Vector2f(2000, 1080);
+    public Vector2f worldSize = new Vector2f(16 * 45, 16 * 45);
 
 
 
@@ -49,10 +55,14 @@ public class Camera {
      * Projection Matrix of the camera
      */
     private Matrix4f projectionMatrix;
+    private Matrix4f inverseProjectionM;
+
+
     /**
      * View Matrix of the camera
      */
     private Matrix4f viewMatrix;
+    private Matrix4f inverseViewM;
 
     /**
      * Creates a new Camera with a certain position
@@ -61,10 +71,14 @@ public class Camera {
      * @param position initial position
      */
     public Camera(Vector2f position) {
+        instance = this;
         this.position = position;
         this.projectionMatrix = new Matrix4f();
         this.viewMatrix = new Matrix4f();
+        this.inverseProjectionM = new Matrix4f();
+        this.inverseViewM = new Matrix4f();
         adjustProjection();
+
     }
 
     /**
@@ -72,48 +86,55 @@ public class Camera {
      * Projection matrix is set to default: 0 to Window's width from left to right, 0 to Window's height from top to bottom
      */
     public Camera() {
+        instance = this;
         this.position = new Vector2f();
         this.projectionMatrix = new Matrix4f();
         this.viewMatrix = new Matrix4f();
+        this.inverseProjectionM = new Matrix4f();
+        this.inverseViewM = new Matrix4f();
         adjustProjection();
     }
 
     /**
      * Recalculate Projection Matrix
      */
-    public void adjustProjection() {
+    public void adjustProjection(){
         projectionMatrix.identity();
         //This should be checked with physicalAspectRatio!! but its fine right now
-        float windowAspectRatio = (float) Window.getWidth() / Window.getHeight();
-        float physicalAspectRatio = resolution.x() / resolution.y();
+        float displayAspectRatio = (float) Window.getWidth() / (float)Window.getHeight();
+        float pixelAspectRatio = worldSize.x() / worldSize.y();
 
 
-        if(mode == Mode.FILL) {
 
-            projectionMatrix.ortho(0, Window.getWidth(), Window.getHeight(), 0, 0, 100);
+        if(mode == Mode.FREE){
+            aspectWidth = Window.getWidth();
+            aspectHeight = Window.getHeight();
+            viewportPosX = 0;
+            viewportPosX = 0;
 
-        }else if(mode == Mode.EXTENDED){
-
-            GL11.glViewport(0, 0, (int)resolution.x, (int)resolution.y);
-            projectionMatrix.ortho(0, Window.getWidth(), Window.getHeight(), 0, 0, 100);
-
+            GL11.glViewport(viewportPosX, viewportPosY, Window.getWidth(), Window.getHeight());
+            projectionMatrix.ortho(0, worldSize.x * displayAspectRatio, worldSize.y, 0, 0, 100f);
         }else if(mode == Mode.ASPECT_RATIO){
 
-            float aspectWidth = Window.getWidth();
-            float aspectHeight = aspectWidth / physicalAspectRatio;
+            aspectWidth = Window.getWidth();
+            aspectHeight = aspectWidth / pixelAspectRatio;
 
             if(aspectHeight > Window.getHeight()){
                 aspectHeight = Window.getHeight();
-                aspectWidth = aspectHeight * physicalAspectRatio;
+                aspectWidth = aspectHeight * pixelAspectRatio;
             }
 
-            int vpX = (int)(((float)Window.getWidth() / 2.0f) - (aspectWidth / 2.0f));
-            int vpY = (int)(((float)Window.getHeight() / 2.0f) - (aspectHeight / 2.0f));
+            viewportPosX = (int)(((float)Window.getWidth() / 2.0f) - (aspectWidth / 2.0f));
+            viewportPosY = (int)(((float)Window.getHeight() / 2.0f) - (aspectHeight / 2.0f));
 
-            GL11.glViewport(vpX, vpY, (int)aspectWidth, (int)aspectHeight);
-            projectionMatrix.ortho(0, Window.getWidth(), Window.getHeight(), 0, 0, 100);
+            GL11.glViewport(viewportPosX, viewportPosY, (int)aspectWidth, (int)aspectHeight);
+            projectionMatrix.ortho(0, worldSize.x, worldSize.y, 0, 0, 100f);
 
         }
+
+        projectionMatrix.invert(inverseProjectionM);
+
+
     }
 
     /**
@@ -155,5 +176,41 @@ public class Camera {
      */
     public Vector2f getPosition() {
         return this.position;
+    }
+
+
+
+
+    public Matrix4f getInverseProjection(){
+        return inverseProjectionM;
+    }
+
+    public Matrix4f getInverseView(){
+        return inverseViewM;
+    }
+
+    public Vector2f getWorldSize(){
+        return worldSize;
+    }
+
+
+    public float getViewportSizeX()
+    {
+        return aspectWidth;
+    }
+
+    public float getViewportSizeY()
+    {
+        return aspectHeight;
+    }
+
+    public int getViewportPosX()
+    {
+        return viewportPosX;
+    }
+
+    public int getViewportPosY()
+    {
+        return viewportPosY;
     }
 }
