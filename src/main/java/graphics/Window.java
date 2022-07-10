@@ -121,7 +121,7 @@ public class Window {
             throw new IllegalStateException("[FATAL] Failed to create window.");
 
         // Set up callback
-        glfwSetWindowSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
+        glfwSetFramebufferSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
             if (newWidth == 0 || newHeight == 0) {
                 sleeping = true;
                 return;
