@@ -14,6 +14,7 @@ import java.util.List;
 public class LightmapRenderer extends Renderer {
     // The light data
     private final List<PointLight> lights;
+    private RenderBatch batch;
 
     public LightmapRenderer() {
         lights = new ArrayList<>();
@@ -24,15 +25,16 @@ public class LightmapRenderer extends Renderer {
     public void init() {
         super.init();
 
-        RenderBatch batch = new RenderBatch(1, 0, Primitive.QUAD, ShaderDatatype.FLOAT2);
+        batch = new RenderBatch(1, 0, Primitive.QUAD, ShaderDatatype.FLOAT2);
         batch.init();
         batch.start();
-        batch.pushVec2(0, 0);
-        batch.pushVec2(Window.getWidth(), 0);
-        batch.pushVec2(Window.getWidth(), Window.getHeight());
         batch.pushVec2(0, Window.getHeight());
+        batch.pushVec2(Window.getWidth(), Window.getHeight());
+        batch.pushVec2(Window.getWidth(), 0);
+        batch.pushVec2(0, 0);
         batch.finish();
         batches.add(batch);
+        // TODO: Add resize method to re-upload projection matrix @asher or @voxelrifts
     }
 
     /**
@@ -102,6 +104,7 @@ public class LightmapRenderer extends Renderer {
     @Override
     protected void rebuffer() {
         // Will never be called since noRebuffer flag is set
+
     }
 
 

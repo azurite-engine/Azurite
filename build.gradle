@@ -9,7 +9,8 @@ plugins {
 group 'com.GwgCommunity'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 11
+targetCompatibility = 11
 
 project.ext.lwjglVersion = "3.3.0"
 project.ext.jomlVersion = "1.10.1"

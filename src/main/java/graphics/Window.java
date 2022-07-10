@@ -1,4 +1,4 @@
-package graphics; 
+package graphics;
 
 import audio.AudioMaster;
 import event.EventData;
@@ -31,16 +31,18 @@ public class Window {
     private String title;
     private boolean sleeping = false;
 
-
+    public static Window instance = null;
 
     public Window(int pwidth, int pheight, String ptitle, boolean fullscreen, float minSceneLighting, boolean recalculateProjectionOnResize) {
+        instance = this;
+
         videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         width = pwidth;
         height = pheight;
         title = ptitle;
         this.recalculateProjectionOnResize = recalculateProjectionOnResize;
 
-        //create the sceneManager to be able to set a scene
+        // create the sceneManager to be able to set a scene
         sceneManager = new SceneManager();
 
         sceneManager.setMinSceneLight(minSceneLighting);
@@ -55,6 +57,8 @@ public class Window {
 
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+
+        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
 
         if (!fullscreen)
             initWindow(width, height, title, 0);
@@ -63,7 +67,7 @@ public class Window {
     }
 
     public Window(String ptitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
-        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
+        instance = this;
 
         videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         width = videoMode.width();
@@ -71,7 +75,7 @@ public class Window {
         title = ptitle;
         this.recalculateProjectionOnResize = recalculateProjectionOnResize;
 
-        //create the sceneManager to be able to set a scene
+        // create the sceneManager to be able to set a scene
         sceneManager = new SceneManager();
 
         sceneManager.setMinSceneLight(minSceneLighting);
@@ -87,10 +91,13 @@ public class Window {
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
 
+        glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
+
         initWindow(width, height, title, glfwGetPrimaryMonitor());
     }
 
-    public Window(int pwidth, int pheight, String ptitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
+    public Window(int pwidth, int pheight, String ptitle, float minSceneLighting,
+            boolean recalculateProjectionOnResize) {
         this(pwidth, pheight, ptitle, false, minSceneLighting, recalculateProjectionOnResize);
     }
 
@@ -126,6 +133,7 @@ public class Window {
             if (recalculateProjectionOnResize && currentScene().camera() != null)
                 currentScene().camera().adjustProjection();
             Events.windowResizeEvent.onEvent(new EventData.WindowResizeEventData(newWidth, newHeight));
+
         });
 
         Mouse.setupCallbacks();
@@ -144,8 +152,8 @@ public class Window {
     }
 
     public float getFPS() {
-        float fps = 1/Engine.deltaTime();
-        glfwSetWindowTitle(glfwWindow, title + " @ " + (int)fps + " FPS");
+        float fps = 1 / Engine.deltaTime();
+        glfwSetWindowTitle(glfwWindow, title + " @ " + (int) fps + " FPS");
         return fps;
     }
 
@@ -223,6 +231,10 @@ public class Window {
 
     public SceneManager getSceneManager() {
         return sceneManager;
+    }
+
+    public static Camera getCamera() {
+        return instance.currentScene().camera();
     }
 
     public void setIcon(String path) {

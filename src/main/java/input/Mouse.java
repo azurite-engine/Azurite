@@ -2,8 +2,11 @@ package input;
 
 import event.EventData;
 import event.Events;
+import graphics.Camera;
 import graphics.Window;
+import org.joml.Matrix4f;
 import org.joml.Vector2f;
+import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
 
 import java.nio.DoubleBuffer;
@@ -15,6 +18,10 @@ public class Mouse {
      * Position of the mouse
      */
     public static Vector2f mouse = new Vector2f();
+    /**
+     * Position of the mouse in world space
+     */
+    public static Vector2f worldMouse = new Vector2f();
     /**
      * X Position of the mouse
      */
@@ -111,6 +118,7 @@ public class Mouse {
             mouseX = (long) xpos;
             mouseY = (long) ypos;
             mouse.set(mouseX, mouseY);
+            worldMouse.set(getWorldX(), getWorldY());
             moved = true;
         });
     }
@@ -151,5 +159,51 @@ public class Mouse {
         pmouseX = mouseX;
         pmouseY = mouseY;
         pmouse = new Vector2f(pmouseX, pmouseY);
+    }
+
+    public static Vector2f get () {
+        return mouse;
+    }
+
+    /**
+     *
+     * @return Get the mouse position in the world
+     */
+    public static float getWorldX(){
+        Camera camera = Window.getCamera();
+
+
+        float currentX = mouseX - camera.getViewportPosX();
+        currentX = (currentX / camera.getViewportSizeX()) * 2.0f - 1.0f;
+        Vector4f gl_Pos = new Vector4f(currentX, 0, 0, 1);
+
+        Matrix4f viewProjection = new Matrix4f();
+        camera.getInverseView().mul(camera.getInverseProjection(), viewProjection);
+        gl_Pos.mul(viewProjection);
+        currentX = gl_Pos.x;
+
+
+        return currentX;
+    }
+
+    /**
+     *
+     * @return Get the mouse position in the world
+     */
+    public static float getWorldY(){
+        Camera camera = Window.getCamera();
+
+
+
+        float currentY = mouseY - camera.getViewportPosY();
+        currentY = -((currentY / camera.getViewportSizeY()) * 2.0f - 1.0f);
+        Vector4f gl_Pos = new Vector4f(0, currentY, 0, 1);
+
+        Matrix4f viewProjection = new Matrix4f();
+        camera.getInverseView().mul(camera.getInverseProjection(), viewProjection);
+        gl_Pos.mul(viewProjection);
+        currentY = gl_Pos.y;
+
+        return currentY;
     }
 }

@@ -28,7 +28,7 @@ import static graphics.Graphics.setDefaultBackground;
 public class UIRenderingDemo extends Scene {
 
     public static void main(String[] args) {
-        Engine.init(900, 600, "Azurite UI Rendering Demo");
+        Engine.init(900, 600, "Azurite UI Rendering Demo", 1, true);
         Engine.scenes().switchScene(new UIRenderingDemo(), true);
         Engine.showWindow();
     }
@@ -104,6 +104,8 @@ public class UIRenderingDemo extends Scene {
     }
 
     public void update () {
+        background.getComponent(SpriteRenderer.class).setSize(new Vector2f(Window.getWidth(), Window.getHeight()));
+
         String s = "";
         for (String i : radios.getSelected()) {
             s += i + ", ";
