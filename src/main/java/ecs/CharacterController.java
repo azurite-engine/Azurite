@@ -1,10 +1,13 @@
 package ecs;
 
 import input.Keyboard;
+import input.Keys;
 import org.joml.Vector2f;
 import physics.force.Force;
 
-//this class is just made to support topDown and platformer demo scenes - its not good at all!!!!
+/**
+ * Character controllers built to support the Top down and Side scroller Demo scenes.
+ */
 public class CharacterController extends Component {
 
     private final float speedModifier;
@@ -81,19 +84,18 @@ public class CharacterController extends Component {
     }
 
     private static boolean up() {
-        return Keyboard.keyDownOrHold(Keyboard.UP_ARROW) || Keyboard.keyDownOrHold(Keyboard.W_KEY);
+        return Keyboard.keyDownOrHold(Keys.KEY_UP) || Keyboard.keyDownOrHold(Keys.KEY_W);
     }
 
     private static boolean down() {
-        return Keyboard.keyDownOrHold(Keyboard.DOWN_ARROW) || Keyboard.keyDownOrHold(Keyboard.S_KEY);
+        return Keyboard.keyDownOrHold(Keys.KEY_DOWN) || Keyboard.keyDownOrHold(Keys.KEY_S);
     }
 
     private static boolean left() {
-        return Keyboard.keyDownOrHold(Keyboard.LEFT_ARROW) || Keyboard.keyDownOrHold(Keyboard.A_KEY);
+        return Keyboard.keyDownOrHold(Keys.KEY_LEFT) || Keyboard.keyDownOrHold(Keys.KEY_A);
     }
 
     private static boolean right() {
-        return Keyboard.keyDownOrHold(Keyboard.RIGHT_ARROW) || Keyboard.keyDownOrHold(Keyboard.D_KEY);
+        return Keyboard.keyDownOrHold(Keys.KEY_RIGHT) || Keyboard.keyDownOrHold(Keys.KEY_D);
     }
-
 }

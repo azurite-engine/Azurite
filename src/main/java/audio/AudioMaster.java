@@ -14,7 +14,7 @@ import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.openal.EXTEfx.ALC_MAX_AUXILIARY_SENDS;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * Main audio center: equivocal to graphics.Window but for initializing audio stuff,
  * like toggling and changing some parameters in the OpenAL API
  *

@@ -10,6 +10,10 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 
+/** 
+ * The Assets class contains methods to assist in loading common resources used by the engine from the filesystem as well as HashMaps to keep track of loaded resources. 
+ * If the same path is loaded again via the Assets class, it will call the item up from the hashmap rather than reload it.
+ */
 public class Assets {
 	private static HashMap<String, Shader> shaders = new HashMap<>();
     private static HashMap<String, String> dataFiles = new HashMap<>();

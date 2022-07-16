@@ -16,6 +16,10 @@ import java.util.ArrayList;
 
 import static io.FileFormats.XML;
 
+/**
+ * The Tilesystem class loads a .tmx file (XML file format for the Tiled map editor) and generates a 2D array of GameObjects with SpriteRenderers corresponding to the texture determined by the .tmx file.
+ * Currently only Axis-aligned maps are supported (no isometric or hexagonal maps right now).
+ */
 public class Tilesystem {
 
     ArrayList<Tileset> tilesets = new ArrayList<>();

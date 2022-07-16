@@ -8,11 +8,11 @@ import util.safety.Preconditions;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 
+/**
+ * The Engine class initializes the Window and the game loop.
+ * It can also be used to access some globally used classes like the scene manager and Window.
+ */
 public final class Engine {
-
-    /**
-     * The Engine class initializes GLFW and the game loop.
-     */
 
     private static final Engine instance = new Engine();
 
@@ -59,7 +59,7 @@ public final class Engine {
         return window().getSceneManager();
     }
 
-    //internal method called before any init
+    // Internal method called before any init
     private static void preInit() {
 
         System.setProperty("java.awt.headless", "true");

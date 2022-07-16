@@ -18,6 +18,9 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * The Window class handles setup of GLFW
+ */
 public class Window {
 
     private static long glfwWindow;

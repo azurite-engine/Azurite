@@ -1,5 +1,8 @@
 package util;
 
+/**
+ * Logging utility to print colored and labeled errors with class references.
+ */
 public class Logger {
 
     /**
@@ -37,12 +40,12 @@ public class Logger {
     }
 
     public static void logSystemCompatibilityError() {
-        System.out.println("System NOT COMPATIBLE, Might be driver or software issue.\n\n\tTry reinstalling program");
+        System.out.println("System NOT COMPATIBLE, Might be driver or software issue.");
         System.exit(0);
     }
 
     public static void logEngineError() {
-        System.out.println("We Encountered an Engine error it will be fixed soon. Thank you");
+        System.out.println("Unhelpful error");
         System.exit(-1);
     }
 

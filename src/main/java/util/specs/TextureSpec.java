@@ -4,7 +4,6 @@ import static org.lwjgl.opengl.GL30.*;
 import static org.lwjgl.opengl.GL44.GL_MIRROR_CLAMP_TO_EDGE;
 
 /**
- * 
  * Specification for the framebuffer's attachment textures
  *
  * @author VoxelRifts

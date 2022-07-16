@@ -13,6 +13,10 @@ import java.nio.DoubleBuffer;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * Class containing everything related to mouse input. 
+ * Mouse position, past mouse position, mouse dragged, mouse clicked, etc.
+ */
 public class Mouse {
     /**
      * Position of the mouse

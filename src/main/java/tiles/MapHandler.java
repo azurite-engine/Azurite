@@ -9,6 +9,7 @@ import java.util.ArrayList;
     http://www.roguebasin.com/index.php?title=Cellular_Automata_Method_for_Generating_Random_Cave-Like_Levels#:~:text=It%20is%20an%20old%20and%20fairly%20well%20documented,a%20wall%20and%205%20or%20more%20neighbors%20were.
 */
 
+@Deprecated
 class MapHandler {
     public int MapWidth = 90;
     public int MapHeight = 21;

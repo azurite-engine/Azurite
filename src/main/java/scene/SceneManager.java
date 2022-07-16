@@ -8,9 +8,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 
- * <p>
- * The SceneManager to handle all scenes of a window instance.
+ * The SceneManager to handle all scenes of an Engine instance.
  * It contains a scene pool and a currently active scene.
  *
  * @author Juyas
