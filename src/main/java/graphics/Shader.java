@@ -299,6 +299,7 @@ public class Shader {
     public void uploadTexture(String varName, int slot) {
         int varLocation = getLocation(varName);
         attach(); // make sure the shader is being used
+        glActiveTexture(varLocation);
         glUniform1i(varLocation, slot);
     }
 

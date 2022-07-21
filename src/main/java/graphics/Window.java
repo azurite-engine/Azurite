@@ -123,6 +123,16 @@ public class Window {
         if (glfwWindow == 0)
             throw new IllegalStateException("[FATAL] Failed to create window.");
 
+        // Make the OpenGL context current
+        glfwMakeContextCurrent(glfwWindow);
+
+        // Enable V-Sync
+        glfwSwapInterval(1);
+
+        // Center the window
+        glfwSetWindowPos(glfwWindow, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
+        GL.createCapabilities();
+
         // Set up callback
         glfwSetFramebufferSizeCallback(glfwWindow, (w, newWidth, newHeight) -> {
             if (newWidth == 0 || newHeight == 0) {
@@ -141,16 +151,6 @@ public class Window {
 
         Mouse.setupCallbacks();
         Keyboard.setupCallbacks();
-
-        // Make the OpenGL context current
-        glfwMakeContextCurrent(glfwWindow);
-
-        // Enable V-Sync
-        glfwSwapInterval(1);
-
-        // Center the window
-        glfwSetWindowPos(glfwWindow, (videoMode.width() - width) / 2, (videoMode.height() - height) / 2);
-        GL.createCapabilities();
 
     }
 
