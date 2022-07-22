@@ -64,11 +64,12 @@
 public class Main extends Scene {
 	public static void main(String[] args) {
 		Engine.init(1920, 1080, "Azurite Engine Demo In Comment", 1.0f);
-		Engine.scenes().switchScene(new Main(), true);
+		Engine.scenes().switchScene(new Main());
 		Engine.showWindow();
 	}
 
 	public void awake() {
+		Graphics.setDefaultBackground(Color.BLACK);
 		camera = new Camera();
 		...
 	}
@@ -87,11 +88,12 @@ public class Main extends Scene {
 
 	public static void main(String[] args) {
 		Engine.init(1920, 1080, "Azurite Engine Demo In Comment", 1.0f);
-		Engine.scenes().switchScene(new Main(), true);
+		Engine.scenes().switchScene(new Main());
 		Engine.showWindow();
 	}
 
 	public void awake() {
+		Graphics.setDefaultBackground(Color.BLACK);
 		camera = new Camera();
 
 		player = new GameObject();
