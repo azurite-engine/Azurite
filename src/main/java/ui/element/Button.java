@@ -55,7 +55,9 @@ public class Button extends RenderableElement implements TextHolder {
         label.setPosition(getX() + frame.getWidth() / 2, getY() + frame.getHeight() / 2 - label.getHeight() / 2);
 
         if (isMouseOnThis()) {
-            this.setColor(tintColor);
+            if (tintColor != null) {
+                this.setColor(tintColor);
+            }
         } else {
             this.setColor(defaultColor);
         }
