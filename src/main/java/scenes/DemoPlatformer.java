@@ -34,7 +34,7 @@ public class DemoPlatformer extends Scene {
 
     public static void main(String[] args) {
         Engine.init(1920, 1080, "Azurite Engine Demo 2", 0.4f);
-        Engine.scenes().switchScene(new DemoPlatformer(), true);
+        Engine.scenes().switchScene(new DemoPlatformer());
         Engine.showWindow();
     }
 
