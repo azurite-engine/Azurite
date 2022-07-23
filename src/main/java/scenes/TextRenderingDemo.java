@@ -20,7 +20,7 @@ public class TextRenderingDemo extends Scene {
 
     public static void main(String[] args) {
         Engine.init(900, 600, "Azurite Font Rendering Demo", 0, true);
-        Engine.scenes().switchScene(new TextRenderingDemo(), true);
+        Engine.scenes().switchScene(new TextRenderingDemo());
         Engine.showWindow();
     }
 

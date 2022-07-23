@@ -36,7 +36,7 @@ public class DemoTopDown extends Scene {
 
     public static void main(String[] args) {
         Engine.init(1280, 720, "Azurite Engine Demo 1", 0.01f, true);
-        Engine.scenes().switchScene(new DemoTopDown(), true);
+        Engine.scenes().switchScene(new DemoTopDown());
 //        Engine.window().setIcon("src/assets/images/icon.png");
         Engine.showWindow();
     }
