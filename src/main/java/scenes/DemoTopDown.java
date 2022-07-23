@@ -3,18 +3,17 @@ package scenes;
 import ecs.*;
 import graphics.Camera;
 import graphics.Color;
+import graphics.Spritesheet;
 import graphics.Texture;
-import input.Keyboard;
-import input.Keys;
-import org.joml.Vector2f;
-import physics.collision.Shapes;
 import graphics.postprocess.BloomEffect;
 import graphics.postprocess.PostProcessStep;
+import org.joml.Vector2f;
+import physics.collision.Shapes;
 import scene.Scene;
-import graphics.Spritesheet;
 import tiles.Tilesystem;
 import util.Assets;
 import util.Engine;
+import util.Log;
 import util.MathUtils;
 
 import java.util.Arrays;
@@ -35,6 +34,7 @@ public class DemoTopDown extends Scene {
     boolean flip = true;
 
     public static void main(String[] args) {
+        Log.setLogLevel(Log.ALL);
         Engine.init(1280, 720, "Azurite Engine Demo 1", 0.01f, true);
         Engine.scenes().switchScene(new DemoTopDown());
 //        Engine.window().setIcon("src/assets/images/icon.png");

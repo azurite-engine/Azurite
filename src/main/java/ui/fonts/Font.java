@@ -7,6 +7,7 @@ package ui.fonts;
 
 import graphics.Texture;
 import org.lwjgl.BufferUtils;
+import util.Log;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -24,6 +25,7 @@ import static java.awt.Font.*;
 /**
  * This class contains a font texture for drawing text.
  * A lot of credit for the base of this file goes to @SilverTiger on GitHub, his base has been heavily modified to work in Azurite.
+ *
  * @author Heiko Brumme (SilverTiger) {@link <a href="https://github.com/SilverTiger/lwjgl3-tutorial">...</a>}
  * @author Asher Haun
  */
@@ -85,7 +87,6 @@ public class Font {
      *
      * @param in   The input stream
      * @param size Font size
-     *
      * @throws FontFormatException if fontFile does not contain the required
      *                             font tables for the specified format
      * @throws IOException         If font can't be read
@@ -100,7 +101,6 @@ public class Font {
      * @param in        The input stream
      * @param size      Font size
      * @param antiAlias Whether the font should be anti-aliased or not
-     *
      * @throws FontFormatException if fontFile does not contain the required
      *                             font tables for the specified format
      * @throws IOException         If font can't be read
@@ -122,7 +122,7 @@ public class Font {
             java.awt.Font fontRaw = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, new File(path));
             f = fontRaw.deriveFont(size);
         } catch (Exception e) {
-            System.out.println("[WARNING] Could not load font " + path + ", using default monospaced font.");
+            Log.warn("could not load font " + path + ", using default monospaced font.", 1);
             e.printStackTrace();
         }
 
@@ -155,7 +155,6 @@ public class Font {
      *
      * @param font      The AWT font
      * @param antiAlias Whether the font should be anti-aliased or not
-     *
      * @return Font texture
      */
     private Texture createFontTexture(java.awt.Font font, boolean antiAlias) {
@@ -223,7 +222,7 @@ public class Font {
         return finalTexture;
     }
 
-    private Texture bufferedImageToTexture (BufferedImage image) {
+    private Texture bufferedImageToTexture(BufferedImage image) {
         // Flip image Horizontally
         AffineTransform transform = AffineTransform.getScaleInstance(1f, -1f);
         transform.translate(0, -image.getHeight());
@@ -240,8 +239,8 @@ public class Font {
 
         // Load the pixel data into a ByteBuffer
         ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * 4);
-        for (int i = 0; i < height; i ++) {
-            for (int j = 0; j < width; j ++) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 // Pixel as RGBA: 0xAARRGGBB
                 int pixel = pixels[i * width + j];
                 // Red component 0xAARRGGBB >> 16 = 0x0000AARR
@@ -266,7 +265,6 @@ public class Font {
      * @param font      The AWT font
      * @param c         The char
      * @param antiAlias Whether the char should be anti-aliased or not
-     *
      * @return Char image
      */
     private BufferedImage createCharImage(java.awt.Font font, char c, boolean antiAlias) {
@@ -330,15 +328,15 @@ public class Font {
         return height;
     }
 
-    public int getFontHeight () {
+    public int getFontHeight() {
         return fontHeight;
     }
 
-    public Map<Character, Glyph> getGlyphs () {
+    public Map<Character, Glyph> getGlyphs() {
         return glyphs;
     }
 
-    public Texture getTexture () {
+    public Texture getTexture() {
         return texture;
     }
 }

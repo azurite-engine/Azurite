@@ -8,6 +8,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.joml.Vector4f;
 import org.lwjgl.BufferUtils;
+import util.Log;
 
 import java.nio.IntBuffer;
 import java.util.ArrayList;
@@ -19,12 +20,11 @@ import static org.lwjgl.opengl.GL20.glVertexAttribPointer;
 import static org.lwjgl.opengl.GL30.*;
 
 /**
- * 
  * <p>
- *     A render batch is a collection of elements that are "batched" together into
- *     a single object. This objects conglomerates the vertex data associated with
- *     a specified primitive and prepares it to be rendered by it's associated
- *     renderer. The pipeline of a {@code RenderBatch} object is as follows:
+ * A render batch is a collection of elements that are "batched" together into
+ * a single object. This objects conglomerates the vertex data associated with
+ * a specified primitive and prepares it to be rendered by it's associated
+ * renderer. The pipeline of a {@code RenderBatch} object is as follows:
  *     <ol>
  *         <li>
  *             The {@code RenderBatch} class is extended by another class intended
@@ -226,8 +226,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     }
 
     /**
-     * @USELESS
-     * Unbinds the vertex array and all the textures
+     * @USELESS Unbinds the vertex array and all the textures
      */
     public void unbind() {
         for (Texture texture : textures)
@@ -252,7 +251,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
     public int getVertexCount() {
         // Safety check
         if (dataOffset % vertexCount != 0)
-            System.err.println("A Renderer Seems to not have the correct amount of data!!!");
+            Log.warn("a renderer seems to not have the correct amount of data!!!", 2);
         return (dataOffset * primitive.elementCount) / (vertexCount * primitive.vertexCount);
     }
 
@@ -292,6 +291,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     /**
      * Push a float to the data array
+     *
      * @param f the value
      */
     public void pushFloat(float f) {
@@ -301,6 +301,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     /**
      * Push an int to the data array
+     *
      * @param i the value
      */
     public void pushInt(int i) {
@@ -310,6 +311,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     /**
      * Push two floats to the data array
+     *
      * @param x x value
      * @param y y value
      */
@@ -321,6 +323,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     /**
      * Push two floats to the data array
+     *
      * @param v the 2d vector
      */
     public void pushVec2(Vector2f v) {
@@ -331,6 +334,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     /**
      * Push three floats to the data array
+     *
      * @param x x value
      * @param y y value
      * @param z z value
@@ -344,6 +348,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     /**
      * Push three floats to the data array
+     *
      * @param v the 3d vector
      */
     public void pushVec3(Vector3f v) {
@@ -355,6 +360,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     /**
      * Push four floats to the data array
+     *
      * @param x x value
      * @param y y value
      * @param z z value
@@ -370,6 +376,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     /**
      * Push four floats to the data array
+     *
      * @param v the 4d vector
      */
     public void pushVec4(Vector4f v) {
@@ -382,6 +389,7 @@ public class RenderBatch implements Comparable<RenderBatch> {
 
     /**
      * Push four floats to the data array
+     *
      * @param c the color
      */
     public void pushColor(Color c) {

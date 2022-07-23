@@ -1,24 +1,22 @@
 package scenes;
 
-import ecs.GameObject;
-import ecs.SpriteRenderer;
-
 import graphics.Camera;
 import graphics.Color;
 import graphics.Window;
 import input.Mouse;
 import org.joml.Vector2f;
-import ui.Text;
-
 import scene.Scene;
+import ui.Text;
 import ui.fonts.Font;
 import util.Engine;
+import util.Log;
 
 import static graphics.Graphics.setDefaultBackground;
 
 public class TextRenderingDemo extends Scene {
 
     public static void main(String[] args) {
+        Log.setLogLevel(Log.ALL);
         Engine.init(900, 600, "Azurite Font Rendering Demo", 0, true);
         Engine.scenes().switchScene(new TextRenderingDemo());
         Engine.showWindow();

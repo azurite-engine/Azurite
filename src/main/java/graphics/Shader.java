@@ -2,6 +2,7 @@ package graphics;
 
 import org.joml.*;
 import org.lwjgl.BufferUtils;
+import util.Log;
 
 import java.io.IOException;
 import java.nio.FloatBuffer;
@@ -104,8 +105,8 @@ public class Shader {
         int success = glGetShaderi(vertexID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
             int length = glGetShaderi(vertexID, GL_INFO_LOG_LENGTH);
-            System.out.println("[FATAL] Vertex shader compilation failed. " + filepath + "\n\t");
-            System.out.println(glGetShaderInfoLog(vertexID, length));
+            Log.fatal("vertex shader compilation failed. " + filepath + "\n\t", 2);
+            Log.fatal(glGetShaderInfoLog(vertexID, length), false);
             assert false : "";
         }
 
@@ -119,8 +120,8 @@ public class Shader {
         success = glGetShaderi(fragmentID, GL_COMPILE_STATUS);
         if (success == GL_FALSE) {
             int length = glGetShaderi(fragmentID, GL_INFO_LOG_LENGTH);
-            System.out.println("[FATAL] Fragment shader compilation failed. " + filepath + "\n\t");
-            System.out.println(glGetShaderInfoLog(fragmentID, length));
+            Log.fatal("fragment shader compilation failed. " + filepath + "\n\t", 2);
+            Log.fatal(glGetShaderInfoLog(fragmentID, length), false);
             assert false : "";
         }
 
@@ -133,8 +134,8 @@ public class Shader {
         success = glGetProgrami(shaderProgramID, GL_LINK_STATUS);
         if (success == GL_FALSE) {
             int length = glGetProgrami(shaderProgramID, GL_INFO_LOG_LENGTH);
-            System.out.println("[FATAL] Shader linking failed. " + filepath + "\n\t");
-            System.out.println(glGetProgramInfoLog(shaderProgramID, length));
+            Log.fatal("shader linking failed. " + filepath + "\n\t", 2);
+            Log.fatal(glGetProgramInfoLog(shaderProgramID, length), false);
             assert false : "";
         }
     }

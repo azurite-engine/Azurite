@@ -4,30 +4,28 @@ import ecs.GameObject;
 import ecs.SpriteRenderer;
 import graphics.*;
 import org.joml.Vector2f;
-
 import org.lwjgl.glfw.GLFW;
 import scene.Scene;
 import ui.EventHandler;
 import ui.Frame;
 import ui.Layer;
 import ui.Text;
-
 import ui.element.Button;
 import ui.element.CheckBox;
 import ui.element.CheckBoxGroup;
 import util.Engine;
-import util.Logger;
+import util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-
 
 import static graphics.Graphics.setDefaultBackground;
 
 public class UIRenderingDemo extends Scene {
 
     public static void main(String[] args) {
+        Log.setLogLevel(Log.ALL);
         Engine.init(900, 600, "Azurite UI Rendering Demo", 1, true);
         Engine.scenes().switchScene(new UIRenderingDemo());
         Engine.showWindow();
@@ -99,23 +97,23 @@ public class UIRenderingDemo extends Scene {
         addUIElement(button);
 
         button.getEventHandler().registerListener(EventHandler.Event.MOUSE_CLICK, e -> {
-            Logger.logInfo("CLICKED! \n" + e.getElement().toString());
+            Log.p("CLICKED! \n" + e.getElement().toString());
         });
     }
 
-    public void update () {
+    public void update() {
         background.getComponent(SpriteRenderer.class).setSize(new Vector2f(Window.getWidth(), Window.getHeight()));
 
         String s = "";
         for (String i : radios.getSelected()) {
             s += i + ", ";
         }
-        Logger.logInfo(s);
+        //Log.p(s);
 
         for (String i : checks.getSelected()) {
             s += i + ", ";
         }
-        Logger.debugLog(s);
+        //Log.p(s);
 
     }
 }

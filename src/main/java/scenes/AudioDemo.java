@@ -8,6 +8,7 @@ import org.joml.Vector2f;
 import scene.Scene;
 import util.Assets;
 import util.Engine;
+import util.Log;
 
 import static graphics.Graphics.setDefaultBackground;
 
@@ -16,6 +17,7 @@ import static graphics.Graphics.setDefaultBackground;
  */
 public class AudioDemo extends Scene {
     public static void main(String[] args) {
+        Log.setLogLevel(Log.ALL);
         Engine.init(1080, 720, "Azurite Audio Demo", 0.01f);
         Engine.scenes().switchScene(new AudioDemo());
         Engine.showWindow();

@@ -1,19 +1,19 @@
 package scene;
 
 import ecs.GameObject;
-import ui.Element;
-import ui.RenderableElement;
-import ui.Text;
 import graphics.Camera;
 import graphics.Texture;
+import graphics.postprocess.ForwardToTexture;
+import graphics.postprocess.PostProcessStep;
 import graphics.renderer.*;
 import input.Keyboard;
 import org.lwjgl.glfw.GLFW;
 import physics.collision.Collider;
-import graphics.postprocess.ForwardToTexture;
-import graphics.postprocess.PostProcessStep;
+import ui.Element;
+import ui.RenderableElement;
+import ui.Text;
 import util.Engine;
-import util.Logger;
+import util.Log;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -117,6 +117,7 @@ public abstract class Scene {
      */
     public void activate() {
         this.active = true;
+        Log.debug("scene " + sceneId + " activated");
     }
 
     /**
@@ -126,6 +127,7 @@ public abstract class Scene {
      */
     public void deactivate() {
         this.active = false;
+        Log.debug("scene " + sceneId + " deactivated");
     }
 
     /**

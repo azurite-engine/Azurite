@@ -3,7 +3,6 @@ package ui;
 import graphics.Window;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWImage;
-import util.Logger;
 
 import java.util.HashMap;
 

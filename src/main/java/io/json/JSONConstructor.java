@@ -1,5 +1,7 @@
 package io.json;
 
+import util.Log;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -81,6 +83,7 @@ public class JSONConstructor {
                 }
             }
         } catch (Exception e) {
+            Log.fatal("Error while handling JSON conversion");
             e.printStackTrace();
         }
 
@@ -98,6 +101,6 @@ public class JSONConstructor {
     }
 
     public void print() {
-        System.out.println(serializedObject.getJSON());
+        Log.p(serializedObject.getJSON());
     }
 }

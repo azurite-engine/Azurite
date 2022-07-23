@@ -2,13 +2,12 @@ package graphics;
 
 import event.EventData;
 import event.Events;
+import util.Log;
 import util.specs.FramebufferSpec;
 import util.specs.TextureSpec;
-import static org.lwjgl.glfw.GLFW.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.lwjgl.BufferUtils;
 
 import static org.lwjgl.opengl.GL45.*;
 
@@ -21,7 +20,8 @@ import static org.lwjgl.opengl.GL45.*;
  * @author VoxelRifts
  */
 public class Framebuffer {
-    /**ß
+    /**
+     * ß
      * Static list maintaining all framebuffers so as to delete them all in the end
      */
     private static final List<Framebuffer> fbos = new ArrayList<>();
@@ -304,7 +304,7 @@ public class Framebuffer {
 
         // Check if the framebuffer is complete
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-            System.err.println("Incomplete Framebuffer :(");
+            Log.fatal("incomplete framebuffer :(");
             System.exit(-1);
         }
 

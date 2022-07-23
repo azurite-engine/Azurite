@@ -1,11 +1,14 @@
 package graphics.renderer;
 
-import graphics.*;
+import graphics.Framebuffer;
+import graphics.Primitive;
+import graphics.Shader;
+import graphics.ShaderDatatype;
 import org.joml.Vector2f;
 import ui.RenderableElement;
 import util.Assets;
 import util.Engine;
-import util.Logger;
+import util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +80,7 @@ public class UIRenderer extends Renderer {
             Vector2f scale = re.getRenderFrame().getScale();
 
             if (re.getParent() != null) {
-                Logger.logInfo("PARENT");
+                Log.info("PARENT");
                 pos.add(re.getParent().getX(), re.getParent().getY());
             }
 
