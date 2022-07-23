@@ -54,7 +54,7 @@ public class Log {
         if (loggingThread != null) return;
         loggingThread = new LoggingThread(path, logLevel);
         if (!loggingThread.init()) {
-            System.out.println("There is some fatal issue with the path \"" + path.toString() + "\"");
+            Log.fatal("There is some fatal issue with the path \"" + path.toString() + "\"", 2);
             return;
         }
         loggingThread.start();
@@ -267,8 +267,10 @@ public class Log {
      * @param e the exception causing the crash
      */
     public static void crash(Exception e) {
-        String line = "[CRASH] " + e.getMessage();
-        System.out.println(CL_RED + line);
+        String line = "[CRASH] {" + e.getStackTrace()[0] + "} " + e.getMessage();
+        if (e.getStackTrace().length >= 2)
+            line = "[CRASH] {" + e.getStackTrace()[e.getStackTrace().length-1] + " -> " + e.getStackTrace()[0] + "} " + e.getMessage();
+        println(-1, CL_RED + line);
         e.printStackTrace();
     }
 

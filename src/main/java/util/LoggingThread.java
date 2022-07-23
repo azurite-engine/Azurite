@@ -62,7 +62,7 @@ public class LoggingThread extends Thread {
                     }
                     fw.flush();
                 } catch (IOException e) {
-                    System.out.println("Exception in the logger... we are sorry, no logs for you.");
+                    Log.fatal("Exception in the logger... we are sorry, no logs for you.");
                     e.printStackTrace();
                 }
             }

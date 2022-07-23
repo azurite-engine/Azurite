@@ -111,7 +111,7 @@ public final class Engine {
             Log.startLogging(folderPath, logLevel);
             Log.info("log file record started");
         } catch (IOException e) {
-            System.out.println("There has been an error while starting to log");
+            Log.fatal("There has been an error while starting to log", 1);
             e.printStackTrace();
         }
     }
