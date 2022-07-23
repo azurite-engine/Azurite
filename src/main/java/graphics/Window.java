@@ -202,7 +202,7 @@ public class Window {
 
             glfwPollEvents();
 
-            if (!sleeping) {
+            if (!sleeping && currentScene().isActive()) {
                 Mouse.update();
                 sceneManager.update();
                 sceneManager.updateGameObjects();

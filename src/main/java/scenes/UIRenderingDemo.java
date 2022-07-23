@@ -26,7 +26,7 @@ public class UIRenderingDemo extends Scene {
 
     public static void main(String[] args) {
         Engine.init(900, 600, "Azurite UI Rendering Demo", 1, true);
-        Engine.scenes().switchScene(new UIRenderingDemo(), true);
+        Engine.scenes().switchScene(new UIRenderingDemo());
         Engine.showWindow();
     }
 

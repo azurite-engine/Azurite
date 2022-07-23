@@ -13,6 +13,7 @@ import physics.collision.Collider;
 import graphics.postprocess.ForwardToTexture;
 import graphics.postprocess.PostProcessStep;
 import util.Engine;
+import util.Logger;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -26,11 +27,12 @@ import java.util.List;
  * public class Main extends Scene {
  *     public static void main(String[] args) {
  *         Engine.init(1920, 1080, "Azurite Engine Demo In Comment", 1.0f);
- *         Engine.scenes().switchScene(new Main(), true);
+ *         Engine.scenes().switchScene(new Main());
  *         Engine.showWindow();
  *     }
  *
  *     public void awake() {
+ *         Graphics.setDefaultBackground(Color.BLACK);
  *         camera = new Camera();
  *         ...
  *     }
@@ -48,11 +50,12 @@ import java.util.List;
  *
  *     public static void main(String[] args) {
  *         Engine.init(1920, 1080, "Azurite Engine Demo In Comment", 1.0f);
- *         Engine.scenes().switchScene(new Main(), true);
+ *         Engine.scenes().switchScene(new Main());
  *         Engine.showWindow();
  *     }
  *
  *     public void awake() {
+ *         Graphics.setDefaultBackground(Color.BLACK);
  *         camera = new Camera();
  *
  *         player = new GameObject();
@@ -213,6 +216,7 @@ public abstract class Scene {
     }
 
     public void updateUI () {
+        // Logger.logInfo("There are " + texts.size() + " text elements.");
         for (Element e : uiElements) {
             e.update();
         }

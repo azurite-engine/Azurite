@@ -1,6 +1,7 @@
 package scene; 
 
 import graphics.Texture;
+import util.Logger;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -36,18 +37,13 @@ public class SceneManager {
      */
     public void enable() {
         this.enabled = true;
-        //init the currentScene if there is one
-        if (currentScene != null) {
-            currentScene.initRenderers();
-            currentScene.startUi();
-            currentScene.awake();
-        }
+        awaken(currentScene);
     }
 
     /**
      * The currently active scene.
      */
-    public Scene currentScene() {
+    public Scene currentScene() { 
         return currentScene;
     }
 
@@ -60,39 +56,28 @@ public class SceneManager {
      */
     public boolean addScene(Scene scene) {
         boolean add = scenePool.add(scene);
-        if (add && enabled) {
-            // a newly added scene is probably raw and uninitialized
-            scene.initRenderers();
-            scene.startUi();
-            scene.awake();
-        }
         return add;
-    }
-
-    public void updateUI() {
-        if (currentScene != null) {
-            currentScene.updateUI();
-            currentScene.textRender();
-        }
-    }
+    }    
 
     /**
      * Switches the current scene to a given one.
      *
      * @param scene        the scene to switch to
-     * @param addIfUnknown whether the scene should be added
-     *                     if the scene is currently unknown to the scene pool
      * @return true if the given scene is now the new current scene
      */
-    public boolean switchScene(Scene scene, boolean addIfUnknown) {
+    public boolean switchScene(Scene scene) {
+        boolean newScene = false;
+
         Optional<Scene> sceneOpt = scenePool.stream()
                 .filter(s -> s.sceneId() == scene.sceneId())
                 .findFirst();
-        if (!addIfUnknown) {
-            return sceneOpt.isPresent() && switchScene(sceneOpt.get());
-        } else if (!sceneOpt.isPresent()) {
-            return addScene(scene) && switchScene(scene);
-        } else return switchScene(scene);
+                
+        if (!sceneOpt.isPresent()) {
+            // Scene is not present in the scene pool
+            addScene(scene);
+            newScene = true;
+        }
+        return switchScene(scene, newScene);
     }
 
     /**
@@ -105,7 +90,7 @@ public class SceneManager {
         Optional<Scene> sceneOpt = scenePool.stream()
                 .filter(scene -> scene.sceneId() == id)
                 .findFirst();
-        return sceneOpt.isPresent() && switchScene(sceneOpt.get());
+        return sceneOpt.isPresent() && switchScene(sceneOpt.get(), false);
     }
 
     /**
@@ -136,6 +121,13 @@ public class SceneManager {
         }
     }
 
+    public void updateUI() {
+        if (currentScene != null) {
+            currentScene.updateUI();
+            currentScene.textRender();
+        }
+    }
+
     public void postProcess(Texture texture) {
         if (currentScene != null) {
             currentScene.postProcess(texture);
@@ -150,10 +142,15 @@ public class SceneManager {
 
     //below are internal methods
 
-
-    //internal method to switch scenes, should not be used from outside, since its completely unchecked
-    //will only result in false, if the input is null
-    private boolean switchScene(Scene newCurrent) {
+    private void awaken (Scene scene) {
+        if (enabled) {
+            scene.initRenderers();
+            scene.startUi();
+            scene.awake();
+        }
+    }
+    
+    private boolean switchScene (Scene newCurrent, boolean newScene) {
         if (newCurrent == null) return false;
         //we dont wanna call method if the current scene is already displayed
         //consider adding a debug, because usually the programming is aware of his scenes
@@ -163,8 +160,10 @@ public class SceneManager {
         if (currentScene != null) {
             currentScene.deactivate();
         }
+
         currentScene = newCurrent;
         currentScene.activate();
+        if (newScene) awaken(currentScene);
         return true;
     }
 

@@ -17,7 +17,7 @@ import static graphics.Graphics.setDefaultBackground;
 public class AudioDemo extends Scene {
     public static void main(String[] args) {
         Engine.init(1080, 720, "Azurite Audio Demo", 0.01f);
-        Engine.scenes().switchScene(new AudioDemo(), true);
+        Engine.scenes().switchScene(new AudioDemo());
         Engine.showWindow();
     }
 
