@@ -116,6 +116,8 @@ public class Assets {
 
     private static Spritesheet getSpritesheet(String path) {
         File file = new File(path);
+        if (!Assets.spritesheets.containsKey(file.getAbsolutePath()))
+            Log.fatal("tried to access spritesheet \"" + path + "\", but it does not exist or is not loaded, try using \"Assets.loadSpritesheet()\".");
         assert Assets.spritesheets.containsKey(file.getAbsolutePath()) : "[ERROR] Tried to access spritesheet \"" + path + "\", but it does not exist or is not loaded, try using \"Assets.loadSpritesheet()\".";
         return Assets.spritesheets.getOrDefault(file.getAbsolutePath(), null);
     }

@@ -5,6 +5,9 @@ import physics.collision.shape.Circle;
 import physics.collision.shape.ConvexPolygon;
 import physics.collision.shape.Quadrilateral;
 import physics.collision.shape.Triangle;
+import util.Log;
+
+import java.util.Arrays;
 
 /**
  * Util methods to create {@link physics.collision.shape.PrimitiveShape} on the fly.
@@ -59,7 +62,10 @@ public class Shapes {
      * @return a {@link ConvexPolygon} over all given points or null if the coordinates have a odd size
      */
     public static ConvexPolygon convexPolygon(float... coordPairs) {
-        if (coordPairs.length % 2 == 1 || coordPairs.length == 0) return null;
+        if (coordPairs.length % 2 == 1 || coordPairs.length == 0) {
+            Log.warn("polygon with incorrect input data not created " + Arrays.toString(coordPairs), 1);
+            return null;
+        }
         Vector2f[] coords = new Vector2f[coordPairs.length / 2];
         for (int i = 0; i < coords.length; i++)
             coords[i] = new Vector2f(coordPairs[i * 2], coordPairs[i * 2 + 1]);

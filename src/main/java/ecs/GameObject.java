@@ -44,6 +44,7 @@ public class GameObject {
      */
     public GameObject(String name, List<Component> componentList, Vector2f position, int zIndex) {
         this.name = name;
+        if (this.name == null) Log.warn("GameObject with a name that is null created", 1);
         this.components = new OrderPreservingList<>(componentList);
         this.position[0] = position.x;
         this.position[1] = position.y;
@@ -62,12 +63,13 @@ public class GameObject {
      */
     public GameObject(Scene scene, String name, Vector2f position, int zIndex) {
         this.name = name;
+        if (this.name == null) Log.warn("GameObject with a name that is null created", 1);
         this.components = new OrderPreservingList<Component>(new LinkedList<>());
         this.position[0] = position.x;
         this.position[1] = position.y;
         this.zIndex = zIndex;
-        this.parentScene = scene;
-        scene.addGameObjectToScene(this);
+        this.parentScene = scene == null ? Engine.window().currentScene() : scene;
+        this.parentScene.addGameObjectToScene(this);
     }
 
     /**
