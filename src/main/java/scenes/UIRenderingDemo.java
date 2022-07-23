@@ -25,6 +25,7 @@ import static graphics.Graphics.setDefaultBackground;
 public class UIRenderingDemo extends Scene {
 
     public static void main(String[] args) {
+        Log.setLogLevel(Log.ALL);
         Engine.init(900, 600, "Azurite UI Rendering Demo", 1, true);
         Engine.scenes().switchScene(new UIRenderingDemo());
         Engine.showWindow();
@@ -96,7 +97,7 @@ public class UIRenderingDemo extends Scene {
         addUIElement(button);
 
         button.getEventHandler().registerListener(EventHandler.Event.MOUSE_CLICK, e -> {
-            Log.info("CLICKED! \n" + e.getElement().toString());
+            Log.p("CLICKED! \n" + e.getElement().toString());
         });
     }
 
@@ -107,12 +108,12 @@ public class UIRenderingDemo extends Scene {
         for (String i : radios.getSelected()) {
             s += i + ", ";
         }
-        Log.info(s);
+        //Log.p(s);
 
         for (String i : checks.getSelected()) {
             s += i + ", ";
         }
-        Log.debug(s);
+        //Log.p(s);
 
     }
 }

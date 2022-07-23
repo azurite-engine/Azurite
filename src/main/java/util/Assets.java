@@ -32,7 +32,7 @@ public class Assets {
         if (shaders.containsKey(file.getAbsolutePath())) {
             return shaders.get(file.getAbsolutePath());
         }
-        Log.debug("unknown shader requested to load: \"" + path + "\"");
+        Log.debug("shader requested to load: \"" + path + "\"");
         Shader shader = new Shader(path);
         shader.compile();
         Log.debug("shader compilation successful");
@@ -64,7 +64,7 @@ public class Assets {
 
             dataFiles.put(file.getAbsolutePath(), data);
         } catch (FileNotFoundException e) {
-            Log.fatal("file not found: \"" + path + "\"");
+            Log.fatal("file not found: \"" + path + "\"", 1);
             e.printStackTrace();
         }
         return data;
@@ -81,7 +81,7 @@ public class Assets {
         if (textures.containsKey(file.getAbsolutePath())) {
             return textures.get(file.getAbsolutePath());
         }
-        Log.debug("unknown texture requested to load: \"" + path + "\"");
+        Log.debug("texture requested to load: \"" + path + "\"");
         Texture texture = new Texture(path);
         Log.debug("loading texture successfully");
         textures.put(file.getAbsolutePath(), texture);
@@ -93,7 +93,7 @@ public class Assets {
         if (audioBuffers.containsKey(file.getAbsolutePath())) {
             return audioBuffers.get(file.getAbsolutePath());
         }
-        Log.debug("unknown audiobuffer requested to load: \"" + path + "\"");
+        Log.debug("audiobuffer requested to load: \"" + path + "\"");
         AudioBuffer audioBuffer = new AudioBuffer(path);
         Log.debug("loading audiobuffer successfully");
         audioBuffers.put(file.getAbsolutePath(), audioBuffer);

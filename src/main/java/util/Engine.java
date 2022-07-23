@@ -62,7 +62,14 @@ public final class Engine {
     }
 
     public static void showWindow() {
-        Preconditions.nonNull("window", window()).showWindow();
+        try {
+
+            Preconditions.nonNull("window", window()).showWindow();
+        } catch (Exception e) {
+            Log.crash(e);
+            e.printStackTrace();
+            System.exit(-1);
+        }
     }
 
     public static SceneManager scenes() {
