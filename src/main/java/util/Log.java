@@ -1,7 +1,9 @@
 package util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
 
 /**
  * Logging utility to print colored and labeled errors with class references.
@@ -269,8 +271,13 @@ public class Log {
     public static void crash(Exception e) {
         String line = "[CRASH] {" + e.getStackTrace()[0] + "} " + e.getMessage();
         if (e.getStackTrace().length >= 2)
-            line = "[CRASH] {" + e.getStackTrace()[e.getStackTrace().length-1] + " -> " + e.getStackTrace()[0] + "} " + e.getMessage();
+            line = "[CRASH] {" + e.getStackTrace()[e.getStackTrace().length - 1] + " -> " + e.getStackTrace()[0] + "} " + e.getMessage();
         println(-1, CL_RED + line);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(bos);
+        e.printStackTrace(ps);
+        loggingThread.log(bos.toString(), -1);
+        loggingThread.save();
         e.printStackTrace();
     }
 

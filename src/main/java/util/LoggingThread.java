@@ -9,6 +9,7 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
+ *
  */
 public class LoggingThread extends Thread {
 
@@ -26,7 +27,7 @@ public class LoggingThread extends Thread {
 
     public LoggingThread(File path, int logLevel) {
         this.path = path;
-        String name = LOG_NAME + new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss.log").format(new Date());
+        String name = LOG_NAME + " " + new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss").format(new Date()) + ".log";
         this.target = new File(path, name);
         this.logLevel = Math.abs(logLevel) % 4;
         this.logQueue = new ConcurrentLinkedQueue<>();
@@ -46,7 +47,7 @@ public class LoggingThread extends Thread {
         logQueue.offer(log);
     }
 
-    private void save() {
+    protected void save() {
         //determine size of writing block and if writing is necessary
         int size = logQueue.size();
         if (size > 0) {
