@@ -3,12 +3,12 @@ package graphics;
 import audio.AudioMaster;
 import event.EventData;
 import event.Events;
+import graphics.postprocess.PostProcessing;
 import input.Keyboard;
 import input.Mouse;
 import org.lwjgl.glfw.GLFWImage;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
-import graphics.postprocess.PostProcessing;
 import scene.Scene;
 import scene.SceneManager;
 import util.Engine;
@@ -100,7 +100,7 @@ public class Window {
     }
 
     public Window(int pwidth, int pheight, String ptitle, float minSceneLighting,
-            boolean recalculateProjectionOnResize) {
+                  boolean recalculateProjectionOnResize) {
         this(pwidth, pheight, ptitle, false, minSceneLighting, recalculateProjectionOnResize);
     }
 
@@ -226,6 +226,10 @@ public class Window {
         glfwDestroyWindow(glfwWindow);
         glfwTerminate();
         glfwSetErrorCallback(null).free();
+
+        //stopping engine and all threads listening for the engine to run
+        Engine.getInstance().windowStopped();
+
     }
 
     public Scene currentScene() {

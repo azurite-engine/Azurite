@@ -1,10 +1,13 @@
-package util; 
+package util;
 
 import audio.AudioMaster;
 import graphics.Window;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import scene.SceneManager;
 import util.safety.Preconditions;
+
+import java.io.File;
+import java.io.IOException;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 
@@ -47,6 +50,13 @@ public final class Engine {
         return getInstance().running;
     }
 
+    /**
+     * Not meant to be called. Only used for {@link Window} to stop the engine.
+     */
+    public void windowStopped() {
+        this.running = false;
+    }
+
     public static Window window() {
         return getInstance().getWindow();
     }
@@ -71,8 +81,25 @@ public final class Engine {
 
         if (!glfwInit())
             throw new IllegalStateException("[FATAL] Failed to initialize GLFW.");
-      
+
         AudioMaster.get();
+    }
+
+    /**
+     * Enables a parallel thread saving the logging history every {@link LoggingThread#CYCLE} seconds
+     * to a file named after the calling datetime of this method into the specified folder.
+     * Everytime the instances shuts down ({@link Engine#isRunning()} is false), the file is closed and won't be touched again.
+     *
+     * @param folderPath the path of the folder to save the log files to
+     * @param logLevel   {@link Log#FATAL_ONLY}, {@link Log#WARNINGS}, {@link Log#NO_DEBUG}, {@link Log#ALL}
+     */
+    public static void enableLogFiles(File folderPath, int logLevel) {
+        try {
+            Log.startLogging(folderPath, logLevel);
+        } catch (IOException e) {
+            System.out.println("There has been an error while starting to log");
+            e.printStackTrace();
+        }
     }
 
     /**

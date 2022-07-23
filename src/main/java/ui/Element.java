@@ -1,11 +1,8 @@
 package ui;
 
-import ui.fonts.Font;
-import graphics.Color;
 import input.Mouse;
 import org.lwjgl.glfw.GLFW;
-
-import util.Logger;
+import ui.fonts.Font;
 import util.MathUtils;
 import util.Observable;
 
