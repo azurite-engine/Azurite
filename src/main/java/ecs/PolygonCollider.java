@@ -5,6 +5,10 @@ import physics.collision.CollisionInformation;
 import physics.collision.shape.PrimitiveShape;
 import util.MathUtils;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * A polygon collider for a {@link GameObject}.
  * Collision detection uses GJK in {@link MathUtils#gjksmCollision(PrimitiveShape, PrimitiveShape)}.
@@ -38,6 +42,8 @@ public class PolygonCollider extends Component implements Collider {
      * while it's not required to be present on the layer.
      */
     private short collisionMask;
+
+    private Set<String> tags;
 
     /**
      * @see Collider#passive()
@@ -106,7 +112,7 @@ public class PolygonCollider extends Component implements Collider {
 
     @Override
     public boolean canCollideWith(Collider other) {
-        return (this.collisionLayer & other.mask()) != 0 || (this.collisionMask & other.layers()) != 0;
+        return matchTags(other) && ((this.collisionLayer & other.mask()) != 0 || (this.collisionMask & other.layers()) != 0);
     }
 
     @Override
@@ -145,7 +151,42 @@ public class PolygonCollider extends Component implements Collider {
     }
 
     @Override
+    public void addTag(String tag) {
+        if (tags == null) tags = new HashSet<>();
+        tags.add(tag);
+    }
+
+    @Override
+    public void removeTag(String tag) {
+        tags.remove(tag);
+        if (tags.isEmpty()) tags = null;
+    }
+
+    @Override
+    public Set<String> tags() {
+        return Collections.unmodifiableSet(tags);
+    }
+
+    @Override
+    public boolean hasTags() {
+        return tags != null;
+    }
+
+    @Override
+    public boolean matchTags(Collider collider) {
+        //tagged with untagged cannot collide
+        if (hasTags() != collider.hasTags()) return false;
+        //if both are untagged, they can collide
+        if (!hasTags()) return true;
+        //check for tag set intersection
+        Set<String> tags2 = collider.tags();
+        return this.tags.stream().anyMatch(tags2::contains);
+    }
+
+    @Override
     public void update(float dt) {
         shape.setPosition(position());
     }
+
+
 }
