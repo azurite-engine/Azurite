@@ -72,6 +72,8 @@ public final class Engine {
     // Internal method called before any init
     private static void preInit() {
 
+        Log.debug("pre init of engine called");
+
         System.setProperty("java.awt.headless", "true");
 
         //ensure that the Engine is running on main thread
@@ -79,10 +81,14 @@ public final class Engine {
 
         GLFWErrorCallback.createPrint(System.err).set();
 
-        if (!glfwInit())
+        if (!glfwInit()) {
+            Log.fatal("failed to initialoze GLFW");
             throw new IllegalStateException("[FATAL] Failed to initialize GLFW.");
+        }
 
         AudioMaster.get();
+
+        Log.info("engine pre init complete");
     }
 
     /**
@@ -96,6 +102,7 @@ public final class Engine {
     public static void enableLogFiles(File folderPath, int logLevel) {
         try {
             Log.startLogging(folderPath, logLevel);
+            Log.info("log file record started");
         } catch (IOException e) {
             System.out.println("There has been an error while starting to log");
             e.printStackTrace();

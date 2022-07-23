@@ -1,6 +1,7 @@
-package scene; 
+package scene;
 
 import graphics.Texture;
+import util.Log;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -37,12 +38,13 @@ public class SceneManager {
     public void enable() {
         this.enabled = true;
         awaken(currentScene);
+        Log.info("enabled");
     }
 
     /**
      * The currently active scene.
      */
-    public Scene currentScene() { 
+    public Scene currentScene() {
         return currentScene;
     }
 
@@ -56,12 +58,12 @@ public class SceneManager {
     public boolean addScene(Scene scene) {
         boolean add = scenePool.add(scene);
         return add;
-    }    
+    }
 
     /**
      * Switches the current scene to a given one.
      *
-     * @param scene        the scene to switch to
+     * @param scene the scene to switch to
      * @return true if the given scene is now the new current scene
      */
     public boolean switchScene(Scene scene) {
@@ -70,7 +72,7 @@ public class SceneManager {
         Optional<Scene> sceneOpt = scenePool.stream()
                 .filter(s -> s.sceneId() == scene.sceneId())
                 .findFirst();
-                
+
         if (!sceneOpt.isPresent()) {
             // Scene is not present in the scene pool
             addScene(scene);
@@ -141,15 +143,15 @@ public class SceneManager {
 
     //below are internal methods
 
-    private void awaken (Scene scene) {
+    private void awaken(Scene scene) {
         if (enabled) {
             scene.initRenderers();
             scene.startUi();
             scene.awake();
         }
     }
-    
-    private boolean switchScene (Scene newCurrent, boolean newScene) {
+
+    private boolean switchScene(Scene newCurrent, boolean newScene) {
         if (newCurrent == null) return false;
         //we dont wanna call method if the current scene is already displayed
         //consider adding a debug, because usually the programming is aware of his scenes
@@ -163,6 +165,7 @@ public class SceneManager {
         currentScene = newCurrent;
         currentScene.activate();
         if (newScene) awaken(currentScene);
+        Log.info("switched to new scene (id: " + newCurrent.sceneId() + ")");
         return true;
     }
 

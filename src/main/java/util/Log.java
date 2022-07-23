@@ -5,6 +5,13 @@ import java.io.IOException;
 
 /**
  * Logging utility to print colored and labeled errors with class references.
+ * Always call the methods of this class directly and do not nest it inside other functions,
+ * because it will mess up the stacktrace and would therefore display a wrong source.<br>
+ * <u>Logging modes:</u> <br>
+ * - FATAL -> only fatal errors and major problems are reported; this is the minimal setting <br>
+ * - WARNINGS -> includes fatal errors and minor warnings; useful for detecting common issues <br>
+ * - NO_DEBUG -> displays all information except for hard debug logs; for integrity checks <br>
+ * - ALL -> shows all logs including hard debug for a detailed overview over vital systems <br>
  */
 public class Log {
 
@@ -29,6 +36,14 @@ public class Log {
         return Thread.currentThread().getStackTrace()[3];
     }
 
+    /**
+     * Starts a thread for saving the log into a file. the saved log may have a different logging level than the printed one.
+     *
+     * @param path     the folder path for the log file to be saved to
+     * @param logLevel the logging level for the saved file
+     * @throws IOException if any issue happens during the creation and saving of the log file
+     * @see Engine#enableLogFiles(File, int)
+     */
     public synchronized static void startLogging(File path, int logLevel) throws IOException {
         if (loggingThread != null) return;
         loggingThread = new LoggingThread(path, logLevel);

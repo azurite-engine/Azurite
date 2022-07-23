@@ -1,5 +1,7 @@
 package util.safety;
 
+import util.Log;
+
 /**
  * @author Juyas
  * @version 18.06.2021
@@ -16,8 +18,10 @@ public final class Preconditions {
      * because only with this argument, its guaranteed that the main thread is actually is the first.
      */
     public static void ensureMainThread(String location) {
-        if (Thread.currentThread().getId() != mainThreadID)
+        if (Thread.currentThread().getId() != mainThreadID) {
+            Log.fatal("the main thread is required to run this engine");
             throw new IllegalThreadStateException(location + ": This code is supposed to run in main thread.");
+        }
     }
 
     /**
