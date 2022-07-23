@@ -34,7 +34,11 @@ public class LoggingThread extends Thread {
     }
 
     public boolean init() throws IOException {
-        if (!path.exists()) if (path.mkdirs()) return target.createNewFile();
+        if (!path.exists()) {
+            if (path.mkdirs())
+                return target.createNewFile();
+        }
+        else return target.createNewFile();
         return false;
     }
 

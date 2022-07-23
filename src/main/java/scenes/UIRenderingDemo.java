@@ -16,7 +16,6 @@ import ui.element.CheckBoxGroup;
 import util.Engine;
 import util.Log;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -27,10 +26,9 @@ public class UIRenderingDemo extends Scene {
 
     public static void main(String[] args) {
         Log.setLogLevel(Log.ALL);
-        Engine.enableLogFiles(new File("T:/logs/"), Log.ALL);
         Engine.init(900, 600, "Azurite UI Rendering Demo", 1, true);
-        Engine.showWindow();
         Engine.scenes().switchScene(new UIRenderingDemo());
+        Engine.showWindow();
     }
 
     GameObject background;
