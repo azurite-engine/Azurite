@@ -57,6 +57,16 @@ public final class Engine {
         this.running = false;
     }
 
+    /**
+     * Cuts off the engine and exits out of the program immediately with saving the logs.
+     *
+     * @param code the exit code
+     */
+    public void interrupt(int code) {
+        windowStopped();
+        System.exit(code);
+    }
+
     public static Window window() {
         return getInstance().getWindow();
     }

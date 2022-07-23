@@ -9,9 +9,6 @@ import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * @author Juyas
- * @version 23.07.2022
- * @since 23.07.2022
  */
 public class LoggingThread extends Thread {
 
@@ -49,29 +46,38 @@ public class LoggingThread extends Thread {
         logQueue.offer(log);
     }
 
-    @Override
-    public void run() {
-        while (Engine.isRunning()) {
-            //determine size of writing block and if writing is necessary
-            int size = logQueue.size();
-            if (size > 0) {
-                try (FileWriter fw = new FileWriter(target, true)) {
-                    //write the set amount of lines
-                    for (int i = 0; i < size; i++) {
-                        fw.write(logQueue.poll() + "\n");
-                    }
-                    fw.flush();
-                } catch (IOException e) {
-                    Log.fatal("Exception in the logger... we are sorry, no logs for you.");
-                    e.printStackTrace();
+    private void save() {
+        //determine size of writing block and if writing is necessary
+        int size = logQueue.size();
+        if (size > 0) {
+            try (FileWriter fw = new FileWriter(target, true)) {
+                //write the set amount of lines
+                for (int i = 0; i < size; i++) {
+                    fw.write(logQueue.poll() + "\n");
                 }
-            }
-            try {
-                Thread.sleep(1000L * CYCLE);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+                fw.flush();
+            } catch (IOException e) {
+                Log.fatal("Exception in the logger... we are sorry, no logs for you.");
+                e.printStackTrace();
             }
         }
     }
 
+    @Override
+    public void run() {
+        int c;
+        while (Engine.isRunning()) {
+            c = 0;
+            while (Engine.isRunning() && c < CYCLE) {
+                try {
+                    Thread.sleep(1000L);
+                } catch (InterruptedException e) {
+                }
+                c++;
+            }
+            save();
+        }
+    }
+
 }
+

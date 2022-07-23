@@ -4,6 +4,7 @@ import org.joml.Vector2f;
 import physics.collision.Collider;
 import scene.Scene;
 import util.Engine;
+import util.Log;
 import util.OrderPreservingList;
 
 import java.util.ArrayList;
@@ -170,7 +171,7 @@ public class GameObject {
                 try {
                     return componentClass.cast(c);
                 } catch (ClassCastException e) {
-                    System.err.println("[ERROR] Failed to cast component.");
+                    Log.fatal("failed to cast component to " + componentClass.getName());
                     e.printStackTrace();
                 }
             }
@@ -192,7 +193,7 @@ public class GameObject {
                     T cast = componentClass.cast(c);
                     comps.add(cast);
                 } catch (ClassCastException e) {
-                    System.err.println("[ERROR] Failed to cast component.");
+                    Log.fatal("failed to cast component to " + componentClass.getName());
                     e.printStackTrace();
                 }
             }
