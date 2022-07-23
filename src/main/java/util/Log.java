@@ -100,7 +100,8 @@ public class Log {
     private static void println(int level, String line) {
         if (logLevel >= level)
             System.out.println(line);
-        loggingThread.log(line, level);
+        if (loggingThread != null)
+            loggingThread.log(line, level);
     }
 
 }

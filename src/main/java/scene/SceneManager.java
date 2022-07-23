@@ -1,7 +1,6 @@
 package scene; 
 
 import graphics.Texture;
-import util.Logger;
 
 import java.util.HashSet;
 import java.util.Optional;
