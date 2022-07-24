@@ -37,7 +37,7 @@ public class Tilesystem {
         this.tileHeight = height;
 
         // Extract XML data
-        XMLElement root = XML.parse(Assets.getDataFile(tmxFile));
+        XMLElement root = XML.parse(Assets.getDataFile(tmxFile).array());
 
         // Determine number of tiles on X and Y axis'
         int xTiles = Integer.parseInt(root.getAttributes().get("width"));
@@ -134,7 +134,7 @@ class Tileset {
         this.source = source;
 
         // Parse the .tsx file to extract the spritesheet data and texture path
-        XMLElement tsRoot = XML.parse(Assets.getDataFile(this.source.toString()));
+        XMLElement tsRoot = XML.parse(Assets.getDataFile(this.source.toString()).array());
 
         int tileWidth = Integer.parseInt(tsRoot.getAttributes().get("tilewidth"));
         int tileHeight = Integer.parseInt(tsRoot.getAttributes().get("tileheight"));
