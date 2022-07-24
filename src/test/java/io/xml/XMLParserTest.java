@@ -24,27 +24,32 @@ public class XMLParserTest {
 
     @Test
     public void parse() {
+        headerless1 = strip(headerless1);
         XMLElement element = XML.parse(headerless1);
-        Assert.assertEquals(headerless1, element.toString(true));
+        Assert.assertEquals(headerless1, strip(element.toString(true)));
         element = XML.parse(header1);
-        Assert.assertEquals(headerless1, element.toString(true));
+        Assert.assertEquals(headerless1, strip(element.toString(true)));
         element = XML.parse(header2);
-        Assert.assertEquals(headerless1, element.toString(true));
+        Assert.assertEquals(headerless1, strip(element.toString(true)));
 
         element = XML.parse(headerless1.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
-        Assert.assertEquals(headerless1, element.toString(true));
+        Assert.assertEquals(headerless1, strip(element.toString(true)));
         element = XML.parse(header1.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
-        Assert.assertEquals(headerless1, element.toString(true));
+        Assert.assertEquals(headerless1, strip(element.toString(true)));
         element = XML.parse(header2.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
-        Assert.assertEquals(headerless1, element.toString(true));
+        Assert.assertEquals(headerless1, strip(element.toString(true)));
 
         element = XML.parse(headerless1.getBytes(StandardCharsets.UTF_8));
-        Assert.assertEquals(headerless1, element.toString(true));
+        Assert.assertEquals(headerless1, strip(element.toString(true)));
         element = XML.parse(header1.getBytes(StandardCharsets.UTF_8));
-        Assert.assertEquals(headerless1, element.toString(true));
+        Assert.assertEquals(headerless1, strip(element.toString(true)));
         element = XML.parse(header2.getBytes(StandardCharsets.US_ASCII));
-        Assert.assertEquals(headerless1, element.toString(true));
+        Assert.assertEquals(headerless1, strip(element.toString(true)));
 
+    }
+
+    private static String strip(String s) {
+        return s.replaceAll("\n", "").replaceAll("\t", "");
     }
 
     @Test

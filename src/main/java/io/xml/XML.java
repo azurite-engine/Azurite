@@ -169,7 +169,7 @@ public class XML {
                     }
                     break;
                 case SLASH:
-                    if (state.equals("value") || state.equals("blockvalue"))
+                    if (state.equals("value") || state.equals("blockvalue") || state.equals("comment"))
                         valueBuilder.append(tokens.get(i).getValue());
                     else if (state.equals("tag") || state.equals("endtag")) state = "slash";
                     break;
@@ -207,7 +207,8 @@ public class XML {
                         lastAttrName = null;
                         valueBuilder = new StringBuilder();
                         state = "tag";
-                    }
+                    } else if (state.equals("comment") || state.equals("blockvalue"))
+                        valueBuilder.append(tokens.get(i).getValue());
                     break;
                 case OPEN_COMMENT:
                     if (state.equals("opentag"))
@@ -222,7 +223,7 @@ public class XML {
                         //if there is the second tag, the comment starts
                     else if (state.equals("commenttag")) {
                         state = "comment";
-                    } else valueBuilder.append(tokens.get(i).getValue());
+                    } else if (!state.equals("comment")) valueBuilder.append(tokens.get(i).getValue());
                     break;
                 case IDENTIFIER:
                     if (state.equals("opentag")) {
