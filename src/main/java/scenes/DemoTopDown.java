@@ -7,6 +7,9 @@ import graphics.Spritesheet;
 import graphics.Texture;
 import graphics.postprocess.BloomEffect;
 import graphics.postprocess.PostProcessStep;
+import io.bin.BinaryIO;
+import io.xml.XML;
+import io.xml.XMLElement;
 import org.joml.Vector2f;
 import physics.collision.Shapes;
 import scene.Scene;
@@ -16,6 +19,8 @@ import util.Engine;
 import util.Log;
 import util.MathUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 import static graphics.Graphics.setDefaultBackground;
@@ -38,6 +43,12 @@ public class DemoTopDown extends Scene {
         Engine.init(1280, 720, "Azurite Engine Demo 1", 0.01f, true);
         Engine.scenes().switchScene(new DemoTopDown());
 //        Engine.window().setIcon("src/assets/images/icon.png");
+        try {
+            XMLElement parse = XML.parse(BinaryIO.readData(new File("T:/de_DE.xml")).array());
+            System.out.println(parse);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Engine.showWindow();
     }
 
@@ -95,11 +106,11 @@ public class DemoTopDown extends Scene {
 
         //Tween demo. You can remove the if statement for endless movement back and forth between these tweens.
         //Position is a primitive in a GameObject so to change position by tweening you have to use more logic
-        if(!booper.getComponent(Tween.class).tweenFinishedAll()) {
-            booper.getComponent(Tween.class).setUpTweenPosition( new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), new Vector2f(800, 600), 2, Tween.TweenMode.EASING_IN);
-            booper.getComponent(Tween.class).setUpTweenPosition( new Vector2f(800, 600), new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), 2, Tween.TweenMode.EASING_OUT);
-            booper.getComponent(Tween.class).setUpTweenPosition( new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), new Vector2f(800, 600), 1, Tween.TweenMode.NO_EASING);
-            booper.getComponent(Tween.class).setUpTweenPosition( new Vector2f(800, 600), new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), 1, Tween.TweenMode.EASING_IN_OUT);
+        if (!booper.getComponent(Tween.class).tweenFinishedAll()) {
+            booper.getComponent(Tween.class).setUpTweenPosition(new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), new Vector2f(800, 600), 2, Tween.TweenMode.EASING_IN);
+            booper.getComponent(Tween.class).setUpTweenPosition(new Vector2f(800, 600), new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), 2, Tween.TweenMode.EASING_OUT);
+            booper.getComponent(Tween.class).setUpTweenPosition(new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), new Vector2f(800, 600), 1, Tween.TweenMode.NO_EASING);
+            booper.getComponent(Tween.class).setUpTweenPosition(new Vector2f(800, 600), new Vector2f(booper.getPositionData()[0], booper.getPositionData()[1]), 1, Tween.TweenMode.EASING_IN_OUT);
 
             booper.getComponent(Tween.class).play();
         }
@@ -109,6 +120,6 @@ public class DemoTopDown extends Scene {
 
     @Override
     public void postProcess(Texture texture) {
-       bloom.apply(texture);
+        bloom.apply(texture);
     }
 }

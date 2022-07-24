@@ -13,7 +13,7 @@ import static io.xml.XMLTokenType.*;
  * @version 24.07.2022
  * @since 24.07.2022
  */
-public class XMLParser {
+public class XML {
 
     protected static Charset readHeader(byte[] input) {
         String data = new String(input, StandardCharsets.UTF_8);
@@ -129,7 +129,7 @@ public class XMLParser {
     public static XMLElement parse(String input) {
         List<XMLToken> tokens = tokenize(input);
         Pair<XMLElement, Integer> parse = parse(tokens, 0);
-        return parse != null ? parse.getLeft() : null;
+        return parse.getLeft();
     }
 
     public static XMLElement parse(byte[] input, Charset charset) {
