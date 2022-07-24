@@ -5,6 +5,7 @@ import ecs.SpriteRenderer;
 import graphics.Spritesheet;
 import graphics.Texture;
 import io.xml.XMLElement;
+import io.xml.XMLParser;
 import org.joml.Vector2f;
 import util.Assets;
 import util.MathUtils;
@@ -13,8 +14,6 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-
-import static io.FileFormats.XML;
 
 /**
  * The Tilesystem class loads a .tmx file (XML file format for the Tiled map editor) and generates a 2D array of GameObjects with SpriteRenderers corresponding to the texture determined by the .tmx file.
@@ -38,7 +37,7 @@ public class Tilesystem {
         this.tileHeight = height;
 
         // Extract XML data
-        XMLElement root = XML.parse(Assets.getDataFile(tmxFile));
+        XMLElement root = XMLParser.parse(Assets.getDataFile(tmxFile));
 
         // Determine number of tiles on X and Y axis'
         int xTiles = Integer.parseInt(root.getAttributes().get("width"));
@@ -135,7 +134,7 @@ class Tileset {
         this.source = source;
 
         // Parse the .tsx file to extract the spritesheet data and texture path
-        XMLElement tsRoot = XML.parse(Assets.getDataFile(this.source.toString()));
+        XMLElement tsRoot = XMLParser.parse(Assets.getDataFile(this.source.toString()));
 
         int tileWidth = Integer.parseInt(tsRoot.getAttributes().get("tilewidth"));
         int tileHeight = Integer.parseInt(tsRoot.getAttributes().get("tileheight"));

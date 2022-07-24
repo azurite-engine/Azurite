@@ -3,7 +3,6 @@ package io.xml;
 import java.util.*;
 
 /**
- * @author Juyas
  * @version 09.12.2021
  * @since 09.12.2021
  */
