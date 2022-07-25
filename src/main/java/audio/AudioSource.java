@@ -3,6 +3,7 @@ package audio;
 import ecs.Component;
 import org.joml.Vector2f;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.openal.AL10;
 import util.Assets;
 import util.Engine;
 
@@ -81,6 +82,14 @@ public class AudioSource extends Component {
         return isLooping;
     }
 
+    private void clearQueue() {
+        for (int i : getSelectedBuffer().getALBuffers())
+            alSourceUnqueueBuffers(sourceID, new int[]{i});
+        // suppress the error here; best to cover all possible bufferIDs
+        //AudioMaster.alGetError();
+        AL10.alGetError();
+    }
+
     /**
      * Sets the selected buffer to whatever the index indicates, then plays all of
      * this buffer.
@@ -94,8 +103,11 @@ public class AudioSource extends Component {
 
         setLooping(isLooping);
 
+        clearQueue();
+
         setSelectedBuffer(index);
         alSourcePlay(sourceID);
+        AudioMaster.alGetError();
     }
 
     public boolean isPlaying() {
@@ -109,10 +121,10 @@ public class AudioSource extends Component {
         alSourceStop(sourceID);
         AudioMaster.alGetError();
 
-        alSourceUnqueueBuffers(sourceID, getSelectedBuffer().getALBuffers());
-        AudioMaster.alGetError();
+        clearQueue();
 
         this.cursor = 0;
+        this.buffPtr = 0;
         this.atEnd = true;
     }
 
@@ -128,7 +140,10 @@ public class AudioSource extends Component {
         index = i;
 
         AudioBuffer buff = audioBuffers.get(index);
-        for (int inc = 0; inc < NUM_BUFFERS; inc++) {
+
+        int toBuffer = Math.min(NUM_BUFFERS, (int) Math.ceil((float) buff.getAudioData().length / BUFFER_SIZE));
+
+        for (int inc = 0; inc < toBuffer; inc++) {
             int toCopy = Math.min(BUFFER_SIZE, buff.getAudioData().length - inc*BUFFER_SIZE);
             AudioMaster.alGetError();
 
@@ -137,7 +152,8 @@ public class AudioSource extends Component {
             AudioMaster.alGetError();
 
             bu.flip();
-            cursor += toCopy;
+            if (toCopy > 0) cursor += toCopy;
+            else cursor = buff.getAudioData().length;
 
             alBufferData(audioBuffers.get(index).getALBuffer(inc), buff.getFormat(), bu, (int) buff.getSampleRate());
             AudioMaster.alGetError();
@@ -145,7 +161,7 @@ public class AudioSource extends Component {
             alSourceQueueBuffers(sourceID, audioBuffers.get(index).getALBuffer(inc));
             AudioMaster.alGetError();
         }
-        buffPtr = NUM_BUFFERS - 1;
+        buffPtr = toBuffer - 1;
         atEnd = false;
     }
 
