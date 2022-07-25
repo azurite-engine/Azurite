@@ -3,7 +3,6 @@ package io.xml;
 import java.util.*;
 
 /**
- * @author Juyas
  * @version 09.12.2021
  * @since 09.12.2021
  */
@@ -89,7 +88,7 @@ public class XMLElement {
         }
         builder.append(layer).append('<').append(tag);
         for (Map.Entry<String, String> entry : attributes.entrySet()) {
-            builder.append(' ').append(entry.getKey()).append('=').append('"').append(XMLParser.transformValue(entry.getValue(), false)).append('"');
+            builder.append(' ').append(entry.getKey()).append('=').append('"').append(XML.transformValue(entry.getValue(), false)).append('"');
         }
         if (subElements.size() == 0 && value == null) {
             builder.append("/").append('>');
@@ -102,7 +101,7 @@ public class XMLElement {
             if (fancy) builder.append('\n');
         }
         if (value != null) {
-            builder.append(XMLParser.transformValue(value, false));
+            builder.append(XML.transformValue(value, false));
             if (value.contains("\n"))
                 builder.append(layer);
         }

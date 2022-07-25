@@ -4,11 +4,12 @@ import audio.AudioBuffer;
 import graphics.Shader;
 import graphics.Spritesheet;
 import graphics.Texture;
+import io.bin.BinaryIO;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
-import java.util.Scanner;
 
 /**
  * The Assets class contains methods to assist in loading common resources used by the engine from the filesystem as well as HashMaps to keep track of loaded resources.
@@ -16,7 +17,7 @@ import java.util.Scanner;
  */
 public class Assets {
     private static HashMap<String, Shader> shaders = new HashMap<>();
-    private static HashMap<String, String> dataFiles = new HashMap<>();
+    private static HashMap<String, ByteBuffer> dataFiles = new HashMap<>();
     private static HashMap<String, Texture> textures = new HashMap<>();
     private static HashMap<String, AudioBuffer> audioBuffers = new HashMap<>();
     private static HashMap<String, Spritesheet> spritesheets = new HashMap<>();
@@ -46,28 +47,22 @@ public class Assets {
      * @param path to data file
      * @return returns type String
      */
-    public static String getDataFile(String path) {
-        String data = "";
+    public static ByteBuffer getDataFile(String path) {
         try {
             File file = new File(path);
-
             if (dataFiles.containsKey(file.getAbsolutePath())) {
                 return dataFiles.get(file.getAbsolutePath());
             }
-
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-                data += line + "\n";
-            }
-            scanner.close();
-
+            Log.debug("data file requested to load: \"" + path + "\"");
+            ByteBuffer data = BinaryIO.readData(file);
+            Log.debug("data successfully loaded");
             dataFiles.put(file.getAbsolutePath(), data);
-        } catch (FileNotFoundException e) {
+            return data;
+        } catch (IOException e) {
             Log.fatal("file not found: \"" + path + "\"", 1);
             e.printStackTrace();
+            return null;
         }
-        return data;
     }
 
     /**
