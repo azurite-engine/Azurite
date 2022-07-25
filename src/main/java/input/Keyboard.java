@@ -6,19 +6,11 @@ import graphics.Window;
 
 import static org.lwjgl.glfw.GLFW.*;
 
+/**
+ * Class containing everything related to keyboard input. 
+ * Implementations of GLFW key callbacks are all found here. getKey, getKeyDown, getKeyUp, etc...
+ */
 public class Keyboard {
-
-    public static int SPACE = 32; // Space Bar
-
-    public static int W_KEY = 87; // WASD
-    public static int A_KEY = 65;
-    public static int S_KEY = 83;
-    public static int D_KEY = 68;
-
-    public static int UP_ARROW = 38;
-    public static int LEFT_ARROW = 37;
-    public static int DOWN_ARROW = 40;
-    public static int RIGHT_ARROW = 39;
 
     /**
      * A bitfield array to store button states.

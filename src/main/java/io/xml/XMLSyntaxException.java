@@ -1,7 +1,6 @@
 package io.xml;
 
 /**
- * @author Juyas
  * @version 08.12.2021
  * @since 08.12.2021
  */

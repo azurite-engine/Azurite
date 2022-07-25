@@ -1,33 +1,15 @@
 package input;
 
+import util.Log;
+
 import static org.lwjgl.glfw.GLFW.*;
 
-// https://github.com/LWJGL/lwjgl3-wiki/wiki/2.6.3-Input-handling-with-GLFW#joystick-input
-
+/**
+ * Class containing everything related to gamepad input.
+ * <br>
+ * https://github.com/LWJGL/lwjgl3-wiki/wiki/2.6.3-Input-handling-with-GLFW#joystick-input
+ */
 public class Gamepad {
-
-    public static int LEFT_STICK_HORIZONTAL = 0;
-    public static int LEFT_STICK_VERTICAL = 1;
-    public static int LEFT_TRIGGER = 2;
-    public static int RIGHT_TRIGGER = 5;
-    public static int RIGHT_STICK_HORIZONTAL = 3;
-    public static int RIGHT_STICK_VERITCAL = 4;
-
-    public static int A = 0;
-    public static int B = 1;
-    public static int X = 2;
-    public static int Y = 3;
-    public static int LEFT_SHOULDER = 4;
-    public static int RIGHT_SHOULDER = 5;
-    public static int BACK = 6;
-    public static int START = 7;
-    public static int XBOX = 8;
-    public static int LEFT_STICK = 9;
-    public static int RIGHT_STICK = 10;
-    public static int D_UP = 11;
-    public static int D_RIGHT = 12;
-    public static int D_DOWN = 13;
-    public static int D_LEFT = 14;
 
     /**
      * @return Returns an int with the number of connected controllers.
@@ -51,7 +33,7 @@ public class Gamepad {
         try {
             return glfwGetJoystickButtons(controllerId).get(button) == 1;
         } catch (NullPointerException e) {
-            System.out.println("[ERROR] No Controller Attached on " + controllerId + ".");
+            Log.fatal("no controller attached on " + controllerId + ".", 1);
             return false;
         }
     }
@@ -69,7 +51,7 @@ public class Gamepad {
             }
             return x;
         } catch (NullPointerException e) {
-            System.out.println("[ERROR] No Controller Attached on " + controllerId + ".");
+            Log.fatal("no controller attached on " + controllerId + ".", 1);
             return 0;
         }
     }

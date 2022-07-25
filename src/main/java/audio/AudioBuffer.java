@@ -16,7 +16,7 @@ import java.util.Arrays;
 import static org.lwjgl.openal.AL10.*;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * Instantiations of this class hold all information about how a sound should be replayed
  * and the sound data itself (if you know OpenGL, think of this as a massive vbo containing a
  * single noise or piece of music). <br><br>

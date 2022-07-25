@@ -7,7 +7,7 @@ import util.Engine;
 import static org.lwjgl.openal.AL10.*;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * This is where the "ear" is located. There can only ever be one Listener, hence the singleton.
  *
  * @author HilbertCurve

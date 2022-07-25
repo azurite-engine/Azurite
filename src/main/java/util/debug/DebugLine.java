@@ -4,9 +4,6 @@ import ecs.Component;
 import graphics.Color;
 import org.joml.Vector2f;
 
-// NOTE: Even though this is not a component, it extends RenderableComponent. This was the easiest
-// way I found to make these debug lines work with the removal system.
-
 /**
  * Represents a Line which can be rendered by DebugRenderer
  * The most basic primitive for Debug Rendering

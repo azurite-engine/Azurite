@@ -1,10 +1,10 @@
 package ecs;
 
 import org.joml.Vector2f;
+import util.Log;
 import util.debug.DebugPrimitive;
 
 /**
- * 
  * Abstract structure for ECS Components.
  * It is highly recommended to use this when implementing any system that can/should be applied to a GameObject.
  */
@@ -23,7 +23,9 @@ public abstract class Component implements Comparable<Component> {
     private final ComponentOrder order;
 
     public Component(ComponentOrder order) {
-        this.order = order;
+        this.order = order == null ? ComponentOrder.POST_DRAW : order;
+        if (order == null)
+            Log.warn("Component no ComponentOrder created", 1);
     }
 
     public Component() {

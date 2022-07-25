@@ -2,18 +2,18 @@ package graphics;
 
 import event.EventData;
 import event.Events;
+import util.Log;
 import util.specs.FramebufferSpec;
 import util.specs.TextureSpec;
-import static org.lwjgl.glfw.GLFW.*;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.lwjgl.BufferUtils;
 
 import static org.lwjgl.opengl.GL45.*;
 
 /**
- * This class is heavily inspired from TheCherno's Hazel Engine's Framebuffer API
+ * This class is heavily inspired from TheCherno's Hazel Engine's Framebuffer
+ * API
  * <p>
  * An encapsulation of an OpenGL Framebuffer
  *
@@ -21,6 +21,7 @@ import static org.lwjgl.opengl.GL45.*;
  */
 public class Framebuffer {
     /**
+     * ß
      * Static list maintaining all framebuffers so as to delete them all in the end
      */
     private static final List<Framebuffer> fbos = new ArrayList<>();
@@ -52,7 +53,8 @@ public class Framebuffer {
      */
     private List<TextureSpec> colorAttachmentSpecs;
     /**
-     * The depth attachment texture's specification. Initialized to an Invalid default
+     * The depth attachment texture's specification. Initialized to an Invalid
+     * default
      */
     private TextureSpec depthAttachmentSpec = new TextureSpec();
     /**
@@ -94,7 +96,8 @@ public class Framebuffer {
     }
 
     /**
-     * Constructor used to register the framebuffer for Auto-Resizing based on its size
+     * Constructor used to register the framebuffer for Auto-Resizing based on its
+     * size
      *
      * @param width        width of the fbo
      * @param height       height of the fbo
@@ -118,8 +121,10 @@ public class Framebuffer {
                 depthAttachmentSpec = format;
             }
         }
-        if (isScreenSize) screenSize.add(this);
-        if (isHalfSize) halfScreenSize.add(this);
+        if (isScreenSize)
+            screenSize.add(this);
+        if (isHalfSize)
+            halfScreenSize.add(this);
         // Generate the framebuffer
         invalidate();
 
@@ -151,28 +156,36 @@ public class Framebuffer {
      * @return Framebuffer
      */
     public static Framebuffer createWithColorAttachment() {
-        return new Framebuffer(Window.getWidth(), Window.getHeight(), new FramebufferSpec(new TextureSpec(TextureSpec.TextureFormat.RGBA8)), true, false);
+        return new Framebuffer(Window.getWidth(), Window.getHeight(),
+                new FramebufferSpec(new TextureSpec(TextureSpec.TextureFormat.RGBA8)), true, false);
     }
 
     /**
-     * Factory method to create an instance that is half the size of the screen and has one simple color attachment
+     * Factory method to create an instance that is half the size of the screen and
+     * has one simple color attachment
      *
      * @return Framebuffer
      */
     public static Framebuffer createHalfResWithColorAttachment() {
-        return new Framebuffer(Window.getWidth() / 2, Window.getHeight() / 4, new FramebufferSpec(new TextureSpec(TextureSpec.TextureFormat.RGBA8)), false, true);
+        return new Framebuffer(Window.getWidth() / 2, Window.getHeight() / 4,
+                new FramebufferSpec(new TextureSpec(TextureSpec.TextureFormat.RGBA8)), false, true);
     }
 
     /**
-     * Resize all Framebuffers created via the createWithColorAttachment() or createHalfResWithColorAttachment() methods
+     * Resize all Framebuffers created via the createWithColorAttachment() or
+     * createHalfResWithColorAttachment() methods
      */
+
     public static void resizeAll(EventData.WindowResizeEventData data) {
+
         for (Framebuffer f : screenSize) {
             f.resize(data.x, data.y);
         }
+
         for (Framebuffer f : halfScreenSize) {
             f.resize(data.x / 2, data.y / 2);
         }
+
     }
 
     /**
@@ -180,14 +193,13 @@ public class Framebuffer {
      */
     public static void unbind() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        int[] w = new int[4];
-        int[] h = new int[4];
-        glfwGetFramebufferSize(Window.glfwWindow(), w, h);
-
-        int width = w[0];
-        int height = h[0];
-
-        glViewport(0, 0, width, height);
+        // int[] w = new int[4];
+        // int[] h = new int[4];
+        // glfwGetFramebufferSize(Window.glfwWindow(), w, h);
+        // int width = w[0];
+        // int height = h[0];
+        glViewport(Camera.instance.getViewportPosX(), Camera.instance.getViewportPosY(),
+                (int) Camera.instance.getViewportSizeX(), (int) Camera.instance.getViewportSizeY());
     }
 
     /**
@@ -201,7 +213,8 @@ public class Framebuffer {
 
     /**
      * Checks if the fbo is a wrapper around the default one.
-     * Required because created wrapper has no attachments stored in colorAttachmentTextures
+     * Required because created wrapper has no attachments stored in
+     * colorAttachmentTextures
      *
      * @return if the framebuffer instance is a wrapper around the
      */
@@ -231,8 +244,10 @@ public class Framebuffer {
     }
 
     /**
-     * Copies all data from the color texture attachments of this framebuffer to the texture attachments
-     * of the default Framebuffer. OpenGL provides a function, glBlitFramebuffer for this
+     * Copies all data from the color texture attachments of this framebuffer to the
+     * texture attachments
+     * of the default Framebuffer. OpenGL provides a function, glBlitFramebuffer for
+     * this
      */
     public void blitColorBuffersToScreen() {
         glBlitNamedFramebuffer(this.id, 0,
@@ -242,8 +257,10 @@ public class Framebuffer {
     }
 
     /**
-     * Copies all data from the ALL texture attachments of this framebuffer to the texture attachments
-     * of the default Framebuffer. OpenGL provides a function, glBlitFramebuffer for this
+     * Copies all data from the ALL texture attachments of this framebuffer to the
+     * texture attachments
+     * of the default Framebuffer. OpenGL provides a function, glBlitFramebuffer for
+     * this
      */
     public void blitEntireFboToScreen() {
         glBlitNamedFramebuffer(this.id, 0,
@@ -254,7 +271,8 @@ public class Framebuffer {
 
     /**
      * Deletes the framebuffer if it was already created.
-     * Then it creates a brand new framebuffer and adds new texture attachments to it based on the spec
+     * Then it creates a brand new framebuffer and adds new texture attachments to
+     * it based on the spec
      */
     private void invalidate() {
         if (this.id != -1)
@@ -271,7 +289,8 @@ public class Framebuffer {
                 TextureSpec format = colorAttachmentSpecs.get(i);
                 Texture texture = new Texture(width, height, format);
                 colorAttachmentTextures.add(texture);
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture.getTextureID(), 0);
+                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texture.getTextureID(),
+                        0);
             }
         }
 
@@ -279,12 +298,13 @@ public class Framebuffer {
         if (depthAttachmentSpec.format.isDepth) {
             // Generate the depth texture
             depthAttachmentTexture = new Texture(width, height, depthAttachmentSpec);
-            glFramebufferTexture2D(GL_FRAMEBUFFER, depthAttachmentSpec.format.format, GL_TEXTURE_2D, depthAttachmentTexture.getTextureID(), 0);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, depthAttachmentSpec.format.format, GL_TEXTURE_2D,
+                    depthAttachmentTexture.getTextureID(), 0);
         }
 
         // Check if the framebuffer is complete
         if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-            System.err.println("Incomplete Framebuffer :(");
+            Log.fatal("incomplete framebuffer :(");
             System.exit(-1);
         }
 
@@ -310,16 +330,16 @@ public class Framebuffer {
      */
     public void bind() {
         glBindFramebuffer(GL_FRAMEBUFFER, this.id);
-        if (!isDefault()) glViewport(0, 0, this.width, this.height);
+        if (!isDefault())
+            glViewport(0, 0, this.width, this.height);
         else {
-            int[] w = new int[4];
-            int[] h = new int[4];
-            glfwGetFramebufferSize(Window.glfwWindow(), w, h);
-
-            int width = w[0];
-            int height = h[0];
-
-            glViewport(0, 0, width, height);
+            // int[] w = new int[4];
+            // int[] h = new int[4];
+            // glfwGetFramebufferSize(Window.glfwWindow(), w, h);
+            // int width = w[0];
+            // int height = h[0];
+            glViewport(Camera.instance.getViewportPosX(), Camera.instance.getViewportPosY(),
+                    (int) Camera.instance.getViewportSizeX(), (int) Camera.instance.getViewportSizeY());
         }
     }
 
@@ -328,7 +348,8 @@ public class Framebuffer {
      */
     public void delete() {
         colorAttachmentTextures.forEach(Texture::delete);
-        if (depthAttachmentTexture != null) depthAttachmentTexture.delete();
+        if (depthAttachmentTexture != null)
+            depthAttachmentTexture.delete();
         glDeleteFramebuffers(this.id);
     }
 

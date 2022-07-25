@@ -1,18 +1,19 @@
 package scenes;
 
 import ecs.*;
-import fonts.Font;
+import ui.fonts.Font;
 import graphics.Camera;
 import graphics.Color;
 import graphics.Texture;
 import org.joml.Vector2f;
 import physics.collision.Shapes;
 import physics.force.ConstantForce;
-import postprocess.BloomEffect;
-import postprocess.PostProcessStep;
+import graphics.postprocess.BloomEffect;
+import graphics.postprocess.PostProcessStep;
 import scene.Scene;
-import tiles.Spritesheet;
+import graphics.Spritesheet;
 import tiles.TilesystemSideScroll;
+import ui.Text;
 import util.Assets;
 import util.Engine;
 import util.MathUtils;
@@ -33,14 +34,14 @@ public class DemoPlatformer extends Scene {
 
     public static void main(String[] args) {
         Engine.init(1920, 1080, "Azurite Engine Demo 2", 0.4f);
-        Engine.scenes().switchScene(new DemoPlatformer(), true);
+        Engine.scenes().switchScene(new DemoPlatformer());
         Engine.showWindow();
     }
 
     public void awake() {
 
         f = new Font("src/assets/fonts/OpenSans-Regular.ttf", 18, true);
-        text = new Text("Azurite Engine demo", f, Color.RED, 15, 5, 100, true, false);
+        text = new Text("Azurite Engine demo", f, Color.WHITE, 15, 5, 100, true, false);
 
         camera = new Camera();
         setDefaultBackground(new Color(41, 30, 49));

@@ -2,19 +2,19 @@ package audio;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.openal.*;
+import util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.openal.AL10.alGetError;
 import static org.lwjgl.openal.AL10.alGetString;
 import static org.lwjgl.openal.ALC10.*;
 import static org.lwjgl.openal.EXTEfx.ALC_MAX_AUXILIARY_SENDS;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * Main audio center: equivocal to graphics.Window but for initializing audio stuff,
  * like toggling and changing some parameters in the OpenAL API
  *
@@ -35,7 +35,7 @@ public class AudioMaster {
             try {
                 init();
             } catch (Exception e) {
-                System.err.println("[FATAL] Could not initialize AudioMaster.");
+                Log.fatal("could not initialize AudioMaster.");
                 e.printStackTrace();
             }
             instance = new AudioMaster();
@@ -73,6 +73,7 @@ public class AudioMaster {
         long newContext = ALC10.alcCreateContext(device, contextAttribList);
 
         if (!ALC10.alcMakeContextCurrent(newContext)) {
+            Log.fatal("failed to make context current");
             throw new Exception("Failed to make context current");
         }
 
@@ -96,7 +97,7 @@ public class AudioMaster {
     public static void alGetError() {
         int err = AL10.alGetError();
         if (err != 0) {
-            System.err.println("[FATAL] AL error received: " + alGetString(err));
+            Log.fatal("AL error received: " + alGetString(err));
             throw new RuntimeException();
         }
     }

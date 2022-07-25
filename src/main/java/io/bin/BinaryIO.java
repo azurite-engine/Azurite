@@ -45,6 +45,7 @@ public class BinaryIO {
             readData.add(data);
             length.add(r);
         } while (r > 0);
+        
         //combine all data segments
         ByteBuffer buffer = ByteBuffer.allocate(length.stream().reduce(Integer::sum).get());
         for (int i = 0; i < readData.size(); i++) {

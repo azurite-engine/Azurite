@@ -40,32 +40,23 @@ out vec4 color;
 void main () {
     vec4 texColor;
 
-    // This may look bad, but it is intentional, openGL minimum spec does not require dynamic indexing with variables into texture arrays, so this switch is required on AMD GPUs.
-    switch (int(fTexId)) {
-        case 0:
-            texColor = fColor;
-            break;
-        case 1:
-            texColor = fColor * texture(uTextures[1], fTexCoords);
-            break;
-        case 2:
-            texColor = fColor * texture(uTextures[2], fTexCoords);
-            break;
-        case 3:
-            texColor = fColor * texture(uTextures[3], fTexCoords);
-            break;
-        case 4:
-            texColor = fColor * texture(uTextures[4], fTexCoords);
-            break;
-        case 5:
-            texColor = fColor * texture(uTextures[5], fTexCoords);
-            break;
-        case 6:
-            texColor = fColor * texture(uTextures[6], fTexCoords);
-            break;
-        case 7:
-            texColor = fColor * texture(uTextures[7], fTexCoords);
-            break;
+    // This may look bad, but it is intentional, openGL minimum spec does not require dynamic indexing with variables into texture arrays, so this switch is required on AMD GPUs, and apparently on apple which DOESN'T SUPPORT CASTING!?!?!?!? (Hence the if/else rather than a switch).
+    if (fTexId == 0) {
+        texColor = fColor;
+    } else if (fTexId == 1) {
+        texColor = fColor * texture(uTextures[1], fTexCoords);
+    } else if (fTexId == 2) {
+        texColor = fColor * texture(uTextures[2], fTexCoords);
+    } else if (fTexId == 3) {
+        texColor = fColor * texture(uTextures[3], fTexCoords);
+    } else if (fTexId == 4) {
+        texColor = fColor * texture(uTextures[4], fTexCoords);
+    } else if (fTexId == 5) {
+        texColor = fColor * texture(uTextures[5], fTexCoords);
+    } else if (fTexId == 6) {
+        texColor = fColor * texture(uTextures[6], fTexCoords);
+    } else if (fTexId == 7) {
+        texColor = fColor * texture(uTextures[7], fTexCoords);
     }
 
     // Sample from lightmap and multiply with current fragment color

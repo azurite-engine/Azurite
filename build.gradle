@@ -1,107 +1,86 @@
 import org.gradle.internal.os.OperatingSystem
 
 plugins {
-    id 'com.github.johnrengelman.shadow' version '7.1.0'
-    id 'java'
-    id 'application'
+    id("application")
+    id("com.github.johnrengelman.shadow").version("7.1.0")
 }
 
-group 'com.GwgCommunity'
-version '1.0-SNAPSHOT'
+tasks.wrapper {
+    gradleVersion = "7.3.1"
+    distributionType = Wrapper.DistributionType.BIN
+}
 
-sourceCompatibility = 1.8
+group = "com.GwgCommunity"
+version = "1.0-SNAPSHOT"
 
-project.ext.lwjglVersion = "3.3.0"
-project.ext.jomlVersion = "1.10.1"
-switch (OperatingSystem.current()) {
+sourceCompatibility = 11
+targetCompatibility = 11
+
+repositories { mavenCentral() }
+
+ext.junitVersion = "4.13.2"
+ext.lwjglVersion = "3.3.0"
+ext.jomlVersion = "1.10.4"
+
+/* ext.lwjglNatives */ switch (OperatingSystem.current()) {
     case OperatingSystem.LINUX:
         def osArch = System.getProperty("os.arch")
-        project.ext.lwjglNatives = osArch.startsWith("arm") || osArch.startsWith("aarch64")
+        ext.lwjglNatives = osArch.startsWith("arm") || osArch.startsWith("aarch64")
                 ? "natives-linux-${osArch.contains("64") || osArch.startsWith("armv8") ? "arm64" : "arm32"}"
                 : "natives-linux"
         break
     case OperatingSystem.MAC_OS:
-        project.ext.lwjglNatives = System.getProperty("os.arch").startsWith("aarch64") ? "natives-macos-arm64" : "natives-macos"
+        ext.lwjglNatives = System.getProperty("os.arch").startsWith("aarch64") ? "natives-macos-arm64" : "natives-macos"
         break
     case OperatingSystem.WINDOWS:
         def osArch = System.getProperty("os.arch")
-        project.ext.lwjglNatives = osArch.contains("64")
+        ext.lwjglNatives = osArch.contains("64")
                 ? "natives-windows${osArch.startsWith("aarch64") ? "-arm64" : ""}"
                 : "natives-windows-x86"
         break
 }
 
-repositories {
-    mavenCentral()
+dependencies {
+    testImplementation("junit:junit:$junitVersion")
+    implementation(platform("org.lwjgl:lwjgl-bom:$lwjglVersion"))
+    implementation("org.lwjgl:lwjgl")
+    implementation("org.lwjgl:lwjgl-glfw")
+    implementation("org.lwjgl:lwjgl-openal")
+    implementation("org.lwjgl:lwjgl-opengl")
+    implementation("org.lwjgl:lwjgl-stb")
+    runtimeOnly("org.lwjgl:lwjgl::$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-glfw::$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-openal::$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-opengl::$lwjglNatives")
+    runtimeOnly("org.lwjgl:lwjgl-stb::$lwjglNatives")
+    implementation("org.joml:joml:$jomlVersion")
 }
+
 
 application {
-    mainClass = 'scenes.TextRenderingDemo'
-}
-
-jar {
-    manifest {
-        attributes(
-                'Main-Class': 'scenes.DemoTopDown',
-        )
-    }
-}
-
-task fatJar(type: Jar) {
-    manifest.from jar.manifest
-    classifier = 'all'
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-    } {
-        exclude "META-INF/*.SF"
-        exclude "META-INF/*.DSA"
-        exclude "META-INF/*.RSA"
-        exclude "META-INF/*.LIST"
-    }
-    with jar
-}
-
-sourceSets {
-    test {
-        java {
-            srcDir 'src/main/test'
-        }
+    mainClass = "scenes.UIRenderingDemo"
+    if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
+        applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
     }
 }
 
 test {
-    testLogging {
-        events "passed", "skipped", "failed"
-    }
+    useJUnit()
+    testLogging.events("passed", "skipped", "failed")
 }
 
-dependencies {
-    testImplementation group: 'junit', name: 'junit', version: '4.12'
-
-    implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
-
-    implementation "org.lwjgl:lwjgl"
-    implementation "org.lwjgl:lwjgl-glfw"
-    implementation "org.lwjgl:lwjgl-openal"
-    implementation "org.lwjgl:lwjgl-opengl"
-    implementation "org.lwjgl:lwjgl-stb"
-    runtimeOnly "org.lwjgl:lwjgl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-glfw::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-openal::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-opengl::$lwjglNatives"
-    runtimeOnly "org.lwjgl:lwjgl-stb::$lwjglNatives"
-    implementation "org.joml:joml:${jomlVersion}"
+tasks.register("generateApiDocs", Javadoc) {
+    it.title = ""
+    it.options.noTimestamp(false)
+    it.source(sourceSets.main.allJava)
+    it.classpath = configurations.runtimeClasspath
+    it.options.encoding("UTF-8")
+    it.destinationDir = file("build/generated-files")
+    it.options.addStringOption("doclet", "com.microsoft.doclet.DocFxDoclet")
+    it.options.docletpath = [file("lib/docfx-doclet-1.0-SNAPSHOT-jar-with-dependencies.jar")]
+    it.dependsOn(build)
 }
 
-task generateApiDocs(type: Javadoc) {
-    title = ""
-    options.noTimestamp(false)
-    source sourceSets.main.allJava
-    classpath = configurations.runtimeClasspath
-    options.encoding 'UTF-8'
-    destinationDir = file("build/generated-files")
-    options.addStringOption("doclet", "com.microsoft.doclet.DocFxDoclet")
-    options.docletpath = [file("lib/docfx-doclet-1.0-SNAPSHOT-jar-with-dependencies.jar")]
-    dependsOn build
-}
-
+// aliases
+tasks.register("fatJar") { it.dependsOn(tasks.shadowJar) }
+tasks.register("execute") { it.dependsOn(tasks.runShadow) }

@@ -2,6 +2,8 @@ package physics.collision;
 
 import physics.collision.shape.PrimitiveShape;
 
+import java.util.Set;
+
 /**
  * Describes an object that can collide with others.
  *
@@ -94,5 +96,45 @@ public interface Collider {
      * @return whether this collider is passive
      */
     boolean passive();
+
+    /**
+     * Adds a tag to this collider, making it a tagged collider if it isnt already one.
+     *
+     * @param tag the new case-sensitive tag to add
+     */
+    void addTag(String tag);
+
+    /**
+     * Removes a tag to this collider. If the last tag got removed, this collider becomes an untagged collider.
+     *
+     * @param tag the case-sensitive tag to remove
+     */
+    void removeTag(String tag);
+
+    /**
+     * All tags assigned to this collider.
+     *
+     * @return an unmodifiable set of all tags assigned to this collider
+     */
+    Set<String> tags();
+
+    /**
+     * Defines whether a collider is a tagged or an untagged collider.
+     *
+     * @return true, if and only if that collider contains at least a one tag
+     */
+    boolean hasTags();
+
+    /**
+     * Checks for matching tags with another collider.
+     * There are 3 different rules for tag matching: <br>
+     * - a collider without tags can only collide with a collider without tags (ignoring tags and only using layers) <br>
+     * - a collider without tags can never collide with a tagged collider <br>
+     * - a tagged collider can only collide with another tagged object, if there is any intersection comparing both sets of tags <br>
+     *
+     * @param collider another collider
+     * @return true, if the colliders are allowed to collide
+     */
+    boolean matchTags(Collider collider);
 
 }

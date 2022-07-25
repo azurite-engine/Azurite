@@ -1,16 +1,17 @@
 package graphics.renderer;
 
-import ecs.Text;
-import fonts.GlyphRenderer;
-import graphics.*;
+import graphics.Framebuffer;
+import graphics.Primitive;
+import graphics.Shader;
+import graphics.ShaderDatatype;
 import org.joml.Vector2f;
+import ui.Text;
+import ui.fonts.GlyphRenderer;
 import util.Assets;
 import util.Engine;
-import util.Logger;
 import util.Transform;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

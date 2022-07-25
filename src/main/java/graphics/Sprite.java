@@ -76,16 +76,16 @@ public class Sprite {
     }
 
     /**
-     * Get the width of the texture
+     * Get the width of the Sprite
      */
     public float getWidth() {
-        return texture.getWidth();
+        return texture.getWidth() * (textureCoordinates[0].x - textureCoordinates[3].x);
     }
 
     /**
-     * Get the height of the texture
+     * Get the height of the Sprite
      */
     public float getHeight() {
-        return texture.getHeight();
+        return texture.getHeight() * (textureCoordinates[1].y - textureCoordinates[0].y);
     }
 }

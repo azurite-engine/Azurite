@@ -15,7 +15,7 @@ import static audio.AudioBuffer.NUM_BUFFERS;
 import static org.lwjgl.openal.AL10.*;
 
 /**
- * <h1>Azurite</h1>
+ * 
  * Object representing a sound's source as well as it's velocity (for applying the doppler effect).
  *
  * @author HilbertCurve

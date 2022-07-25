@@ -1,6 +1,7 @@
-package scene; 
+package scene;
 
 import graphics.Texture;
+import util.Log;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -8,9 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * 
- * <p>
- * The SceneManager to handle all scenes of a window instance.
+ * The SceneManager to handle all scenes of an Engine instance.
  * It contains a scene pool and a currently active scene.
  *
  * @author Juyas
@@ -38,12 +37,8 @@ public class SceneManager {
      */
     public void enable() {
         this.enabled = true;
-        //init the currentScene if there is one
-        if (currentScene != null) {
-            currentScene.initRenderers();
-            currentScene.startUi();
-            currentScene.awake();
-        }
+        awaken(currentScene);
+        Log.info("enabled");
     }
 
     /**
@@ -62,39 +57,29 @@ public class SceneManager {
      */
     public boolean addScene(Scene scene) {
         boolean add = scenePool.add(scene);
-        if (add && enabled) {
-            // a newly added scene is probably raw and uninitialized
-            scene.initRenderers();
-            scene.startUi();
-            scene.awake();
-        }
+        if (!add) Log.warn("scene with id " + scene.sceneId() + " could not be added", 1);
         return add;
-    }
-
-    public void updateUI() {
-        if (currentScene != null) {
-            currentScene.updateUI();
-            currentScene.textRender();
-        }
     }
 
     /**
      * Switches the current scene to a given one.
      *
-     * @param scene        the scene to switch to
-     * @param addIfUnknown whether the scene should be added
-     *                     if the scene is currently unknown to the scene pool
+     * @param scene the scene to switch to
      * @return true if the given scene is now the new current scene
      */
-    public boolean switchScene(Scene scene, boolean addIfUnknown) {
+    public boolean switchScene(Scene scene) {
+        boolean newScene = false;
+
         Optional<Scene> sceneOpt = scenePool.stream()
                 .filter(s -> s.sceneId() == scene.sceneId())
                 .findFirst();
-        if (!addIfUnknown) {
-            return sceneOpt.isPresent() && switchScene(sceneOpt.get());
-        } else if (!sceneOpt.isPresent()) {
-            return addScene(scene) && switchScene(scene);
-        } else return switchScene(scene);
+
+        if (!sceneOpt.isPresent()) {
+            // Scene is not present in the scene pool
+            if (!addScene(scene)) return false;
+            newScene = true;
+        }
+        return switchScene(scene, newScene);
     }
 
     /**
@@ -107,7 +92,7 @@ public class SceneManager {
         Optional<Scene> sceneOpt = scenePool.stream()
                 .filter(scene -> scene.sceneId() == id)
                 .findFirst();
-        return sceneOpt.isPresent() && switchScene(sceneOpt.get());
+        return sceneOpt.isPresent() && switchScene(sceneOpt.get(), false);
     }
 
     /**
@@ -138,6 +123,13 @@ public class SceneManager {
         }
     }
 
+    public void updateUI() {
+        if (currentScene != null) {
+            currentScene.updateUI();
+            currentScene.textRender();
+        }
+    }
+
     public void postProcess(Texture texture) {
         if (currentScene != null) {
             currentScene.postProcess(texture);
@@ -152,21 +144,35 @@ public class SceneManager {
 
     //below are internal methods
 
+    private void awaken(Scene scene) {
+        if (enabled) {
+            scene.initRenderers();
+            scene.startUi();
+            scene.awake();
+        } else Log.warn("scene awaken called without being enabled", 1);
+    }
 
-    //internal method to switch scenes, should not be used from outside, since its completely unchecked
-    //will only result in false, if the input is null
-    private boolean switchScene(Scene newCurrent) {
-        if (newCurrent == null) return false;
+    private boolean switchScene(Scene newCurrent, boolean newScene) {
+        if (newCurrent == null) {
+            Log.warn("tried to switch to a scene that is null", 1);
+            return false;
+        }
         //we dont wanna call method if the current scene is already displayed
         //consider adding a debug, because usually the programming is aware of his scenes
         //and won't switch to the current scene
-        if (newCurrent == currentScene) return true;
+        if (newCurrent == currentScene) {
+            Log.warn("tried to switch to current scene id " + currentScene.sceneId(), 1);
+            return true;
+        }
         //deactivate the previous scene if there is one (just one start, there might be no)
         if (currentScene != null) {
             currentScene.deactivate();
         }
+
         currentScene = newCurrent;
         currentScene.activate();
+        if (newScene && enabled) awaken(currentScene);
+        Log.info("switched to new scene (id: " + newCurrent.sceneId() + ")", 1);
         return true;
     }
 
