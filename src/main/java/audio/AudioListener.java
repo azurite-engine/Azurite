@@ -1,6 +1,7 @@
 package audio;
 
 import ecs.Component;
+import graphics.Camera;
 import org.joml.Vector2f;
 import util.Engine;
 
@@ -12,7 +13,7 @@ import static org.lwjgl.openal.AL10.*;
  *
  * @author HilbertCurve
  */
-public class AudioListener extends Component {
+public class AudioListener {
 
     private static AudioListener instance;
 
@@ -33,24 +34,15 @@ public class AudioListener extends Component {
         return instance;
     }
 
-    @Override
-    public void start() {
-        alListener3f(AL_POSITION, 0.0f, 0.0f, 0.0f);
-        AudioMaster.alGetError();
-        alListener3f(AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-        AudioMaster.alGetError();
-    }
-
     public void update(float dt) {
-        if (gameObject == null) return;
         Vector2f firstPos = position;
-        Vector2f secondPos = gameObject.getReadOnlyPosition();
+        Vector2f secondPos = Camera.instance.getPosition();
         alListener3f(AL_POSITION, secondPos.x, secondPos.y, 0.0f);
         AudioMaster.alGetError();
         alListener3f(AL_VELOCITY,
                 secondPos.x - firstPos.x,
                 secondPos.y - firstPos.y, 0.0f);
         AudioMaster.alGetError();
-        position = gameObject.getReadOnlyPosition();
+        position = secondPos;
     }
 }
