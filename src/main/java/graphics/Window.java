@@ -223,6 +223,7 @@ public class Window {
 
             if (!sleeping && currentScene().isActive()) {
                 Mouse.update();
+                AudioMaster.get().update(getFPS());
                 sceneManager.update();
                 sceneManager.updateGameObjects();
                 sceneManager.render();
