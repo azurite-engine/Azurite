@@ -22,12 +22,12 @@ import java.util.function.Consumer;
 
 import static graphics.Graphics.setDefaultBackground;
 
-public class UIRenderingDemo extends Scene {
+public class UIDemo extends Scene {
 
     public static void main(String[] args) {
         Log.setLogLevel(Log.ALL);
         Engine.init(900, 600, "Azurite UI Rendering Demo", 1, true);
-        Engine.scenes().switchScene(new UIRenderingDemo());
+        Engine.scenes().switchScene(new UIDemo());
         Engine.showWindow();
     }
 
