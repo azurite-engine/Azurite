@@ -276,9 +276,10 @@ public class Log {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         PrintStream ps = new PrintStream(bos);
         e.printStackTrace(ps);
-        loggingThread.log(bos.toString(), -1);
-        loggingThread.save();
-        e.printStackTrace();
+        if (loggingThread != null) {
+            loggingThread.log(bos.toString(), -1);
+            loggingThread.save();
+        }
     }
 
     private static void println(int level, String line) {
