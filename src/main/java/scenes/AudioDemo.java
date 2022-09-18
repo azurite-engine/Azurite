@@ -1,6 +1,5 @@
 package scenes;
 
-import audio.AudioListener;
 import audio.AudioSource;
 import ecs.GameObject;
 import input.Keyboard;
@@ -10,7 +9,6 @@ import org.joml.Vector2f;
 import scene.Scene;
 import util.Assets;
 import util.Engine;
-import util.Log;
 
 import static graphics.Graphics.setDefaultBackground;
 

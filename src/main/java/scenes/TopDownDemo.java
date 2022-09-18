@@ -37,7 +37,7 @@ public class TopDownDemo extends Scene {
         Log.setLogLevel(Log.ALL);
         Engine.init(1280, 720, "Azurite Engine Demo 1", 0.01f, true);
         Engine.scenes().switchScene(new TopDownDemo());
-//        Engine.window().setIcon("src/assets/images/icon.png");
+        Engine.window().setIcon("src/assets/images/icon.png");
         Engine.showWindow();
     }
 
@@ -77,7 +77,7 @@ public class TopDownDemo extends Scene {
         player.addComponent(new SpriteRenderer(a.getSprite(132), new Vector2f(100)));
         Dynamics dynamics = new Dynamics();
         player.addComponent(dynamics);
-        player.addComponent(CharacterController.standardTopDown(dynamics, 5));
+        player.addComponent(CharacterController.standardTopDown(dynamics, 250));
 
 
         greenLight = new GameObject("Green light", new Vector2f(3315, 300), 3);

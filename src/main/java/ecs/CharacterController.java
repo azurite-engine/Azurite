@@ -4,6 +4,7 @@ import input.Keyboard;
 import input.Keys;
 import org.joml.Vector2f;
 import physics.force.Force;
+import util.Engine;
 
 /**
  * Character controllers built to support the Top down and Side scroller Demo scenes.
@@ -67,10 +68,10 @@ public class CharacterController extends Component {
             @Override
             public boolean update(float dt) {
                 direction.set(0, 0);
-                if (up()) direction.add(0, -speedModifier);
-                if (down()) direction.add(0, speedModifier);
-                if (left()) direction.add(-speedModifier, 0);
-                if (right()) direction.add(speedModifier, 0);
+                if (up()) direction.add(0, -speedModifier * dt);
+                if (down()) direction.add(0, speedModifier * dt);
+                if (left()) direction.add(-speedModifier * dt, 0);
+                if (right()) direction.add(speedModifier * dt, 0);
                 return true;
             }
 
