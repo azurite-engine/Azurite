@@ -85,6 +85,10 @@ public class AudioMaster {
         sources.add(s);
     }
 
+    public void update(float dt) {
+        AudioListener.get().update(dt);
+    }
+
     public void clean() {
         for (AudioSource s : sources) {
             s.delete();

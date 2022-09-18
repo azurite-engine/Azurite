@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 import static graphics.Graphics.setDefaultBackground;
 
-public class DemoTopDown extends Scene {
+public class TopDownDemo extends Scene {
 
     Spritesheet a;
     Spritesheet b;
@@ -36,7 +36,7 @@ public class DemoTopDown extends Scene {
     public static void main(String[] args) {
         Log.setLogLevel(Log.ALL);
         Engine.init(1280, 720, "Azurite Engine Demo 1", 0.01f, true);
-        Engine.scenes().switchScene(new DemoTopDown());
+        Engine.scenes().switchScene(new TopDownDemo());
 //        Engine.window().setIcon("src/assets/images/icon.png");
         Engine.showWindow();
     }
