@@ -1,5 +1,20 @@
 import org.gradle.internal.os.OperatingSystem
 
+/* 
+Aliases for shadowJar:
+./gradlew shadowJar 
+./gradlew fatJar 
+
+Aliases for runShadow:
+./gradlew runShadow -P cp=package.ClassName
+./gradlew execute -P cp=package.ClassName
+
+Run unit tests and generate docfx docs
+./gradlew test
+./gradlew generateApiDocs
+*/
+
+
 plugins {
     id("application")
     id("com.github.johnrengelman.shadow").version("7.1.0")
@@ -58,7 +73,7 @@ dependencies {
 
 
 application {
-    mainClass = "scenes.TopDownDemo"
+    mainClass = "${cp}"
     if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
         applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
     }
