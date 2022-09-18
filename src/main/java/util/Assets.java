@@ -68,7 +68,7 @@ public class Assets {
     /**
      * Loads a image from the filesystem, and returns a Texture.
      *
-     * @param path to Texture resource (usually a .png file)
+    * @param path to Texture resource (usually a .png file)
      * @return returns type Texture
      */
     public static Texture getTexture(String path) {

@@ -16,8 +16,7 @@ import static graphics.Graphics.setDefaultBackground;
  * Minimal usage example of the AudioListener and AudioSource components.
  */
 public class AudioDemo extends Scene {
-    public static void main(String[] args) {
-        Log.setLogLevel(Log.ALL);
+    public static void main (String[] args) {
         Engine.init(1080, 720, "Azurite Audio Demo", 0.01f);
         Engine.scenes().switchScene(new AudioDemo());
         Engine.showWindow();
@@ -25,7 +24,7 @@ public class AudioDemo extends Scene {
 
     GameObject barFoo;
 
-    public void awake() {
+    public void awake () {
         camera = new Camera();
         setDefaultBackground(0);
 

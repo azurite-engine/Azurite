@@ -35,7 +35,7 @@ public class TextRenderingDemo extends Scene {
         camera = new Camera();
         setDefaultBackground(Color.WHITE);
 
-        maghrib = new Font("src/assets/fonts/Maghrib-MVZpx.ttf", 50, true);
+        maghrib = new Font("src/assets/fonts/Maghrib-MVZpx.ttf", 100, true);
         openSans = new Font("src/assets/fonts/OpenSans-Regular.ttf", 20, true);
 
         float halfWindowWidth = Window.getWidth() / 2.0f;

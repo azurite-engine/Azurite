@@ -91,9 +91,6 @@ public class CheckBoxGroup extends Element {
     @Override
     public void update () {
         super.update();
-
-//        Logger.logInfo(frame.toString());
-
     }
 
 }
