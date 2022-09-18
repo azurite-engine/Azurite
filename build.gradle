@@ -58,7 +58,7 @@ dependencies {
 
 
 application {
-    mainClass = "scenes.DemoTopDown"
+    mainClass = "scenes.UIDemo"
     if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
         applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
     }
