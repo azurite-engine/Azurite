@@ -14,7 +14,6 @@ Run unit tests and generate docfx docs
 ./gradlew generateApiDocs
 */
 
-
 plugins {
     id("application")
     id("com.github.johnrengelman.shadow").version("7.1.0")
@@ -73,6 +72,9 @@ dependencies {
 
 
 application {
+    if (!project.hasProperty("cp")) {
+        ext.cp = "scenes.TopDownDemo"
+    }
     mainClass = "${cp}"
     if (OperatingSystem.current() == OperatingSystem.MAC_OS) {
         applicationDefaultJvmArgs = ["-XstartOnFirstThread"]
