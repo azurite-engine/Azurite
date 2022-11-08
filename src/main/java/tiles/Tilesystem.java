@@ -1,13 +1,18 @@
 package tiles;
 
+import ecs.CollisionHandlers;
 import ecs.GameObject;
+import ecs.PolygonCollider;
 import ecs.SpriteRenderer;
 import graphics.Spritesheet;
 import graphics.Texture;
 import io.xml.XML;
 import io.xml.XMLElement;
+import physics.collision.Shapes;
+
 import org.joml.Vector2f;
 import util.Assets;
+import util.Log;
 import util.MathUtils;
 
 import java.io.File;
@@ -57,9 +62,14 @@ public class Tilesystem {
 
                 String[] mapString = i.getChildren().get(0).getValue().split(",");
 
-                int[] map = new int[mapString.length];
+                double[] map = new double[mapString.length];
                 for (int j = 0; j < mapString.length; j++) {
-                    map[j] = Integer.parseInt(mapString[j].trim());
+                    try {
+                        map[j] = Double.parseDouble(mapString[j].trim());
+                    } catch (Exception e) {
+                        System.out.println(i);
+                        e.printStackTrace();
+                    }
                 }
 
                 layers.add(new Layer(
@@ -67,8 +77,11 @@ public class Tilesystem {
                         i.getAttributes().get("name"),
                         Integer.parseInt(i.getAttributes().get("width")),
                         Integer.parseInt(i.getAttributes().get("height")),
+                        i.getAttributes().get("name").contains("collidable"),
                         map
                 ));
+
+                // Log.debug(layer.);
             }
         }
 
@@ -79,7 +92,8 @@ public class Tilesystem {
                 for (Layer layer : layers) {
 
                     // Get the raw ID from the tmx layer
-                    int tileID = getAt(x, y, layer.width, layer.map);
+                    int tileID = (int) getAt(x, y, layer.width, layer.map);
+
 
                     // Determine which tileset to pull sprites from
                     Tileset ts = getTileSet(tileID);
@@ -87,9 +101,18 @@ public class Tilesystem {
                     // Normalize the index according to range defined by tileset tags
                     int index = getNormalizedIndex(tileID, ts);
 
+                    if (index == 0) continue;
+
                     gameObjects[x][y] = new GameObject(new Vector2f(x * tileWidth, y * tileHeight), 0).addComponent(
                             new SpriteRenderer(ts.spritesheet.getSprite(index), new Vector2f(width, height))
                     );
+
+                    if (layer.collidable) {
+                        
+                        PolygonCollider collider = new PolygonCollider(Shapes.axisAlignedRectangle(0, 0, width, height)).layer(2).mask(2);
+                        gameObjects[x][y].addComponent(collider);
+                        gameObjects[x][y].addComponent(CollisionHandlers.unpassablePolygonCollider(collider));
+                    }
                 }
             }
         }
@@ -108,12 +131,12 @@ public class Tilesystem {
         return tilesets.get(0);
     }
 
-    public int getAt(int x, int y, int dimensionWidth, int[] map) {
+    public double getAt(int x, int y, int dimensionWidth, double[] map) {
         return map[(dimensionWidth * y) + x];
     }
 
     private int getNormalizedIndex(int id, Tileset t) {
-        return (int) MathUtils.constrain(MathUtils.map(id, t.firstgid, t.firstgid + t.spritesheet.getSize(), 0, t.spritesheet.getSize()), 0, t.spritesheet.getSize());
+        return (int) MathUtils.constrain(MathUtils.map(id, t.firstgid, t.firstgid + t.spritesheet.getSize(), 0, t.spritesheet.getSize()), 0, t.spritesheet.getSize() - 1);
     }
 
     public int[] getIndex(int worldX, int worldY) {
@@ -136,13 +159,24 @@ class Tileset {
         // Parse the .tsx file to extract the spritesheet data and texture path
         XMLElement tsRoot = XML.parse(Assets.getDataFile(this.source.toString()).array());
 
-        int tileWidth = Integer.parseInt(tsRoot.getAttributes().get("tilewidth"));
-        int tileHeight = Integer.parseInt(tsRoot.getAttributes().get("tileheight"));
-        int tileCount = Integer.parseInt(tsRoot.getAttributes().get("tilecount"));
+        int tileWidth = 0;
+        int tileHeight = 0;
+        int tileCount = 0;
+        int spacing = 0;
+
+        try {
+            tileWidth = Integer.parseInt(tsRoot.getAttributes().get("tilewidth"));
+            tileHeight = Integer.parseInt(tsRoot.getAttributes().get("tileheight"));
+            tileCount = Integer.parseInt(tsRoot.getAttributes().get("tilecount"));
+            spacing = Integer.parseInt(tsRoot.getAttributes().get("spacing"));
+        } catch (Exception e) {
+            Log.warn("Tileset " + source + " is missing some attributes. Using default values.");
+            e.printStackTrace();
+        }
 
         String spriteSheetPath = new File(this.source.getParent().toString(), tsRoot.getChildren().get(0).getAttributes().get("source")).toString();
 
-        this.spritesheet = new Spritesheet(new Texture(spriteSheetPath), tileWidth, tileHeight, tileCount, 0);
+        this.spritesheet = new Spritesheet(new Texture(spriteSheetPath), tileWidth, tileHeight, tileCount, spacing);
     }
 }
 
@@ -150,13 +184,15 @@ class Layer {
     protected int id;
     protected String name;
     protected int width, height;
-    protected int map[] = {};
+    protected boolean collidable;
+    protected double map[] = {};
 
-    public Layer(int id, String name, int width, int height, int[] map) {
+    public Layer(int id, String name, int width, int height, boolean collidable, double[] map) {
         this.id = id;
         this.name = name;
         this.width = width;
         this.height = height;
+        this.collidable = collidable;
         this.map = map;
     }
 }
