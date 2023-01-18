@@ -121,7 +121,7 @@ Build gradle, then run the Main scene (located in the scenes package).
 Follow this [link](https://azurite-engine.github.io/Azurite-Docs/tutorials/set-a-project.html) for tutorials on cloning and importing to either Intellj or Eclipse.
 
 ### Documentation
-* [Documentatation](https://azurite-engine.github.io/Azurite-Docs/) (Heavy WIP)
+* [Documentation](https://azurite-engine.github.io/Azurite-Docs/) (Heavy WIP)
 * [Javadocs](https://azurite-engine.github.io/azurite-javadocs/)
 * [Contributing guidelines](https://azurite-engine.github.io/Azurite-Docs/docs/contributing.html)
 * [Azurite Code style](https://azurite-engine.github.io/Azurite-Docs/docs/azurite-style.html)
