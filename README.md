@@ -127,7 +127,7 @@ Follow this [link](https://azurite-engine.github.io/Azurite-Docs/tutorials/set-a
 * [Azurite Code style](https://azurite-engine.github.io/Azurite-Docs/docs/azurite-style.html)
 
 ### License
-Copyright (c) 2021 MIT License
+Copyright (c) 2023 MIT License
 
 ### Contact
 [Discord Server](https://discord.gg/dhyV3BXkRZ) in the #azurite-development channel
