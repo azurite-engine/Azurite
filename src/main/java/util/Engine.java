@@ -12,8 +12,17 @@ import java.io.IOException;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 
 /**
- * The Engine class initializes the Window and the game loop.
- * It can also be used to access some globally used classes like the scene manager and Window.
+ * The Engine class initializes the Window and the game loop for a game engine.
+ * It follows the Singleton design pattern,
+ * providing a global unique instance accessible through the
+ * {@link #getInstance()} method.
+ *
+ * The Engine class provides several static methods to initialize the engine and
+ * create a window, as well as methods to control the engine's state, such as
+ * checking if the engine is running, stopping the window, and interrupting the engine
+ * with an exit code. It also provides methods to access the window, delta time
+ * (time elapsed since the last frame), scene manager, and to enable logging to log files.
+ *
  */
 public final class Engine {
 
@@ -24,7 +33,7 @@ public final class Engine {
     private boolean running;
     private float deltaTime;
 
-    //private to prevent creating new instances
+    // private to prevent creating new instances
     private Engine() {
         running = true;
         deltaTime = 0;
@@ -58,7 +67,8 @@ public final class Engine {
     }
 
     /**
-     * Cuts off the engine and exits out of the program immediately with saving the logs.
+     * Cuts off the engine and exits out of the program immediately with saving the
+     * logs.
      *
      * @param code the exit code
      */
@@ -93,7 +103,7 @@ public final class Engine {
 
         System.setProperty("java.awt.headless", "true");
 
-        //ensure that the Engine is running on main thread
+        // ensure that the Engine is running on main thread
         Preconditions.ensureMainThread("engine initialization");
 
         GLFWErrorCallback.createPrint(System.err).set();
@@ -109,12 +119,16 @@ public final class Engine {
     }
 
     /**
-     * Enables a parallel thread saving the logging history every {@link LoggingThread#CYCLE} seconds
-     * to a file named after the calling datetime of this method into the specified folder.
-     * Everytime the instances shuts down ({@link Engine#isRunning()} is false), the file is closed and won't be touched again.
+     * Enables a parallel thread saving the logging history every
+     * {@link LoggingThread#CYCLE} seconds
+     * to a file named after the calling datetime of this method into the specified
+     * folder.
+     * Everytime the instances shuts down ({@link Engine#isRunning()} is false), the
+     * file is closed and won't be touched again.
      *
      * @param folderPath the path of the folder to save the log files to
-     * @param logLevel   {@link Log#FATAL_ONLY}, {@link Log#WARNINGS}, {@link Log#NO_DEBUG}, {@link Log#ALL}
+     * @param logLevel   {@link Log#FATAL_ONLY}, {@link Log#WARNINGS},
+     *                   {@link Log#NO_DEBUG}, {@link Log#ALL}
      */
     public static void enableLogFiles(File folderPath, int logLevel) {
         try {
@@ -132,7 +146,8 @@ public final class Engine {
      * @param windowWidth      Width of the window to be created
      * @param windowHeight     Height of the window to be created
      * @param windowTitle      Title of the window to be created
-     * @param minSceneLighting float from 0-1 indicating the minimum scene light level
+     * @param minSceneLighting float from 0-1 indicating the minimum scene light
+     *                         level
      */
     public static void init(int windowWidth, int windowHeight, String windowTitle, float minSceneLighting) {
         preInit();
@@ -155,16 +170,19 @@ public final class Engine {
      * Start the engine, and initialize GLFW. This will create a fullscreen window.
      *
      * @param windowTitle      Title of the window to be created
-     * @param minSceneLighting float from 0-1 indicating the minimum scene light level
+     * @param minSceneLighting float from 0-1 indicating the minimum scene light
+     *                         level
      */
     public static void init(String windowTitle, float minSceneLighting) {
         preInit();
         getInstance().window = new Window(windowTitle, minSceneLighting, false);
     }
 
-    public static void init(int windowWidth, int windowHeight, String windowTitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
+    public static void init(int windowWidth, int windowHeight, String windowTitle, float minSceneLighting,
+            boolean recalculateProjectionOnResize) {
         preInit();
-        getInstance().window = new Window(windowWidth, windowHeight, windowTitle, minSceneLighting, recalculateProjectionOnResize);
+        getInstance().window = new Window(windowWidth, windowHeight, windowTitle, minSceneLighting,
+                recalculateProjectionOnResize);
     }
 
     /**
@@ -178,7 +196,8 @@ public final class Engine {
     }
 
     /**
-     * @return Returns the number of milliseconds since the engine started. (since the first call)
+     * @return Returns the number of milliseconds since the engine started. (since
+     *         the first call)
      */
     public static double millisRunning() {
         return System.currentTimeMillis() - getInstance().startMillis;

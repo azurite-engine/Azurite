@@ -83,6 +83,12 @@ public class Assets {
         return texture;
     }
 
+    /**
+     * Loads an audio file from the filesystem and returns an AudioBuffer.
+     *
+     * @param path to audio file
+     * @return returns type AudioBuffer
+     */
     public static AudioBuffer getAudioBuffer(String path) {
         File file = new File(path);
         if (audioBuffers.containsKey(file.getAbsolutePath())) {
@@ -97,7 +103,7 @@ public class Assets {
 
     /**
      * Adds a filepath and spritesheet to the Asset class's spritesheet hashmap. (private)
-     * * @param path to Texture resource (usually a .png file)
+     * @param path to Texture resource (usually a .png file)
      *
      * @param spritesheet object
      */
@@ -108,7 +114,13 @@ public class Assets {
         }
     }
 
-
+    /**
+     * Gets the {@link Spritesheet} object corresponding to the given file path.
+     *
+     * @param path The file path of the spritesheet.
+     * @return The {@link Spritesheet} object associated with the given file path, or {@code null} if not found.
+     * @throws AssertionError If the spritesheet does not exist or is not loaded.
+     */
     private static Spritesheet getSpritesheet(String path) {
         File file = new File(path);
         if (!Assets.spritesheets.containsKey(file.getAbsolutePath()))

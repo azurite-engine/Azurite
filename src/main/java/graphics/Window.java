@@ -20,7 +20,10 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
- * The Window class handles setup of GLFW
+ * The Window class handles the setup and management of the GLFW window for
+ * rendering graphics.
+ * It provides methods for window creation, configuration, resizing, and event
+ * handling.
  */
 public class Window {
 
@@ -37,21 +40,36 @@ public class Window {
 
     public static Window instance = null;
 
-    public Window(int pwidth, int pheight, String ptitle, boolean fullscreen, float minSceneLighting, boolean recalculateProjectionOnResize) {
+    /**
+     * Creates a Window object with specified width, height, title, fullscreen mode,
+     * minimum scene lighting, and option to recalculate projection on window
+     * resize.
+     * 
+     * @param pwidth                        The width of the window in pixels
+     * @param pheight                       The height of the window in pixels
+     * @param ptitle                        The title of the window
+     * @param fullscreen                    Whether the window should be in
+     *                                      fullscreen mode
+     * @param minSceneLighting              The minimum lighting value for the scene
+     * @param recalculateProjectionOnResize Whether to recalculate projection on
+     *                                      window resize
+     */
+    public Window(int pwidth, int pheight, String ptitle, boolean fullscreen, float minSceneLighting,
+            boolean recalculateProjectionOnResize) {
         instance = this;
 
-        Log.debug("construct window instance (" + ptitle + ", " + pwidth + ", " + pheight + ", "
-                + minSceneLighting + ", recalc: " + recalculateProjectionOnResize + ", fullscreen: " + fullscreen + ")");
-        videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        Log.debug("construct window instance (" + ptitle + ", " + pwidth + ", " + pheight + ", " + minSceneLighting
+                + ", recalc: " + recalculateProjectionOnResize + ", fullscreen: " + fullscreen + ")");
+        this.videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         width = pwidth;
         height = pheight;
-        title = ptitle;
+        this.title = ptitle;
         this.recalculateProjectionOnResize = recalculateProjectionOnResize;
 
         // create the sceneManager to be able to set a scene
-        sceneManager = new SceneManager();
+        this.sceneManager = new SceneManager();
 
-        sceneManager.setMinSceneLight(minSceneLighting);
+        this.sceneManager.setMinSceneLight(minSceneLighting);
 
         // Configure GLFW
         glfwDefaultWindowHints();
@@ -73,10 +91,23 @@ public class Window {
         Log.info("window creation successful");
     }
 
+    /**
+     * Constructor to create a Window object with specified title, minimum scene
+     * lighting,
+     * and option to recalculate projection on window resize. The window will be
+     * created with the
+     * default width and height of the primary monitor.
+     * 
+     * @param ptitle                        The title of the window
+     * @param minSceneLighting              The minimum lighting value for the scene
+     * @param recalculateProjectionOnResize Whether to recalculate projection on
+     *                                      window resize
+     */
     public Window(String ptitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
         instance = this;
 
-        Log.debug("construct window instance (" + ptitle + ", " + minSceneLighting + ", " + recalculateProjectionOnResize + ")");
+        Log.debug("construct window instance (" + ptitle + ", " + minSceneLighting + ", "
+                + recalculateProjectionOnResize + ")");
         videoMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
         width = videoMode.width();
         height = videoMode.height();
@@ -106,23 +137,37 @@ public class Window {
         Log.info("window creation successful");
     }
 
-    public Window(int pwidth, int pheight, String ptitle, float minSceneLighting,
-                  boolean recalculateProjectionOnResize) {
+    /**
+     * Constructs a new Window object with the specified width, height, title,
+     * minimum scene lighting, and recalculate projection on resize flag.
+     *
+     * @param pwidth                        The width of the window
+     * @param pheight                       The height of the window
+     * @param ptitle                        The title of the window
+     * @param minSceneLighting              The minimum scene lighting value
+     * @param recalculateProjectionOnResize Whether to recalculate the projection
+     *                                      matrix on window resize
+     */
+    public Window(int pwidth, int pheight, String ptitle, float minSceneLighting, boolean recalculateProjectionOnResize) {
         this(pwidth, pheight, ptitle, false, minSceneLighting, recalculateProjectionOnResize);
     }
 
+    /**
+     * Constructs a new Window object with the specified width, height, title, and recalculate projection on resize flag.
+     * The minimum scene lighting value is set to 1.0f by default.
+     *
+     * @param pwidth                      The width of the window
+     * @param pheight                     The height of the window
+     * @param ptitle                      The title of the window
+     * @param recalculateProjectionOnResize Whether to recalculate the projection matrix on window resize
+     */
     public Window(int pwidth, int pheight, String ptitle, boolean recalculateProjectionOnResize) {
         this(pwidth, pheight, ptitle, 1.0f, recalculateProjectionOnResize);
     }
 
-    public Window(String ptitle, boolean recalculateProjectionOnResize) {
-        this(ptitle, 1.0f, recalculateProjectionOnResize);
-    }
-
-    public Window(String ptitle) {
-        this(ptitle, false);
-    }
-
+    /**
+     * Initialize the GLFW library, create the window, and setup event handling.
+     */
     private void initWindow(int width, int height, String title, long monitor) {
         // Create window
         Log.info("creating window");
@@ -139,7 +184,6 @@ public class Window {
 
         // Enable V-Sync
         glfwSwapInterval(1);
-
 
         // Center the window
         int xpos = (videoMode.width() - width) / 2;
@@ -176,31 +220,46 @@ public class Window {
         return fps;
     }
 
+    /**
+     * Gt the current window title.
+     */
     public String getTitle() {
         return title;
     }
 
+    /**
+     * Get the current window height.
+     */
     public static int getHeight() {
         return height;
     }
 
+    /**
+     * Get the current window width.
+     */
     public static int getWidth() {
         return width;
     }
 
+    /**
+     * Get the current glfw window (long).
+     */
     public static long glfwWindow() {
         return glfwWindow;
     }
 
+    /**
+     * Set the current window title.
+     */
     public void setTitle(String title) {
         this.title = title;
         glfwSetWindowTitle(glfwWindow, title);
     }
 
+    /**
+     * Main game loop: rendering, frametime calculation, event polling and cleanup.
+     */
     public void showWindow() {
-        /*
-         * scenes.Main game loop
-         */
         Log.info("starting window");
         glfwShowWindow(glfwWindow);
 
@@ -250,23 +309,35 @@ public class Window {
         glfwSetErrorCallback(null).free();
 
         Log.info("window closed");
-        //stopping engine and all threads listening for the engine to run
+        // stopping engine and all threads listening for the engine to run
         Engine.getInstance().windowStopped();
 
     }
 
+    /*
+     * Get the current scene.
+     */
     public Scene currentScene() {
         return sceneManager.currentScene();
     }
 
+    /*
+     * Get the scene manager.
+     */
     public SceneManager getSceneManager() {
         return sceneManager;
     }
 
+    /*
+     * Get the current scene camera.
+     */
     public static Camera getCamera() {
         return instance.currentScene().camera();
     }
 
+    /*
+     * Set the window icon.
+     */
     public void setIcon(String path) {
         Texture icon = new Texture(path);
         GLFWImage image = GLFWImage.malloc();

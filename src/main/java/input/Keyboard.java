@@ -25,7 +25,7 @@ public class Keyboard {
     }
 
     /**
-     * Subscribes to key event
+     * Subscribes to key events and sets up GLFW key callback.
      */
     public static void setupCallbacks() {
         glfwSetKeyCallback(Window.glfwWindow(), (w, keycode, scancode, action, mods) -> {

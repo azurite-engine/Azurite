@@ -559,6 +559,20 @@ public class MathUtils {
     }
 
     /**
+     * Re-maps a number from one range to another.
+     *
+     * @param value  Number to me re-mapped
+     * @param start1 Lowest number of first range
+     * @param stop1  Highest number of first range
+     * @param start2 Lowest number of second range
+     * @param stop2  Highest number of second range
+     * @return Returns the re-mapped value as a double.
+     */
+    public static double map(double value, double start1, double stop1, double start2, double stop2) {
+        return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
+    }
+
+    /**
      * Returns the distance between two sets of X and Y coordinates.
      *
      * @param x1 First X coordinate
@@ -593,6 +607,18 @@ public class MathUtils {
      * @return Constrained value as a float.
      */
     public static float constrain(float value, float min, float max) {
+        return Math.min(Math.max(value, min), max);
+    }
+
+    /**
+     * Takes a double value clamps/constrains it between a minimum and maximum.
+     *
+     * @param value Input to be constrained
+     * @param min   Minimum possible value
+     * @param max   Maximum possible value
+     * @return Constrained value as a double.
+     */
+    public static double constrain(double value, double min, double max) {
         return Math.min(Math.max(value, min), max);
     }
 

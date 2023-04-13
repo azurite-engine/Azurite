@@ -80,8 +80,6 @@ public class Tilesystem {
                         i.getAttributes().get("name").contains("collidable"),
                         map
                 ));
-
-                // Log.debug(layer.);
             }
         }
 

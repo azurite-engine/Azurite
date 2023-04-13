@@ -12,10 +12,33 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * A GameObject is the root of the Entity Component system used to store all entities in Azurite games.
- * Each GameObject can contain any of a number of available components including spriteRenderers and lights.
- * By default, each GameObject contains a Transform, which holds the X and Y position, and width and height of the object in pixels.
+ * A GameObject is the root of the Entity Component system used to store all
+ * entities in Azurite games.
+ * Each GameObject can contain any of a number of available components including
+ * spriteRenderers and lights.
+ * By default, each GameObject contains a Transform, which holds the X and Y
+ * position.
  *
+ * <pre>
+ * import ecs.*;
+ * 
+ * public class Main extends Scene {
+ *     // ...
+ *
+ *     GameObject player;
+ * 
+ *     public void awake() {
+ *         // ...
+ *         player = new GameObject("Player", new Vector2f(600, 600), 2);
+ *         player.addComponent(new PointLight(new Color(250, 255, 181), 30));
+ *         player.addComponent(new SpriteRenderer(Assets.getTexture("src/assets/images/player.png"), new Vector2f(64, 64)));
+ * 
+ *     }
+ * 
+ *     // ...
+ * }
+ * </pre>
+ * 
  * @author Asher Haun
  * @author Gabe
  * @author Juyas
@@ -44,7 +67,8 @@ public class GameObject {
      */
     public GameObject(String name, List<Component> componentList, Vector2f position, int zIndex) {
         this.name = name;
-        if (this.name == null) Log.warn("GameObject with a name that is null created", 1);
+        if (this.name == null)
+            Log.warn("GameObject with a name that is null created", 1);
         this.components = new OrderPreservingList<>(componentList);
         this.position[0] = position.x;
         this.position[1] = position.y;
@@ -56,14 +80,16 @@ public class GameObject {
     /**
      * Creates a new GameObject.
      *
-     * @param scene    the scene to add the GameObject to. By default, GameObjects are added to the currentScene.
+     * @param scene    the scene to add the GameObject to. By default, GameObjects
+     *                 are added to the currentScene.
      * @param name     name of the GameObject
      * @param position
      * @param zIndex
      */
     public GameObject(Scene scene, String name, Vector2f position, int zIndex) {
         this.name = name;
-        if (this.name == null) Log.warn("GameObject with a name that is null created", 1);
+        if (this.name == null)
+            Log.warn("GameObject with a name that is null created", 1);
         this.components = new OrderPreservingList<Component>(new LinkedList<>());
         this.position[0] = position.x;
         this.position[1] = position.y;
@@ -106,7 +132,8 @@ public class GameObject {
     }
 
     /**
-     * Called once on gameObject creation, also starts any components that are passed to the constructor.
+     * Called once on gameObject creation, also starts any components that are
+     * passed to the constructor.
      */
     public void start() {
         for (Component component : components) {
@@ -115,7 +142,8 @@ public class GameObject {
     }
 
     /**
-     * Called once every frame for each GameObject, calls the update method for each component it contains
+     * Called once every frame for each GameObject, calls the update method for each
+     * component it contains
      */
     public void update(float dt) {
         for (Component component : components) {
@@ -151,7 +179,7 @@ public class GameObject {
 
     @Deprecated
     public void setZIndex(int z) {
-        //TODO does this work now?
+        // TODO does this work now?
         parentScene.removeGameObjectFromScene(this);
         zIndex = z;
         parentScene.addGameObjectToScene(this);
@@ -162,7 +190,8 @@ public class GameObject {
     }
 
     /**
-     * Takes a parameter of a class that extends component and returns it if it is contained in the GameObject's list of components.
+     * Takes a parameter of a class that extends component and returns it if it is
+     * contained in the GameObject's list of components.
      *
      * @param componentClass of component (ie. "SpriteRenderer.class")
      * @return Component of type passed as param is contained in GameObject
@@ -182,7 +211,8 @@ public class GameObject {
     }
 
     /**
-     * Takes a parameter of a class that extends component and returns it if it is contained in the GameObject's list of components.
+     * Takes a parameter of a class that extends component and returns it if it is
+     * contained in the GameObject's list of components.
      *
      * @param componentClass of component (ie. "SpriteRenderer.class")
      * @return all components of type passed as param is contained in GameObject
@@ -204,7 +234,8 @@ public class GameObject {
     }
 
     /**
-     * Takes a parameter of a class that extends component and removed it from the GameObject if it is contained in the list of components.
+     * Takes a parameter of a class that extends component and removed it from the
+     * GameObject if it is contained in the list of components.
      *
      * @param componentClass of component (ie. "SpriteRenderer.class")
      */
@@ -222,7 +253,6 @@ public class GameObject {
         }
     }
 
-
     /**
      * Adds a new component to the GameObject's list.
      *
@@ -232,7 +262,7 @@ public class GameObject {
     public GameObject addComponent(Component c) {
         this.components.add(c);
         c.gameObject = this;
-        //TODO check if this is necessary
+        // TODO check if this is necessary
         if (getParentScene() != null) {
             if (getParentScene().isActive()) {
                 c.start();
