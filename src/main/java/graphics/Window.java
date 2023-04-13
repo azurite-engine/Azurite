@@ -165,6 +165,14 @@ public class Window {
         this(pwidth, pheight, ptitle, 1.0f, recalculateProjectionOnResize);
     }
 
+    public Window(String ptitle, boolean recalculateProjectionOnResize) {
+        this(ptitle, 1.0f, recalculateProjectionOnResize);
+    }
+
+    public Window(String ptitle) {
+        this(ptitle, false);
+    }
+
     /**
      * Initialize the GLFW library, create the window, and setup event handling.
      */
