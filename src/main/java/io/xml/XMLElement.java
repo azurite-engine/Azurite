@@ -23,7 +23,7 @@ public class XMLElement {
     }
 
     public XMLElement(String tag, List<XMLElement> subElements) {
-        this(tag, new HashMap<>(), subElements);
+        this(tag, new LinkedHashMap<>(), subElements);
     }
 
     public XMLElement(String tag, Map<String, String> attributes, String value) {
@@ -34,7 +34,7 @@ public class XMLElement {
     }
 
     public XMLElement(String tag, String value) {
-        this(tag, new HashMap<>(), value);
+        this(tag, new LinkedHashMap<>(), value);
     }
 
     public XMLElement(String comment) {
